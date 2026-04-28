@@ -1,6 +1,6 @@
 project:
   name: "USA Signal Bot"
-  version: "0.1.0"
+  version: "0.2.0"
   timezone: "America/New_York"
 
 runtime:
@@ -8,6 +8,8 @@ runtime:
   broker_order_routing_enabled: false
   web_scraping_allowed: false
   dashboard_enabled: false
+  dry_run: true
+  fail_fast: true
 
 data:
   root_dir: "data"
@@ -15,29 +17,61 @@ data:
   raw_dir: "data/raw"
   processed_dir: "data/processed"
   universe_dir: "data/universe"
+  max_download_workers: 4
+  request_timeout_seconds: 30
+  retry_attempts: 3
 
 logging:
   level: "INFO"
   log_dir: "data/logs"
   log_file: "app.log"
+  enable_console: true
+  enable_file: true
 
 telegram:
   enabled: false
   bot_token_env: "TELEGRAM_BOT_TOKEN"
   chat_id_env: "TELEGRAM_CHAT_ID"
+  parse_mode: "HTML"
 
 universe:
   asset_types:
     - "stock"
     - "etf"
   default_watchlist_file: "data/universe/watchlist.csv"
+  include_etfs: true
+  include_stocks: true
+  min_price: 1.0
+  max_symbols_per_scan: 500
 
 paper:
-  initial_cash: 100000
+  initial_cash: 100000.0
   currency: "USD"
   allow_short: false
+  commission_per_trade: 0.0
+  slippage_bps: 5.0
 
 risk:
   max_position_pct: 0.10
   max_total_exposure_pct: 0.80
   max_daily_loss_pct: 0.03
+  max_open_positions: 10
+
+backtest:
+  default_initial_cash: 100000.0
+  default_benchmark: "SPY"
+  include_transaction_costs: true
+
+optimization:
+  enabled: false
+  max_trials: 100
+  walk_forward_enabled: true
+
+regime:
+  enabled: false
+  default_market_proxy: "SPY"
+
+ml:
+  enabled: false
+  model_dir: "data/models"
+  leakage_checks_enabled: true

@@ -27,3 +27,19 @@ class BrokerRoutingForbiddenError(USASignalBotError):
 class WebScrapingForbiddenError(USASignalBotError):
     """Strictly raised if web scraping is attempted."""
     pass
+
+class EnvironmentConfigError(USASignalBotError):
+    """Raised when there is an issue with environment variables."""
+    pass
+
+class RuntimeInitializationError(USASignalBotError):
+    """Raised when runtime initialization fails."""
+    pass
+
+class ValidationError(USASignalBotError):
+    """Raised when basic validation fails."""
+    pass
+
+class SecretHandlingError(USASignalBotError):
+    """Raised when there is an issue handling secrets."""
+    pass
