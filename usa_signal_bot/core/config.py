@@ -1,88 +1,128 @@
-"""Configuration loading and validation module."""
+"""Configuration management for USA Signal Bot."""
 
-from pathlib import Path
-from typing import Dict, Any, Optional
 import yaml
+from pathlib import Path
 from dataclasses import asdict
+from typing import Optional
 
-from usa_signal_bot.core.exceptions import ConfigError
-from usa_signal_bot.core.paths import CONFIG_DIR
 from usa_signal_bot.core.config_schema import AppConfig
+from usa_signal_bot.core.exceptions import ConfigError
 from usa_signal_bot.utils.dict_utils import deep_merge_dicts
+from usa_signal_bot.core import paths
 
-def load_yaml_file(file_path: Path) -> dict:
+def validate_config(config: AppConfig) -> None:
+    """Validates the application configuration to ensure core restrictions are respected."""
+    # Enforce safe mode constraints
+    if config.runtime.broker_order_routing_enabled:
+        raise ConfigError("CRITICAL: broker_order_routing_enabled MUST be False in this project.")
+
+    if config.runtime.web_scraping_allowed:
+        raise ConfigError("CRITICAL: web_scraping_allowed MUST be False. Web scraping is strictly forbidden.")
+
+    if config.runtime.dashboard_enabled:
+        raise ConfigError("CRITICAL: dashboard_enabled MUST be False. UI components are forbidden.")
+
+    if config.runtime.mode != "local_paper_only":
+        raise ConfigError(f"CRITICAL: runtime mode must be 'local_paper_only', got '{config.runtime.mode}'.")
+
+    # Validate logging config
+    if config.logging.max_bytes <= 0:
+        raise ConfigError("logging.max_bytes must be positive")
+    if config.logging.backup_count < 0:
+        raise ConfigError("logging.backup_count cannot be negative")
+    valid_levels = {"DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"}
+    if config.logging.level.upper() not in valid_levels:
+        raise ConfigError(f"Invalid logging level: {config.logging.level}")
+
+def _load_yaml(file_path: Path) -> dict:
     """Loads a YAML file and returns its content as a dictionary."""
     if not file_path.exists():
         return {}
-    with open(file_path, "r", encoding="utf-8") as f:
-        try:
-            return yaml.safe_load(f) or {}
-        except yaml.YAMLError as e:
-            raise ConfigError(f"Failed to parse YAML file {file_path}: {e}")
 
-def validate_raw_config(raw: dict) -> None:
-    """Ensures strict architectural boundaries are respected via raw config checks."""
-    runtime = raw.get("runtime", {})
-
-    if runtime.get("broker_order_routing_enabled") is True:
-        raise ConfigError("Strict Boundary Violation: broker_order_routing_enabled must be False.")
-
-    if runtime.get("web_scraping_allowed") is True:
-        raise ConfigError("Strict Boundary Violation: web_scraping_allowed must be False.")
-
-    if runtime.get("dashboard_enabled") is True:
-        raise ConfigError("Strict Boundary Violation: dashboard_enabled must be False.")
-
-    mode = runtime.get("mode")
-    if mode is not None and mode != "local_paper_only":
-        raise ConfigError("Strict Boundary Violation: runtime.mode must be 'local_paper_only'.")
-
-def validate_app_config(config: AppConfig) -> None:
-    """Validates the strongly typed AppConfig instance."""
-    if config.runtime.broker_order_routing_enabled is True:
-        raise ConfigError("Strict Boundary Violation: broker_order_routing_enabled must be False.")
-
-    if config.runtime.web_scraping_allowed is True:
-        raise ConfigError("Strict Boundary Violation: web_scraping_allowed must be False.")
-
-    if config.runtime.dashboard_enabled is True:
-        raise ConfigError("Strict Boundary Violation: dashboard_enabled must be False.")
-
-    if config.runtime.mode != "local_paper_only":
-        raise ConfigError("Strict Boundary Violation: runtime.mode must be 'local_paper_only'.")
-
-    if config.paper.allow_short is True:
-        raise ConfigError("Phase 2 Guard: paper.allow_short must be False for now.")
-
-def load_raw_config(config_dir: Optional[Path] = None, local_filename: str = "local.yaml") -> dict:
-    """Loads default and local configs, merges them, and validates guardrails on raw dict."""
-    config_dir = config_dir or CONFIG_DIR
-    default_path = config_dir / "default.yaml"
-    local_path = config_dir / local_filename
-
-    if not default_path.exists():
-        raise ConfigError(f"Missing required configuration file: {default_path}")
-
-    default_config = load_yaml_file(default_path)
-    local_config = load_yaml_file(local_path)
-
-    merged_config = deep_merge_dicts(default_config, local_config)
-    validate_raw_config(merged_config)
-
-    return merged_config
+    try:
+        with open(file_path, "r", encoding="utf-8") as f:
+            data = yaml.safe_load(f)
+            return data if data is not None else {}
+    except yaml.YAMLError as e:
+        raise ConfigError(f"Error parsing YAML file {file_path}: {e}")
 
 def load_app_config(config_dir: Optional[Path] = None) -> AppConfig:
-    """Loads raw config, converts to AppConfig, and fully validates it."""
-    raw_config = load_raw_config(config_dir)
-    app_config = AppConfig.from_dict(raw_config)
-    validate_app_config(app_config)
-    return app_config
+    """
+    Loads and merges the application configuration.
+    It reads default.yaml and overrides it with local.yaml if present.
+    """
+    cfg_dir = config_dir or paths.CONFIG_DIR
+    default_path = cfg_dir / "default.yaml"
+    local_path = cfg_dir / "local.yaml"
+
+    if not default_path.exists():
+        raise ConfigError(f"Default configuration file not found at {default_path}")
+
+    default_cfg = _load_yaml(default_path)
+    local_cfg = _load_yaml(local_path)
+
+    merged_cfg_dict = deep_merge_dicts(default_cfg, local_cfg)
+
+    # Simple manual deserialization mapping nested dicts to dataclasses
+    try:
+        config = AppConfig()
+
+        if "project" in merged_cfg_dict:
+            for k, v in merged_cfg_dict["project"].items():
+                setattr(config.project, k, v)
+
+        if "runtime" in merged_cfg_dict:
+            for k, v in merged_cfg_dict["runtime"].items():
+                setattr(config.runtime, k, v)
+
+        if "data" in merged_cfg_dict:
+            for k, v in merged_cfg_dict["data"].items():
+                setattr(config.data, k, v)
+
+        if "logging" in merged_cfg_dict:
+            for k, v in merged_cfg_dict["logging"].items():
+                setattr(config.logging, k, v)
+
+        if "telegram" in merged_cfg_dict:
+            for k, v in merged_cfg_dict["telegram"].items():
+                setattr(config.telegram, k, v)
+
+        if "universe" in merged_cfg_dict:
+            for k, v in merged_cfg_dict["universe"].items():
+                setattr(config.universe, k, v)
+
+        if "paper" in merged_cfg_dict:
+            for k, v in merged_cfg_dict["paper"].items():
+                setattr(config.paper, k, v)
+
+        if "risk" in merged_cfg_dict:
+            for k, v in merged_cfg_dict["risk"].items():
+                setattr(config.risk, k, v)
+
+        if "backtest" in merged_cfg_dict:
+            for k, v in merged_cfg_dict["backtest"].items():
+                setattr(config.backtest, k, v)
+
+        if "optimization" in merged_cfg_dict:
+            for k, v in merged_cfg_dict["optimization"].items():
+                setattr(config.optimization, k, v)
+
+        if "regime" in merged_cfg_dict:
+            for k, v in merged_cfg_dict["regime"].items():
+                setattr(config.regime, k, v)
+
+        if "ml" in merged_cfg_dict:
+            for k, v in merged_cfg_dict["ml"].items():
+                setattr(config.ml, k, v)
+
+        validate_config(config)
+        return config
+
+    except Exception as e:
+        if isinstance(e, ConfigError):
+            raise
+        raise ConfigError(f"Error mapping configuration to schema: {e}")
 
 def config_to_dict(config: AppConfig) -> dict:
-    """Converts the typed AppConfig to a dictionary."""
+    """Converts the active configuration back to a dictionary."""
     return asdict(config)
-
-# Backward compatibility for existing code in Phase 1
-def load_config() -> dict:
-    app_config = load_app_config()
-    return config_to_dict(app_config)

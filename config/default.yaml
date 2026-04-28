@@ -27,6 +27,8 @@ logging:
   log_file: "app.log"
   enable_console: true
   enable_file: true
+  max_bytes: 5000000
+  backup_count: 5
 
 telegram:
   enabled: false
