@@ -29,6 +29,32 @@ def validate_config(config: AppConfig) -> None:
         raise ConfigError("logging.max_bytes must be positive")
     if config.logging.backup_count < 0:
         raise ConfigError("logging.backup_count cannot be negative")
+
+    if config.universe.symbol_max_length <= 1:
+        raise ConfigError("universe.symbol_max_length must be > 1")
+    if not config.universe.default_currency:
+        raise ConfigError("universe.default_currency cannot be empty")
+    if config.universe.max_symbols_per_scan <= 0:
+        raise ConfigError("universe.max_symbols_per_scan must be positive")
+    if not config.universe.include_stocks and not config.universe.include_etfs:
+        raise ConfigError("Both include_stocks and include_etfs cannot be False")
+    for at in config.universe.asset_types:
+        if at.lower() not in ("stock", "etf"):
+            raise ConfigError(f"Invalid asset_type in config: {at}")
+
+
+    if config.universe.symbol_max_length <= 1:
+        raise ConfigError("universe.symbol_max_length must be > 1")
+    if not config.universe.default_currency:
+        raise ConfigError("universe.default_currency cannot be empty")
+    if config.universe.max_symbols_per_scan <= 0:
+        raise ConfigError("universe.max_symbols_per_scan must be positive")
+    if not config.universe.include_stocks and not config.universe.include_etfs:
+        raise ConfigError("Both include_stocks and include_etfs cannot be False")
+    for at in config.universe.asset_types:
+        if at.lower() not in ("stock", "etf"):
+            raise ConfigError(f"Invalid asset_type in config: {at}")
+
     valid_levels = {"DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"}
     if config.logging.level.upper() not in valid_levels:
         raise ConfigError(f"Invalid logging level: {config.logging.level}")

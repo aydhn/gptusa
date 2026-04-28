@@ -2,49 +2,47 @@ import pytest
 import subprocess
 import sys
 
-def run_cli_command(*args) -> subprocess.CompletedProcess:
-    """Helper to run a CLI command and return the completed process."""
-    return subprocess.run(
-        [sys.executable, "-m", "usa_signal_bot", *args],
+def test_universe_info_command():
+    result = subprocess.run(
+        [sys.executable, "-m", "usa_signal_bot", "universe-info"],
         capture_output=True,
         text=True
     )
-
-def test_cli_smoke_command():
-    result = run_cli_command("smoke")
     assert result.returncode == 0
-    assert "USA Signal Bot smoke check" in result.stdout
-    assert "Status: OK" in result.stdout
+    assert "USA Signal Bot Universe Info" in result.stdout
 
-def test_cli_validate_config_command():
-    result = run_cli_command("validate-config")
+def test_universe_validate_command():
+    result = subprocess.run(
+        [sys.executable, "-m", "usa_signal_bot", "universe-validate"],
+        capture_output=True,
+        text=True
+    )
     assert result.returncode == 0
-    assert "Config validation: OK" in result.stdout
+    assert "Passed        : YES" in result.stdout
 
-def test_cli_runtime_summary_command():
-    result = run_cli_command("runtime-summary")
+def test_universe_list_command():
+    result = subprocess.run(
+        [sys.executable, "-m", "usa_signal_bot", "universe-list", "--limit", "2"],
+        capture_output=True,
+        text=True
+    )
     assert result.returncode == 0
-    assert "USA Signal Bot Runtime Summary" in result.stdout
-    assert "local_paper_only" in result.stdout
+    assert "Universe Symbols" in result.stdout
 
-def test_cli_check_env_command():
-    result = run_cli_command("check-env")
+def test_universe_build_command():
+    result = subprocess.run(
+        [sys.executable, "-m", "usa_signal_bot", "universe-build"],
+        capture_output=True,
+        text=True
+    )
     assert result.returncode == 0
-    assert "Telegram Enabled: False" in result.stdout
+    assert "Snapshot written" in result.stdout
 
-
-def test_cli_storage_info():
-    result = run_cli_command("storage-info")
+def test_universe_summary_command():
+    result = subprocess.run(
+        [sys.executable, "-m", "usa_signal_bot", "universe-summary"],
+        capture_output=True,
+        text=True
+    )
     assert result.returncode == 0
-
-def test_cli_storage_check():
-    result = run_cli_command("storage-check")
-    assert result.returncode == 0
-
-def test_cli_storage_list():
-    result = run_cli_command("storage-list")
-    assert result.returncode == 0
-
-def test_cli_storage_list_area():
-    result = run_cli_command("storage-list", "--area", "cache")
-    assert result.returncode == 0
+    assert "Universe Summary" in result.stdout

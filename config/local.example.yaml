@@ -14,3 +14,4 @@ risk:
 
 universe:
   max_symbols_per_scan: 100
+  allow_inactive_symbols: true

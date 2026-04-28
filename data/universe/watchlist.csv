@@ -1,0 +1,16 @@
+symbol,asset_type,name,exchange,currency,active,sector,industry,source,notes
+SPY,etf,SPDR S&P 500 ETF Trust,NYSEARCA,USD,true,,,manual_seed,broad_market_benchmark
+QQQ,etf,Invesco QQQ Trust,NASDAQ,USD,true,,,manual_seed,nasdaq_100_proxy
+IWM,etf,iShares Russell 2000 ETF,NYSEARCA,USD,true,,,manual_seed,small_cap_proxy
+DIA,etf,SPDR Dow Jones Industrial Average ETF Trust,NYSEARCA,USD,true,,,manual_seed,dow_proxy
+AAPL,stock,Apple Inc,NASDAQ,USD,true,Technology,Consumer Electronics,manual_seed,large_cap_sample
+MSFT,stock,Microsoft Corp,NASDAQ,USD,true,Technology,Software,manual_seed,large_cap_sample
+NVDA,stock,NVIDIA Corp,NASDAQ,USD,true,Technology,Semiconductors,manual_seed,large_cap_sample
+AMZN,stock,Amazon.com Inc,NASDAQ,USD,true,Consumer Cyclical,Internet Retail,manual_seed,large_cap_sample
+META,stock,Meta Platforms Inc,NASDAQ,USD,true,Communication Services,Internet Content,manual_seed,large_cap_sample
+GOOGL,stock,Alphabet Inc,NASDAQ,USD,true,Communication Services,Internet Content,manual_seed,large_cap_sample
+TSLA,stock,Tesla Inc,NASDAQ,USD,true,Consumer Cyclical,Auto Manufacturers,manual_seed,large_cap_sample
+JPM,stock,JPMorgan Chase & Co,NYSE,USD,true,Financial Services,Banks,manual_seed,large_cap_sample
+XLF,etf,Financial Select Sector SPDR Fund,NYSEARCA,USD,true,,,manual_seed,sector_etf_sample
+XLK,etf,Technology Select Sector SPDR Fund,NYSEARCA,USD,true,,,manual_seed,sector_etf_sample
+XLV,etf,Health Care Select Sector SPDR Fund,NYSEARCA,USD,true,,,manual_seed,sector_etf_sample
