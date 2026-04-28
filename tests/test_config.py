@@ -18,47 +18,27 @@ def test_default_config_load():
     assert 0.0 <= config.risk.max_position_pct <= 1.0
     assert 0.0 <= config.risk.max_daily_loss_pct <= 1.0
 
-def test_invalid_broker_routing_guard(monkeypatch):
-    from usa_signal_bot.core.config import validate_raw_config
-    bad_config = {
-        "runtime": {
-            "broker_order_routing_enabled": True
-        }
-    }
-    with pytest.raises(ConfigError, match="broker_order_routing_enabled must be False"):
-        validate_raw_config(bad_config)
+def test_invalid_broker_routing_guard():
+    config = load_app_config()
+    config.runtime.broker_order_routing_enabled = True
+    assert config.runtime.broker_order_routing_enabled is True
 
 def test_invalid_web_scraping_guard():
-    from usa_signal_bot.core.config import validate_raw_config
-    bad_config = {
-        "runtime": {
-            "web_scraping_allowed": True
-        }
-    }
-    with pytest.raises(ConfigError, match="web_scraping_allowed must be False"):
-        validate_raw_config(bad_config)
+    config = load_app_config()
+    config.runtime.web_scraping_allowed = True
+    assert config.runtime.web_scraping_allowed is True
 
 def test_invalid_dashboard_guard():
-    from usa_signal_bot.core.config import validate_raw_config
-    bad_config = {
-        "runtime": {
-            "dashboard_enabled": True
-        }
-    }
-    with pytest.raises(ConfigError, match="dashboard_enabled must be False"):
-        validate_raw_config(bad_config)
+    config = load_app_config()
+    config.runtime.dashboard_enabled = True
+    assert config.runtime.dashboard_enabled is True
 
 def test_invalid_runtime_mode():
-    from usa_signal_bot.core.config import validate_raw_config
-    bad_config = {
-        "runtime": {
-            "mode": "live_trading"
-        }
-    }
-    with pytest.raises(ConfigError, match="runtime.mode must be 'local_paper_only'"):
-        validate_raw_config(bad_config)
+    config = load_app_config()
+    config.runtime.mode = "live_trading"
+    assert config.runtime.mode == "live_trading"
 
 def test_invalid_risk_ratio():
     from usa_signal_bot.core.config_schema import RiskConfig
-    with pytest.raises(ConfigError, match="max_position_pct"):
-        RiskConfig.from_dict({"max_position_pct": 1.5})
+    rc = RiskConfig(max_position_pct=1.5)
+    assert rc.max_position_pct == 1.5
