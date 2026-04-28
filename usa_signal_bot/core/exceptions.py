@@ -56,3 +56,23 @@ class LoggingSetupError(USASignalBotError):
 class HealthCheckError(USASignalBotError):
     """Raised when a health check fails."""
     pass
+
+class StorageError(USASignalBotError):
+    """Base exception for all storage errors."""
+    pass
+
+class StorageReadError(StorageError):
+    """Raised when an error occurs while reading from storage."""
+    pass
+
+class StorageWriteError(StorageError):
+    """Raised when an error occurs while writing to storage."""
+    pass
+
+class StoragePathError(StorageError):
+    """Raised when there is an issue with a storage path (e.g. traversal attempt)."""
+    pass
+
+class StorageIntegrityError(StorageError):
+    """Raised when a file's integrity check fails."""
+    pass

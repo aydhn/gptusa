@@ -2,10 +2,10 @@ import pytest
 import subprocess
 import sys
 
-def run_cli_command(command_name: str) -> subprocess.CompletedProcess:
+def run_cli_command(*args) -> subprocess.CompletedProcess:
     """Helper to run a CLI command and return the completed process."""
     return subprocess.run(
-        [sys.executable, "-m", "usa_signal_bot", command_name],
+        [sys.executable, "-m", "usa_signal_bot", *args],
         capture_output=True,
         text=True
     )
@@ -31,3 +31,20 @@ def test_cli_check_env_command():
     result = run_cli_command("check-env")
     assert result.returncode == 0
     assert "Telegram Enabled: False" in result.stdout
+
+
+def test_cli_storage_info():
+    result = run_cli_command("storage-info")
+    assert result.returncode == 0
+
+def test_cli_storage_check():
+    result = run_cli_command("storage-check")
+    assert result.returncode == 0
+
+def test_cli_storage_list():
+    result = run_cli_command("storage-list")
+    assert result.returncode == 0
+
+def test_cli_storage_list_area():
+    result = run_cli_command("storage-list", "--area", "cache")
+    assert result.returncode == 0

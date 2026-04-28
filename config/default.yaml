@@ -77,3 +77,12 @@ ml:
   enabled: false
   model_dir: "data/models"
   leakage_checks_enabled: true
+
+storage:
+  enabled: true
+  manifests_dir: "data/manifests"
+  features_dir: "data/features"
+  models_dir: "data/models"
+  atomic_writes: true
+  default_json_indent: 2
+  parquet_enabled: false

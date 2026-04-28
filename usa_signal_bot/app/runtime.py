@@ -43,8 +43,15 @@ def initialize_runtime(config_dir: Optional[Path] = None) -> RuntimeContext:
     # 1-3. Load and validate config
     config = load_app_config(config_dir)
 
-    # 4. Ensure directories
+
+    # 4. Ensure directories and setup storage areas
     ensure_directories()
+    try:
+        from usa_signal_bot.storage.paths import ensure_storage_areas
+        ensure_storage_areas(DATA_DIR)
+    except ImportError:
+        pass  # In case storage module isn't fully loaded yet during some tests
+
 
     # 5. Set up logging
     log_level = config.logging.level

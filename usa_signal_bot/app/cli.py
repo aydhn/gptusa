@@ -135,6 +135,71 @@ def handle_log_info(context):
     print(f"App Log File: {context.log_file_path}")
     print(f"Audit Log File: {context.audit_log_path}")
 
+
+def handle_storage_info(context):
+    """Displays storage subsystem info."""
+    from usa_signal_bot.storage.formats import StorageFormat
+    from usa_signal_bot.storage.paths import StorageArea, get_storage_area_path
+
+    print("--- USA Signal Bot Storage Info ---")
+    print(f"Data Root: {context.data_dir}")
+    print("\nStorage Areas:")
+    for area in StorageArea:
+        path = get_storage_area_path(context.data_dir, area)
+        print(f"  - {area.value}: {path}")
+
+    print("\nSupported Formats:")
+    for fmt in StorageFormat:
+        if fmt == StorageFormat.PARQUET_RESERVED:
+            print(f"  - {fmt.name}: Reserved for future use (currently unsupported)")
+        else:
+            print(f"  - {fmt.name}")
+
+    print("\nStorage Config:")
+    print(f"  - enabled: {context.config.storage.enabled}")
+    print(f"  - atomic_writes: {context.config.storage.atomic_writes}")
+    print(f"  - parquet_enabled: {context.config.storage.parquet_enabled}")
+
+def handle_storage_check(context) -> int:
+    """Runs storage specific health checks."""
+    from usa_signal_bot.core.health import check_storage_health
+    print("--- USA Signal Bot Storage Check ---")
+    result = check_storage_health(context)
+    status = "PASS" if result.passed else "FAIL"
+    print(f"[{status}] {result.name}: {result.message}")
+    if result.details:
+        print(f"Details: {result.details}")
+
+    return 0 if result.passed else 1
+
+def handle_storage_list(context, area: str = None) -> int:
+    """Lists files in the storage system."""
+    from usa_signal_bot.storage.file_store import LocalFileStore
+    from usa_signal_bot.storage.paths import StorageArea
+    from usa_signal_bot.utils.file_utils import normalize_safe_filename
+
+    print("--- USA Signal Bot Storage List ---")
+    store = LocalFileStore(context.data_dir)
+
+    try:
+        if area:
+            safe_area = normalize_safe_filename(area)
+            files = store.list_files(safe_area)
+            print(f"Files in area '{safe_area}': {len(files)}")
+            for f in files:
+                size = f.stat().st_size
+                print(f"  - {f.name} ({size} bytes)")
+        else:
+            print("Summary of all areas:")
+            for a in StorageArea:
+                files = store.list_files(a.value)
+                print(f"  - {a.value}: {len(files)} files")
+        return 0
+    except Exception as e:
+        print(f"Error listing storage files: {e}")
+        return 1
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="USA Signal Bot CLI")
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
@@ -147,7 +212,16 @@ def main() -> int:
     subparsers.add_parser("runtime-summary", help="Show a summary of the runtime environment")
     subparsers.add_parser("check-env", help="Check and mask environment variables")
     subparsers.add_parser("health", help="Run full system health check")
+
     subparsers.add_parser("log-info", help="Display information about logging configuration")
+
+    # Storage commands
+    subparsers.add_parser("storage-info", help="Display storage subsystem information")
+    subparsers.add_parser("storage-check", help="Run storage health check")
+
+    storage_list_parser = subparsers.add_parser("storage-list", help="List files in storage")
+    storage_list_parser.add_argument("--area", type=str, help="Specific storage area to list")
+
 
     audit_parser = subparsers.add_parser("audit-tail", help="Tail the audit log")
     audit_parser.add_argument("--limit", type=int, default=20, help="Number of events to display")
@@ -182,8 +256,16 @@ def main() -> int:
             sys.exit(handle_health(context))
         elif args.command == "log-info":
             handle_log_info(context)
+
         elif args.command == "audit-tail":
             handle_audit_tail(context, args.limit)
+        elif args.command == "storage-info":
+            handle_storage_info(context)
+        elif args.command == "storage-check":
+            sys.exit(handle_storage_check(context))
+        elif args.command == "storage-list":
+            sys.exit(handle_storage_list(context, args.area))
+
 
     except Exception as e:
         sys.exit(handle_cli_exception(e))
