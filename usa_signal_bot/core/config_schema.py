@@ -93,6 +93,17 @@ class MLConfig:
     model_dir: str = "data/models"
     leakage_checks_enabled: bool = True
 
+
+@dataclass
+class StorageConfig:
+    enabled: bool = True
+    manifests_dir: str = "data/manifests"
+    features_dir: str = "data/features"
+    models_dir: str = "data/models"
+    atomic_writes: bool = True
+    default_json_indent: int = 2
+    parquet_enabled: bool = False
+
 @dataclass
 class AppConfig:
     project: ProjectConfig = field(default_factory=ProjectConfig)
@@ -107,3 +118,4 @@ class AppConfig:
     optimization: OptimizationConfig = field(default_factory=OptimizationConfig)
     regime: RegimeConfig = field(default_factory=RegimeConfig)
     ml: MLConfig = field(default_factory=MLConfig)
+    storage: StorageConfig = field(default_factory=StorageConfig)

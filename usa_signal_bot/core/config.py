@@ -24,7 +24,6 @@ def validate_config(config: AppConfig) -> None:
 
     if config.runtime.mode != "local_paper_only":
         raise ConfigError(f"CRITICAL: runtime mode must be 'local_paper_only', got '{config.runtime.mode}'.")
-
     # Validate logging config
     if config.logging.max_bytes <= 0:
         raise ConfigError("logging.max_bytes must be positive")
@@ -33,6 +32,21 @@ def validate_config(config: AppConfig) -> None:
     valid_levels = {"DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"}
     if config.logging.level.upper() not in valid_levels:
         raise ConfigError(f"Invalid logging level: {config.logging.level}")
+
+    # Validate storage config
+    if not config.storage.enabled:
+        raise ConfigError("CRITICAL: storage.enabled MUST be True.")
+    if config.storage.parquet_enabled:
+        raise ConfigError("CRITICAL: storage.parquet_enabled MUST be False in this phase.")
+    if not (0 <= config.storage.default_json_indent <= 8):
+        raise ConfigError("storage.default_json_indent must be between 0 and 8.")
+    if not config.storage.manifests_dir:
+        raise ConfigError("storage.manifests_dir cannot be empty.")
+    if not config.storage.features_dir:
+        raise ConfigError("storage.features_dir cannot be empty.")
+    if not config.storage.models_dir:
+        raise ConfigError("storage.models_dir cannot be empty.")
+
 
 def _load_yaml(file_path: Path) -> dict:
     """Loads a YAML file and returns its content as a dictionary."""
@@ -111,9 +125,15 @@ def load_app_config(config_dir: Optional[Path] = None) -> AppConfig:
             for k, v in merged_cfg_dict["regime"].items():
                 setattr(config.regime, k, v)
 
+
         if "ml" in merged_cfg_dict:
             for k, v in merged_cfg_dict["ml"].items():
                 setattr(config.ml, k, v)
+
+        if "storage" in merged_cfg_dict:
+            for k, v in merged_cfg_dict["storage"].items():
+                setattr(config.storage, k, v)
+
 
         validate_config(config)
         return config

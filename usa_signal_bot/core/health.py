@@ -53,13 +53,47 @@ def check_safe_mode_health(context) -> HealthCheckResult:
     msg = "Safe mode active" if passed else f"Safe mode violations: {', '.join(issues)}"
     return HealthCheckResult(name="Safe Mode Check", passed=passed, message=msg)
 
+
+def check_storage_health(context) -> HealthCheckResult:
+    """Checks if the storage layer is healthy and accessible."""
+    import uuid
+    from usa_signal_bot.storage.paths import ensure_storage_areas
+    from usa_signal_bot.utils.file_utils import atomic_write_text
+
+    try:
+        # Check data root
+        if not context.data_dir.exists():
+            return HealthCheckResult(name="Storage Check", passed=False, message="Data root directory missing")
+
+        # Ensure all standard storage areas exist
+        areas = ensure_storage_areas(context.data_dir)
+
+        # Test writing and deleting a temp file in the root
+        test_file = context.data_dir / f".health_{uuid.uuid4().hex}.tmp"
+        atomic_write_text(test_file, "healthcheck")
+
+        if not test_file.exists():
+            return HealthCheckResult(name="Storage Check", passed=False, message="Failed to write test file")
+
+        test_file.unlink()
+
+        return HealthCheckResult(
+            name="Storage Check",
+            passed=True,
+            message="Storage areas and write access OK",
+            details={"areas_checked": list(areas.keys())}
+        )
+    except Exception as e:
+        return HealthCheckResult(name="Storage Check", passed=False, message=f"Storage check failed: {e}")
+
 def run_health_checks(context) -> List[HealthCheckResult]:
     """Runs all health checks and returns the results."""
     return [
         check_config_health(context),
         check_paths_health(context),
         check_logging_health(context),
-        check_safe_mode_health(context)
+        check_safe_mode_health(context),
+        check_storage_health(context)
     ]
 
 def health_results_to_dict(results: List[HealthCheckResult]) -> List[Dict]:
