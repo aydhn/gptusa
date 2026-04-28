@@ -1,14 +1,15 @@
-"""Runtime context and state management."""
+"""Runtime state tracking and context."""
 
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 from pathlib import Path
-from datetime import datetime, timezone
+from typing import Optional
 
 from usa_signal_bot.core.config_schema import AppConfig
 from usa_signal_bot.core.exceptions import RuntimeInitializationError
 
 @dataclass
 class RuntimeContext:
+    """Holds the active runtime state, configuration, and resolved paths."""
     config: AppConfig
     project_root: Path
     config_dir: Path
@@ -20,6 +21,10 @@ class RuntimeContext:
     backtests_dir: Path
     started_at_utc: str
     execution_mode: str
+
+    log_file_path: Optional[Path] = None
+    audit_log_path: Optional[Path] = None
+    health_status: Optional[str] = None
 
     def as_summary_dict(self) -> dict:
         """Returns a summarized dictionary of the runtime context."""
@@ -37,8 +42,11 @@ class RuntimeContext:
             "paths": {
                 "project_root": str(self.project_root),
                 "data_dir": str(self.data_dir),
-                "logs_dir": str(self.logs_dir)
-            }
+                "logs_dir": str(self.logs_dir),
+                "log_file_path": str(self.log_file_path) if self.log_file_path else None,
+                "audit_log_path": str(self.audit_log_path) if self.audit_log_path else None
+            },
+            "health_status": self.health_status
         }
 
     def assert_safe_mode(self) -> None:

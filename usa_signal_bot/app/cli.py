@@ -5,12 +5,17 @@ import sys
 import json
 from pprint import pprint
 import logging
+from pathlib import Path
 
 from usa_signal_bot.app.runtime import initialize_runtime, run_startup_checks, build_runtime_summary
 from usa_signal_bot.core import paths
 from usa_signal_bot.core.config import config_to_dict
 from usa_signal_bot.utils.dict_utils import redact_sensitive_keys
 from usa_signal_bot.core.environment import get_env, mask_secret
+from usa_signal_bot.core.error_handling import handle_cli_exception
+from usa_signal_bot.core.health import run_health_checks, health_results_to_dict
+from usa_signal_bot.core.audit import tail_audit_events
+from usa_signal_bot.utils.json_utils import safe_json_dumps
 
 def handle_smoke(context):
     """Run smoke checks to ensure basic components load correctly."""
@@ -55,7 +60,7 @@ def handle_runtime_summary(context):
     """Display a summary of the current runtime context."""
     print("--- USA Signal Bot Runtime Summary ---")
     summary = build_runtime_summary(context)
-    print(json.dumps(summary, indent=2))
+    print(safe_json_dumps(summary))
 
 def handle_check_env(context):
     """Check required environment variables, specially for Telegram."""
@@ -83,6 +88,53 @@ def handle_check_env(context):
     else:
         print("Telegram is disabled, missing tokens are expected.")
 
+def handle_health(context) -> int:
+    """Run full health checks and report."""
+    print("--- USA Signal Bot Health Check ---")
+    results = run_health_checks(context)
+
+    all_passed = True
+    for res in results:
+        status = "PASS" if res.passed else "FAIL"
+        print(f"[{status}] {res.name}: {res.message}")
+        if not res.passed:
+            all_passed = False
+
+    if all_passed:
+        print("\nOverall Status: HEALTHY")
+        return 0
+    else:
+        print("\nOverall Status: UNHEALTHY")
+        return 1
+
+def handle_audit_tail(context, limit: int):
+    """Tail the audit log."""
+    print(f"--- USA Signal Bot Audit Trail (last {limit} events) ---")
+    log_dir = Path(context.config.logging.log_dir)
+    events = tail_audit_events(log_dir, n=limit)
+
+    if not events:
+        print("No audit events found.")
+        return
+
+    for ev in events:
+        # Simple string representation for CLI
+        ts = ev.get('timestamp_utc', 'N/A')
+        sev = ev.get('severity', 'UNK')
+        typ = ev.get('event_type', 'UNK')
+        msg = ev.get('message', '')
+        print(f"[{ts}] [{sev}] {typ}: {msg}")
+
+def handle_log_info(context):
+    """Display logging subsystem information."""
+    print("--- USA Signal Bot Logging Info ---")
+    print(f"Log Level: {context.config.logging.level}")
+    print(f"Console Logging: {'Enabled' if context.config.logging.enable_console else 'Disabled'}")
+    print(f"File Logging: {'Enabled' if context.config.logging.enable_file else 'Disabled'}")
+    print(f"Log Directory: {context.config.logging.log_dir}")
+    print(f"App Log File: {context.log_file_path}")
+    print(f"Audit Log File: {context.audit_log_path}")
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="USA Signal Bot CLI")
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
@@ -94,19 +146,24 @@ def main() -> int:
     subparsers.add_parser("validate-config", help="Validate the configuration")
     subparsers.add_parser("runtime-summary", help="Show a summary of the runtime environment")
     subparsers.add_parser("check-env", help="Check and mask environment variables")
+    subparsers.add_parser("health", help="Run full system health check")
+    subparsers.add_parser("log-info", help="Display information about logging configuration")
+
+    audit_parser = subparsers.add_parser("audit-tail", help="Tail the audit log")
+    audit_parser.add_argument("--limit", type=int, default=20, help="Number of events to display")
 
     args = parser.parse_args()
 
     if not args.command:
         parser.print_help()
-        return 1
+        sys.exit(1)
 
     try:
         if args.command == "show-paths":
             # Paths check doesn't need full validation to avoid crashing if config is bad just to see paths
             paths.ensure_directories()
             handle_show_paths()
-            return 0
+            sys.exit(0)
 
         # All other commands require a valid runtime context
         context = initialize_runtime()
@@ -121,12 +178,17 @@ def main() -> int:
             handle_runtime_summary(context)
         elif args.command == "check-env":
             handle_check_env(context)
+        elif args.command == "health":
+            sys.exit(handle_health(context))
+        elif args.command == "log-info":
+            handle_log_info(context)
+        elif args.command == "audit-tail":
+            handle_audit_tail(context, args.limit)
 
     except Exception as e:
-        print(f"Fatal Error: {e}", file=sys.stderr)
-        return 1
+        sys.exit(handle_cli_exception(e))
 
-    return 0
+    sys.exit(0)
 
 if __name__ == "__main__":
-    sys.exit(main())
+    main()

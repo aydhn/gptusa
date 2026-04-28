@@ -1,35 +1,35 @@
-"""Core custom exceptions for USA Signal Bot."""
+"""Core exception classes for USA Signal Bot."""
 
 class USASignalBotError(Exception):
     """Base exception for all USA Signal Bot errors."""
     pass
 
 class ConfigError(USASignalBotError):
-    """Raised when there is a configuration issue."""
+    """Raised when there is a configuration error."""
     pass
 
 class PathError(USASignalBotError):
-    """Raised when a directory or file path issue occurs."""
+    """Raised when there is an error with file paths or directories."""
     pass
 
 class DataValidationError(USASignalBotError):
-    """Raised when data fails validation rules."""
+    """Raised when data validation fails."""
     pass
 
 class UnsupportedOperationError(USASignalBotError):
-    """Raised for general unsupported operations."""
+    """Raised when an operation is not supported."""
     pass
 
-class BrokerRoutingForbiddenError(USASignalBotError):
-    """Strictly raised if broker routing is attempted."""
+class BrokerRoutingForbiddenError(UnsupportedOperationError):
+    """Raised when an attempt is made to route orders to a live broker."""
     pass
 
-class WebScrapingForbiddenError(USASignalBotError):
-    """Strictly raised if web scraping is attempted."""
+class WebScrapingForbiddenError(UnsupportedOperationError):
+    """Raised when an attempt is made to perform web scraping."""
     pass
 
-class EnvironmentConfigError(USASignalBotError):
-    """Raised when there is an issue with environment variables."""
+class EnvironmentConfigError(ConfigError):
+    """Raised when environment variables are misconfigured."""
     pass
 
 class RuntimeInitializationError(USASignalBotError):
@@ -37,9 +37,21 @@ class RuntimeInitializationError(USASignalBotError):
     pass
 
 class ValidationError(USASignalBotError):
-    """Raised when basic validation fails."""
+    """Raised for general validation errors."""
     pass
 
 class SecretHandlingError(USASignalBotError):
-    """Raised when there is an issue handling secrets."""
+    """Raised when there's an error handling secrets."""
+    pass
+
+class AuditError(USASignalBotError):
+    """Raised when there's an error writing to the audit trail."""
+    pass
+
+class LoggingSetupError(USASignalBotError):
+    """Raised when logging configuration fails."""
+    pass
+
+class HealthCheckError(USASignalBotError):
+    """Raised when a health check fails."""
     pass
