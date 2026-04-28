@@ -1,0 +1,11 @@
+# Copy this file to local.yaml for your local configurations.
+# Environment secrets like Telegram tokens should be passed via env vars,
+# not hardcoded here.
+
+telegram:
+  enabled: true
+  # bot_token_env: "TELEGRAM_BOT_TOKEN"
+  # chat_id_env: "TELEGRAM_CHAT_ID"
+
+logging:
+  level: "DEBUG"

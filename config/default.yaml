@@ -1,0 +1,43 @@
+project:
+  name: "USA Signal Bot"
+  version: "0.1.0"
+  timezone: "America/New_York"
+
+runtime:
+  mode: "local_paper_only"
+  broker_order_routing_enabled: false
+  web_scraping_allowed: false
+  dashboard_enabled: false
+
+data:
+  root_dir: "data"
+  cache_dir: "data/cache"
+  raw_dir: "data/raw"
+  processed_dir: "data/processed"
+  universe_dir: "data/universe"
+
+logging:
+  level: "INFO"
+  log_dir: "data/logs"
+  log_file: "app.log"
+
+telegram:
+  enabled: false
+  bot_token_env: "TELEGRAM_BOT_TOKEN"
+  chat_id_env: "TELEGRAM_CHAT_ID"
+
+universe:
+  asset_types:
+    - "stock"
+    - "etf"
+  default_watchlist_file: "data/universe/watchlist.csv"
+
+paper:
+  initial_cash: 100000
+  currency: "USD"
+  allow_short: false
+
+risk:
+  max_position_pct: 0.10
+  max_total_exposure_pct: 0.80
+  max_daily_loss_pct: 0.03
