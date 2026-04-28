@@ -14,7 +14,8 @@ class PathError(USASignalBotError):
 
 class DataValidationError(USASignalBotError):
     """Raised when data validation fails."""
-    pass
+    def __init__(self, message: str):
+        super().__init__(f"Data validation error: {message}")
 
 class UnsupportedOperationError(USASignalBotError):
     """Raised when an operation is not supported."""
