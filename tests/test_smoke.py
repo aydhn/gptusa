@@ -23,4 +23,4 @@ def test_cli_smoke_command():
         text=True
     )
     assert result.returncode == 0
-    assert "Status: OK" in result.stdout
+    assert "Smoke test completed successfully" in result.stdout

@@ -76,3 +76,19 @@ class StoragePathError(StorageError):
 class StorageIntegrityError(StorageError):
     """Raised when a file's integrity check fails."""
     pass
+
+class UniverseError(USASignalBotError):
+    """Base exception for universe operations."""
+    pass
+
+class UniverseLoadError(UniverseError):
+    """Exception raised when universe data cannot be loaded."""
+    pass
+
+class UniverseValidationError(UniverseError):
+    """Exception raised when a universe fails validation."""
+    pass
+
+class SymbolValidationError(UniverseError):
+    """Exception raised when a symbol fails validation."""
+    pass

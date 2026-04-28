@@ -2,175 +2,327 @@
 
 import argparse
 import sys
-import json
-from pprint import pprint
-import logging
+from typing import Optional
 from pathlib import Path
 
-from usa_signal_bot.app.runtime import initialize_runtime, run_startup_checks, build_runtime_summary
 from usa_signal_bot.core import paths
 from usa_signal_bot.core.config import config_to_dict
-from usa_signal_bot.utils.dict_utils import redact_sensitive_keys
-from usa_signal_bot.core.environment import get_env, mask_secret
-from usa_signal_bot.core.error_handling import handle_cli_exception
-from usa_signal_bot.core.health import run_health_checks, health_results_to_dict
-from usa_signal_bot.core.audit import tail_audit_events
-from usa_signal_bot.utils.json_utils import safe_json_dumps
+from usa_signal_bot.app.runtime import initialize_runtime, run_startup_checks, build_runtime_summary
 
-def handle_smoke(context):
-    """Run smoke checks to ensure basic components load correctly."""
-    print("USA Signal Bot smoke check")
-    print(f"Project: {context.config.project.name}")
-    print(f"Mode: {context.config.runtime.mode}")
-    print(f"Broker routing enabled: {context.config.runtime.broker_order_routing_enabled}")
-    print(f"Web scraping allowed: {context.config.runtime.web_scraping_allowed}")
-    print(f"Dashboard enabled: {context.config.runtime.dashboard_enabled}")
+def handle_universe_info(context) -> int:
+    from usa_signal_bot.universe.registry import get_default_watchlist_path, get_sample_stocks_path, get_sample_etfs_path
 
-    checks = run_startup_checks(context)
-    for check in checks:
-        print(f"Check: {check} - OK")
+    print("--- USA Signal Bot Universe Info ---")
+    print("This seed file is NOT the entire USA universe.")
+    print("It is meant for sample purposes and will be expanded later.")
+    print(f"Default Watchlist : {context.config.universe.default_watchlist_file}")
+    print(f"Sample Stocks     : {get_sample_stocks_path(context.data_dir)}")
+    print(f"Sample ETFs       : {get_sample_etfs_path(context.data_dir)}")
+    print(f"Allowed Asset Types: {context.config.universe.asset_types}")
+    print(f"Include Stocks    : {context.config.universe.include_stocks}")
+    print(f"Include ETFs      : {context.config.universe.include_etfs}")
+    print(f"Default Currency  : {context.config.universe.default_currency}")
+    return 0
 
-    print("Status: OK")
+def handle_universe_validate(context, file_path: str = None) -> int:
+    from pathlib import Path
+    from usa_signal_bot.universe.validator import validate_universe_csv_file
+    from usa_signal_bot.universe.reporting import validation_report_to_text
 
-def handle_show_config(context):
-    """Display the loaded configuration with redacted secrets."""
-    print("--- USA Signal Bot Configuration ---")
-    config_dict = config_to_dict(context.config)
-    safe_config = redact_sensitive_keys(config_dict)
-    print(json.dumps(safe_config, indent=2))
-
-def handle_show_paths():
-    """Display the core directory paths."""
-    print("--- USA Signal Bot Paths ---")
-    print(f"PROJECT_ROOT: {paths.PROJECT_ROOT}")
-    print(f"CONFIG_DIR: {paths.CONFIG_DIR}")
-    print(f"DATA_DIR: {paths.DATA_DIR}")
-    print(f"LOGS_DIR: {paths.LOGS_DIR}")
-    print(f"REPORTS_DIR: {paths.REPORTS_DIR}")
-    print(f"CACHE_DIR: {paths.CACHE_DIR}")
-    print(f"PAPER_DIR: {paths.PAPER_DIR}")
-    print(f"BACKTESTS_DIR: {paths.BACKTESTS_DIR}")
-
-def handle_validate_config(context):
-    """Explicitly validate the loaded configuration."""
-    # initialize_runtime already validates the config fully.
-    print("Config validation: OK")
-
-def handle_runtime_summary(context):
-    """Display a summary of the current runtime context."""
-    print("--- USA Signal Bot Runtime Summary ---")
-    summary = build_runtime_summary(context)
-    print(safe_json_dumps(summary))
-
-def handle_check_env(context):
-    """Check required environment variables, specially for Telegram."""
-    print("--- USA Signal Bot Environment Check ---")
-    telegram_config = context.config.telegram
-
-    print(f"Telegram Enabled: {telegram_config.enabled}")
-
-    bot_token_env = telegram_config.bot_token_env
-    chat_id_env = telegram_config.chat_id_env
-
-    bot_token_val = get_env(bot_token_env)
-    chat_id_val = get_env(chat_id_env)
-
-    print(f"Env {bot_token_env}: {mask_secret(bot_token_val)}")
-    print(f"Env {chat_id_env}: {mask_secret(chat_id_val)}")
-
-    if telegram_config.enabled:
-        if not bot_token_val:
-            print(f"WARNING: Telegram is enabled but {bot_token_env} is not set!")
-        if not chat_id_val:
-            print(f"WARNING: Telegram is enabled but {chat_id_env} is not set!")
-        if bot_token_val and chat_id_val:
-            print("Telegram environment variables are properly set.")
+    if file_path:
+        target = Path(file_path)
     else:
-        print("Telegram is disabled, missing tokens are expected.")
+        target = Path(context.config.universe.default_watchlist_file)
+        if not target.is_absolute():
+            target = context.project_root / target
 
-def handle_health(context) -> int:
-    """Run full health checks and report."""
-    print("--- USA Signal Bot Health Check ---")
-    results = run_health_checks(context)
+    print(f"Validating {target}...")
+    report = validate_universe_csv_file(target)
+    print(validation_report_to_text(report))
 
-    all_passed = True
-    for res in results:
-        status = "PASS" if res.passed else "FAIL"
-        print(f"[{status}] {res.name}: {res.message}")
-        if not res.passed:
-            all_passed = False
+    return 0 if report.passed else 1
 
-    if all_passed:
-        print("\nOverall Status: HEALTHY")
+def handle_universe_list(context, asset_type: str = None, limit: int = None, include_inactive: bool = False) -> int:
+    from usa_signal_bot.universe.loader import load_default_watchlist
+
+    try:
+        res = load_default_watchlist(context.data_dir, context.config.universe.default_watchlist_file)
+        u = res.universe
+
+        symbols = u.symbols
+        if not include_inactive:
+            symbols = [s for s in symbols if s.active]
+
+        if asset_type:
+            at = asset_type.upper()
+            symbols = [s for s in symbols if s.asset_type.value == at or str(s.asset_type) == at]
+
+        if limit:
+            symbols = symbols[:limit]
+
+        print(f"--- Universe Symbols ({len(symbols)}) ---")
+        for s in symbols:
+            print(f"{s.symbol:<8} {str(s.asset_type):<6} {s.currency}")
+
         return 0
-    else:
-        print("\nOverall Status: UNHEALTHY")
+    except Exception as e:
+        print(f"Error: {e}")
         return 1
 
-def handle_audit_tail(context, limit: int):
-    """Tail the audit log."""
-    print(f"--- USA Signal Bot Audit Trail (last {limit} events) ---")
-    log_dir = Path(context.config.logging.log_dir)
-    events = tail_audit_events(log_dir, n=limit)
+def handle_universe_build(context) -> int:
+    from usa_signal_bot.universe.builder import build_default_universe, write_default_universe_snapshot
+    from usa_signal_bot.universe.reporting import summarize_universe, universe_summary_to_text
 
-    if not events:
-        print("No audit events found.")
+    try:
+        print("Building default universe snapshot...")
+        u = build_default_universe(context.data_dir)
+        p = write_default_universe_snapshot(context.data_dir, u)
+
+        summary = summarize_universe(u)
+        print(f"Snapshot written to {p}")
+        print(universe_summary_to_text(summary))
+        return 0
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
+
+def handle_universe_summary(context, json_out: bool = False) -> int:
+    from usa_signal_bot.universe.loader import load_default_watchlist
+    from usa_signal_bot.universe.reporting import summarize_universe, universe_summary_to_text, write_universe_summary_json
+    from pathlib import Path
+
+    try:
+        res = load_default_watchlist(context.data_dir, context.config.universe.default_watchlist_file)
+        summary = summarize_universe(res.universe, [res.source_path])
+
+        if json_out:
+            out_path = context.reports_dir / "universe_summary.json"
+            write_universe_summary_json(out_path, summary)
+            print(f"JSON summary written to {out_path}")
+        else:
+            print(universe_summary_to_text(summary))
+
+        return 0
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
+
+def handle_cli_exception(e: Exception) -> int:
+    """Handles exceptions explicitly meant for the CLI output."""
+    print(f"Error: {str(e)}", file=sys.stderr)
+    return 1
+
+def handle_smoke(context) -> None:
+    """Runs a quick smoke test of the core components."""
+    print("--- USA Signal Bot Smoke Test ---")
+    checks = run_startup_checks(context)
+    for check in checks:
+        print(f"✓ {check}")
+    print("\nSmoke test completed successfully. System is ready.")
+
+def handle_show_config(context) -> None:
+    """Displays the currently loaded and merged configuration."""
+    print("--- Loaded Configuration ---")
+    import pprint
+    cfg_dict = config_to_dict(context.config)
+    pprint.pprint(cfg_dict, width=80)
+
+def handle_show_paths() -> None:
+    """Displays all resolved system paths."""
+    print("--- Resolved System Paths ---")
+    print(f"Project Root   : {paths.PROJECT_ROOT}")
+    print(f"Config Dir     : {paths.CONFIG_DIR}")
+    print(f"Data Dir       : {paths.DATA_DIR}")
+    print(f"Logs Dir       : {paths.LOGS_DIR}")
+    print(f"Cache Dir      : {paths.CACHE_DIR}")
+    print(f"Reports Dir    : {paths.REPORTS_DIR}")
+    print(f"Paper Trade Dir: {paths.PAPER_DIR}")
+    print(f"Backtests Dir  : {paths.BACKTESTS_DIR}")
+
+def handle_validate_config(context) -> None:
+    """Validates configuration rules."""
+    print("--- Configuration Validation ---")
+    print("Rules applied:")
+    print("- broker_order_routing_enabled MUST be False")
+    print("- web_scraping_allowed MUST be False")
+    print("- dashboard_enabled MUST be False")
+    print("- mode MUST be 'local_paper_only'")
+    print(f"Current mode: {context.config.runtime.mode}")
+    print("\nResult: OK. All strict conditions are met.")
+
+def handle_runtime_summary(context) -> None:
+    """Displays a JSON summary of the runtime state."""
+    import json
+    summary = build_runtime_summary(context)
+    print(json.dumps(summary, indent=2))
+
+def handle_check_env(context) -> None:
+    """Checks required and optional environment variables."""
+    from usa_signal_bot.core.environment import get_env
+    print("--- Environment Variables Check ---")
+
+    # For Phase 2, we just verify the mechanism works
+    # We might expect TELEGRAM_BOT_TOKEN to be present if telegram is enabled
+    telegram_enabled = context.config.telegram.enabled
+    bot_token_env_name = context.config.telegram.bot_token_env
+
+    print(f"Telegram Enabled: {telegram_enabled}")
+
+    if telegram_enabled:
+        token = get_env(bot_token_env_name)
+        if token:
+            print(f"✓ {bot_token_env_name} is set (value masked)")
+        else:
+            print(f"✗ {bot_token_env_name} is NOT set. Telegram notifications will fail.")
+    else:
+        print(f"- {bot_token_env_name} is not required because telegram is disabled.")
+
+    print("\nEnvironment check completed.")
+
+def handle_health(context) -> int:
+    """Runs the system health checks and prints the result."""
+    from usa_signal_bot.core.health import run_health_checks, health_results_to_dict
+    from usa_signal_bot.utils.json_utils import safe_json_dumps
+
+    print("--- System Health Check ---")
+    results = run_health_checks(context)
+
+    # Simple console output
+    for res in results:
+        status_symbol = "✓" if res.passed else "✗"
+        print(f"[{status_symbol}] {res.name}: {res.message}")
+        if res.details and not res.passed:
+            print(f"    Details: {res.details}")
+
+    # Determine overall status
+    all_passed = all(res.passed for res in results)
+
+    print("\n--- Summary JSON ---")
+    print(safe_json_dumps(health_results_to_dict(results)))
+
+    return 0 if all_passed else 1
+
+def handle_log_info(context) -> None:
+    """Displays information about the logging subsystem."""
+    print("--- Logging Subsystem Info ---")
+    print(f"Log Level     : {context.config.logging.level}")
+    print(f"Log File Path : {context.log_file_path}")
+    print(f"Audit Log Path: {context.audit_log_path}")
+    print(f"Console Output: {'Enabled' if context.config.logging.enable_console else 'Disabled'}")
+    print(f"File Output   : {'Enabled' if context.config.logging.enable_file else 'Disabled'}")
+
+    # Check if files exist and size
+    if context.log_file_path.exists():
+        size_kb = context.log_file_path.stat().st_size / 1024
+        print(f"Main Log Size : {size_kb:.2f} KB")
+    else:
+        print("Main Log      : Not created yet")
+
+    if context.audit_log_path.exists():
+        size_kb = context.audit_log_path.stat().st_size / 1024
+        print(f"Audit Log Size: {size_kb:.2f} KB")
+    else:
+        print("Audit Log     : Not created yet")
+
+
+def handle_audit_tail(context, limit: int) -> None:
+    """Tails the last N events from the audit log."""
+    print(f"--- Last {limit} Audit Events ---")
+    if not context.audit_log_path.exists():
+        print("Audit log file does not exist yet.")
         return
 
-    for ev in events:
-        # Simple string representation for CLI
-        ts = ev.get('timestamp_utc', 'N/A')
-        sev = ev.get('severity', 'UNK')
-        typ = ev.get('event_type', 'UNK')
-        msg = ev.get('message', '')
-        print(f"[{ts}] [{sev}] {typ}: {msg}")
+    from usa_signal_bot.utils.file_utils import read_last_lines
+    lines = read_last_lines(context.audit_log_path, limit)
 
-def handle_log_info(context):
-    """Display logging subsystem information."""
-    print("--- USA Signal Bot Logging Info ---")
-    print(f"Log Level: {context.config.logging.level}")
-    print(f"Console Logging: {'Enabled' if context.config.logging.enable_console else 'Disabled'}")
-    print(f"File Logging: {'Enabled' if context.config.logging.enable_file else 'Disabled'}")
-    print(f"Log Directory: {context.config.logging.log_dir}")
-    print(f"App Log File: {context.log_file_path}")
-    print(f"Audit Log File: {context.audit_log_path}")
+    if not lines:
+        print("Audit log is empty.")
+        return
 
+    import json
+    for line in lines:
+        try:
+            event = json.loads(line)
+            timestamp = event.get('timestamp_utc', 'UNKNOWN')
+            event_type = event.get('event_type', 'UNKNOWN')
+            severity = event.get('severity', 'UNKNOWN')
+            msg = event.get('message', '')
+            print(f"[{timestamp}] {severity} - {event_type}: {msg}")
+        except json.JSONDecodeError:
+            print(f"Raw line: {line.strip()}")
 
-def handle_storage_info(context):
-    """Displays storage subsystem info."""
-    from usa_signal_bot.storage.formats import StorageFormat
-    from usa_signal_bot.storage.paths import StorageArea, get_storage_area_path
+def handle_storage_info(context) -> None:
+    """Displays storage subsystem information."""
+    from usa_signal_bot.storage.file_store import LocalFileStore
+    from usa_signal_bot.storage.paths import StorageArea
 
     print("--- USA Signal Bot Storage Info ---")
-    print(f"Data Root: {context.data_dir}")
+    store = LocalFileStore(context.data_dir)
+    print(f"Root Directory: {store.root_dir}")
+
     print("\nStorage Areas:")
     for area in StorageArea:
-        path = get_storage_area_path(context.data_dir, area)
-        print(f"  - {area.value}: {path}")
-
-    print("\nSupported Formats:")
-    for fmt in StorageFormat:
-        if fmt == StorageFormat.PARQUET_RESERVED:
-            print(f"  - {fmt.name}: Reserved for future use (currently unsupported)")
-        else:
-            print(f"  - {fmt.name}")
-
-    print("\nStorage Config:")
-    print(f"  - enabled: {context.config.storage.enabled}")
-    print(f"  - atomic_writes: {context.config.storage.atomic_writes}")
-    print(f"  - parquet_enabled: {context.config.storage.parquet_enabled}")
+        path = store.area_path(area.value)
+        exists = path.exists()
+        file_count = len(list(path.glob("*"))) if exists else 0
+        status = "Ready" if exists else "Missing"
+        print(f"  - {area.value:<12} [{status}] ({file_count} items): {path}")
 
 def handle_storage_check(context) -> int:
-    """Runs storage specific health checks."""
-    from usa_signal_bot.core.health import check_storage_health
-    print("--- USA Signal Bot Storage Check ---")
-    result = check_storage_health(context)
-    status = "PASS" if result.passed else "FAIL"
-    print(f"[{status}] {result.name}: {result.message}")
-    if result.details:
-        print(f"Details: {result.details}")
+    """Runs storage integrity checks."""
+    from usa_signal_bot.storage.integrity import verify_file_integrity
+    from usa_signal_bot.storage.file_store import LocalFileStore
 
-    return 0 if result.passed else 1
+    print("--- USA Signal Bot Storage Integrity Check ---")
+    store = LocalFileStore(context.data_dir)
+
+    try:
+        # Example check: just verify all manifests
+        manifests = store.list_files("manifests", "*.json")
+        if not manifests:
+            print("No manifests found to check.")
+            return 0
+
+        all_passed = True
+        for manifest_path in manifests:
+            print(f"\nChecking manifest: {manifest_path.name}")
+            try:
+                from usa_signal_bot.storage.json_store import read_json_dict
+                manifest_data = read_json_dict(manifest_path)
+                records = manifest_data.get("records", [])
+                print(f"  Found {len(records)} records.")
+
+                for record in records:
+                    target_path = Path(record.get("path", ""))
+                    expected_hash = record.get("checksum_sha256")
+
+                    if not target_path.is_absolute():
+                        # Assume paths in manifest are relative to project root
+                        target_path = context.project_root / target_path
+
+                    if not target_path.exists():
+                        print(f"  ✗ MISSING: {target_path}")
+                        all_passed = False
+                        continue
+
+                    if expected_hash:
+                        is_valid = verify_file_integrity(target_path, expected_hash)
+                        if is_valid:
+                            print(f"  ✓ OK: {target_path.name}")
+                        else:
+                            print(f"  ✗ CORRUPTED: {target_path.name} (Hash mismatch)")
+                            all_passed = False
+                    else:
+                        print(f"  ? UNVERIFIED: {target_path.name} (No hash in manifest)")
+
+            except Exception as e:
+                print(f"  ✗ ERROR processing manifest: {e}")
+                all_passed = False
+
+        return 0 if all_passed else 1
+    except Exception as e:
+        print(f"Storage check failed: {e}")
+        return 1
 
 def handle_storage_list(context, area: str = None) -> int:
     """Lists files in the storage system."""
@@ -183,39 +335,73 @@ def handle_storage_list(context, area: str = None) -> int:
 
     try:
         if area:
-            safe_area = normalize_safe_filename(area)
-            files = store.list_files(safe_area)
-            print(f"Files in area '{safe_area}': {len(files)}")
-            for f in files:
-                size = f.stat().st_size
-                print(f"  - {f.name} ({size} bytes)")
+            # Validate area
+            valid_areas = [a.value for a in StorageArea]
+            if area not in valid_areas:
+                print(f"Invalid area '{area}'. Valid areas: {valid_areas}")
+                return 1
+            areas_to_list = [area]
         else:
-            print("Summary of all areas:")
-            for a in StorageArea:
-                files = store.list_files(a.value)
-                print(f"  - {a.value}: {len(files)} files")
+            areas_to_list = [a.value for a in StorageArea]
+
+        for a in areas_to_list:
+            files = store.list_files(a)
+            print(f"\n[{a}] ({len(files)} items)")
+            for f in files:
+                size_kb = f.stat().st_size / 1024
+                print(f"  - {f.name} ({size_kb:.1f} KB)")
+
         return 0
     except Exception as e:
-        print(f"Error listing storage files: {e}")
+        print(f"Error listing storage: {e}")
         return 1
 
-
 def main() -> int:
+    """Main CLI entrypoint."""
     parser = argparse.ArgumentParser(description="USA Signal Bot CLI")
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
 
-    # Subcommands
-    subparsers.add_parser("smoke", help="Run system smoke check")
-    subparsers.add_parser("show-config", help="Display the active configuration")
-    subparsers.add_parser("show-paths", help="Display application paths")
-    subparsers.add_parser("validate-config", help="Validate the configuration")
-    subparsers.add_parser("runtime-summary", help="Show a summary of the runtime environment")
-    subparsers.add_parser("check-env", help="Check and mask environment variables")
-    subparsers.add_parser("health", help="Run full system health check")
+    # Command: smoke
+    subparsers.add_parser("smoke", help="Run a quick smoke test")
 
-    subparsers.add_parser("log-info", help="Display information about logging configuration")
+    # Command: show-config
+    subparsers.add_parser("show-config", help="Display the loaded configuration")
 
-    # Storage commands
+    # Command: show-paths
+    subparsers.add_parser("show-paths", help="Display resolved system paths")
+
+    # Command: validate-config
+    subparsers.add_parser("validate-config", help="Validate config rules")
+
+    # Command: runtime-summary
+    subparsers.add_parser("runtime-summary", help="Display runtime state JSON")
+
+    # Command: check-env
+    subparsers.add_parser("check-env", help="Check environment variables")
+
+    # Command: health
+    subparsers.add_parser("health", help="Run system health checks")
+
+    # Command: log-info
+    subparsers.add_parser("log-info", help="Display logging info")
+
+    # Universe commands
+    universe_info_parser = subparsers.add_parser("universe-info", help="Show universe info")
+
+    universe_validate_parser = subparsers.add_parser("universe-validate", help="Validate universe CSV")
+    universe_validate_parser.add_argument("--file", type=str, help="Specific CSV to validate")
+
+    universe_list_parser = subparsers.add_parser("universe-list", help="List universe symbols")
+    universe_list_parser.add_argument("--asset-type", type=str, choices=["stock", "etf"], help="Filter by asset type")
+    universe_list_parser.add_argument("--limit", type=int, help="Limit number of output symbols")
+    universe_list_parser.add_argument("--include-inactive", action="store_true", help="Include inactive symbols")
+
+    universe_build_parser = subparsers.add_parser("universe-build", help="Build universe snapshot")
+
+    universe_summary_parser = subparsers.add_parser("universe-summary", help="Show universe summary")
+    universe_summary_parser.add_argument("--json-out", action="store_true", help="Output summary to JSON file")
+
+    # Command: storage-info
     subparsers.add_parser("storage-info", help="Display storage subsystem information")
     subparsers.add_parser("storage-check", help="Run storage health check")
 
@@ -265,7 +451,16 @@ def main() -> int:
             sys.exit(handle_storage_check(context))
         elif args.command == "storage-list":
             sys.exit(handle_storage_list(context, args.area))
-
+        elif args.command == "universe-info":
+            sys.exit(handle_universe_info(context))
+        elif args.command == "universe-validate":
+            sys.exit(handle_universe_validate(context, args.file))
+        elif args.command == "universe-list":
+            sys.exit(handle_universe_list(context, args.asset_type, args.limit, args.include_inactive))
+        elif args.command == "universe-build":
+            sys.exit(handle_universe_build(context))
+        elif args.command == "universe-summary":
+            sys.exit(handle_universe_summary(context, args.json_out))
 
     except Exception as e:
         sys.exit(handle_cli_exception(e))

@@ -1,0 +1,11 @@
+symbol,asset_type,name,exchange,currency,active,sector,industry,source,notes
+AAPL,stock,Apple Inc,NASDAQ,USD,true,Technology,Consumer Electronics,manual_seed,large_cap_sample
+MSFT,stock,Microsoft Corp,NASDAQ,USD,true,Technology,Software,manual_seed,large_cap_sample
+NVDA,stock,NVIDIA Corp,NASDAQ,USD,true,Technology,Semiconductors,manual_seed,large_cap_sample
+AMZN,stock,Amazon.com Inc,NASDAQ,USD,true,Consumer Cyclical,Internet Retail,manual_seed,large_cap_sample
+META,stock,Meta Platforms Inc,NASDAQ,USD,true,Communication Services,Internet Content,manual_seed,large_cap_sample
+GOOGL,stock,Alphabet Inc,NASDAQ,USD,true,Communication Services,Internet Content,manual_seed,large_cap_sample
+TSLA,stock,Tesla Inc,NASDAQ,USD,true,Consumer Cyclical,Auto Manufacturers,manual_seed,large_cap_sample
+JPM,stock,JPMorgan Chase & Co,NYSE,USD,true,Financial Services,Banks,manual_seed,large_cap_sample
+UNH,stock,UnitedHealth Group,NYSE,USD,true,Healthcare,Health Plans,manual_seed,large_cap_sample
+V,stock,Visa Inc,NYSE,USD,true,Financial Services,Credit Services,manual_seed,large_cap_sample

@@ -45,6 +45,10 @@ universe:
   include_stocks: true
   min_price: 1.0
   max_symbols_per_scan: 500
+  allow_inactive_symbols: false
+  symbol_max_length: 15
+  default_currency: "USD"
+  snapshot_file: "data/universe/default_universe.csv"
 
 paper:
   initial_cash: 100000.0

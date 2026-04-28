@@ -54,6 +54,10 @@ class UniverseConfig:
     include_stocks: bool = True
     min_price: float = 1.0
     max_symbols_per_scan: int = 500
+    allow_inactive_symbols: bool = False
+    symbol_max_length: int = 15
+    default_currency: str = "USD"
+    snapshot_file: str = "data/universe/default_universe.csv"
 
 @dataclass
 class PaperConfig:

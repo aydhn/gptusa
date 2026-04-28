@@ -54,6 +54,122 @@ def check_safe_mode_health(context) -> HealthCheckResult:
     return HealthCheckResult(name="Safe Mode Check", passed=passed, message=msg)
 
 
+
+def check_universe_health(context) -> HealthCheckResult:
+    """Checks universe readiness."""
+    from usa_signal_bot.universe.loader import load_default_watchlist
+    from usa_signal_bot.core.exceptions import UniverseLoadError, UniverseValidationError
+
+    universe_dir = context.data_dir / "universe"
+    details = {}
+
+    if not universe_dir.exists():
+        return HealthCheckResult(
+            name="Universe Check",
+            passed=False,
+            message="Universe directory missing.",
+            details={"path": str(universe_dir)}
+        )
+
+    try:
+        load_result = load_default_watchlist(context.data_dir, context.config.universe.default_watchlist_file)
+
+        details["source"] = load_result.source_path
+        details["total_rows"] = load_result.row_count
+        details["valid_symbols"] = load_result.valid_count
+        details["invalid_symbols"] = load_result.invalid_count
+        details["duplicates"] = load_result.duplicate_count
+
+        if load_result.invalid_count > 0:
+            details["warnings"] = load_result.errors[:5]
+
+        if load_result.valid_count == 0:
+            return HealthCheckResult(
+                name="Universe Check",
+                passed=False,
+                message="Watchlist contains no valid symbols.",
+                details=details
+            )
+
+        return HealthCheckResult(
+            name="Universe Check",
+            passed=True,
+            message=f"Universe healthy with {load_result.valid_count} valid symbols.",
+            details=details
+        )
+
+    except (UniverseLoadError, UniverseValidationError) as e:
+        return HealthCheckResult(
+            name="Universe Check",
+            passed=False,
+            message=f"Failed to load universe: {e}"
+        )
+    except Exception as e:
+        return HealthCheckResult(
+            name="Universe Check",
+            passed=False,
+            message=f"Unexpected error checking universe: {e}"
+        )
+
+
+
+def check_universe_health(context) -> HealthCheckResult:
+    """Checks universe readiness."""
+    from usa_signal_bot.universe.loader import load_default_watchlist
+    from usa_signal_bot.core.exceptions import UniverseLoadError, UniverseValidationError
+
+    universe_dir = context.data_dir / "universe"
+    details = {}
+
+    if not universe_dir.exists():
+        return HealthCheckResult(
+            name="Universe Check",
+            passed=False,
+            message="Universe directory missing.",
+            details={"path": str(universe_dir)}
+        )
+
+    try:
+        load_result = load_default_watchlist(context.data_dir, context.config.universe.default_watchlist_file)
+
+        details["source"] = load_result.source_path
+        details["total_rows"] = load_result.row_count
+        details["valid_symbols"] = load_result.valid_count
+        details["invalid_symbols"] = load_result.invalid_count
+        details["duplicates"] = load_result.duplicate_count
+
+        if load_result.invalid_count > 0:
+            details["warnings"] = load_result.errors[:5]
+
+        if load_result.valid_count == 0:
+            return HealthCheckResult(
+                name="Universe Check",
+                passed=False,
+                message="Watchlist contains no valid symbols.",
+                details=details
+            )
+
+        return HealthCheckResult(
+            name="Universe Check",
+            passed=True,
+            message=f"Universe healthy with {load_result.valid_count} valid symbols.",
+            details=details
+        )
+
+    except (UniverseLoadError, UniverseValidationError) as e:
+        return HealthCheckResult(
+            name="Universe Check",
+            passed=False,
+            message=f"Failed to load universe: {e}"
+        )
+    except Exception as e:
+        return HealthCheckResult(
+            name="Universe Check",
+            passed=False,
+            message=f"Unexpected error checking universe: {e}"
+        )
+
+
 def check_storage_health(context) -> HealthCheckResult:
     """Checks if the storage layer is healthy and accessible."""
     import uuid
@@ -93,7 +209,9 @@ def run_health_checks(context) -> List[HealthCheckResult]:
         check_paths_health(context),
         check_logging_health(context),
         check_safe_mode_health(context),
-        check_storage_health(context)
+        check_storage_health(context),
+        check_universe_health(context),
+        check_universe_health(context)
     ]
 
 def health_results_to_dict(results: List[HealthCheckResult]) -> List[Dict]:
