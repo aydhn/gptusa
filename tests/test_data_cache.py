@@ -57,3 +57,58 @@ def test_split_bars_by_symbol():
     assert len(grouped) == 2
     assert len(grouped["AAPL"]) == 2
     assert len(grouped["MSFT"]) == 1
+
+from usa_signal_bot.data.cache import list_market_data_cache_files, cache_file_age_seconds, cache_file_size, validate_cache_file, write_repaired_cache, cache_summary
+from usa_signal_bot.core.enums import DataQualityStatus
+import os
+
+def test_list_market_data_cache_files(tmp_path):
+    path = tmp_path / "cache" / "market_data"
+    path.mkdir(parents=True)
+    (path / "file1.jsonl").write_text("{}")
+    (path / "file2.jsonl").write_text("{}")
+
+    files = list_market_data_cache_files(tmp_path)
+    assert len(files) == 2
+
+def test_cache_file_age_size(tmp_path):
+    f = tmp_path / "test.jsonl"
+    f.write_text("hello")
+
+    age = cache_file_age_seconds(f)
+    assert age is not None
+    assert age >= 0
+
+    size = cache_file_size(f)
+    assert size == 5
+
+def test_validate_cache_file(tmp_path):
+    bar = OHLCVBar(symbol="AAPL", timestamp_utc="1", timeframe="1d", open=10, high=10, low=10, close=10, volume=10)
+    path = build_market_data_cache_path(tmp_path, "mock", "AAPL", "1d", None, None)
+    write_ohlcv_bars_cache(path, [bar])
+
+    report = validate_cache_file(path)
+    assert report.status == DataQualityStatus.OK
+
+def test_write_repaired_cache(tmp_path):
+    bar = OHLCVBar(symbol="AAPL", timestamp_utc="1", timeframe="1d", open=10, high=10, low=10, close=10, volume=10)
+    path = tmp_path / "repaired.jsonl"
+    write_repaired_cache(path, [bar])
+    assert path.exists()
+
+def test_cache_summary(tmp_path):
+    path = tmp_path / "cache" / "market_data"
+    path.mkdir(parents=True)
+    f1 = path / "a.jsonl"
+    f1.write_text("hello")
+    f2 = path / "b.jsonl"
+    f2.write_text("world!")
+
+    # ensure f2 is newer
+    mtime = f1.stat().st_mtime
+    os.utime(f2, (mtime, mtime + 10))
+
+    summary = cache_summary(tmp_path)
+    assert summary["file_count"] == 2
+    assert summary["total_size_bytes"] == 11
+    assert summary["newest_file"] == "b.jsonl"

@@ -126,6 +126,45 @@ class ProviderConfig:
     yfinance_auto_adjust: bool = False
     yfinance_progress: bool = False
 
+
+@dataclass
+class DataQualityConfig:
+    enabled: bool = True
+    allow_zero_volume: bool = True
+    allow_warnings: bool = True
+    repair_enabled: bool = True
+    drop_invalid_price_bars: bool = True
+    drop_duplicate_bars: bool = True
+    fill_missing_volume_with_zero: bool = True
+    max_allowed_warning_ratio: float = 0.20
+    block_on_errors: bool = True
+
+    def __post_init__(self):
+        if not (0 <= self.max_allowed_warning_ratio <= 1):
+            raise ValueError("max_allowed_warning_ratio must be between 0 and 1")
+        if not self.enabled:
+            raise ValueError("data_quality.enabled must be True")
+
+@dataclass
+class CacheRefreshConfig:
+    enabled: bool = True
+    default_ttl_seconds: int = 86400
+    force_refresh_default: bool = False
+    validate_cache_before_use: bool = True
+    repair_cache_before_use: bool = True
+    max_cache_age_days_daily: int = 3
+    max_cache_age_days_intraday: int = 1
+
+    def __post_init__(self):
+        if self.default_ttl_seconds < 0:
+            raise ValueError("default_ttl_seconds cannot be negative")
+        if self.max_cache_age_days_daily <= 0:
+            raise ValueError("max_cache_age_days_daily must be positive")
+        if self.max_cache_age_days_intraday <= 0:
+            raise ValueError("max_cache_age_days_intraday must be positive")
+        if not self.enabled:
+            raise ValueError("cache_refresh.enabled must be True")
+
 @dataclass
 class AppConfig:
     project: ProjectConfig = field(default_factory=ProjectConfig)
@@ -142,3 +181,5 @@ class AppConfig:
     ml: MLConfig = field(default_factory=MLConfig)
     storage: StorageConfig = field(default_factory=StorageConfig)
     providers: ProviderConfig = field(default_factory=ProviderConfig)
+    data_quality: DataQualityConfig = field(default_factory=DataQualityConfig)
+    cache_refresh: CacheRefreshConfig = field(default_factory=CacheRefreshConfig)

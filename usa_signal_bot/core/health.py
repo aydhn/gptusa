@@ -214,6 +214,8 @@ def run_health_checks(context) -> List[HealthCheckResult]:
         check_universe_health(context),
         check_market_data_cache_health(context),
         check_provider_health(context),
+        check_data_quality_config_health(context),
+        check_cache_refresh_health(context),
         check_market_data_cache_health(context)
     ]
 
@@ -325,3 +327,26 @@ def check_provider_health(context) -> HealthCheckResult:
             passed=False,
             message="Error", details={"error": str(e)}
         )
+
+def check_data_quality_config_health(context) -> HealthCheckResult:
+    try:
+        cfg = context.config.data_quality
+        if not cfg.enabled:
+            return HealthCheckResult("Data Quality Config", False, "data_quality.enabled is False")
+        if not (0 <= cfg.max_allowed_warning_ratio <= 1):
+             return HealthCheckResult("Data Quality Config", False, "max_allowed_warning_ratio out of bounds")
+        return HealthCheckResult("Data Quality Config", True, "Data Quality config OK")
+    except Exception as e:
+        return HealthCheckResult("Data Quality Config", False, f"Check failed: {e}")
+
+def check_cache_refresh_health(context) -> HealthCheckResult:
+    try:
+        cfg = context.config.cache_refresh
+        if not cfg.enabled:
+            return HealthCheckResult("Cache Refresh Config", False, "cache_refresh.enabled is False")
+
+        from usa_signal_bot.data.cache import cache_summary
+        summary = cache_summary(context.data_dir)
+        return HealthCheckResult("Cache Refresh Config", True, "Cache Refresh config OK", details=summary)
+    except Exception as e:
+        return HealthCheckResult("Cache Refresh Config", False, f"Check failed: {e}")

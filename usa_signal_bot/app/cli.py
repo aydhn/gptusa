@@ -794,3 +794,210 @@ def handle_data_quality_check(context, cache_file: str, symbols_str: str, timefr
 
 if __name__ == "__main__":
     main()
+
+def handle_data_cache_validate(context, cache_file: str, symbols_str: str, timeframe: str) -> int:
+    from usa_signal_bot.data.cache import market_data_cache_dir, validate_cache_file
+    from usa_signal_bot.data.quality import data_quality_report_to_text
+
+    cache_dir = market_data_cache_dir(context.data_dir)
+    print("--- Data Cache Validate ---")
+
+    if cache_file:
+        path = cache_dir / cache_file
+        if not path.exists():
+            print(f"Cache file {path} not found.")
+            return 1
+
+        symbols = [s.strip().upper() for s in symbols_str.split(",")] if symbols_str else None
+        try:
+            report = validate_cache_file(path, symbols)
+            print("\n" + data_quality_report_to_text(report))
+            return 0 if report.status.value != "ERROR" else 1
+        except Exception as e:
+            print(f"Validation failed: {e}")
+            return 1
+    else:
+        # Validate all? Or just ask for a file. Prompt implies cache_file is optional but maybe validating all is complex.
+        # Let's say if no file, we validate the newest.
+        from usa_signal_bot.data.cache import list_market_data_cache_files
+        files = list_market_data_cache_files(context.data_dir)
+        if not files:
+            print("No cache files found to validate.")
+            return 0 # Safe exit
+
+        path = sorted(files, key=lambda x: x.stat().st_mtime)[-1]
+        print(f"Validating latest cache file: {path.name}")
+        symbols = [s.strip().upper() for s in symbols_str.split(",")] if symbols_str else None
+        try:
+            report = validate_cache_file(path, symbols)
+            print("\n" + data_quality_report_to_text(report))
+            return 0 if report.status.value != "ERROR" else 1
+        except Exception as e:
+            print(f"Validation failed: {e}")
+            return 1
+
+def handle_data_cache_repair(context, cache_file: str, output: str, overwrite: bool) -> int:
+    from usa_signal_bot.data.cache import market_data_cache_dir, read_cached_ohlcv_bars, write_repaired_cache
+    from usa_signal_bot.data.repair import repair_ohlcv_bars, repair_report_to_text
+    import shutil
+
+    cache_dir = market_data_cache_dir(context.data_dir)
+    print("--- Data Cache Repair ---")
+
+    if not cache_file:
+        print("Error: --cache-file is required.")
+        return 1
+
+    path = cache_dir / cache_file
+    if not path.exists():
+        print(f"Cache file {path} not found.")
+        return 1
+
+    try:
+        bars = read_cached_ohlcv_bars(path)
+        print(f"Read {len(bars)} bars from {cache_file}.")
+
+        repaired_bars, report = repair_ohlcv_bars(bars)
+        print("\n" + repair_report_to_text(report))
+
+        out_path = path
+        if not overwrite:
+            if output:
+                out_path = cache_dir / output
+            else:
+                out_path = cache_dir / f"repaired_{cache_file}"
+        else:
+            # backup
+            backup_path = cache_dir / f"{cache_file}.bak"
+            shutil.copy2(path, backup_path)
+            print(f"Backed up to {backup_path.name}")
+
+        write_repaired_cache(out_path, repaired_bars)
+        print(f"Wrote repaired cache to {out_path.name}")
+        return 0
+    except Exception as e:
+        print(f"Repair failed: {e}")
+        return 1
+
+def handle_data_refresh_plan(context, symbols_str: str, timeframe: str, provider: str, start: str, end: str, force: bool, no_cache: bool) -> int:
+    from usa_signal_bot.data.refresh import CacheRefreshRequest, build_cache_refresh_plan, cache_refresh_plan_to_text
+
+    print("--- Data Refresh Plan ---")
+    symbols = [s.strip().upper() for s in symbols_str.split(",")] if symbols_str else []
+    if not symbols:
+        print("Error: --symbols required.")
+        return 1
+
+    req = CacheRefreshRequest(
+        provider_name=provider,
+        symbols=symbols,
+        timeframe=timeframe,
+        start_date=start,
+        end_date=end,
+        force_refresh=force,
+        use_cache=not no_cache
+    )
+
+    try:
+        ttl = context.config.cache_refresh.default_ttl_seconds
+        batch = context.config.providers.max_symbols_per_batch
+        plan = build_cache_refresh_plan(context.data_dir, req, ttl, batch)
+        print("\n" + cache_refresh_plan_to_text(plan))
+        return 0
+    except Exception as e:
+        print(f"Failed to build plan: {e}")
+        return 1
+
+def handle_data_refresh_execute(context, symbols_str: str, timeframe: str, provider: str, start: str, end: str, force: bool, limit: int) -> int:
+    from usa_signal_bot.data.refresh import CacheRefreshRequest, build_cache_refresh_plan, execute_cache_refresh_plan
+    from usa_signal_bot.data.downloader import MarketDataDownloader
+    from usa_signal_bot.data.provider_registry import create_default_provider_registry
+    from usa_signal_bot.storage.file_store import LocalFileStore
+
+    print("--- Data Refresh Execute ---")
+    symbols = [s.strip().upper() for s in symbols_str.split(",")] if symbols_str else []
+    if not symbols:
+        print("Error: --symbols required.")
+        return 1
+
+    if limit:
+        symbols = symbols[:limit]
+
+    req = CacheRefreshRequest(
+        provider_name=provider,
+        symbols=symbols,
+        timeframe=timeframe,
+        start_date=start,
+        end_date=end,
+        force_refresh=force,
+        use_cache=True
+    )
+
+    try:
+        ttl = context.config.cache_refresh.default_ttl_seconds
+        batch = context.config.providers.max_symbols_per_batch
+        plan = build_cache_refresh_plan(context.data_dir, req, ttl, batch)
+
+        registry = create_default_provider_registry(include_yfinance=context.config.providers.yfinance_enabled)
+        store = LocalFileStore(context.data_dir)
+        downloader = MarketDataDownloader(registry, store, context.data_dir)
+
+        result = execute_cache_refresh_plan(plan, downloader)
+
+        print(f"Execution complete.")
+        print(f"Refreshed: {len(result.refreshed_symbols)}")
+        print(f"From Cache: {len(result.cache_used_symbols)}")
+        print(f"Failed: {len(result.failed_symbols)}")
+
+        if result.errors:
+            print("Errors:")
+            for e in result.errors:
+                print(f"  - {e}")
+
+        return 0 if not result.errors else 1
+    except Exception as e:
+        print(f"Execution failed: {e}")
+        return 1
+
+def handle_data_validation_report(context, latest: bool, reports_dir: str) -> int:
+    from pathlib import Path
+    import json
+
+    print("--- Data Validation Report ---")
+    d_root = Path(reports_dir) if reports_dir else context.data_dir / "reports"
+
+    if not d_root.exists():
+        print("Reports directory not found.")
+        return 0
+
+    q_files = list(d_root.glob("quality_*.json"))
+    a_files = list(d_root.glob("anomaly_*.json"))
+
+    if not q_files:
+        print("No quality reports found.")
+        return 0
+
+    # Pick the latest
+    latest_q = sorted(q_files, key=lambda x: x.stat().st_mtime)[-1]
+    print(f"Latest Quality Report: {latest_q.name}")
+    try:
+        with latest_q.open('r') as f:
+            data = json.load(f)
+            print(f"  Status: {data.get('status')}")
+            print(f"  Total Bars: {data.get('total_bars')}")
+            print(f"  Invalid Bars: {data.get('invalid_bars')}")
+    except Exception as e:
+        print(f"  Could not read report: {e}")
+
+    if a_files:
+        latest_a = sorted(a_files, key=lambda x: x.stat().st_mtime)[-1]
+        print(f"\nLatest Anomaly Report: {latest_a.name}")
+        try:
+            with latest_a.open('r') as f:
+                data = json.load(f)
+                print(f"  Total Anomalies: {data.get('total_anomalies')}")
+                print(f"  Errors: {data.get('error_count')}")
+        except Exception as e:
+            print(f"  Could not read report: {e}")
+
+    return 0
