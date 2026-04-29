@@ -138,3 +138,31 @@ class ValidationSeverity(str, Enum):
     WARNING = "WARNING"
     ERROR = "ERROR"
     CRITICAL = "CRITICAL"
+
+class DataReadinessStatus(str, Enum):
+    READY = "READY"
+    PARTIAL = "PARTIAL"
+    NOT_READY = "NOT_READY"
+    FAILED = "FAILED"
+    UNKNOWN = "UNKNOWN"
+
+class DataCoverageStatus(str, Enum):
+    COMPLETE = "COMPLETE"
+    PARTIAL = "PARTIAL"
+    EMPTY = "EMPTY"
+    STALE = "STALE"
+    INVALID = "INVALID"
+
+class TimeframeRole(str, Enum):
+    PRIMARY = "PRIMARY"
+    CONFIRMATION = "CONFIRMATION"
+    CONTEXT = "CONTEXT"
+    INTRADAY = "INTRADAY"
+    DAILY = "DAILY"
+
+class PipelineRunStatus(str, Enum):
+    NOT_STARTED = "NOT_STARTED"
+    RUNNING = "RUNNING"
+    COMPLETED = "COMPLETED"
+    PARTIAL_SUCCESS = "PARTIAL_SUCCESS"
+    FAILED = "FAILED"

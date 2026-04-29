@@ -34,3 +34,22 @@ def test_build_cache_refresh_plan(tmp_path):
 
     txt = cache_refresh_plan_to_text(plan)
     assert "Refresh Required: 2" in txt
+
+def test_build_multitimeframe_refresh_plan(tmp_path):
+    from usa_signal_bot.data.refresh import build_multitimeframe_refresh_plan
+    from usa_signal_bot.data.multitimeframe import MultiTimeframeDataRequest, TimeframeSpec
+
+    req = MultiTimeframeDataRequest(
+        symbols=["AAPL", "MSFT"],
+        timeframe_specs=[
+            TimeframeSpec(timeframe="1d"),
+            TimeframeSpec(timeframe="1h")
+        ],
+        use_cache=False
+    )
+
+    plan = build_multitimeframe_refresh_plan(tmp_path, req, 86400, 50)
+    assert len(plan.plans_by_timeframe) == 2
+    assert "1d" in plan.plans_by_timeframe
+    assert "1h" in plan.plans_by_timeframe
+    assert plan.total_symbols_to_refresh == 4  # 2 symbols * 2 timeframes

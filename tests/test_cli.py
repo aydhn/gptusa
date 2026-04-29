@@ -110,3 +110,18 @@ def test_cli_data_download_mock():
     assert result.returncode == 0
     assert "Success: True" in result.stdout
     assert "Data Quality Report (mock - 1d)" in result.stdout
+
+def test_data_mtf_plan_command_success(monkeypatch, tmp_path):
+    import sys
+    from unittest.mock import patch
+    import usa_signal_bot.app.cli
+
+    with patch("usa_signal_bot.app.cli.handle_data_mtf_plan", return_value=0) as mock:
+        testargs = ["usa_signal_bot", "data-mtf-plan", "--symbols", "AAPL", "--timeframes", "1d,1h"]
+        monkeypatch.setattr(sys, 'argv', testargs)
+
+        with pytest.raises(SystemExit) as e:
+            usa_signal_bot.app.cli.main()
+
+        assert e.value.code == 0
+        mock.assert_called_once()

@@ -192,3 +192,70 @@ def write_cache_refresh_result_json(path: Path, result: CacheRefreshResult) -> P
     with path.open('w', encoding='utf-8') as f:
         json.dump(d, f, indent=2)
     return path
+
+from .multitimeframe import MultiTimeframeDataRequest
+import datetime
+import json
+
+from ..core.domain import BaseDomainModel
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Optional
+
+@dataclass
+class MultiTimeframeRefreshPlan(BaseDomainModel):
+    request: MultiTimeframeDataRequest = None
+    created_at_utc: str = ""
+    plans_by_timeframe: dict[str, CacheRefreshPlan] = field(default_factory=dict)
+    total_symbols_to_refresh: int = 0
+    total_symbols_from_cache: int = 0
+    estimated_requests: int = 0
+
+def build_multitimeframe_refresh_plan(data_root: Path, request: MultiTimeframeDataRequest, ttl_seconds: int, batch_size: int) -> MultiTimeframeRefreshPlan:
+    plan = MultiTimeframeRefreshPlan(
+        request=request,
+        created_at_utc=datetime.datetime.now(datetime.timezone.utc).isoformat()
+    )
+
+    for spec in request.timeframe_specs:
+        if not spec.enabled:
+            continue
+
+        req = CacheRefreshRequest(
+            provider_name=request.provider_name,
+            symbols=request.symbols,
+            timeframe=spec.timeframe,
+            start_date=spec.start_date,
+            end_date=spec.end_date,
+            force_refresh=request.force_refresh,
+            use_cache=request.use_cache
+        )
+        tf_plan = build_cache_refresh_plan(data_root, req, ttl_seconds, batch_size)
+        plan.plans_by_timeframe[spec.timeframe] = tf_plan
+        plan.total_symbols_to_refresh += len(tf_plan.symbols_to_refresh)
+        plan.total_symbols_from_cache += len(tf_plan.symbols_from_cache)
+        plan.estimated_requests += tf_plan.estimated_requests
+
+    return plan
+
+def multitimeframe_refresh_plan_to_text(plan: MultiTimeframeRefreshPlan) -> str:
+    lines = [
+        f"Multi-Timeframe Refresh Plan ({plan.created_at_utc})",
+        f"Provider: {plan.request.provider_name}",
+        f"Symbols: {len(plan.request.symbols)}",
+        f"Total to refresh: {plan.total_symbols_to_refresh} | Total from cache: {plan.total_symbols_from_cache}",
+        f"Estimated requests: {plan.estimated_requests}",
+        "---"
+    ]
+    for tf, tf_plan in plan.plans_by_timeframe.items():
+        lines.append(f"Timeframe: {tf}")
+        lines.append(f"  To refresh: {len(tf_plan.symbols_to_refresh)}")
+        lines.append(f"  From cache: {len(tf_plan.symbols_from_cache)}")
+        lines.append(f"  Estimated reqs: {tf_plan.estimated_requests}")
+    return "\n".join(lines)
+
+def write_multitimeframe_refresh_plan_json(path: Path, plan: MultiTimeframeRefreshPlan) -> Path:
+    from ..core.serialization import dataclass_to_dict
+    with open(path, 'w') as f:
+        json.dump(dataclass_to_dict(plan), f, indent=2)
+    return path

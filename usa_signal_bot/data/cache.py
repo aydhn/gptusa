@@ -138,3 +138,58 @@ def cache_summary(data_root: Path) -> Dict[str, Any]:
         "newest_file": newest,
         "oldest_file": oldest
     }
+
+def list_cache_files_for_timeframe(data_root: Path, timeframe: str) -> list[Path]:
+    cache_dir = market_data_cache_dir(data_root)
+    if not cache_dir.exists():
+        return []
+    # format: yfinance_AAPL_1d.jsonl or yfinance_AAPL_1d_20230101.jsonl
+    return list(cache_dir.glob(f"*_{timeframe}.jsonl")) + list(cache_dir.glob(f"*_{timeframe}_*.jsonl"))
+
+def list_cache_files_for_symbol(data_root: Path, symbol: str) -> list[Path]:
+    cache_dir = market_data_cache_dir(data_root)
+    if not cache_dir.exists():
+        return []
+    return list(cache_dir.glob(f"*_{symbol}_*.jsonl"))
+
+def find_latest_cache_file(data_root: Path, provider_name: str, symbol: str, timeframe: str) -> Optional[Path]:
+    cache_dir = market_data_cache_dir(data_root)
+    if not cache_dir.exists():
+        return None
+    # match specific pattern to avoid collisions
+    pattern = f"{provider_name}_{symbol}_{timeframe}*.jsonl"
+    files = list(cache_dir.glob(pattern))
+    if not files:
+        return None
+    return sorted(files, key=lambda x: x.stat().st_mtime)[-1]
+
+def read_cached_bars_for_symbols_timeframe(data_root: Path, symbols: list[str], timeframe: str, provider_name: str = "yfinance") -> list[OHLCVBar]:
+    all_bars = []
+    for sym in symbols:
+        latest = find_latest_cache_file(data_root, provider_name, sym, timeframe)
+        if latest:
+            try:
+                raw_bars = read_ohlcv_bars_cache(latest)
+                for b in raw_bars:
+                    all_bars.append(OHLCVBar(**b))
+            except Exception:
+                pass
+    return all_bars
+
+def market_data_cache_summary_by_timeframe(data_root: Path) -> dict[str, Any]:
+    cache_dir = market_data_cache_dir(data_root)
+    summary = {}
+    if not cache_dir.exists():
+        return summary
+
+    files = list_market_data_cache_files(data_root)
+    for f in files:
+        parts = f.stem.split('_')
+        if len(parts) >= 3:
+            tf = parts[2]
+            if tf not in summary:
+                summary[tf] = {"count": 0, "size_bytes": 0}
+            summary[tf]["count"] += 1
+            summary[tf]["size_bytes"] += f.stat().st_size
+
+    return summary

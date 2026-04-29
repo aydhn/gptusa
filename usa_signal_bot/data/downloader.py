@@ -170,3 +170,76 @@ class MarketDataDownloader:
         path = self.data_root / "cache" / f"download_summary_{response.provider_name}.json"
         self.store.write_json("cache", f"download_summary_{response.provider_name}.json", summary)
         return path
+
+    def download_with_refresh_decision(self, request: MarketDataRequest, force_refresh: bool = False, use_cache: bool = True) -> MarketDataResponse:
+        """
+        A high-level method to download data utilizing cache decisions, without needing a full refresh plan.
+        Mainly for convenience when orchestrating from higher levels.
+        """
+        if not use_cache or force_refresh:
+            return self.download(request)
+
+        from .cache import find_latest_cache_file, read_ohlcv_bars_cache
+        from .models import OHLCVBar
+        import datetime
+        import logging
+
+        logger = logging.getLogger(__name__)
+
+        # Simplified logic: If we have a cache file for every symbol that is not stale, use it.
+        # But MarketDataRequest can contain multiple symbols. It's often better to just build a mini-plan.
+        # Since this is an adapter method, we can lean on the existing cache if requested.
+        # If we just need to return a MarketDataResponse from cache:
+
+        cached_bars = []
+        symbols_to_fetch = []
+
+        # Simplified TTL logic (24h default)
+        ttl = 86400
+
+        for sym in request.symbols:
+            latest = find_latest_cache_file(self.data_root, request.provider_name, sym, request.timeframe)
+            stale = True
+            if latest:
+                mtime = latest.stat().st_mtime
+                age = datetime.datetime.now().timestamp() - mtime
+                if age <= ttl:
+                    stale = False
+
+            if not stale and latest:
+                try:
+                    raw = read_ohlcv_bars_cache(latest)
+                    for r in raw:
+                        cached_bars.append(OHLCVBar(**r))
+                except Exception:
+                    symbols_to_fetch.append(sym)
+            else:
+                symbols_to_fetch.append(sym)
+
+        if not symbols_to_fetch:
+            return MarketDataResponse(
+                request=request,
+                bars=cached_bars,
+                success=True,
+                provider_name=request.provider_name,
+                from_cache=True,
+                fetched_at_utc=datetime.datetime.now(datetime.timezone.utc).isoformat()
+            )
+
+        # We need to fetch at least some
+        req_to_fetch = MarketDataRequest(
+            symbols=symbols_to_fetch,
+            timeframe=request.timeframe,
+            start_date=request.start_date,
+            end_date=request.end_date,
+            provider_name=request.provider_name,
+            adjusted=request.adjusted,
+            use_cache=False # Force fetch for these
+        )
+
+        resp = self.download(req_to_fetch)
+        # Combine
+        resp.bars.extend(cached_bars)
+        # For simplicity, if we hit network, from_cache = False
+
+        return resp

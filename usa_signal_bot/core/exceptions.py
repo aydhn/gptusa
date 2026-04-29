@@ -148,3 +148,19 @@ class CacheValidationError(StorageError):
 class DataAnomalyError(DataProviderError):
     """Raised when a data anomaly is detected."""
     pass
+
+class MultiTimeframeError(USASignalBotError):
+    """Raised when there is an error in multi-timeframe processing."""
+    pass
+
+class DataCoverageError(USASignalBotError):
+    """Raised when there is an error calculating or verifying data coverage."""
+    pass
+
+class DataReadinessError(USASignalBotError):
+    """Raised when data readiness requirements are not met."""
+    pass
+
+class DataPipelineError(USASignalBotError):
+    """Raised when there is an error in the data pipeline orchestration."""
+    pass
