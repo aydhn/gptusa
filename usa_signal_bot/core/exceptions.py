@@ -116,3 +116,19 @@ class ProviderFetchError(DataProviderError):
 
 class ForbiddenProviderError(DataProviderError):
     pass
+
+class DataNormalizationError(DataProviderError):
+    """Raised when data cannot be normalized to project standards."""
+    pass
+
+class DataQualityError(DataProviderError):
+    """Raised when data fails quality checks."""
+    pass
+
+class DataCacheError(StorageError):
+    """Raised when an error occurs reading or writing to market data cache."""
+    pass
+
+class MarketDataDownloadError(DataProviderError):
+    """Raised when a download operation fails."""
+    pass

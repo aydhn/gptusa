@@ -4,6 +4,7 @@ from usa_signal_bot.data.provider_capabilities import ProviderCapability, valida
 from usa_signal_bot.data.provider_guards import assert_no_forbidden_provider_name
 from usa_signal_bot.core.exceptions import ProviderRegistrationError, ProviderNotFoundError
 from usa_signal_bot.data.mock_provider import MockMarketDataProvider
+from usa_signal_bot.data.yfinance_provider import YFinanceMarketDataProvider
 
 class ProviderRegistry:
     def __init__(self):
@@ -37,10 +38,12 @@ class ProviderRegistry:
         if name in self._providers:
             del self._providers[name]
 
-def create_default_provider_registry() -> ProviderRegistry:
+def create_default_provider_registry(include_yfinance: bool = True) -> ProviderRegistry:
     registry = ProviderRegistry()
-    return register_default_providers(registry)
+    return register_default_providers(registry, include_yfinance=include_yfinance)
 
-def register_default_providers(registry: ProviderRegistry) -> ProviderRegistry:
+def register_default_providers(registry: ProviderRegistry, include_yfinance: bool = True) -> ProviderRegistry:
     registry.register(MockMarketDataProvider())
+    if include_yfinance:
+        registry.register(YFinanceMarketDataProvider())
     return registry

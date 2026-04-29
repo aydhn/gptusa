@@ -66,7 +66,7 @@ def default_mock_provider_capability() -> ProviderCapability:
         notes=["Mock provider for testing purposes only."]
     )
 
-def reserved_yfinance_provider_capability() -> ProviderCapability:
+def yfinance_provider_capability() -> ProviderCapability:
     return ProviderCapability(
         provider_name="yfinance",
         supports_daily=True,
@@ -75,10 +75,18 @@ def reserved_yfinance_provider_capability() -> ProviderCapability:
         supports_batch=True,
         supports_stocks=True,
         supports_etfs=True,
-        supports_fundamentals=True,
-        supports_options=True,
+        supports_fundamentals=False,
+        supports_options=False,
         free_only=True,
         requires_api_key=False,
         allows_scraping=False,
-        notes=["Reserved capability for future yfinance integration. No real fetch occurs in Phase 7."]
+        notes=[
+            "Free yfinance library based provider",
+            "Data availability and limits depend on Yahoo Finance/yfinance behavior",
+            "No broker routing",
+            "No direct HTML scraping in project code"
+        ]
     )
+
+def reserved_yfinance_provider_capability() -> ProviderCapability:
+    return yfinance_provider_capability()
