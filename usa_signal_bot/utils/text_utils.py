@@ -18,3 +18,9 @@ def truncate_text(text: str, max_length: int = 500) -> str:
     if len(text) > max_length:
         return text[:max_length] + "..."
     return text
+
+def clean_symbol_for_filename(symbol: str) -> str:
+    """Cleans a symbol string to be safe for filenames."""
+    # Replace characters that might be problematic in filenames
+    import re
+    return re.sub(r'[^a-zA-Z0-9_\-]', '_', symbol).upper()

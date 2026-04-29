@@ -81,3 +81,32 @@ def test_provider_mock_fetch_command():
     assert result.returncode == 0
     assert "Mock Data Fetch Result" in result.stdout
     assert "fake data" in result.stdout
+
+def test_cli_data_provider_info():
+    result = subprocess.run(
+        [sys.executable, "-m", "usa_signal_bot", "data-provider-info"],
+        capture_output=True,
+        text=True
+    )
+    assert result.returncode == 0
+    assert "[MOCK]" in result.stdout
+
+def test_cli_data_cache_info():
+    result = subprocess.run(
+        [sys.executable, "-m", "usa_signal_bot", "data-cache-info"],
+        capture_output=True,
+        text=True
+    )
+    assert result.returncode == 0
+    assert "Market Data Cache Info" in result.stdout
+
+def test_cli_data_download_mock():
+    # Execute a download via the mock provider to avoid real network calls
+    result = subprocess.run(
+        [sys.executable, "-m", "usa_signal_bot", "data-download", "--symbols", "AAPL", "--timeframe", "1d", "--provider", "mock"],
+        capture_output=True,
+        text=True
+    )
+    assert result.returncode == 0
+    assert "Success: True" in result.stdout
+    assert "Data Quality Report (mock - 1d)" in result.stdout

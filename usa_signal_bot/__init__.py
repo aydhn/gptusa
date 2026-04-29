@@ -6,4 +6,4 @@ Description: Local algorithmic trading signal generator for USA stocks and ETFs.
 No live broker integration, no web scraping, strictly local paper trading.
 """
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"

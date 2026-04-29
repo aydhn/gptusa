@@ -422,6 +422,34 @@ def main() -> int:
     provider_fetch_parser.add_argument("--symbols", type=str, required=True, help="Comma-separated symbols")
     provider_fetch_parser.add_argument("--timeframe", type=str, required=True, help="Timeframe (e.g. 1d)")
 
+
+    # Market Data Commands
+    data_provider_info_parser = subparsers.add_parser("data-provider-info", help="Show data provider info")
+
+    data_download_parser = subparsers.add_parser("data-download", help="Download market data for symbols")
+    data_download_parser.add_argument("--symbols", type=str, required=True, help="Comma-separated symbols")
+    data_download_parser.add_argument("--timeframe", type=str, default="1d", help="Timeframe (e.g. 1d)")
+    data_download_parser.add_argument("--start", type=str, help="Start date YYYY-MM-DD")
+    data_download_parser.add_argument("--end", type=str, help="End date YYYY-MM-DD")
+    data_download_parser.add_argument("--provider", type=str, default="yfinance", help="Provider name")
+    data_download_parser.add_argument("--no-cache", action="store_true", help="Bypass reading/writing cache")
+    data_download_parser.add_argument("--limit", type=int, help="Limit number of symbols to fetch")
+
+    data_download_universe_parser = subparsers.add_parser("data-download-universe", help="Download data for an entire universe")
+    data_download_universe_parser.add_argument("--file", type=str, help="Universe CSV file")
+    data_download_universe_parser.add_argument("--timeframe", type=str, default="1d", help="Timeframe (e.g. 1d)")
+    data_download_universe_parser.add_argument("--provider", type=str, default="yfinance", help="Provider name")
+    data_download_universe_parser.add_argument("--limit", type=int, default=20, help="Limit number of symbols")
+    data_download_universe_parser.add_argument("--asset-type", type=str, choices=["stock", "etf"], help="Filter by asset type")
+    data_download_universe_parser.add_argument("--no-cache", action="store_true", help="Bypass reading/writing cache")
+
+    data_cache_info_parser = subparsers.add_parser("data-cache-info", help="Show info about the market data cache")
+
+    data_quality_check_parser = subparsers.add_parser("data-quality-check", help="Check quality of cached data")
+    data_quality_check_parser.add_argument("--cache-file", type=str, help="Specific cache file to check")
+    data_quality_check_parser.add_argument("--symbols", type=str, help="Comma-separated symbols to check")
+    data_quality_check_parser.add_argument("--timeframe", type=str, default="1d", help="Timeframe (e.g. 1d)")
+
     audit_parser = subparsers.add_parser("audit-tail", help="Tail the audit log")
 
     audit_parser.add_argument("--limit", type=int, default=20, help="Number of events to display")
@@ -486,6 +514,20 @@ def main() -> int:
             sys.exit(handle_provider_plan(context, args.symbols, args.timeframe))
         elif args.command == "provider-mock-fetch":
             sys.exit(handle_provider_mock_fetch(context, args.symbols, args.timeframe))
+        elif args.command == "data-provider-info":
+            sys.exit(handle_data_provider_info(context))
+        elif args.command == "data-download":
+            sys.exit(handle_data_download(context, args.symbols, args.timeframe, args.start, args.end, args.provider, args.no_cache, args.limit))
+        elif args.command == "data-download-universe":
+            sys.exit(handle_data_download_universe(context, args.file, args.timeframe, args.provider, args.limit, args.asset_type, args.no_cache))
+        elif args.command == "data-cache-info":
+            sys.exit(handle_data_cache_info(context))
+        elif args.command == "data-quality-check":
+            sys.exit(handle_data_quality_check(context, args.cache_file, args.symbols, args.timeframe))
+
+        # End of new handlers
+        # Keep this to not break replace logic
+            sys.exit(handle_provider_mock_fetch(context, args.symbols, args.timeframe))
 
 
     except Exception as e:
@@ -493,8 +535,7 @@ def main() -> int:
 
     sys.exit(0)
 
-if __name__ == "__main__":
-    main()
+
 
 def handle_provider_info(context) -> int:
     """Display data provider configuration and rules."""
@@ -591,3 +632,165 @@ def handle_provider_mock_fetch(context, symbols_str: str, timeframe: str) -> int
     except Exception as e:
          print(f"Mock fetch failed: {e}")
          return 1
+
+def handle_data_provider_info(context) -> int:
+    from usa_signal_bot.data.provider_registry import create_default_provider_registry
+    registry = create_default_provider_registry(include_yfinance=context.config.providers.yfinance_enabled)
+    print("--- Market Data Providers ---")
+    for cap in registry.list_capabilities():
+        print(f"[{cap.provider_name.upper()}]")
+        print(f"  Free Only: {cap.free_only}")
+        print(f"  Requires API Key: {cap.requires_api_key}")
+        print(f"  Allows Scraping: {cap.allows_scraping}")
+        print(f"  Notes: {', '.join(cap.notes)}")
+        print()
+    return 0
+
+def handle_data_download(context, symbols_str: str, timeframe: str, start: str, end: str, provider: str, no_cache: bool, limit: int) -> int:
+    from usa_signal_bot.data.provider_registry import create_default_provider_registry
+    from usa_signal_bot.data.downloader import MarketDataDownloader
+    from usa_signal_bot.storage.file_store import LocalFileStore
+    from usa_signal_bot.data.quality import validate_ohlcv_bars_quality, data_quality_report_to_text
+
+    symbols = [s.strip().upper() for s in symbols_str.split(",") if s.strip()]
+    if limit:
+        symbols = symbols[:limit]
+
+    registry = create_default_provider_registry(include_yfinance=context.config.providers.yfinance_enabled)
+    store = LocalFileStore(context.data_dir)
+    downloader = MarketDataDownloader(registry, store, context.data_dir, None)
+
+    print(f"Downloading data for {len(symbols)} symbols via {provider}...")
+    try:
+        resp = downloader.download_for_symbols(
+            symbols=symbols, timeframe=timeframe, provider_name=provider,
+            start_date=start, end_date=end, write_cache=not no_cache
+        )
+
+        print(f"Success: {resp.success}")
+        print(f"Bars: {resp.bar_count()}")
+
+        if resp.errors:
+            print("Errors:")
+            for e in resp.errors: print(f"  - {e}")
+        if resp.warnings:
+            print("Warnings:")
+            for w in resp.warnings: print(f"  - {w}")
+
+        if resp.bar_count() > 0:
+            report = validate_ohlcv_bars_quality(resp.bars, symbols, provider, timeframe)
+            print("\n" + data_quality_report_to_text(report))
+            downloader.write_download_summary(resp, report)
+
+        return 0 if resp.success else 1
+    except Exception as e:
+        print(f"Download failed: {e}")
+        return 1
+
+def handle_data_download_universe(context, file: str, timeframe: str, provider: str, limit: int, asset_type: str, no_cache: bool) -> int:
+    from usa_signal_bot.data.provider_registry import create_default_provider_registry
+    from usa_signal_bot.data.downloader import MarketDataDownloader
+    from usa_signal_bot.storage.file_store import LocalFileStore
+    from usa_signal_bot.universe.loader import load_default_watchlist
+    from usa_signal_bot.data.quality import validate_ohlcv_bars_quality, data_quality_report_to_text
+    from usa_signal_bot.universe.models import UniverseDefinition, UniverseSymbol
+    from usa_signal_bot.core.enums import AssetType
+
+    # Load universe
+    print(f"Loading universe...")
+    try:
+        if file:
+            load_result = load_default_watchlist(context.data_dir, file)
+        else:
+            load_result = load_default_watchlist(context.data_dir, context.config.universe.default_watchlist_file)
+
+        universe = load_result.universe
+
+        if asset_type:
+            at = AssetType(asset_type.upper())
+            universe.symbols = [s for s in universe.symbols if s.asset_type == at]
+
+        print(f"Found {len(universe.get_active_symbols())} active symbols.")
+        if limit:
+            print(f"Applying limit of {limit}.")
+
+        registry = create_default_provider_registry(include_yfinance=context.config.providers.yfinance_enabled)
+        store = LocalFileStore(context.data_dir)
+        downloader = MarketDataDownloader(registry, store, context.data_dir, None)
+
+        print(f"Downloading...")
+        resp = downloader.download_for_universe(universe, timeframe, provider, limit, not no_cache)
+
+        print(f"Success: {resp.success}")
+        print(f"Bars: {resp.bar_count()}")
+
+        if resp.bar_count() > 0:
+            symbols_requested = universe.get_active_symbols()
+            if limit: symbols_requested = symbols_requested[:limit]
+            report = validate_ohlcv_bars_quality(resp.bars, symbols_requested, provider, timeframe)
+            print("\n" + data_quality_report_to_text(report))
+            downloader.write_download_summary(resp, report)
+
+        return 0 if resp.success else 1
+    except Exception as e:
+        print(f"Universe download failed: {e}")
+        return 1
+
+def handle_data_cache_info(context) -> int:
+    from usa_signal_bot.data.cache import market_data_cache_dir
+    cache_dir = market_data_cache_dir(context.data_dir)
+    print("--- Market Data Cache Info ---")
+    print(f"Cache Directory: {cache_dir}")
+
+    if not cache_dir.exists():
+        print("Directory does not exist.")
+        return 0
+
+    files = list(cache_dir.glob("*.jsonl"))
+    summaries = list(cache_dir.glob("download_summary_*.json"))
+
+    print(f"Total cache files (.jsonl): {len(files)}")
+    print(f"Total summary files (.json): {len(summaries)}")
+
+    total_size = sum(f.stat().st_size for f in files)
+    print(f"Total JSONL size: {total_size / (1024*1024):.2f} MB")
+
+    if files:
+        print("\nRecent cache files:")
+        recent = sorted(files, key=lambda x: x.stat().st_mtime, reverse=True)[:5]
+        for f in recent:
+            print(f"  - {f.name} ({f.stat().st_size / 1024:.1f} KB)")
+
+    return 0
+
+def handle_data_quality_check(context, cache_file: str, symbols_str: str, timeframe: str) -> int:
+    from usa_signal_bot.data.cache import market_data_cache_dir, read_ohlcv_bars_cache
+    from usa_signal_bot.data.models import OHLCVBar
+    from usa_signal_bot.data.quality import validate_ohlcv_bars_quality, data_quality_report_to_text
+
+    cache_dir = market_data_cache_dir(context.data_dir)
+    print("--- Data Quality Check ---")
+
+    if cache_file:
+        path = cache_dir / cache_file
+        if not path.exists():
+            print(f"Cache file {path} not found.")
+            return 1
+
+        print(f"Reading {path.name}...")
+        raw_bars = read_ohlcv_bars_cache(path)
+        bars = []
+        for b in raw_bars:
+             bars.append(OHLCVBar(**b))
+
+        symbols = [s.strip().upper() for s in symbols_str.split(",")] if symbols_str else list(set(b.symbol for b in bars))
+        report = validate_ohlcv_bars_quality(bars, symbols, "unknown_from_cache", timeframe)
+        print("\n" + data_quality_report_to_text(report))
+        return 0 if report.status.value != "ERROR" else 1
+    else:
+        print("No cache file specified. Usage requires --cache-file.")
+        return 1
+
+
+if __name__ == "__main__":
+    main()

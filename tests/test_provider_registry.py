@@ -33,3 +33,12 @@ def test_forbidden_provider_name_registration_fails():
     registry = ProviderRegistry()
     with pytest.raises(ForbiddenProviderError):
         registry.register(BadProvider())
+
+def test_default_registry_contains_yfinance():
+    registry = create_default_provider_registry(include_yfinance=True)
+    assert registry.has_provider("yfinance")
+    assert registry.get("yfinance").name == "yfinance"
+
+def test_default_registry_excludes_yfinance():
+    registry = create_default_provider_registry(include_yfinance=False)
+    assert not registry.has_provider("yfinance")

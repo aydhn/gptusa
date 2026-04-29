@@ -6,7 +6,7 @@ from typing import List
 @dataclass
 class ProjectConfig:
     name: str = "USA Signal Bot"
-    version: str = "0.1.0"
+    version: str = "0.2.0"
     timezone: str = "America/New_York"
 
 @dataclass
@@ -111,16 +111,20 @@ class StorageConfig:
 
 @dataclass
 class ProviderConfig:
-    default_provider: str = "mock"
-    enabled_providers: List[str] = field(default_factory=lambda: ["mock"])
+    default_provider: str = "yfinance"
+    enabled_providers: List[str] = field(default_factory=lambda: ["mock", "yfinance"])
     allow_paid_providers: bool = False
     allow_scraping_providers: bool = False
     allow_broker_data_providers: bool = False
     request_timeout_seconds: int = 30
-    max_symbols_per_batch: int = 50
+    max_symbols_per_batch: int = 25
     min_seconds_between_requests: float = 1.0
     cache_enabled: bool = True
     cache_ttl_seconds: int = 86400
+    yfinance_enabled: bool = True
+    yfinance_threads: bool = True
+    yfinance_auto_adjust: bool = False
+    yfinance_progress: bool = False
 
 @dataclass
 class AppConfig:

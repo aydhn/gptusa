@@ -212,7 +212,9 @@ def run_health_checks(context) -> List[HealthCheckResult]:
         check_storage_health(context),
         check_universe_health(context),
         check_universe_health(context),
-        check_provider_health(context)
+        check_market_data_cache_health(context),
+        check_provider_health(context),
+        check_market_data_cache_health(context)
     ]
 
 def health_results_to_dict(results: List[HealthCheckResult]) -> List[Dict]:
@@ -235,6 +237,26 @@ def assert_health_ok(results: List[HealthCheckResult]) -> None:
         msgs = [f"{r.name}: {r.message}" for r in failed]
         raise HealthCheckError(f"Health checks failed: {'; '.join(msgs)}")
 
+def check_market_data_cache_health(context) -> HealthCheckResult:
+    """Checks if the market data cache is writable."""
+    try:
+        from usa_signal_bot.data.cache import market_data_cache_dir
+        from usa_signal_bot.utils.file_utils import atomic_write_text
+        import uuid
+
+        cache_dir = market_data_cache_dir(context.data_dir)
+        test_file = cache_dir / f".health_{uuid.uuid4().hex}.tmp"
+
+        atomic_write_text(test_file, "healthcheck")
+        if not test_file.exists():
+            return HealthCheckResult(name="Market Data Cache", passed=False, message="Could not verify market data cache is writable.")
+
+        test_file.unlink()
+        return HealthCheckResult(name="Market Data Cache", passed=True, message="Market data cache is writable.")
+    except Exception as e:
+        return HealthCheckResult(name="Market Data Cache", passed=False, message=f"Market data cache check failed: {e}")
+
+
 def check_provider_health(context) -> HealthCheckResult:
     """Check data provider foundation health."""
     try:
@@ -250,11 +272,11 @@ def check_provider_health(context) -> HealthCheckResult:
             )
 
         p_cfg = context.config.providers
-        if p_cfg.default_provider != "mock":
+        if p_cfg.default_provider not in ["mock", "yfinance"]:
              return HealthCheckResult(
                 name="provider_foundation",
                 passed=False,
-                message="Error", details={"error": "default_provider is not mock in Phase 7"}
+                message="Error", details={"error": "default_provider is not mock or yfinance"}
             )
 
         if p_cfg.allow_paid_providers or p_cfg.allow_scraping_providers or p_cfg.allow_broker_data_providers:
