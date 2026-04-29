@@ -108,3 +108,23 @@ providers:
   yfinance_threads: true
   yfinance_auto_adjust: false
   yfinance_progress: false
+
+data_quality:
+  enabled: true
+  allow_zero_volume: true
+  allow_warnings: true
+  repair_enabled: true
+  drop_invalid_price_bars: true
+  drop_duplicate_bars: true
+  fill_missing_volume_with_zero: true
+  max_allowed_warning_ratio: 0.20
+  block_on_errors: true
+
+cache_refresh:
+  enabled: true
+  default_ttl_seconds: 86400
+  force_refresh_default: false
+  validate_cache_before_use: true
+  repair_cache_before_use: true
+  max_cache_age_days_daily: 3
+  max_cache_age_days_intraday: 1

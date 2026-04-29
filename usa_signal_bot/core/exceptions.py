@@ -132,3 +132,19 @@ class DataCacheError(StorageError):
 class MarketDataDownloadError(DataProviderError):
     """Raised when a download operation fails."""
     pass
+
+class DataRepairError(DataProviderError):
+    """Raised when data repair fails."""
+    pass
+
+class CacheRefreshError(StorageError):
+    """Raised when cache refresh fails."""
+    pass
+
+class CacheValidationError(StorageError):
+    """Raised when cache validation fails."""
+    pass
+
+class DataAnomalyError(DataProviderError):
+    """Raised when a data anomaly is detected."""
+    pass

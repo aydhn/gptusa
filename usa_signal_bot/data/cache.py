@@ -1,7 +1,7 @@
 import json
 import time
 from pathlib import Path
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Any
 from usa_signal_bot.data.models import OHLCVBar
 from usa_signal_bot.utils.text_utils import clean_symbol_for_filename
 from usa_signal_bot.utils.file_utils import safe_mkdir
@@ -67,3 +67,74 @@ def split_bars_by_symbol(bars: List[OHLCVBar]) -> Dict[str, List[OHLCVBar]]:
             grouped[bar.symbol] = []
         grouped[bar.symbol].append(bar)
     return grouped
+
+def list_market_data_cache_files(data_root: Path) -> List[Path]:
+    """Lists all JSONL files in the market data cache directory."""
+    cache_dir = market_data_cache_dir(data_root)
+    if not cache_dir.exists():
+        return []
+    return list(cache_dir.glob("*.jsonl"))
+
+def cache_file_age_seconds(path: Path) -> Optional[float]:
+    """Returns the age of a cache file in seconds, or None if it doesn't exist."""
+    if not path.exists():
+        return None
+    return time.time() - path.stat().st_mtime
+
+def cache_file_size(path: Path) -> Optional[int]:
+    """Returns the size of a cache file in bytes, or None if it doesn't exist."""
+    if not path.exists():
+        return None
+    return path.stat().st_size
+
+def validate_cache_file(path: Path, expected_symbols: Optional[List[str]] = None) -> 'DataQualityReport':
+    """Validates the contents of a cache file and returns a DataQualityReport."""
+    from usa_signal_bot.data.quality import run_full_ohlcv_quality_validation
+    from usa_signal_bot.data.models import OHLCVBar
+    from usa_signal_bot.core.exceptions import DataCacheError
+
+    try:
+        raw_bars = read_ohlcv_bars_cache(path)
+        bars = [OHLCVBar(**b) for b in raw_bars]
+    except Exception as e:
+        raise DataCacheError(f"Corrupt cache file {path}: {e}")
+
+    # Extract provider and timeframe from filename
+    # e.g., mock_SPY_1h_start_end.jsonl
+    parts = path.name.split('_')
+    provider = parts[0] if len(parts) > 0 else "unknown"
+    timeframe = parts[2] if len(parts) > 2 else "unknown"
+
+    symbols_to_check = expected_symbols if expected_symbols else list(set(b.symbol for b in bars))
+    report, _ = run_full_ohlcv_quality_validation(bars, symbols_to_check, provider, timeframe)
+    return report
+
+def read_cached_ohlcv_bars(path: Path) -> List[OHLCVBar]:
+    """Reads a cache file and returns a list of OHLCVBar objects."""
+    raw_bars = read_ohlcv_bars_cache(path)
+    return [OHLCVBar(**b) for b in raw_bars]
+
+def write_repaired_cache(path: Path, bars: List[OHLCVBar]) -> Path:
+    """Writes repaired bars to cache."""
+    return write_ohlcv_bars_cache(path, bars)
+
+def cache_summary(data_root: Path) -> Dict[str, Any]:
+    """Returns a summary of the market data cache."""
+    files = list_market_data_cache_files(data_root)
+    count = len(files)
+    total_size = sum(cache_file_size(f) or 0 for f in files)
+
+    newest = None
+    oldest = None
+
+    if files:
+        sorted_files = sorted(files, key=lambda f: f.stat().st_mtime)
+        newest = sorted_files[-1].name
+        oldest = sorted_files[0].name
+
+    return {
+        "file_count": count,
+        "total_size_bytes": total_size,
+        "newest_file": newest,
+        "oldest_file": oldest
+    }
