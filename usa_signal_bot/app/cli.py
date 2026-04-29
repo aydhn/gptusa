@@ -409,7 +409,21 @@ def main() -> int:
     storage_list_parser.add_argument("--area", type=str, help="Specific storage area to list")
 
 
+
+    provider_info_parser = subparsers.add_parser("provider-info", help="Show provider info")
+    provider_list_parser = subparsers.add_parser("provider-list", help="List registered providers")
+    provider_check_parser = subparsers.add_parser("provider-check", help="Check provider status")
+
+    provider_plan_parser = subparsers.add_parser("provider-plan", help="Generate fetch plan")
+    provider_plan_parser.add_argument("--symbols", type=str, required=True, help="Comma-separated symbols")
+    provider_plan_parser.add_argument("--timeframe", type=str, required=True, help="Timeframe (e.g. 1d)")
+
+    provider_fetch_parser = subparsers.add_parser("provider-mock-fetch", help="Fetch mock data")
+    provider_fetch_parser.add_argument("--symbols", type=str, required=True, help="Comma-separated symbols")
+    provider_fetch_parser.add_argument("--timeframe", type=str, required=True, help="Timeframe (e.g. 1d)")
+
     audit_parser = subparsers.add_parser("audit-tail", help="Tail the audit log")
+
     audit_parser.add_argument("--limit", type=int, default=20, help="Number of events to display")
 
     args = parser.parse_args()
@@ -459,8 +473,20 @@ def main() -> int:
             sys.exit(handle_universe_list(context, args.asset_type, args.limit, args.include_inactive))
         elif args.command == "universe-build":
             sys.exit(handle_universe_build(context))
+
         elif args.command == "universe-summary":
             sys.exit(handle_universe_summary(context, args.json_out))
+        elif args.command == "provider-info":
+            sys.exit(handle_provider_info(context))
+        elif args.command == "provider-list":
+            sys.exit(handle_provider_list(context))
+        elif args.command == "provider-check":
+            sys.exit(handle_provider_check(context))
+        elif args.command == "provider-plan":
+            sys.exit(handle_provider_plan(context, args.symbols, args.timeframe))
+        elif args.command == "provider-mock-fetch":
+            sys.exit(handle_provider_mock_fetch(context, args.symbols, args.timeframe))
+
 
     except Exception as e:
         sys.exit(handle_cli_exception(e))
@@ -469,3 +495,99 @@ def main() -> int:
 
 if __name__ == "__main__":
     main()
+
+def handle_provider_info(context) -> int:
+    """Display data provider configuration and rules."""
+    p_cfg = context.config.providers
+    print("--- USA Signal Bot Provider Info ---")
+    print(f"Default Provider: {p_cfg.default_provider}")
+    print(f"Enabled Providers: {', '.join(p_cfg.enabled_providers)}")
+    print("\nSecurity and Constraints (Phase 7):")
+    print(f"  Allow Paid APIs: {p_cfg.allow_paid_providers}")
+    print(f"  Allow Web Scraping: {p_cfg.allow_scraping_providers}")
+    print(f"  Allow Broker Data: {p_cfg.allow_broker_data_providers}")
+    print("\nNote: In Phase 7, no real data is fetched from the internet.")
+    return 0
+
+def handle_provider_list(context) -> int:
+    """List registered data providers."""
+    from usa_signal_bot.data.provider_registry import create_default_provider_registry
+    registry = create_default_provider_registry()
+    print("--- USA Signal Bot Registered Providers ---")
+    caps = registry.list_capabilities()
+    if not caps:
+        print("No providers registered.")
+        return 0
+    for cap in caps:
+         print(f"- {cap.provider_name.upper()}")
+         print(f"  Free Only: {cap.free_only}")
+         print(f"  Allows Scraping: {cap.allows_scraping}")
+         print(f"  Requires API Key: {cap.requires_api_key}")
+         for note in cap.notes:
+              print(f"  Note: {note}")
+    return 0
+
+def handle_provider_check(context) -> int:
+    """Check provider status and guard compliance."""
+    from usa_signal_bot.data.provider_registry import create_default_provider_registry
+    registry = create_default_provider_registry()
+    print("--- Provider Check ---")
+    p_cfg = context.config.providers
+    provider_name = p_cfg.default_provider
+    try:
+         provider = registry.get(provider_name)
+         print(f"Provider '{provider_name}' loaded.")
+         provider.assert_free_provider()
+         provider.assert_no_scraping()
+         provider.assert_no_broker_routing()
+         print("All guard checks passed.")
+         status = provider.check_status()
+         print(f"Status: {'Available' if status.available else 'Unavailable'} - {status.message}")
+         return 0 if status.available else 1
+    except Exception as e:
+         print(f"Check failed: {e}")
+         return 1
+
+def handle_provider_plan(context, symbols_str: str, timeframe: str) -> int:
+    """Generate a mock fetch plan."""
+    from usa_signal_bot.data.provider_registry import create_default_provider_registry
+    from usa_signal_bot.data.models import MarketDataRequest
+    registry = create_default_provider_registry()
+    symbols = [s.strip() for s in symbols_str.split(",") if s.strip()]
+    provider = registry.get(context.config.providers.default_provider)
+    try:
+         req = MarketDataRequest(symbols=symbols, timeframe=timeframe, provider_name=provider.name)
+         plan = provider.build_fetch_plan(req)
+         print("--- Provider Fetch Plan ---")
+         print(f"Provider: {plan.provider_name}")
+         print(f"Symbols: {len(plan.symbols)}")
+         print(f"Timeframe: {plan.timeframe}")
+         print(f"Batch Count: {plan.batch_count}")
+         print(f"Estimated Requests: {plan.estimated_requests}")
+         return 0
+    except Exception as e:
+         print(f"Failed to build plan: {e}")
+         return 1
+
+def handle_provider_mock_fetch(context, symbols_str: str, timeframe: str) -> int:
+    """Perform a mock data fetch."""
+    from usa_signal_bot.data.provider_registry import create_default_provider_registry
+    from usa_signal_bot.data.models import MarketDataRequest
+    registry = create_default_provider_registry()
+    symbols = [s.strip() for s in symbols_str.split(",") if s.strip()]
+    provider = registry.get("mock")
+    try:
+         req = MarketDataRequest(symbols=symbols, timeframe=timeframe, provider_name=provider.name)
+         resp = provider.fetch_ohlcv(req)
+         print("--- Mock Data Fetch Result ---")
+         print("WARNING: This is deterministically generated fake data for testing interface.")
+         print("It is NOT real market data.\n")
+         print(f"Success: {resp.success}")
+         print(f"Provider: {resp.provider_name}")
+         print(f"Bars Returned: {resp.bar_count()}")
+         for bar in resp.bars:
+             print(f"  {bar.symbol} [{bar.timeframe}]: O:{bar.open} H:{bar.high} L:{bar.low} C:{bar.close} V:{bar.volume}")
+         return 0
+    except Exception as e:
+         print(f"Mock fetch failed: {e}")
+         return 1

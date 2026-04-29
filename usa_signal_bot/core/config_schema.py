@@ -108,6 +108,20 @@ class StorageConfig:
     default_json_indent: int = 2
     parquet_enabled: bool = False
 
+
+@dataclass
+class ProviderConfig:
+    default_provider: str = "mock"
+    enabled_providers: List[str] = field(default_factory=lambda: ["mock"])
+    allow_paid_providers: bool = False
+    allow_scraping_providers: bool = False
+    allow_broker_data_providers: bool = False
+    request_timeout_seconds: int = 30
+    max_symbols_per_batch: int = 50
+    min_seconds_between_requests: float = 1.0
+    cache_enabled: bool = True
+    cache_ttl_seconds: int = 86400
+
 @dataclass
 class AppConfig:
     project: ProjectConfig = field(default_factory=ProjectConfig)
@@ -123,3 +137,4 @@ class AppConfig:
     regime: RegimeConfig = field(default_factory=RegimeConfig)
     ml: MLConfig = field(default_factory=MLConfig)
     storage: StorageConfig = field(default_factory=StorageConfig)
+    providers: ProviderConfig = field(default_factory=ProviderConfig)

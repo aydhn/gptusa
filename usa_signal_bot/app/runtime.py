@@ -105,6 +105,7 @@ def initialize_runtime(config_dir: Optional[Path] = None) -> RuntimeContext:
     events_to_log = [
         create_event("RUNTIME_STARTED", "INFO", "Runtime initialization started.", "runtime", {"version": config.project.version}),
         create_event("CONFIG_VALIDATED", "INFO", "Configuration loaded and validated.", "runtime"),
+        create_event("PROVIDER_CONFIG_VALIDATED", "INFO", "Provider configuration verified.", "runtime"),
         create_event("SAFE_MODE_CONFIRMED", "INFO", "Safe mode constraints verified.", "security", context.as_summary_dict().get("safe_mode", {})),
         create_event("LOGGING_READY", "INFO", "Logging subsystem ready.", "runtime")
     ]

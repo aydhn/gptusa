@@ -92,3 +92,27 @@ class UniverseValidationError(UniverseError):
 class SymbolValidationError(UniverseError):
     """Exception raised when a symbol fails validation."""
     pass
+
+class DataProviderError(USASignalBotError):
+    pass
+
+class ProviderNotFoundError(DataProviderError):
+    pass
+
+class ProviderRegistrationError(DataProviderError):
+    pass
+
+class ProviderCapabilityError(DataProviderError):
+    pass
+
+class ProviderPolicyError(DataProviderError):
+    pass
+
+class ProviderRequestError(DataProviderError):
+    pass
+
+class ProviderFetchError(DataProviderError):
+    pass
+
+class ForbiddenProviderError(DataProviderError):
+    pass

@@ -85,3 +85,18 @@ class ReportFormat(str, Enum):
     JSON = "JSON"
     CSV = "CSV"
     HTML_DISABLED = "HTML_DISABLED"
+
+class DataProviderName(str, Enum):
+    MOCK = "MOCK"
+    YFINANCE_RESERVED = "YFINANCE_RESERVED"
+
+class DataFrequency(str, Enum):
+    DAILY = "DAILY"
+    INTRADAY = "INTRADAY"
+    WEEKLY = "WEEKLY"
+
+class ProviderAvailability(str, Enum):
+    AVAILABLE = "AVAILABLE"
+    UNAVAILABLE = "UNAVAILABLE"
+    RESERVED = "RESERVED"
+    DISABLED = "DISABLED"
