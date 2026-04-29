@@ -211,7 +211,8 @@ def run_health_checks(context) -> List[HealthCheckResult]:
         check_safe_mode_health(context),
         check_storage_health(context),
         check_universe_health(context),
-        check_universe_health(context)
+        check_universe_health(context),
+        check_provider_health(context)
     ]
 
 def health_results_to_dict(results: List[HealthCheckResult]) -> List[Dict]:
@@ -233,3 +234,72 @@ def assert_health_ok(results: List[HealthCheckResult]) -> None:
     if failed:
         msgs = [f"{r.name}: {r.message}" for r in failed]
         raise HealthCheckError(f"Health checks failed: {'; '.join(msgs)}")
+
+def check_provider_health(context) -> HealthCheckResult:
+    """Check data provider foundation health."""
+    try:
+        from usa_signal_bot.data.provider_registry import create_default_provider_registry
+        from usa_signal_bot.data.models import MarketDataRequest
+
+        # 1. Config check
+        if not hasattr(context.config, 'providers'):
+            return HealthCheckResult(
+                name="provider_foundation",
+                passed=False,
+                message="Error", details={"error": "providers config missing"}
+            )
+
+        p_cfg = context.config.providers
+        if p_cfg.default_provider != "mock":
+             return HealthCheckResult(
+                name="provider_foundation",
+                passed=False,
+                message="Error", details={"error": "default_provider is not mock in Phase 7"}
+            )
+
+        if p_cfg.allow_paid_providers or p_cfg.allow_scraping_providers or p_cfg.allow_broker_data_providers:
+            return HealthCheckResult(
+                name="provider_foundation",
+                passed=False,
+                message="Error", details={"error": "forbidden provider types are allowed in config"}
+            )
+
+        # 2. Registry check
+        registry = create_default_provider_registry()
+
+        # 3. Mock provider check
+        mock_provider = registry.get("mock")
+        status = mock_provider.check_status()
+        if not status.available:
+             return HealthCheckResult(
+                name="provider_foundation",
+                passed=False,
+                message="Error", details={"error": "mock provider is unavailable"}
+            )
+
+        # 4. Basic request test
+        req = MarketDataRequest(symbols=["SPY"], timeframe="1d", provider_name="mock")
+        resp = mock_provider.fetch_ohlcv(req)
+        if not resp.success or resp.bar_count() == 0:
+             return HealthCheckResult(
+                name="provider_foundation",
+                passed=False,
+                message="Error", details={"error": "mock provider failed fetch test"}
+            )
+
+        return HealthCheckResult(
+            name="provider_foundation",
+            passed=True,
+            message="Provider OK", details={
+                "default_provider": p_cfg.default_provider,
+                "registry_size": len(registry.list_names()),
+                "mock_fetch_test": "success"
+            }
+        )
+
+    except Exception as e:
+        return HealthCheckResult(
+            name="provider_foundation",
+            passed=False,
+            message="Error", details={"error": str(e)}
+        )

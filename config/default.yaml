@@ -90,3 +90,16 @@ storage:
   atomic_writes: true
   default_json_indent: 2
   parquet_enabled: false
+
+providers:
+  default_provider: "mock"
+  enabled_providers:
+    - "mock"
+  allow_paid_providers: false
+  allow_scraping_providers: false
+  allow_broker_data_providers: false
+  request_timeout_seconds: 30
+  max_symbols_per_batch: 50
+  min_seconds_between_requests: 1.0
+  cache_enabled: true
+  cache_ttl_seconds: 86400
