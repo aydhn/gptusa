@@ -322,6 +322,8 @@ def check_provider_health(context) -> HealthCheckResult:
         )
 
     except Exception as e:
+        import traceback
+        traceback.print_exc()
         return HealthCheckResult(
             name="provider_foundation",
             passed=False,
@@ -350,3 +352,53 @@ def check_cache_refresh_health(context) -> HealthCheckResult:
         return HealthCheckResult("Cache Refresh Config", True, "Cache Refresh config OK", details=summary)
     except Exception as e:
         return HealthCheckResult("Cache Refresh Config", False, f"Check failed: {e}")
+
+def check_multitimeframe_config_health(context) -> HealthCheckResult:
+    try:
+        if not hasattr(context.config, 'multi_timeframe'):
+            return HealthCheckResult(
+                name="Multi-Timeframe Config",
+                passed=False,
+                message="Error", details={"error": "multi_timeframe config missing"}
+            )
+
+        cfg = context.config.multi_timeframe
+        from usa_signal_bot.data.timeframes import validate_timeframe_for_yfinance
+
+        for tf in cfg.default_timeframes:
+            validate_timeframe_for_yfinance(tf)
+
+        return HealthCheckResult(
+            name="Multi-Timeframe Config",
+            passed=True,
+            message="Multi-Timeframe config OK",
+            details={"primary": cfg.primary_timeframe}
+        )
+    except Exception as e:
+        return HealthCheckResult(
+            name="Multi-Timeframe Config",
+            passed=False,
+            message="Error", details={"error": str(e)}
+        )
+
+def check_data_readiness_config_health(context) -> HealthCheckResult:
+    try:
+        if not hasattr(context.config, 'data_readiness'):
+            return HealthCheckResult(
+                name="Data Readiness Config",
+                passed=False,
+                message="Error", details={"error": "data_readiness config missing"}
+            )
+
+        return HealthCheckResult(
+            name="Data Readiness Config",
+            passed=True,
+            message="Data Readiness config OK",
+            details={}
+        )
+    except Exception as e:
+        return HealthCheckResult(
+            name="Data Readiness Config",
+            passed=False,
+            message="Error", details={"error": str(e)}
+        )

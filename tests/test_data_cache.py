@@ -112,3 +112,28 @@ def test_cache_summary(tmp_path):
     assert summary["file_count"] == 2
     assert summary["total_size_bytes"] == 11
     assert summary["newest_file"] == "b.jsonl"
+
+def test_list_cache_files_for_timeframe(tmp_path):
+    from usa_signal_bot.data.cache import list_cache_files_for_timeframe, market_data_cache_dir
+    d = market_data_cache_dir(tmp_path)
+    d.mkdir(parents=True, exist_ok=True)
+    (d / "yfinance_AAPL_1d.jsonl").touch()
+    (d / "yfinance_MSFT_1h.jsonl").touch()
+
+    files = list_cache_files_for_timeframe(tmp_path, "1d")
+    assert len(files) == 1
+    assert "AAPL" in files[0].name
+
+def test_market_data_cache_summary_by_timeframe(tmp_path):
+    from usa_signal_bot.data.cache import market_data_cache_summary_by_timeframe, market_data_cache_dir
+    d = market_data_cache_dir(tmp_path)
+    d.mkdir(parents=True, exist_ok=True)
+    (d / "yfinance_AAPL_1d.jsonl").touch()
+    (d / "yfinance_MSFT_1d.jsonl").touch()
+    (d / "yfinance_MSFT_1h.jsonl").touch()
+
+    summary = market_data_cache_summary_by_timeframe(tmp_path)
+    assert "1d" in summary
+    assert summary["1d"]["count"] == 2
+    assert "1h" in summary
+    assert summary["1h"]["count"] == 1

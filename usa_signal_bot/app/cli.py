@@ -454,6 +454,39 @@ def main() -> int:
 
     audit_parser.add_argument("--limit", type=int, default=20, help="Number of events to display")
 
+    # Multi-timeframe commands
+    mtf_plan_parser = subparsers.add_parser("data-mtf-plan", help="Build multi-timeframe download plan")
+    mtf_plan_parser.add_argument("--symbols", help="Comma-separated symbols")
+    mtf_plan_parser.add_argument("--timeframes", help="Comma-separated timeframes")
+    mtf_plan_parser.add_argument("--provider", default="yfinance", help="Provider name")
+    mtf_plan_parser.add_argument("--force", action="store_true", help="Force refresh")
+    mtf_plan_parser.add_argument("--no-cache", action="store_true", help="Bypass cache")
+
+    mtf_download_parser = subparsers.add_parser("data-mtf-download", help="Execute multi-timeframe download")
+    mtf_download_parser.add_argument("--symbols", help="Comma-separated symbols")
+    mtf_download_parser.add_argument("--timeframes", help="Comma-separated timeframes")
+    mtf_download_parser.add_argument("--provider", default="yfinance", help="Provider name")
+    mtf_download_parser.add_argument("--force", action="store_true", help="Force refresh")
+    mtf_download_parser.add_argument("--no-cache", action="store_true", help="Bypass cache")
+    mtf_download_parser.add_argument("--limit", type=int, help="Limit number of symbols")
+
+    mtf_universe_parser = subparsers.add_parser("data-mtf-universe", help="Download multi-timeframe data for a universe")
+    mtf_universe_parser.add_argument("--file", help="Path to universe file")
+    mtf_universe_parser.add_argument("--timeframes", help="Comma-separated timeframes")
+    mtf_universe_parser.add_argument("--provider", default="yfinance", help="Provider name")
+    mtf_universe_parser.add_argument("--force", action="store_true", help="Force refresh")
+    mtf_universe_parser.add_argument("--limit", type=int, help="Limit number of symbols")
+    mtf_universe_parser.add_argument("--asset-type", help="Filter by asset type (stock/etf)")
+
+    cov_report_parser = subparsers.add_parser("data-coverage-report", help="View data coverage report")
+    cov_report_parser.add_argument("--latest", action="store_true", help="Show latest report")
+    cov_report_parser.add_argument("--reports-dir", help="Custom reports directory")
+
+    readiness_parser = subparsers.add_parser("data-readiness-check", help="Check data readiness")
+    readiness_parser.add_argument("--symbols", help="Comma-separated symbols")
+    readiness_parser.add_argument("--timeframes", help="Comma-separated timeframes")
+    readiness_parser.add_argument("--from-cache", action="store_true", default=True, help="Check readiness from cache")
+
     args = parser.parse_args()
 
     if not args.command:
@@ -524,6 +557,16 @@ def main() -> int:
             sys.exit(handle_data_cache_info(context))
         elif args.command == "data-quality-check":
             sys.exit(handle_data_quality_check(context, args.cache_file, args.symbols, args.timeframe))
+        elif args.command == "data-mtf-plan":
+            sys.exit(handle_data_mtf_plan(context, args.symbols, args.timeframes, args.provider, args.force, args.no_cache))
+        elif args.command == "data-mtf-download":
+            sys.exit(handle_data_mtf_download(context, args.symbols, args.timeframes, args.provider, args.force, args.no_cache, getattr(args, 'limit', None)))
+        elif args.command == "data-mtf-universe":
+            sys.exit(handle_data_mtf_universe(context, args.file, args.timeframes, args.provider, args.force, getattr(args, 'limit', None), getattr(args, 'asset_type', None)))
+        elif args.command == "data-coverage-report":
+            sys.exit(handle_data_coverage_report(context, args.latest, getattr(args, 'reports_dir', None)))
+        elif args.command == "data-readiness-check":
+            sys.exit(handle_data_readiness_check(context, args.symbols, args.timeframes, getattr(args, 'from_cache', True)))
 
         # End of new handlers
         # Keep this to not break replace logic
@@ -1001,3 +1044,196 @@ def handle_data_validation_report(context, latest: bool, reports_dir: str) -> in
             print(f"  Could not read report: {e}")
 
     return 0
+
+def handle_data_mtf_plan(context, symbols_str: str, timeframes_str: str, provider: str, force: bool, no_cache: bool) -> int:
+    from usa_signal_bot.data.multitimeframe import MultiTimeframeDataRequest, parse_timeframe_list, build_timeframe_specs_from_list
+    from usa_signal_bot.data.refresh import build_multitimeframe_refresh_plan, multitimeframe_refresh_plan_to_text
+
+    print("--- Multi-Timeframe Data Plan ---")
+    symbols = [s.strip().upper() for s in symbols_str.split(",")] if symbols_str else []
+    if not symbols:
+        print("Error: --symbols required.")
+        return 1
+
+    tfs = parse_timeframe_list(timeframes_str)
+    specs = build_timeframe_specs_from_list(tfs)
+
+    req = MultiTimeframeDataRequest(
+        symbols=symbols,
+        provider_name=provider,
+        timeframe_specs=specs,
+        force_refresh=force,
+        use_cache=not no_cache
+    )
+
+    try:
+        ttl = context.config.cache_refresh.default_ttl_seconds
+        batch = context.config.providers.max_symbols_per_batch
+        plan = build_multitimeframe_refresh_plan(context.data_dir, req, ttl, batch)
+        print("\n" + multitimeframe_refresh_plan_to_text(plan))
+        return 0
+    except Exception as e:
+        print(f"Failed to build plan: {e}")
+        return 1
+
+def handle_data_mtf_download(context, symbols_str: str, timeframes_str: str, provider: str, force: bool, no_cache: bool, limit: int) -> int:
+    from usa_signal_bot.data.multitimeframe import parse_timeframe_list
+    from usa_signal_bot.data.pipeline import MultiTimeframeDataPipeline
+    from usa_signal_bot.data.readiness import readiness_report_to_text, DataReadinessCriteria
+    from usa_signal_bot.data.downloader import MarketDataDownloader
+    from usa_signal_bot.data.provider_registry import create_default_provider_registry
+    from usa_signal_bot.storage.file_store import LocalFileStore
+
+    print("--- Multi-Timeframe Data Download ---")
+    symbols = [s.strip().upper() for s in symbols_str.split(",")] if symbols_str else []
+    if not symbols:
+        print("Error: --symbols required.")
+        return 1
+
+    tfs = parse_timeframe_list(timeframes_str)
+
+    try:
+        registry = create_default_provider_registry(include_yfinance=context.config.providers.yfinance_enabled)
+        store = LocalFileStore(context.data_dir)
+        downloader = MarketDataDownloader(registry, store, context.data_dir)
+        pipeline = MultiTimeframeDataPipeline(downloader, context.data_dir, provider_name=provider)
+
+        cfg = context.config.data_readiness
+        criteria = DataReadinessCriteria(
+            min_ready_pair_ratio=cfg.min_ready_pair_ratio,
+            min_symbol_coverage_ratio=cfg.min_symbol_coverage_ratio,
+            require_primary_timeframe=cfg.require_primary_timeframe,
+            allow_partial_intraday=cfg.allow_partial_intraday,
+            max_error_count=cfg.max_error_count,
+            max_warning_ratio=cfg.max_warning_ratio
+        )
+
+        result, coverage, readiness = pipeline.run_for_symbols(
+            symbols, tfs, limit=limit, force_refresh=force, readiness_criteria=criteria
+        )
+
+        print(f"Status: {result.status.value}")
+        print(f"Total Bars: {result.total_bars}")
+        print("\n" + readiness_report_to_text(readiness))
+        return 0 if result.status.value != "FAILED" else 1
+    except Exception as e:
+        print(f"Execution failed: {e}")
+        return 1
+
+def handle_data_mtf_universe(context, file: str, timeframes_str: str, provider: str, force: bool, limit: int, asset_type: str) -> int:
+    from usa_signal_bot.data.multitimeframe import parse_timeframe_list
+    from usa_signal_bot.data.pipeline import MultiTimeframeDataPipeline
+    from usa_signal_bot.data.readiness import readiness_report_to_text, DataReadinessCriteria
+    from usa_signal_bot.data.downloader import MarketDataDownloader
+    from usa_signal_bot.data.provider_registry import create_default_provider_registry
+    from usa_signal_bot.storage.file_store import LocalFileStore
+    from usa_signal_bot.universe.loader import load_universe
+
+    print("--- Multi-Timeframe Universe Download ---")
+    tfs = parse_timeframe_list(timeframes_str)
+    u_file = file or context.config.universe.default_watchlist_file
+
+    try:
+        universe = load_universe(u_file)
+        print(f"Loaded universe with {len(universe.rows)} symbols.")
+        if limit:
+            print(f"Warning: Large universe downloads should be monitored. Limiting to {limit} symbols.")
+
+        registry = create_default_provider_registry(include_yfinance=context.config.providers.yfinance_enabled)
+        store = LocalFileStore(context.data_dir)
+        downloader = MarketDataDownloader(registry, store, context.data_dir)
+        pipeline = MultiTimeframeDataPipeline(downloader, context.data_dir, provider_name=provider)
+
+        cfg = context.config.data_readiness
+        criteria = DataReadinessCriteria(
+            min_ready_pair_ratio=cfg.min_ready_pair_ratio,
+            min_symbol_coverage_ratio=cfg.min_symbol_coverage_ratio,
+            require_primary_timeframe=cfg.require_primary_timeframe,
+            allow_partial_intraday=cfg.allow_partial_intraday,
+            max_error_count=cfg.max_error_count,
+            max_warning_ratio=cfg.max_warning_ratio
+        )
+
+        result, coverage, readiness = pipeline.run_for_universe(
+            universe, tfs, limit=limit, asset_type=asset_type, force_refresh=force, readiness_criteria=criteria
+        )
+
+        print(f"Status: {result.status.value}")
+        print("\n" + readiness_report_to_text(readiness))
+        return 0 if result.status.value != "FAILED" else 1
+    except Exception as e:
+        print(f"Execution failed: {e}")
+        return 1
+
+def handle_data_coverage_report(context, latest: bool, reports_dir: str) -> int:
+    from pathlib import Path
+    import json
+
+    print("--- Data Coverage Report ---")
+    d_root = Path(reports_dir) if reports_dir else context.data_dir / "reports" / "data_readiness"
+
+    if not d_root.exists():
+        print(f"Reports directory {d_root} not found.")
+        return 0
+
+    c_files = list(d_root.glob("coverage_*.json"))
+
+    if not c_files:
+        print("No coverage reports found.")
+        return 0
+
+    latest_c = sorted(c_files, key=lambda x: x.stat().st_mtime)[-1]
+    print(f"Latest Coverage Report: {latest_c.name}")
+    try:
+        with latest_c.open('r') as f:
+            data = json.load(f)
+            print(f"  Provider: {data.get('provider_name')}")
+            print(f"  Status: {data.get('status')}")
+            print(f"  Pairs: {data.get('ready_pairs')} ready, {data.get('partial_pairs')} partial, {data.get('empty_pairs')} empty")
+    except Exception as e:
+        print(f"  Could not read report: {e}")
+
+    return 0
+
+def handle_data_readiness_check(context, symbols_str: str, timeframes_str: str, from_cache: bool) -> int:
+    from usa_signal_bot.data.multitimeframe import parse_timeframe_list
+    from usa_signal_bot.data.readiness import readiness_report_to_text, DataReadinessCriteria, evaluate_readiness_from_coverage
+    from usa_signal_bot.data.coverage import calculate_coverage_report
+    from usa_signal_bot.data.cache import read_cached_bars_for_symbols_timeframe
+
+    print("--- Data Readiness Check ---")
+    symbols = [s.strip().upper() for s in symbols_str.split(",")] if symbols_str else []
+    if not symbols:
+        print("Error: --symbols required.")
+        return 1
+
+    tfs = parse_timeframe_list(timeframes_str)
+
+    if not from_cache:
+        print("Live readiness check not implemented yet. Use --from-cache.")
+        return 1
+
+    try:
+        bars_by_timeframe = {}
+        for tf in tfs:
+            bars_by_timeframe[tf] = read_cached_bars_for_symbols_timeframe(context.data_dir, symbols, tf)
+
+        coverage = calculate_coverage_report("yfinance", symbols, tfs, bars_by_timeframe)
+
+        cfg = context.config.data_readiness
+        criteria = DataReadinessCriteria(
+            min_ready_pair_ratio=cfg.min_ready_pair_ratio,
+            min_symbol_coverage_ratio=cfg.min_symbol_coverage_ratio,
+            require_primary_timeframe=cfg.require_primary_timeframe,
+            allow_partial_intraday=cfg.allow_partial_intraday,
+            max_error_count=cfg.max_error_count,
+            max_warning_ratio=cfg.max_warning_ratio
+        )
+
+        readiness = evaluate_readiness_from_coverage(coverage, criteria)
+        print("\n" + readiness_report_to_text(readiness))
+
+        return 0 if readiness.overall_status.value not in ["NOT_READY", "FAILED"] else 1
+    except Exception as e:
+        print(f"Execution failed: {e}")
+        return 1

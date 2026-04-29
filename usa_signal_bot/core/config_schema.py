@@ -165,6 +165,47 @@ class CacheRefreshConfig:
         if not self.enabled:
             raise ValueError("cache_refresh.enabled must be True")
 
+
+@dataclass
+class MultiTimeframeConfig:
+    enabled: bool = True
+    default_timeframes: List[str] = field(default_factory=lambda: ["1d", "1h", "15m"])
+    primary_timeframe: str = "1d"
+    confirmation_timeframes: List[str] = field(default_factory=lambda: ["1h"])
+    intraday_timeframes: List[str] = field(default_factory=lambda: ["15m"])
+    max_timeframes_per_run: int = 4
+    max_symbols_per_multitimeframe_run: int = 50
+
+    def __post_init__(self):
+        if not self.default_timeframes:
+            raise ValueError("default_timeframes cannot be empty")
+        if self.primary_timeframe not in self.default_timeframes:
+            raise ValueError("primary_timeframe must be in default_timeframes")
+        if self.max_timeframes_per_run <= 0:
+            raise ValueError("max_timeframes_per_run must be positive")
+        if self.max_symbols_per_multitimeframe_run <= 0:
+            raise ValueError("max_symbols_per_multitimeframe_run must be positive")
+
+@dataclass
+class DataReadinessConfig:
+    enabled: bool = True
+    min_ready_pair_ratio: float = 0.70
+    min_symbol_coverage_ratio: float = 0.70
+    require_primary_timeframe: bool = True
+    allow_partial_intraday: bool = True
+    max_error_count: int = 0
+    max_warning_ratio: float = 0.30
+    write_reports: bool = True
+
+    def __post_init__(self):
+        if not (0 <= self.min_ready_pair_ratio <= 1):
+            raise ValueError("min_ready_pair_ratio must be between 0 and 1")
+        if not (0 <= self.min_symbol_coverage_ratio <= 1):
+            raise ValueError("min_symbol_coverage_ratio must be between 0 and 1")
+        if self.max_error_count < 0:
+            raise ValueError("max_error_count cannot be negative")
+        if not (0 <= self.max_warning_ratio <= 1):
+            raise ValueError("max_warning_ratio must be between 0 and 1")
 @dataclass
 class AppConfig:
     project: ProjectConfig = field(default_factory=ProjectConfig)
@@ -183,3 +224,5 @@ class AppConfig:
     providers: ProviderConfig = field(default_factory=ProviderConfig)
     data_quality: DataQualityConfig = field(default_factory=DataQualityConfig)
     cache_refresh: CacheRefreshConfig = field(default_factory=CacheRefreshConfig)
+    multi_timeframe: MultiTimeframeConfig = field(default_factory=MultiTimeframeConfig)
+    data_readiness: DataReadinessConfig = field(default_factory=DataReadinessConfig)

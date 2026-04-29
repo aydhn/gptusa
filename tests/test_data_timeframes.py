@@ -44,3 +44,16 @@ def test_is_daily_or_higher_timeframe():
     assert is_daily_or_higher_timeframe("1h") is False
     assert is_daily_or_higher_timeframe("1d") is True
     assert is_daily_or_higher_timeframe("1wk") is True
+
+def test_is_intraday_timeframe():
+    from usa_signal_bot.data.timeframes import is_intraday_timeframe
+    assert is_intraday_timeframe("1h") is True
+    assert is_intraday_timeframe("15m") is True
+    assert is_intraday_timeframe("1d") is False
+    assert is_intraday_timeframe("1wk") is False
+
+def test_is_daily_or_higher_timeframe():
+    from usa_signal_bot.data.timeframes import is_daily_or_higher_timeframe
+    assert is_daily_or_higher_timeframe("1d") is True
+    assert is_daily_or_higher_timeframe("1wk") is True
+    assert is_daily_or_higher_timeframe("1h") is False

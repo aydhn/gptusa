@@ -35,3 +35,27 @@ cache_refresh:
   repair_cache_before_use: true
   max_cache_age_days_daily: 3
   max_cache_age_days_intraday: 1
+
+multi_timeframe:
+  enabled: true
+  default_timeframes:
+    - "1d"
+    - "1h"
+    - "15m"
+  primary_timeframe: "1d"
+  confirmation_timeframes:
+    - "1h"
+  intraday_timeframes:
+    - "15m"
+  max_timeframes_per_run: 4
+  max_symbols_per_multitimeframe_run: 50
+
+data_readiness:
+  enabled: true
+  min_ready_pair_ratio: 0.70
+  min_symbol_coverage_ratio: 0.70
+  require_primary_timeframe: true
+  allow_partial_intraday: true
+  max_error_count: 0
+  max_warning_ratio: 0.30
+  write_reports: true
