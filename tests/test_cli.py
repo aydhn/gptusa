@@ -4,7 +4,7 @@ import sys
 
 def test_universe_info_command():
     result = subprocess.run(
-        [sys.executable, "-m", "usa_signal_bot", "universe-info"],
+        ["python3", "-m", "usa_signal_bot", "universe-info"],
         capture_output=True,
         text=True
     )
@@ -13,7 +13,7 @@ def test_universe_info_command():
 
 def test_universe_validate_command():
     result = subprocess.run(
-        [sys.executable, "-m", "usa_signal_bot", "universe-validate"],
+        ["python3", "-m", "usa_signal_bot", "universe-validate"],
         capture_output=True,
         text=True
     )
@@ -22,7 +22,7 @@ def test_universe_validate_command():
 
 def test_universe_list_command():
     result = subprocess.run(
-        [sys.executable, "-m", "usa_signal_bot", "universe-list", "--limit", "2"],
+        ["python3", "-m", "usa_signal_bot", "universe-list", "--limit", "2"],
         capture_output=True,
         text=True
     )
@@ -31,7 +31,7 @@ def test_universe_list_command():
 
 def test_universe_build_command():
     result = subprocess.run(
-        [sys.executable, "-m", "usa_signal_bot", "universe-build"],
+        ["python3", "-m", "usa_signal_bot", "universe-build"],
         capture_output=True,
         text=True
     )
@@ -40,7 +40,7 @@ def test_universe_build_command():
 
 def test_universe_summary_command():
     result = subprocess.run(
-        [sys.executable, "-m", "usa_signal_bot", "universe-summary"],
+        ["python3", "-m", "usa_signal_bot", "universe-summary"],
         capture_output=True,
         text=True
     )
@@ -84,7 +84,7 @@ def test_provider_mock_fetch_command():
 
 def test_cli_data_provider_info():
     result = subprocess.run(
-        [sys.executable, "-m", "usa_signal_bot", "data-provider-info"],
+        ["python3", "-m", "usa_signal_bot", "data-provider-info"],
         capture_output=True,
         text=True
     )
@@ -93,7 +93,7 @@ def test_cli_data_provider_info():
 
 def test_cli_data_cache_info():
     result = subprocess.run(
-        [sys.executable, "-m", "usa_signal_bot", "data-cache-info"],
+        ["python3", "-m", "usa_signal_bot", "data-cache-info"],
         capture_output=True,
         text=True
     )
@@ -103,7 +103,7 @@ def test_cli_data_cache_info():
 def test_cli_data_download_mock():
     # Execute a download via the mock provider to avoid real network calls
     result = subprocess.run(
-        [sys.executable, "-m", "usa_signal_bot", "data-download", "--symbols", "AAPL", "--timeframe", "1d", "--provider", "mock"],
+        ["python3", "-m", "usa_signal_bot", "data-download", "--symbols", "AAPL", "--timeframe", "1d", "--provider", "mock"],
         capture_output=True,
         text=True
     )

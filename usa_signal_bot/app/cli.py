@@ -441,7 +441,6 @@ def main() -> int:
     data_download_universe_parser.add_argument("--provider", type=str, default="yfinance", help="Provider name")
     data_download_universe_parser.add_argument("--limit", type=int, default=20, help="Limit number of symbols")
     data_download_universe_parser.add_argument("--asset-type", type=str, choices=["stock", "etf"], help="Filter by asset type")
-    data_download_universe_parser.add_argument("--no-cache", action="store_true", help="Bypass reading/writing cache")
 
     data_cache_info_parser = subparsers.add_parser("data-cache-info", help="Show info about the market data cache")
 
