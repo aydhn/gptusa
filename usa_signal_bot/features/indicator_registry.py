@@ -60,10 +60,32 @@ def register_builtin_indicators(registry: IndicatorRegistry) -> IndicatorRegistr
         RollingHighIndicator,
         RollingLowIndicator
     )
+    from usa_signal_bot.features.trend_indicators import (
+        SMAIndicator,
+        EMAIndicator,
+        WMAIndicator,
+        DEMAIndicator,
+        TEMAIndicator,
+        MACDIndicator,
+        PriceDistanceToMAIndicator,
+        MASlopeIndicator,
+        MAAlignmentIndicator,
+        TrendStrengthBasicIndicator
+    )
     registry.register(CloseReturnIndicator())
     registry.register(CloseSMAIndicator())
     registry.register(CloseEMAIndicator())
     registry.register(VolumeSMAIndicator())
     registry.register(RollingHighIndicator())
     registry.register(RollingLowIndicator())
+    registry.register(SMAIndicator())
+    registry.register(EMAIndicator())
+    registry.register(WMAIndicator())
+    registry.register(DEMAIndicator())
+    registry.register(TEMAIndicator())
+    registry.register(MACDIndicator())
+    registry.register(PriceDistanceToMAIndicator())
+    registry.register(MASlopeIndicator())
+    registry.register(MAAlignmentIndicator())
+    registry.register(TrendStrengthBasicIndicator())
     return registry

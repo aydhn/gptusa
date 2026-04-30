@@ -1,10 +1,5 @@
 PyYAML
-pytest
-pyyaml
-yfinance
 pandas
-pyyaml
-pandas
-yfinance
 pytest
 pytest-mock
+yfinance

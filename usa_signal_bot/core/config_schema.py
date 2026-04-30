@@ -274,8 +274,38 @@ class UniverseRunsConfig:
     readiness_dir: str = "data/universe/readiness"
     keep_last_n_runs: int = 50
 
+
+@dataclass
+class TrendFeatureConfig:
+    enabled: bool = True
+    default_indicator_set: str = "basic_trend"
+    available_indicator_sets: List[str] = field(default_factory=lambda: ["basic_trend", "moving_average_trend", "macd_trend", "full_trend"])
+    default_ma_windows: List[int] = field(default_factory=lambda: [20, 50, 200])
+    default_macd_fast: int = 12
+    default_macd_slow: int = 26
+    default_macd_signal: int = 9
+    max_window: int = 500
+    allow_partial_trend_features: bool = True
+
+    def __post_init__(self):
+        if not self.available_indicator_sets:
+            raise ValueError("available_indicator_sets cannot be empty")
+        if self.default_indicator_set not in self.available_indicator_sets:
+            raise ValueError("default_indicator_set must be in available_indicator_sets")
+        if not self.default_ma_windows or not all(isinstance(x, int) and x > 0 for x in self.default_ma_windows):
+            raise ValueError("default_ma_windows must be a list of positive integers")
+        if self.max_window <= 0:
+            raise ValueError("max_window must be positive")
+        if any(w > self.max_window for w in self.default_ma_windows):
+            raise ValueError("Values in default_ma_windows cannot exceed max_window")
+        if self.default_macd_fast >= self.default_macd_slow:
+            raise ValueError("MACD fast must be less than slow")
+        if self.default_macd_signal <= 0:
+            raise ValueError("MACD signal must be positive")
+
 @dataclass
 class AppConfig:
+
     project: ProjectConfig = field(default_factory=ProjectConfig)
     runtime: RuntimeConfig = field(default_factory=RuntimeConfig)
     data: DataConfig = field(default_factory=DataConfig)
@@ -297,3 +327,4 @@ class AppConfig:
     active_universe: ActiveUniverseConfig = field(default_factory=ActiveUniverseConfig)
     universe_readiness_gate: UniverseReadinessGateConfig = field(default_factory=UniverseReadinessGateConfig)
     universe_runs: UniverseRunsConfig = field(default_factory=UniverseRunsConfig)
+    trend_features: TrendFeatureConfig = field(default_factory=TrendFeatureConfig)
