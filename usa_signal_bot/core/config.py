@@ -159,6 +159,18 @@ def load_app_config(config_dir: Optional[Path] = None) -> AppConfig:
         if "storage" in merged_cfg_dict:
             for k, v in merged_cfg_dict["storage"].items():
                 setattr(config.storage, k, v)
+        if "active_universe" in merged_cfg_dict:
+            for k, v in merged_cfg_dict["active_universe"].items():
+                setattr(config.active_universe, k, v)
+
+        if "universe_readiness_gate" in merged_cfg_dict:
+            for k, v in merged_cfg_dict["universe_readiness_gate"].items():
+                setattr(config.universe_readiness_gate, k, v)
+
+        if "universe_runs" in merged_cfg_dict:
+            for k, v in merged_cfg_dict["universe_runs"].items():
+                setattr(config.universe_runs, k, v)
+
 
 
         validate_config(config)
