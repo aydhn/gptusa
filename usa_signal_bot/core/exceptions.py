@@ -164,3 +164,21 @@ class DataReadinessError(USASignalBotError):
 class DataPipelineError(USASignalBotError):
     """Raised when there is an error in the data pipeline orchestration."""
     pass
+
+class UniverseSourceError(USASignalBotError):
+    pass
+
+class UniverseImportError(USASignalBotError):
+    pass
+
+class UniverseReconciliationError(USASignalBotError):
+    pass
+
+class UniverseSnapshotError(USASignalBotError):
+    pass
+
+class UniverseCatalogError(USASignalBotError):
+    pass
+
+class UniverseExportError(USASignalBotError):
+    pass

@@ -125,3 +125,73 @@ def test_data_mtf_plan_command_success(monkeypatch, tmp_path):
 
         assert e.value.code == 0
         mock.assert_called_once()
+
+def test_universe_sources_command():
+    result = subprocess.run(
+        [sys.executable, "-m", "usa_signal_bot", "universe-sources"],
+        capture_output=True,
+        text=True
+    )
+    assert result.returncode == 0
+    assert "USA Signal Bot Universe Sources" in result.stdout
+
+def test_universe_presets_command():
+    result = subprocess.run(
+        [sys.executable, "-m", "usa_signal_bot", "universe-presets"],
+        capture_output=True,
+        text=True
+    )
+    assert result.returncode == 0
+    assert "Universe Presets" in result.stdout
+
+def test_universe_catalog_command():
+    result = subprocess.run(
+        [sys.executable, "-m", "usa_signal_bot", "universe-catalog"],
+        capture_output=True,
+        text=True
+    )
+    assert result.returncode == 0
+    assert "Universe Catalog" in result.stdout
+
+def test_universe_expand_command():
+    result = subprocess.run(
+        [sys.executable, "-m", "usa_signal_bot", "universe-expand", "--max-symbols", "20", "--no-snapshot"],
+        capture_output=True,
+        text=True
+    )
+    assert result.returncode == 0
+    assert "Universe Expansion Result" in result.stdout
+
+def test_universe_snapshots_command():
+    result = subprocess.run(
+        [sys.executable, "-m", "usa_signal_bot", "universe-snapshots"],
+        capture_output=True,
+        text=True
+    )
+    assert result.returncode == 0
+    assert "Universe Snapshots" in result.stdout
+
+def test_universe_import_command(tmp_path):
+    # Create temp csv
+    import uuid
+    rand_name = f"test_import_{uuid.uuid4().hex[:8]}"
+    p = tmp_path / "test.csv"
+    with open(p, "w") as f:
+        f.write("symbol,asset_type\nAAPL,stock\n")
+
+    result = subprocess.run(
+        [sys.executable, "-m", "usa_signal_bot", "universe-import", "--file", str(p), "--name", rand_name],
+        capture_output=True,
+        text=True
+    )
+    assert result.returncode == 0
+    assert "Import successful!" in result.stdout
+
+def test_universe_export_command():
+    result = subprocess.run(
+        [sys.executable, "-m", "usa_signal_bot", "universe-export", "--format", "txt", "--active-only"],
+        capture_output=True,
+        text=True
+    )
+    assert result.returncode == 0
+    assert "Export successful:" in result.stdout

@@ -1,0 +1,26 @@
+symbol,asset_type,name,exchange,currency,active,sector,industry,source,notes
+AAPL,stock,Apple Inc,NASDAQ,USD,true,Technology,Consumer Electronics,preset,mega_cap
+MSFT,stock,Microsoft Corp,NASDAQ,USD,true,Technology,Software,preset,mega_cap
+NVDA,stock,NVIDIA Corp,NASDAQ,USD,true,Technology,Semiconductors,preset,mega_cap
+AMZN,stock,Amazon.com Inc,NASDAQ,USD,true,Consumer Cyclical,Internet Retail,preset,mega_cap
+META,stock,Meta Platforms Inc,NASDAQ,USD,true,Communication Services,Internet Content,preset,mega_cap
+GOOGL,stock,Alphabet Inc,NASDAQ,USD,true,Communication Services,Internet Content,preset,mega_cap
+GOOG,stock,Alphabet Inc,NASDAQ,USD,true,Communication Services,Internet Content,preset,mega_cap
+TSLA,stock,Tesla Inc,NASDAQ,USD,true,Consumer Cyclical,Auto Manufacturers,preset,mega_cap
+BRK-B,stock,Berkshire Hathaway Inc,NYSE,USD,true,Financial Services,Insurance,preset,mega_cap
+JPM,stock,JPMorgan Chase & Co,NYSE,USD,true,Financial Services,Banks,preset,mega_cap
+V,stock,Visa Inc,NYSE,USD,true,Financial Services,Credit Services,preset,mega_cap
+MA,stock,Mastercard Inc,NYSE,USD,true,Financial Services,Credit Services,preset,mega_cap
+UNH,stock,UnitedHealth Group Inc,NYSE,USD,true,Healthcare,Healthcare Plans,preset,mega_cap
+HD,stock,Home Depot Inc,NYSE,USD,true,Consumer Cyclical,Home Improvement Retail,preset,mega_cap
+PG,stock,Procter & Gamble Co,NYSE,USD,true,Consumer Defensive,Household & Personal Products,preset,mega_cap
+COST,stock,Costco Wholesale Corp,NASDAQ,USD,true,Consumer Defensive,Discount Stores,preset,mega_cap
+AVGO,stock,Broadcom Inc,NASDAQ,USD,true,Technology,Semiconductors,preset,mega_cap
+XOM,stock,Exxon Mobil Corp,NYSE,USD,true,Energy,Oil & Gas Integrated,preset,mega_cap
+JNJ,stock,Johnson & Johnson,NYSE,USD,true,Healthcare,Drug Manufacturers,preset,mega_cap
+WMT,stock,Walmart Inc,NYSE,USD,true,Consumer Defensive,Discount Stores,preset,mega_cap
+NFLX,stock,Netflix Inc,NASDAQ,USD,true,Communication Services,Entertainment,preset,mega_cap
+AMD,stock,Advanced Micro Devices Inc,NASDAQ,USD,true,Technology,Semiconductors,preset,mega_cap
+BAC,stock,Bank of America Corp,NYSE,USD,true,Financial Services,Banks,preset,mega_cap
+KO,stock,Coca-Cola Co,NYSE,USD,true,Consumer Defensive,Beverages,preset,mega_cap
+PEP,stock,PepsiCo Inc,NASDAQ,USD,true,Consumer Defensive,Beverages,preset,mega_cap

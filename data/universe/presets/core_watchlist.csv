@@ -1,0 +1,13 @@
+symbol,asset_type,name,exchange,currency,active,sector,industry,source,notes
+SPY,etf,SPDR S&P 500 ETF Trust,NYSEARCA,USD,true,,,preset,core_benchmark
+QQQ,etf,Invesco QQQ Trust,NASDAQ,USD,true,,,preset,core_benchmark
+IWM,etf,iShares Russell 2000 ETF,NYSEARCA,USD,true,,,preset,core_benchmark
+DIA,etf,SPDR Dow Jones Industrial Average ETF Trust,NYSEARCA,USD,true,,,preset,core_benchmark
+AAPL,stock,Apple Inc,NASDAQ,USD,true,Technology,Consumer Electronics,preset,core_mega_cap
+MSFT,stock,Microsoft Corp,NASDAQ,USD,true,Technology,Software,preset,core_mega_cap
+NVDA,stock,NVIDIA Corp,NASDAQ,USD,true,Technology,Semiconductors,preset,core_mega_cap
+AMZN,stock,Amazon.com Inc,NASDAQ,USD,true,Consumer Cyclical,Internet Retail,preset,core_mega_cap
+META,stock,Meta Platforms Inc,NASDAQ,USD,true,Communication Services,Internet Content,preset,core_mega_cap
+GOOGL,stock,Alphabet Inc,NASDAQ,USD,true,Communication Services,Internet Content,preset,core_mega_cap
+TSLA,stock,Tesla Inc,NASDAQ,USD,true,Consumer Cyclical,Auto Manufacturers,preset,core_mega_cap
+JPM,stock,JPMorgan Chase & Co,NYSE,USD,true,Financial Services,Banks,preset,core_mega_cap
