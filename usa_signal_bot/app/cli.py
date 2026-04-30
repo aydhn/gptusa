@@ -685,6 +685,25 @@ def main() -> int:
     parser_uni_export.add_argument("--active-only", action="store_true", help="Only export active symbols")
 
     subparsers.add_parser("universe-presets", help="List universe presets")
+    subparsers.add_parser("indicator-list", help="List available indicators")
+
+    parser_ind_info = subparsers.add_parser("indicator-info", help="Get information about an indicator")
+    parser_ind_info.add_argument("--name", required=True, help="Indicator name")
+
+    subparsers.add_parser("feature-store-info", help="Get information about the feature store")
+
+    parser_fcc = subparsers.add_parser("feature-compute-cache", help="Compute features from cache")
+    parser_fcc.add_argument("--symbols", help="Comma-separated symbols")
+    parser_fcc.add_argument("--timeframes", help="Comma-separated timeframes (default: 1d)", default="1d")
+    parser_fcc.add_argument("--indicators", help="Comma-separated indicators (default: from config)")
+    parser_fcc.add_argument("--provider", default="yfinance", help="Provider name")
+    parser_fcc.add_argument("--write", action="store_true", help="Write to storage")
+
+    parser_fv = subparsers.add_parser("feature-validate", help="Validate a feature output file")
+    parser_fv.add_argument("--file", required=True, help="Path to JSONL feature file")
+
+    subparsers.add_parser("feature-summary", help="Show summary of latest feature outputs")
+
 
     # Command: log-info
     subparsers.add_parser("log-info", help="Display logging info")
@@ -870,6 +889,19 @@ def main() -> int:
             sys.exit(handle_universe_export(context, args.snapshot_id, args.format, args.name, args.active_only))
         elif args.command == "universe-presets":
             sys.exit(handle_universe_presets(context))
+        elif args.command == "indicator-list":
+            sys.exit(handle_indicator_list(context))
+        elif args.command == "indicator-info":
+            sys.exit(handle_indicator_info(context, args.name))
+        elif args.command == "feature-store-info":
+            sys.exit(handle_feature_store_info(context))
+        elif args.command == "feature-compute-cache":
+            sys.exit(handle_feature_compute_cache(context, args.symbols, args.timeframes, args.indicators, args.provider, args.write))
+        elif args.command == "feature-validate":
+            sys.exit(handle_feature_validate(context, args.file))
+        elif args.command == "feature-summary":
+            sys.exit(handle_feature_summary(context))
+
         elif args.command == "log-info":
             handle_log_info(context)
 
@@ -1767,6 +1799,163 @@ def handle_universe_export(context, snapshot_id: str, format: str, name: str, ac
     except Exception as e:
         print(f"Export failed: {e}")
         return 1
+
+
+def handle_indicator_list(context) -> int:
+    from usa_signal_bot.features.indicator_registry import create_default_indicator_registry
+    print("--- Indicator Registry ---")
+    try:
+        registry = create_default_indicator_registry()
+        metadata_list = registry.list_metadata()
+        for m in sorted(metadata_list, key=lambda x: x.name):
+            print(f"[{m.category.value}] {m.name} (v{m.version}) - Min Bars: {m.min_bars}, Produces: {', '.join(m.produces)}")
+        return 0
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
+
+def handle_indicator_info(context, name: str) -> int:
+    from usa_signal_bot.features.indicator_registry import create_default_indicator_registry
+    from usa_signal_bot.features.indicator_metadata import metadata_summary_text
+    import json
+    from usa_signal_bot.features.indicator_params import parameter_schema_to_dict
+
+    try:
+        registry = create_default_indicator_registry()
+        if not registry.has(name):
+            print(f"Error: Indicator '{name}' not found.")
+            return 1
+
+        indicator = registry.get(name)
+        print("--- Indicator Information ---")
+        print(metadata_summary_text(indicator.metadata))
+        print("\nParameters Schema:")
+        schema_dict = parameter_schema_to_dict(indicator.parameter_schema)
+        print(json.dumps(schema_dict["parameters"], indent=2))
+        return 0
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
+
+def handle_feature_store_info(context) -> int:
+    from usa_signal_bot.features.feature_store import feature_store_summary
+    print("--- Feature Store Info ---")
+    try:
+        summary = feature_store_summary(context.data_dir)
+        for k, v in summary.items():
+            if k == "total_size_bytes":
+                print(f"  {k}: {v / 1024 / 1024:.2f} MB")
+            else:
+                print(f"  {k}: {v}")
+        return 0
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
+
+def handle_feature_compute_cache(context, symbols_str: str, timeframes_str: str, indicators_str: str, provider: str, write: bool) -> int:
+    from usa_signal_bot.features.engine import FeatureEngine
+    from usa_signal_bot.features.indicator_registry import create_default_indicator_registry
+    from usa_signal_bot.features.reporting import feature_computation_result_to_text, feature_output_metadata_to_text
+    from usa_signal_bot.features.validation import validate_feature_rows, feature_validation_report_to_text
+
+    print("--- Feature Compute from Cache ---")
+    symbols = [s.strip().upper() for s in symbols_str.split(",")] if symbols_str else []
+    if not symbols:
+        print("Error: --symbols is required")
+        return 1
+
+    timeframes = [t.strip() for t in timeframes_str.split(",")] if timeframes_str else ["1d"]
+    indicators = [i.strip() for i in indicators_str.split(",")] if indicators_str else context.config.features.default_indicators
+
+    try:
+        registry = create_default_indicator_registry()
+        engine = FeatureEngine(registry, context.data_dir)
+
+        print(f"Computing for {len(symbols)} symbols over {len(timeframes)} timeframes using {len(indicators)} indicators...")
+
+        res = engine.compute_from_cache(symbols, timeframes, indicators, provider_name=provider)
+
+        print("\n" + feature_computation_result_to_text(res))
+
+        if res.feature_rows:
+            val_report = validate_feature_rows(res.feature_rows, res.produced_features)
+            print("\n" + feature_validation_report_to_text(val_report))
+        else:
+            print("\nError: No feature rows generated. Have you downloaded data for these symbols?")
+            return 1
+
+        if write and res.is_successful():
+            from usa_signal_bot.core.enums import FeatureStorageFormat
+            fmt = FeatureStorageFormat(context.config.features.default_storage_format.upper())
+            meta = engine.write_result(res, fmt)
+            print("\n" + feature_output_metadata_to_text(meta))
+
+        return 0 if res.is_successful() else 1
+    except Exception as e:
+        print(f"Execution failed: {e}")
+        return 1
+
+def handle_feature_validate(context, file_path_str: str) -> int:
+    from usa_signal_bot.features.feature_store import read_feature_rows_jsonl
+    from usa_signal_bot.features.output_contract import FeatureRow
+    from usa_signal_bot.features.validation import validate_feature_rows, feature_validation_report_to_text
+    from pathlib import Path
+
+    print("--- Feature Output Validation ---")
+    if not file_path_str:
+        print("Error: --file is required")
+        return 1
+
+    path = Path(file_path_str)
+    if not path.exists():
+        print(f"Error: File {path} does not exist")
+        return 1
+
+    try:
+        raw_rows = read_feature_rows_jsonl(path)
+        rows = [FeatureRow(**r) for r in raw_rows]
+
+        if not rows:
+            print("Error: File is empty")
+            return 1
+
+        produced_features = list(rows[0].features.keys())
+
+        val_report = validate_feature_rows(rows, produced_features)
+        print("\n" + feature_validation_report_to_text(val_report))
+        return 0 if val_report.status.value != "INVALID" else 1
+    except Exception as e:
+        print(f"Validation failed: {e}")
+        return 1
+
+def handle_feature_summary(context) -> int:
+    from usa_signal_bot.features.feature_store import list_feature_outputs, feature_store_dir
+    import json
+    print("--- Feature Outputs Summary ---")
+    try:
+        d = feature_store_dir(context.data_dir)
+        meta_files = sorted(list(d.glob("*_meta.json")), key=lambda x: x.stat().st_mtime, reverse=True)
+
+        if not meta_files:
+            print("No feature metadata files found.")
+            return 0
+
+        print(f"Found {len(meta_files)} metadata files. Showing latest 5:\n")
+
+        for f in meta_files[:5]:
+            try:
+                with open(f, "r") as mf:
+                    meta = json.load(mf)
+                print(f"[{meta.get('created_at_utc')}] Output ID: {meta.get('output_id')}")
+                print(f"  Symbols: {len(meta.get('symbols', []))}, Indicators: {len(meta.get('indicators', []))}")
+                print(f"  Rows: {meta.get('row_count')}, Provider: {meta.get('provider_name')}")
+            except Exception:
+                print(f"  [Error reading metadata file {f.name}]")
+        return 0
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
+
 
 def handle_universe_presets(context) -> int:
     from usa_signal_bot.universe.presets import list_preset_files, load_preset_universe

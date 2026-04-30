@@ -242,3 +242,35 @@ class UniverseRunStep(str, Enum):
     READINESS_REPORT = "READINESS_REPORT"
     READINESS_GATE = "READINESS_GATE"
     WRITE_OUTPUTS = "WRITE_OUTPUTS"
+
+class IndicatorCategory(str, Enum):
+    PRICE = "PRICE"
+    VOLUME = "VOLUME"
+    TREND = "TREND"
+    MOMENTUM = "MOMENTUM"
+    VOLATILITY = "VOLATILITY"
+    BREADTH = "BREADTH"
+    REGIME = "REGIME"
+    CUSTOM = "CUSTOM"
+
+class IndicatorOutputType(str, Enum):
+    SERIES = "SERIES"
+    SCALAR = "SCALAR"
+    MULTI_SERIES = "MULTI_SERIES"
+
+class FeatureComputationStatus(str, Enum):
+    NOT_STARTED = "NOT_STARTED"
+    RUNNING = "RUNNING"
+    COMPLETED = "COMPLETED"
+    PARTIAL_SUCCESS = "PARTIAL_SUCCESS"
+    FAILED = "FAILED"
+
+class FeatureValidationStatus(str, Enum):
+    VALID = "VALID"
+    WARNING = "WARNING"
+    INVALID = "INVALID"
+    EMPTY = "EMPTY"
+
+class FeatureStorageFormat(str, Enum):
+    JSONL = "JSONL"
+    CSV = "CSV"

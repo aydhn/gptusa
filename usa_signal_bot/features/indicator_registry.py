@@ -1,0 +1,69 @@
+from typing import List, Dict
+
+from usa_signal_bot.features.indicator_interface import Indicator
+from usa_signal_bot.features.indicator_metadata import IndicatorMetadata, validate_indicator_metadata
+from usa_signal_bot.features.indicator_params import validate_parameter_schema
+from usa_signal_bot.core.enums import IndicatorCategory
+from usa_signal_bot.core.exceptions import IndicatorRegistrationError, IndicatorError
+
+class IndicatorRegistry:
+    def __init__(self):
+        self._indicators: Dict[str, Indicator] = {}
+
+    def register(self, indicator: Indicator) -> None:
+        name = indicator.metadata.name
+        if name in self._indicators:
+            raise IndicatorRegistrationError(f"Indicator '{name}' is already registered")
+
+        validate_indicator_metadata(indicator.metadata)
+        validate_parameter_schema(indicator.parameter_schema)
+
+        self._indicators[name] = indicator
+
+    def get(self, name: str) -> Indicator:
+        if name not in self._indicators:
+            raise IndicatorError(f"Indicator '{name}' not found in registry")
+        return self._indicators[name]
+
+    def has(self, name: str) -> bool:
+        return name in self._indicators
+
+    def unregister(self, name: str) -> None:
+        if name in self._indicators:
+            del self._indicators[name]
+
+    def list_names(self) -> List[str]:
+        return list(self._indicators.keys())
+
+    def list_metadata(self) -> List[IndicatorMetadata]:
+        return [ind.metadata for ind in self._indicators.values()]
+
+    def list_by_category(self, category: IndicatorCategory) -> List[Indicator]:
+        return [ind for ind in self._indicators.values() if ind.metadata.category == category]
+
+    def validate_all(self) -> None:
+        for ind in self._indicators.values():
+            validate_indicator_metadata(ind.metadata)
+            validate_parameter_schema(ind.parameter_schema)
+
+def create_default_indicator_registry() -> IndicatorRegistry:
+    registry = IndicatorRegistry()
+    register_builtin_indicators(registry)
+    return registry
+
+def register_builtin_indicators(registry: IndicatorRegistry) -> IndicatorRegistry:
+    from usa_signal_bot.features.builtins_basic import (
+        CloseReturnIndicator,
+        CloseSMAIndicator,
+        CloseEMAIndicator,
+        VolumeSMAIndicator,
+        RollingHighIndicator,
+        RollingLowIndicator
+    )
+    registry.register(CloseReturnIndicator())
+    registry.register(CloseSMAIndicator())
+    registry.register(CloseEMAIndicator())
+    registry.register(VolumeSMAIndicator())
+    registry.register(RollingHighIndicator())
+    registry.register(RollingLowIndicator())
+    return registry
