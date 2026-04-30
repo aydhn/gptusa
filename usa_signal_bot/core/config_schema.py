@@ -58,6 +58,45 @@ class UniverseConfig:
     symbol_max_length: int = 15
     default_currency: str = "USD"
     snapshot_file: str = "data/universe/default_universe.csv"
+    imports_dir: str = "data/universe/imports"
+    snapshots_dir: str = "data/universe/snapshots"
+    catalog_dir: str = "data/universe/catalog"
+    presets_dir: str = "data/universe/presets"
+    exports_dir: str = "data/universe/exports"
+    active_snapshot_file: str = "data/universe/catalog/active_snapshot.json"
+    default_conflict_resolution: str = "prefer_complete_metadata"
+    max_import_file_size_mb: int = 25
+    allow_reserved_external_sources: bool = False
+
+    def __post_init__(self):
+        if not self.imports_dir:
+            raise ValueError("imports_dir cannot be empty")
+        if not self.snapshots_dir:
+            raise ValueError("snapshots_dir cannot be empty")
+        if not self.catalog_dir:
+            raise ValueError("catalog_dir cannot be empty")
+        if not self.presets_dir:
+            raise ValueError("presets_dir cannot be empty")
+        if not self.exports_dir:
+            raise ValueError("exports_dir cannot be empty")
+        if not self.active_snapshot_file:
+            raise ValueError("active_snapshot_file cannot be empty")
+
+        valid_resolutions = ["first_wins", "last_wins", "prefer_active", "prefer_complete_metadata", "error_on_conflict"]
+        if self.default_conflict_resolution.lower() not in valid_resolutions:
+            raise ValueError(f"default_conflict_resolution must be one of {valid_resolutions}")
+
+        if self.max_import_file_size_mb <= 0:
+            raise ValueError("max_import_file_size_mb must be positive")
+
+        if self.allow_reserved_external_sources:
+             raise ValueError("allow_reserved_external_sources must be False in this phase")
+
+        if not self.include_stocks and not self.include_etfs:
+            raise ValueError("Both include_stocks and include_etfs cannot be False")
+
+        if self.symbol_max_length <= 1:
+            raise ValueError("symbol_max_length must be greater than 1")
 
 @dataclass
 class PaperConfig:

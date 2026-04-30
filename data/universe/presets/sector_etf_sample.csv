@@ -1,0 +1,12 @@
+symbol,asset_type,name,exchange,currency,active,sector,industry,source,notes
+XLB,etf,Materials Select Sector SPDR,NYSEARCA,USD,true,Materials,Broad Sector,preset,sector_etf
+XLC,etf,Communication Services Select Sector SPDR,NYSEARCA,USD,true,Communication Services,Broad Sector,preset,sector_etf
+XLE,etf,Energy Select Sector SPDR,NYSEARCA,USD,true,Energy,Broad Sector,preset,sector_etf
+XLF,etf,Financial Select Sector SPDR,NYSEARCA,USD,true,Financial Services,Broad Sector,preset,sector_etf
+XLI,etf,Industrial Select Sector SPDR,NYSEARCA,USD,true,Industrials,Broad Sector,preset,sector_etf
+XLK,etf,Technology Select Sector SPDR,NYSEARCA,USD,true,Technology,Broad Sector,preset,sector_etf
+XLP,etf,Consumer Staples Select Sector SPDR,NYSEARCA,USD,true,Consumer Defensive,Broad Sector,preset,sector_etf
+XLRE,etf,Real Estate Select Sector SPDR,NYSEARCA,USD,true,Real Estate,Broad Sector,preset,sector_etf
+XLU,etf,Utilities Select Sector SPDR,NYSEARCA,USD,true,Utilities,Broad Sector,preset,sector_etf
+XLV,etf,Health Care Select Sector SPDR,NYSEARCA,USD,true,Healthcare,Broad Sector,preset,sector_etf
+XLY,etf,Consumer Discretionary Select Sector SPDR,NYSEARCA,USD,true,Consumer Cyclical,Broad Sector,preset,sector_etf

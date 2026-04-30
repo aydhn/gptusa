@@ -1,0 +1,14 @@
+symbol,asset_type,name,exchange,currency,active,sector,industry,source,notes
+SPY,etf,SPDR S&P 500 ETF Trust,NYSEARCA,USD,true,Broad Market,Large Cap,preset,index_etf
+QQQ,etf,Invesco QQQ Trust,NASDAQ,USD,true,Broad Market,Large Cap Growth,preset,index_etf
+IWM,etf,iShares Russell 2000 ETF,NYSEARCA,USD,true,Broad Market,Small Cap,preset,index_etf
+DIA,etf,SPDR Dow Jones Industrial Average ETF,NYSEARCA,USD,true,Broad Market,Large Cap,preset,index_etf
+VTI,etf,Vanguard Total Stock Market ETF,NYSEARCA,USD,true,Broad Market,Total Market,preset,index_etf
+IVV,etf,iShares Core S&P 500 ETF,NYSEARCA,USD,true,Broad Market,Large Cap,preset,index_etf
+VOO,etf,Vanguard S&P 500 ETF,NYSEARCA,USD,true,Broad Market,Large Cap,preset,index_etf
+RSP,etf,Invesco S&P 500 Equal Weight ETF,NYSEARCA,USD,true,Broad Market,Large Cap,preset,index_etf
+SCHD,etf,Schwab US Dividend Equity ETF,NYSEARCA,USD,true,Broad Market,Dividend Focus,preset,index_etf
+TLT,etf,iShares 20+ Year Treasury Bond ETF,NASDAQ,USD,true,Fixed Income,Long Term Treasury,preset,index_etf
+SHY,etf,iShares 1-3 Year Treasury Bond ETF,NASDAQ,USD,true,Fixed Income,Short Term Treasury,preset,index_etf
+HYG,etf,iShares iBoxx $ High Yield Corporate Bond ETF,NYSEARCA,USD,true,Fixed Income,High Yield Corporate,preset,index_etf
+LQD,etf,iShares iBoxx $ Investment Grade Corporate Bond ETF,NYSEARCA,USD,true,Fixed Income,Investment Grade Corporate,preset,index_etf

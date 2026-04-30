@@ -381,6 +381,38 @@ def main() -> int:
 
     # Command: health
     subparsers.add_parser("health", help="Run system health checks")
+    subparsers.add_parser("universe-sources", help="List universe sources")
+
+    parser_uni_import = subparsers.add_parser("universe-import", help="Import a local CSV as a custom universe")
+    parser_uni_import.add_argument("--file", required=True, help="Path to the CSV file")
+    parser_uni_import.add_argument("--name", help="Optional name for the imported universe")
+    parser_uni_import.add_argument("--overwrite", action="store_true", help="Overwrite existing file if present")
+
+    parser_uni_expand = subparsers.add_parser("universe-expand", help="Expand the universe from sources")
+    parser_uni_expand.add_argument("--name", default="expanded_universe", help="Name of the expanded universe")
+    parser_uni_expand.add_argument("--include-layers", help="Comma-separated layers to include")
+    parser_uni_expand.add_argument("--exclude-layers", help="Comma-separated layers to exclude")
+    parser_uni_expand.add_argument("--include-stocks", type=bool, default=True, help="Include stocks")
+    parser_uni_expand.add_argument("--include-etfs", type=bool, default=True, help="Include ETFs")
+    parser_uni_expand.add_argument("--include-inactive", action="store_true", help="Include inactive symbols")
+    parser_uni_expand.add_argument("--max-symbols", type=int, help="Max symbols to include")
+    parser_uni_expand.add_argument("--conflict-resolution", default="prefer_complete_metadata", help="Conflict resolution strategy")
+    parser_uni_expand.add_argument("--no-snapshot", action="store_true", help="Skip creating a snapshot")
+
+    subparsers.add_parser("universe-snapshots", help="List universe snapshots")
+
+    parser_uni_activate = subparsers.add_parser("universe-activate-snapshot", help="Activate a snapshot")
+    parser_uni_activate.add_argument("--snapshot-id", required=True, help="Snapshot ID to activate")
+
+    subparsers.add_parser("universe-catalog", help="Show universe catalog")
+
+    parser_uni_export = subparsers.add_parser("universe-export", help="Export a universe snapshot")
+    parser_uni_export.add_argument("--snapshot-id", help="Snapshot ID to export")
+    parser_uni_export.add_argument("--format", choices=["csv", "json", "txt"], default="csv", help="Export format")
+    parser_uni_export.add_argument("--name", help="Name of the export file")
+    parser_uni_export.add_argument("--active-only", action="store_true", help="Only export active symbols")
+
+    subparsers.add_parser("universe-presets", help="List universe presets")
 
     # Command: log-info
     subparsers.add_parser("log-info", help="Display logging info")
@@ -515,6 +547,22 @@ def main() -> int:
             handle_check_env(context)
         elif args.command == "health":
             sys.exit(handle_health(context))
+        elif args.command == "universe-sources":
+            sys.exit(handle_universe_sources(context))
+        elif args.command == "universe-import":
+            sys.exit(handle_universe_import(context, args.file, args.name, args.overwrite))
+        elif args.command == "universe-expand":
+            sys.exit(handle_universe_expand(context, args.name, args.include_layers, args.exclude_layers, args.include_stocks, args.include_etfs, args.include_inactive, args.max_symbols, args.conflict_resolution, args.no_snapshot))
+        elif args.command == "universe-snapshots":
+            sys.exit(handle_universe_snapshots(context))
+        elif args.command == "universe-activate-snapshot":
+            sys.exit(handle_universe_activate_snapshot(context, args.snapshot_id))
+        elif args.command == "universe-catalog":
+            sys.exit(handle_universe_catalog(context))
+        elif args.command == "universe-export":
+            sys.exit(handle_universe_export(context, args.snapshot_id, args.format, args.name, args.active_only))
+        elif args.command == "universe-presets":
+            sys.exit(handle_universe_presets(context))
         elif args.command == "log-info":
             handle_log_info(context)
 
@@ -1237,3 +1285,179 @@ def handle_data_readiness_check(context, symbols_str: str, timeframes_str: str, 
     except Exception as e:
         print(f"Execution failed: {e}")
         return 1
+
+def handle_universe_sources(context) -> int:
+    from usa_signal_bot.universe.sources import default_universe_sources
+    print("--- USA Signal Bot Universe Sources ---")
+    sources = default_universe_sources(context.data_dir)
+    for src in sources:
+        status = "Active" if src.enabled else "Disabled"
+        print(f"[{src.layer.value if hasattr(src.layer, 'value') else str(src.layer)}] {src.name} - {status}")
+        if src.path:
+            print(f"  Path: {src.path}")
+    print("\nNote: RESERVED_EXTERNAL sources are currently disabled.")
+    return 0
+
+def handle_universe_import(context, file: str, name: str, overwrite: bool) -> int:
+    from usa_signal_bot.universe.importer import import_universe_csv
+    from pathlib import Path
+
+    print("--- Universe Import ---")
+    try:
+        dest_dir = context.project_root / context.config.universe.imports_dir
+        dest_path = import_universe_csv(
+            source_path=Path(file),
+            destination_dir=dest_dir,
+            source_name=name,
+            overwrite=overwrite
+        )
+        print(f"Import successful! Saved to: {dest_path}")
+        return 0
+    except Exception as e:
+        print(f"Import failed: {e}")
+        return 1
+
+def handle_universe_expand(context, name: str, include_layers: str, exclude_layers: str, include_stocks: bool, include_etfs: bool, include_inactive: bool, max_symbols: int, conflict_resolution: str, no_snapshot: bool) -> int:
+    from usa_signal_bot.universe.expansion import UniverseExpansionRequest, expand_universe, expansion_result_to_text
+    from usa_signal_bot.universe.sources import default_universe_sources
+    from usa_signal_bot.core.enums import UniverseLayer, UniverseConflictResolution
+
+    print("--- Universe Expand ---")
+
+    try:
+        inc_layers = [UniverseLayer(l.strip().upper()) for l in include_layers.split(",")] if include_layers else None
+        exc_layers = [UniverseLayer(l.strip().upper()) for l in exclude_layers.split(",")] if exclude_layers else None
+        resolution = UniverseConflictResolution(conflict_resolution.upper())
+
+        req = UniverseExpansionRequest(
+            name=name,
+            sources=default_universe_sources(context.data_dir),
+            include_layers=inc_layers,
+            exclude_layers=exc_layers,
+            include_stocks=include_stocks,
+            include_etfs=include_etfs,
+            include_inactive=include_inactive,
+            max_symbols=max_symbols,
+            conflict_resolution=resolution,
+            write_snapshot=not no_snapshot
+        )
+
+        res = expand_universe(req, context.data_dir)
+        print("\n" + expansion_result_to_text(res))
+
+        return 0 if res.success else 1
+    except Exception as e:
+        print(f"Expansion failed: {e}")
+        return 1
+
+def handle_universe_snapshots(context) -> int:
+    from usa_signal_bot.universe.snapshots import list_universe_snapshots, get_latest_active_snapshot
+    print("--- Universe Snapshots ---")
+
+    active_snap = get_latest_active_snapshot(context.data_dir)
+    snapshots = list_universe_snapshots(context.data_dir)
+
+    if not snapshots:
+        print("No snapshots found.")
+        return 0
+
+    for s in snapshots:
+        marker = " (ACTIVE)" if active_snap and active_snap.snapshot_id == s.snapshot_id else ""
+        print(f"[{s.status.value if hasattr(s.status, 'value') else str(s.status)}] {s.snapshot_id} - {s.name}{marker}")
+        print(f"  Symbols: {s.symbol_count} ({s.active_symbol_count} active)")
+        print(f"  Created: {s.created_at_utc}")
+
+    return 0
+
+def handle_universe_activate_snapshot(context, snapshot_id: str) -> int:
+    from usa_signal_bot.universe.snapshots import mark_snapshot_active
+    print(f"--- Activating Snapshot: {snapshot_id} ---")
+    try:
+        mark_snapshot_active(context.data_dir, snapshot_id)
+        print("Snapshot activated successfully.")
+        return 0
+    except Exception as e:
+        print(f"Failed to activate snapshot: {e}")
+        return 1
+
+def handle_universe_catalog(context) -> int:
+    from usa_signal_bot.universe.catalog import build_universe_catalog, catalog_to_text
+    print("--- Universe Catalog ---")
+    try:
+        cat = build_universe_catalog(context.data_dir)
+        print("\n" + catalog_to_text(cat))
+        return 0
+    except Exception as e:
+        print(f"Failed to build catalog: {e}")
+        return 1
+
+def handle_universe_export(context, snapshot_id: str, format: str, name: str, active_only: bool) -> int:
+    from usa_signal_bot.universe.export import export_universe_csv, export_universe_json, export_symbols_txt, export_symbols_json, build_export_path
+    from usa_signal_bot.universe.snapshots import get_latest_active_snapshot, read_universe_snapshot, build_snapshot_paths
+    from usa_signal_bot.universe.loader import load_universe_csv, load_default_watchlist
+
+    print("--- Universe Export ---")
+    try:
+        universe = None
+        if snapshot_id:
+            paths = build_snapshot_paths(context.data_dir, snapshot_id)
+            if paths["universe"].exists():
+                res = load_universe_csv(paths["universe"])
+                universe = res.universe
+        else:
+            active_snap = get_latest_active_snapshot(context.data_dir)
+            if active_snap:
+                 paths = build_snapshot_paths(context.data_dir, active_snap.snapshot_id)
+                 if paths["universe"].exists():
+                     res = load_universe_csv(paths["universe"])
+                     universe = res.universe
+            else:
+                 print("No active snapshot found. Exporting default watchlist instead.")
+                 res = load_default_watchlist(context.data_dir)
+                 universe = res.universe
+
+        if not universe:
+            print("Failed to load universe for export.")
+            return 1
+
+        name = name or universe.name or "export"
+        format = format.lower()
+
+        path = build_export_path(context.data_dir, name, format)
+
+        if format == "csv":
+            export_universe_csv(universe, path)
+        elif format == "json":
+            if active_only: # For symbols json
+                export_symbols_json(universe, path, active_only)
+            else:
+                export_universe_json(universe, path)
+        elif format == "txt":
+            export_symbols_txt(universe, path, active_only)
+        else:
+            print(f"Unsupported format: {format}")
+            return 1
+
+        print(f"Export successful: {path}")
+        return 0
+    except Exception as e:
+        print(f"Export failed: {e}")
+        return 1
+
+def handle_universe_presets(context) -> int:
+    from usa_signal_bot.universe.presets import list_preset_files, load_preset_universe
+    print("--- Universe Presets ---")
+
+    presets = list_preset_files(context.data_dir)
+    if not presets:
+        print("No presets found.")
+        return 0
+
+    for p in presets:
+        try:
+            res = load_preset_universe(context.data_dir, p.stem)
+            print(f"[{p.stem}] - {res.valid_count} symbols")
+        except Exception as e:
+             print(f"[{p.stem}] - Error loading: {e}")
+
+    return 0

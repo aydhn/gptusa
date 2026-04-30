@@ -202,7 +202,43 @@ def check_storage_health(context) -> HealthCheckResult:
     except Exception as e:
         return HealthCheckResult(name="Storage Check", passed=False, message=f"Storage check failed: {e}")
 
+
+def check_extended_universe_health(context) -> HealthCheckResult:
+    try:
+        cfg = context.config.universe
+
+        # Check directories
+        dirs_to_check = [
+            context.project_root / cfg.imports_dir,
+            context.project_root / cfg.snapshots_dir,
+            context.project_root / cfg.catalog_dir,
+            context.project_root / cfg.presets_dir,
+            context.project_root / cfg.exports_dir
+        ]
+
+        for d in dirs_to_check:
+            d.mkdir(parents=True, exist_ok=True)
+            if not d.exists() or not d.is_dir():
+                return HealthCheckResult("Extended Universe Check", False, f"Directory failed: {d}")
+
+        # Check reserved sources
+        if cfg.allow_reserved_external_sources:
+             return HealthCheckResult("Extended Universe Check", False, "allow_reserved_external_sources must be false")
+
+        # Optional: check if preset CSVs exist, catalog buildable (just a light check)
+        from usa_signal_bot.universe.presets import list_preset_files
+        list_preset_files(context.data_dir)
+
+        from usa_signal_bot.universe.catalog import build_universe_catalog
+        build_universe_catalog(context.data_dir)
+
+        return HealthCheckResult("Extended Universe Check", True, "Extended Universe configuration OK")
+
+    except Exception as e:
+        return HealthCheckResult("Extended Universe Check", False, f"Extended Universe check failed: {e}")
+
 def run_health_checks(context) -> List[HealthCheckResult]:
+
     """Runs all health checks and returns the results."""
     return [
         check_config_health(context),
@@ -211,12 +247,11 @@ def run_health_checks(context) -> List[HealthCheckResult]:
         check_safe_mode_health(context),
         check_storage_health(context),
         check_universe_health(context),
-        check_universe_health(context),
+        check_extended_universe_health(context),
         check_market_data_cache_health(context),
         check_provider_health(context),
         check_data_quality_config_health(context),
-        check_cache_refresh_health(context),
-        check_market_data_cache_health(context)
+        check_cache_refresh_health(context)
     ]
 
 def health_results_to_dict(results: List[HealthCheckResult]) -> List[Dict]:
