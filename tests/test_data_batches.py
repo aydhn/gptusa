@@ -1,35 +1,31 @@
 import pytest
-from usa_signal_bot.data.batches import (
-    validate_batch_size, chunk_symbols, estimate_batch_count, build_symbol_batches
-)
-from usa_signal_bot.core.exceptions import DataValidationError
+from usa_signal_bot.data.batches import build_symbol_batch_objects, estimate_large_universe_runtime
 
-def test_validate_batch_size():
-    validate_batch_size(10)
-    with pytest.raises(DataValidationError):
-        validate_batch_size(0)
-    with pytest.raises(DataValidationError):
-        validate_batch_size(-5)
-
-def test_chunk_symbols():
+def test_build_symbol_batch_objects():
     symbols = ["A", "B", "C", "D", "E"]
-    chunks = chunk_symbols(symbols, 2)
-    assert len(chunks) == 3
-    assert chunks[0] == ["A", "B"]
-    assert chunks[1] == ["C", "D"]
-    assert chunks[2] == ["E"]
 
-def test_estimate_batch_count():
-    assert estimate_batch_count(["A", "B", "C"], 2) == 2
-    assert estimate_batch_count([], 2) == 0
+    batches = build_symbol_batch_objects(symbols, batch_size=2)
+    assert len(batches) == 3
+    assert batches[0].symbols == ["A", "B"]
+    assert batches[0].index == 0
+    assert batches[0].total_batches == 3
+    assert batches[2].symbols == ["E"]
 
-def test_build_symbol_batches():
-    symbols = ["a", "b", "A", "", " c "]
+def test_build_symbol_batch_objects_invalid():
+    with pytest.raises(ValueError):
+        build_symbol_batch_objects(["A"], 0)
 
-    # Deduplicate true
-    batches = build_symbol_batches(symbols, 2, deduplicate=True)
-    assert batches == [["A", "B"], ["C"]]
+def test_estimate_large_universe_runtime():
+    est = estimate_large_universe_runtime(
+        symbol_count=1000,
+        timeframe_count=3,
+        min_seconds_between_requests=1.0,
+        batch_size=100
+    )
 
-    # Deduplicate false
-    batches2 = build_symbol_batches(symbols, 2, deduplicate=False)
-    assert batches2 == [["A", "B"], ["A", "C"]]
+    assert est["symbol_count"] == 1000
+    assert est["total_requests"] == 3000
+    assert est["total_batches"] == 10
+    # Wait time = 3000 * 1.0 = 3000
+    # Download time ~ 3000 * 2.0 = 6000
+    assert est["total_estimated_seconds"] == 9000

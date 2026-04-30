@@ -182,3 +182,19 @@ class UniverseCatalogError(USASignalBotError):
 
 class UniverseExportError(USASignalBotError):
     pass
+
+
+class ActiveUniverseError(UniverseError):
+    pass
+
+class ActiveUniverseResolutionError(ActiveUniverseError):
+    pass
+
+class UniverseReadinessGateError(USASignalBotError):
+    pass
+
+class UniverseDataRunError(USASignalBotError):
+    pass
+
+class ActiveUniversePipelineError(USASignalBotError):
+    pass

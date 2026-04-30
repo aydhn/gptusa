@@ -1,7 +1,7 @@
 """Data classes representing the configuration schema."""
 
 from dataclasses import dataclass, field
-from typing import List
+from typing import List, Optional, Dict, Any
 
 @dataclass
 class ProjectConfig:
@@ -245,6 +245,35 @@ class DataReadinessConfig:
             raise ValueError("max_error_count cannot be negative")
         if not (0 <= self.max_warning_ratio <= 1):
             raise ValueError("max_warning_ratio must be between 0 and 1")
+
+@dataclass
+class ActiveUniverseConfig:
+    enabled: bool = True
+    prefer_active_snapshot: bool = True
+    fallback_to_latest_snapshot: bool = True
+    fallback_to_watchlist: bool = True
+    max_symbols_per_run: int = 200
+    default_asset_type_filter: Optional[str] = None
+    write_resolution_report: bool = True
+
+@dataclass
+class UniverseReadinessGateConfig:
+    enabled: bool = True
+    min_symbol_score: float = 70.0
+    min_required_timeframes: int = 1
+    required_primary_timeframe: str = "1d"
+    allow_partial_symbols: bool = True
+    min_eligible_symbol_ratio: float = 0.60
+    max_failed_symbol_ratio: float = 0.30
+    write_eligible_outputs: bool = True
+
+@dataclass
+class UniverseRunsConfig:
+    enabled: bool = True
+    runs_dir: str = "data/universe/runs"
+    readiness_dir: str = "data/universe/readiness"
+    keep_last_n_runs: int = 50
+
 @dataclass
 class AppConfig:
     project: ProjectConfig = field(default_factory=ProjectConfig)
@@ -265,3 +294,6 @@ class AppConfig:
     cache_refresh: CacheRefreshConfig = field(default_factory=CacheRefreshConfig)
     multi_timeframe: MultiTimeframeConfig = field(default_factory=MultiTimeframeConfig)
     data_readiness: DataReadinessConfig = field(default_factory=DataReadinessConfig)
+    active_universe: ActiveUniverseConfig = field(default_factory=ActiveUniverseConfig)
+    universe_readiness_gate: UniverseReadinessGateConfig = field(default_factory=UniverseReadinessGateConfig)
+    universe_runs: UniverseRunsConfig = field(default_factory=UniverseRunsConfig)

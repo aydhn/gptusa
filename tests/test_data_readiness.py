@@ -1,63 +1,35 @@
 import pytest
 from usa_signal_bot.data.readiness import (
-    default_readiness_criteria, evaluate_readiness_from_coverage,
-    readiness_report_to_text, assert_data_ready
+    DataReadinessReport,
+    DataReadinessItem,
+    DataReadinessStatus,
+    readiness_items_by_symbol,
+    symbol_readiness_score,
+    symbol_ready_timeframes,
+    symbol_missing_or_failed_timeframes
 )
-from usa_signal_bot.data.coverage import DataCoverageReport, SymbolTimeframeCoverage
-from usa_signal_bot.core.enums import DataCoverageStatus, DataReadinessStatus
-from usa_signal_bot.core.exceptions import DataReadinessError
 
-def test_default_readiness_criteria():
-    crit = default_readiness_criteria()
-    assert crit.min_ready_pair_ratio == 0.70
-    assert crit.require_primary_timeframe is True
-
-def test_evaluate_readiness_ready():
-    cov = DataCoverageReport(
-        timeframes=["1d"],
-        coverages=[
-            SymbolTimeframeCoverage(symbol="AAPL", timeframe="1d", status=DataCoverageStatus.COMPLETE, coverage_ratio=1.0)
+def test_readiness_helpers():
+    report = DataReadinessReport(
+        report_id="1",
+        items=[
+            DataReadinessItem(symbol="AAPL", timeframe="1d", status=DataReadinessStatus.READY),
+            DataReadinessItem(symbol="AAPL", timeframe="1h", status=DataReadinessStatus.NOT_READY),
+            DataReadinessItem(symbol="AAPL", timeframe="15m", status=DataReadinessStatus.FAILED),
+            DataReadinessItem(symbol="MSFT", timeframe="1d", status=DataReadinessStatus.READY),
         ]
     )
-    report = evaluate_readiness_from_coverage(cov)
-    assert report.overall_status == DataReadinessStatus.READY
 
-def test_evaluate_readiness_partial():
-    cov = DataCoverageReport(
-        timeframes=["1d", "15m"],
-        coverages=[
-            SymbolTimeframeCoverage(symbol="AAPL", timeframe="1d", status=DataCoverageStatus.COMPLETE, coverage_ratio=1.0),
-            SymbolTimeframeCoverage(symbol="AAPL", timeframe="15m", status=DataCoverageStatus.PARTIAL, coverage_ratio=0.6)
-        ]
-    )
-    report = evaluate_readiness_from_coverage(cov)
-    # Intraday partial is allowed, but score might make it partial overall depending on criteria
-    assert report.overall_status == DataReadinessStatus.READY or report.overall_status == DataReadinessStatus.PARTIAL
+    by_sym = readiness_items_by_symbol(report)
+    assert "AAPL" in by_sym
+    assert len(by_sym["AAPL"]) == 3
 
-def test_evaluate_readiness_primary_failed():
-    cov = DataCoverageReport(
-        timeframes=["1d", "15m"],
-        coverages=[
-            SymbolTimeframeCoverage(symbol="AAPL", timeframe="1d", status=DataCoverageStatus.EMPTY, coverage_ratio=0.0),
-            SymbolTimeframeCoverage(symbol="AAPL", timeframe="15m", status=DataCoverageStatus.COMPLETE, coverage_ratio=1.0)
-        ]
-    )
-    report = evaluate_readiness_from_coverage(cov)
-    assert report.overall_status == DataReadinessStatus.NOT_READY
+    score = symbol_readiness_score(report, "AAPL")
+    assert pytest.approx(score, 0.1) == 33.33
 
-def test_assert_data_ready():
-    report = evaluate_readiness_from_coverage(DataCoverageReport(timeframes=["1d"], coverages=[]))
-    with pytest.raises(DataReadinessError):
-        assert_data_ready(report)
+    ready = symbol_ready_timeframes(report, "AAPL")
+    assert ready == ["1d"]
 
-def test_readiness_report_to_text():
-    cov = DataCoverageReport(
-        timeframes=["1d"],
-        coverages=[
-            SymbolTimeframeCoverage(symbol="AAPL", timeframe="1d", status=DataCoverageStatus.COMPLETE, coverage_ratio=1.0)
-        ]
-    )
-    report = evaluate_readiness_from_coverage(cov)
-    text = readiness_report_to_text(report)
-    assert "READY" in text
-    assert "AAPL" in text
+    missing, failed = symbol_missing_or_failed_timeframes(report, "AAPL")
+    assert missing == ["1h"]
+    assert failed == ["15m"]

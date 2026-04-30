@@ -153,3 +153,28 @@ def assert_data_ready(report: DataReadinessReport) -> None:
     from ..core.exceptions import DataReadinessError
     if report.overall_status in [DataReadinessStatus.NOT_READY, DataReadinessStatus.FAILED]:
         raise DataReadinessError(f"Data is not ready. Status: {report.overall_status.value}. Blocking reasons: {report.blocking_reasons}")
+
+def readiness_items_by_symbol(report: DataReadinessReport) -> dict[str, list[DataReadinessItem]]:
+    result = {}
+    for item in report.items:
+        if item.symbol not in result:
+            result[item.symbol] = []
+        result[item.symbol].append(item)
+    return result
+
+def symbol_readiness_score(report: DataReadinessReport, symbol: str) -> float:
+    items = [i for i in report.items if i.symbol == symbol]
+    if not items:
+        return 0.0
+
+    ready_count = sum(1 for i in items if i.status == DataReadinessStatus.READY)
+    return (ready_count / len(items)) * 100.0
+
+def symbol_ready_timeframes(report: DataReadinessReport, symbol: str) -> list[str]:
+    return [i.timeframe for i in report.items if i.symbol == symbol and i.status == DataReadinessStatus.READY]
+
+def symbol_missing_or_failed_timeframes(report: DataReadinessReport, symbol: str) -> tuple[list[str], list[str]]:
+    items = [i for i in report.items if i.symbol == symbol]
+    missing = [i.timeframe for i in items if i.status in (DataReadinessStatus.NOT_READY, DataReadinessStatus.UNKNOWN)]
+    failed = [i.timeframe for i in items if i.status == DataReadinessStatus.FAILED]
+    return missing, failed

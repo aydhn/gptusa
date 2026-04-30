@@ -24,7 +24,7 @@ def handle_universe_info(context) -> int:
     print(f"Default Currency  : {context.config.universe.default_currency}")
     return 0
 
-def handle_universe_validate(context, file_path: str = None) -> int:
+def handle_universe_validate(context, file_path: str = "") -> int:
     from pathlib import Path
     from usa_signal_bot.universe.validator import validate_universe_csv_file
     from usa_signal_bot.universe.reporting import validation_report_to_text
@@ -42,7 +42,7 @@ def handle_universe_validate(context, file_path: str = None) -> int:
 
     return 0 if report.passed else 1
 
-def handle_universe_list(context, asset_type: str = None, limit: int = None, include_inactive: bool = False) -> int:
+def handle_universe_list(context, asset_type: str = "", limit: int = 0, include_inactive: bool = False) -> int:
     from usa_signal_bot.universe.loader import load_default_watchlist
 
     try:
@@ -324,7 +324,7 @@ def handle_storage_check(context) -> int:
         print(f"Storage check failed: {e}")
         return 1
 
-def handle_storage_list(context, area: str = None) -> int:
+def handle_storage_list(context, area: str = "") -> int:
     """Lists files in the storage system."""
     from usa_signal_bot.storage.file_store import LocalFileStore
     from usa_signal_bot.storage.paths import StorageArea
@@ -355,6 +355,278 @@ def handle_storage_list(context, area: str = None) -> int:
     except Exception as e:
         print(f"Error listing storage: {e}")
         return 1
+
+
+def handle_active_universe_info(context) -> int:
+    from usa_signal_bot.universe.active import resolve_active_universe, active_universe_resolution_to_text
+
+    try:
+        res = resolve_active_universe(
+            data_root=context.data_dir,
+            fallback_to_watchlist=context.config.active_universe.fallback_to_watchlist
+        )
+        print(active_universe_resolution_to_text(res))
+        return 0
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
+
+def handle_active_universe_symbols(context, limit: int = 0, asset_type: str = "", include_inactive: bool = False) -> int:
+    from usa_signal_bot.universe.active import resolve_active_universe
+
+    try:
+        res = resolve_active_universe(
+            data_root=context.data_dir,
+            fallback_to_watchlist=context.config.active_universe.fallback_to_watchlist
+        )
+
+        symbols = res.universe.symbols if include_inactive else res.universe.get_active_symbols()
+        if symbols and isinstance(symbols[0], str): symbols = [s for s in res.universe.symbols if s.symbol in symbols] if not include_inactive else res.universe.symbols
+
+        if asset_type:
+            at_lower = asset_type.lower()
+            symbols = [s for s in symbols if hasattr(s, "asset_type") and (s.asset_type.value.lower() if hasattr(s.asset_type, 'value') else str(s.asset_type).lower()) == at_lower]
+
+        print(f"Active Universe Symbols ({len(symbols)} found)")
+        print("-" * 50)
+
+        display_limit = limit if limit and limit > 0 else len(symbols)
+        for sym in symbols[:display_limit]:
+            status = "ACTIVE" if hasattr(sym, "active") and sym.active else "INACTIVE"
+            at = sym.asset_type.value if hasattr(sym.asset_type, 'value') else str(sym.asset_type)
+            print(f"{sym.symbol:10} | {at:5} | {status:8} | {sym.name or 'N/A'}")
+
+        if len(symbols) > display_limit:
+            print(f"... and {len(symbols) - display_limit} more symbols")
+
+        return 0
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
+
+def handle_active_universe_plan(context, timeframes_str: str = "", provider: str = "yfinance", limit: int = 0, asset_type: str = "", force: bool = False, no_cache: bool = False) -> int:
+    from usa_signal_bot.universe.active import resolve_active_universe
+    from usa_signal_bot.data.multitimeframe import MultiTimeframeDataRequest, MultiTimeframeDataPipeline
+    from usa_signal_bot.data.provider_registry import create_default_provider_registry
+    from usa_signal_bot.data.downloader import MarketDataDownloader
+
+    try:
+        res = resolve_active_universe(
+            data_root=context.data_dir,
+            fallback_to_watchlist=context.config.active_universe.fallback_to_watchlist
+        )
+
+        timeframes = [t.strip() for t in timeframes_str.split(",")] if timeframes_str else context.config.multi_timeframe.default_timeframes
+
+        active_symbols = res.universe.get_active_symbols()
+        if asset_type:
+            at_lower = asset_type.lower()
+            active_symbols = [s for s in active_symbols if hasattr(s, "asset_type") and (s.asset_type.value.lower() if hasattr(s.asset_type, 'value') else str(s.asset_type).lower()) == at_lower]
+
+        symbols = [s.symbol if hasattr(s, 'symbol') else str(s) for s in active_symbols]
+        if limit and limit > 0:
+            symbols = symbols[:limit]
+
+        registry = create_default_provider_registry(include_yfinance=context.config.providers.yfinance_enabled)
+        downloader = MarketDataDownloader(registry, context.data_dir)
+        pipeline = MultiTimeframeDataPipeline(downloader, context.data_dir, provider)
+
+        print(f"Planning data refresh for {len(symbols)} symbols from active universe across {len(timeframes)} timeframes...")
+
+        cached_bars = pipeline.collect_cached_bars_for_timeframes(symbols, timeframes)
+
+        from usa_signal_bot.data.refresh import build_cache_refresh_plan
+        from usa_signal_bot.data.models import CacheRefreshRequest
+
+        req = CacheRefreshRequest(
+            provider_name=provider,
+            symbols=symbols,
+            timeframes=timeframes,
+            force_refresh=force,
+            use_cache=not no_cache,
+            ttl_seconds=context.config.cache_refresh.default_ttl_seconds
+        )
+
+        from usa_signal_bot.data.refresh import build_cache_refresh_plan
+        plan = build_cache_refresh_plan(req, cached_bars)
+
+        from usa_signal_bot.data.refresh import cache_refresh_plan_to_text
+        print(cache_refresh_plan_to_text(plan))
+
+        return 0
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
+
+def handle_active_universe_download(context, timeframes_str: str = "", provider: str = "yfinance", limit: int = 0, asset_type: str = "", force: bool = False, no_cache: bool = False) -> int:
+    from usa_signal_bot.data.active_universe_pipeline import ActiveUniverseDataPipeline, ActiveUniversePipelineRequest, active_pipeline_result_to_text
+    from usa_signal_bot.universe.readiness_gate import UniverseReadinessGateCriteria
+    from usa_signal_bot.data.multitimeframe import MultiTimeframeDataPipeline
+    from usa_signal_bot.data.provider_registry import create_default_provider_registry
+    from usa_signal_bot.data.downloader import MarketDataDownloader
+
+    try:
+        registry = create_default_provider_registry(include_yfinance=context.config.providers.yfinance_enabled)
+        downloader = MarketDataDownloader(registry, context.data_dir)
+        mtf_pipeline = MultiTimeframeDataPipeline(downloader, context.data_dir, provider)
+
+        pipeline = ActiveUniverseDataPipeline(mtf_pipeline, context.data_dir)
+
+        timeframes = [t.strip() for t in timeframes_str.split(",")] if timeframes_str else context.config.multi_timeframe.default_timeframes
+
+        max_symbols = limit if limit and limit > 0 else context.config.active_universe.max_symbols_per_run
+
+        criteria = UniverseReadinessGateCriteria(
+            min_symbol_score=context.config.universe_readiness_gate.min_symbol_score,
+            min_required_timeframes=context.config.universe_readiness_gate.min_required_timeframes,
+            required_primary_timeframe=context.config.universe_readiness_gate.required_primary_timeframe,
+            allow_partial_symbols=context.config.universe_readiness_gate.allow_partial_symbols,
+            min_eligible_symbol_ratio=context.config.universe_readiness_gate.min_eligible_symbol_ratio,
+            max_failed_symbol_ratio=context.config.universe_readiness_gate.max_failed_symbol_ratio
+        )
+
+        req = ActiveUniversePipelineRequest(
+            provider_name=provider,
+            timeframes=timeframes,
+            asset_type=asset_type,
+            max_symbols=max_symbols,
+            force_refresh=force,
+            use_cache=not no_cache,
+            fallback_to_watchlist=context.config.active_universe.fallback_to_watchlist,
+            readiness_criteria=criteria,
+            write_reports=True,
+            write_eligible_outputs=True
+        )
+
+        print(f"Starting active universe data download pipeline...")
+        print(f"Provider: {provider}, Timeframes: {timeframes}, Max Symbols: {max_symbols}")
+
+        result = pipeline.run(req)
+
+        print(active_pipeline_result_to_text(result))
+
+        return 0 if result.success else 1
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
+
+def handle_active_universe_readiness(context, latest_run: bool, from_cache: bool) -> int:
+    from usa_signal_bot.universe.readiness_gate import UniverseReadinessGateReport, universe_readiness_gate_report_to_text
+    import json
+
+    try:
+        gate_path = None
+
+        if latest_run:
+            from usa_signal_bot.data.universe_runs import get_latest_universe_data_run, build_universe_run_dir
+            run = get_latest_universe_data_run(context.data_dir)
+            if run:
+                run_dir = build_universe_run_dir(context.data_dir, run.run_id)
+                gate_path = run_dir / "gate_report.json"
+
+        if gate_path and gate_path.exists():
+            with open(gate_path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+
+            from usa_signal_bot.core.enums import UniverseReadinessGateStatus, SymbolReadinessStatus
+            from usa_signal_bot.universe.readiness_gate import SymbolReadinessDecision
+
+            report = UniverseReadinessGateReport(
+                report_id=data["report_id"],
+                created_at_utc=data["created_at_utc"],
+                universe_name=data["universe_name"],
+                total_symbols=data["total_symbols"],
+                eligible_symbols=data["eligible_symbols"],
+                partial_symbols=data["partial_symbols"],
+                ineligible_symbols=data["ineligible_symbols"],
+                missing_data_symbols=data["missing_data_symbols"],
+                failed_validation_symbols=data["failed_validation_symbols"],
+                eligible_symbol_ratio=data["eligible_symbol_ratio"],
+                failed_symbol_ratio=data["failed_symbol_ratio"],
+                status=UniverseReadinessGateStatus(data["status"]),
+                decisions=[
+                    SymbolReadinessDecision(
+                        symbol=d["symbol"],
+                        status=SymbolReadinessStatus(d["status"]),
+                        score=d["score"],
+                        ready_timeframes=d["ready_timeframes"],
+                        missing_timeframes=d["missing_timeframes"],
+                        failed_timeframes=d["failed_timeframes"],
+                        reasons=d["reasons"]
+                    ) for d in data["decisions"]
+                ],
+                blocking_reasons=data.get("blocking_reasons", []),
+                warnings=data.get("warnings", [])
+            )
+
+            print(universe_readiness_gate_report_to_text(report))
+            return 0
+        else:
+            print("No latest run gate report found. Please run active-universe-download first.")
+            return 1
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
+
+def handle_active_universe_runs(context) -> int:
+    from usa_signal_bot.data.universe_runs import list_universe_data_runs
+
+    try:
+        runs = list_universe_data_runs(context.data_dir)
+        print(f"Universe Data Runs ({len(runs)} found)")
+        print("-" * 100)
+
+        for run in runs:
+            print(f"{run.run_id:30} | {run.status.value:15} | {run.universe_name:20} | {run.total_symbols} symbols | {run.created_at_utc}")
+
+        return 0
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
+
+def handle_active_universe_latest_run(context) -> int:
+    from usa_signal_bot.data.universe_runs import get_latest_universe_data_run, universe_data_run_to_text
+
+    try:
+        run = get_latest_universe_data_run(context.data_dir)
+        if not run:
+            print("No universe data runs found.")
+            return 0
+
+        print(universe_data_run_to_text(run))
+        return 0
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
+
+def handle_active_universe_eligible(context, latest_run: bool, format: str) -> int:
+    try:
+        if latest_run:
+            readiness_dir = context.data_dir / "universe" / "readiness"
+            if format == "csv":
+                path = readiness_dir / "eligible_symbols.csv"
+            elif format == "txt":
+                path = readiness_dir / "eligible_symbols.txt"
+            else:
+                print(f"Unsupported format: {format}")
+                return 1
+
+            if path.exists():
+                print(f"Eligible symbols path: {path}")
+                with open(path, "r", encoding="utf-8") as f:
+                    print(f.read())
+                return 0
+            else:
+                print(f"Eligible symbols file not found: {path}")
+                return 1
+        else:
+            print("Only latest-run is currently supported for eligible symbols.")
+            return 1
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
+
 
 def main() -> int:
     """Main CLI entrypoint."""
@@ -515,6 +787,41 @@ def main() -> int:
     cov_report_parser.add_argument("--reports-dir", help="Custom reports directory")
 
     readiness_parser = subparsers.add_parser("data-readiness-check", help="Check data readiness")
+    parser_active_uni_info = subparsers.add_parser("active-universe-info", help="Show active universe info")
+
+    parser_active_uni_syms = subparsers.add_parser("active-universe-symbols", help="List symbols in active universe")
+    parser_active_uni_syms.add_argument("--limit", type=int, default=None, help="Limit number of symbols to list")
+    parser_active_uni_syms.add_argument("--asset-type", type=str, default=None, choices=["stock", "etf"], help="Filter by asset type")
+    parser_active_uni_syms.add_argument("--include-inactive", action="store_true", help="Include inactive symbols")
+
+    parser_active_uni_plan = subparsers.add_parser("active-universe-plan", help="Plan data download for active universe")
+    parser_active_uni_plan.add_argument("--timeframes", type=str, default=None, help="Comma-separated timeframes (default from config)")
+    parser_active_uni_plan.add_argument("--provider", type=str, default="yfinance", help="Data provider")
+    parser_active_uni_plan.add_argument("--limit", type=int, default=None, help="Limit number of symbols")
+    parser_active_uni_plan.add_argument("--asset-type", type=str, default=None, choices=["stock", "etf"], help="Filter by asset type")
+    parser_active_uni_plan.add_argument("--force", action="store_true", help="Force refresh cache")
+    parser_active_uni_plan.add_argument("--no-cache", action="store_true", help="Bypass cache completely")
+
+    parser_active_uni_dl = subparsers.add_parser("active-universe-download", help="Download data for active universe")
+    parser_active_uni_dl.add_argument("--timeframes", type=str, default=None, help="Comma-separated timeframes (default from config)")
+    parser_active_uni_dl.add_argument("--provider", type=str, default="yfinance", help="Data provider")
+    parser_active_uni_dl.add_argument("--limit", type=int, default=None, help="Limit number of symbols (overrides config)")
+    parser_active_uni_dl.add_argument("--asset-type", type=str, default=None, choices=["stock", "etf"], help="Filter by asset type")
+    parser_active_uni_dl.add_argument("--force", action="store_true", help="Force refresh cache")
+    parser_active_uni_dl.add_argument("--no-cache", action="store_true", help="Bypass cache completely")
+
+    parser_active_uni_ready = subparsers.add_parser("active-universe-readiness", help="Check active universe readiness")
+    parser_active_uni_ready.add_argument("--latest-run", action="store_true", default=True, help="Check readiness from latest run")
+    parser_active_uni_ready.add_argument("--from-cache", action="store_true", help="Check readiness from cache (not yet implemented for universe gate)")
+
+    parser_active_uni_runs = subparsers.add_parser("active-universe-runs", help="List active universe data runs")
+
+    parser_active_uni_latest_run = subparsers.add_parser("active-universe-latest-run", help="Show latest active universe data run")
+
+    parser_active_uni_eligible = subparsers.add_parser("active-universe-eligible", help="List eligible symbols from active universe")
+    parser_active_uni_eligible.add_argument("--latest-run", action="store_true", default=True, help="Get eligible symbols from latest run")
+    parser_active_uni_eligible.add_argument("--format", type=str, default="txt", choices=["txt", "csv", "json"], help="Output format")
+
     readiness_parser.add_argument("--symbols", help="Comma-separated symbols")
     readiness_parser.add_argument("--timeframes", help="Comma-separated timeframes")
     readiness_parser.add_argument("--from-cache", action="store_true", default=True, help="Check readiness from cache")
@@ -615,6 +922,23 @@ def main() -> int:
             sys.exit(handle_data_coverage_report(context, args.latest, getattr(args, 'reports_dir', None)))
         elif args.command == "data-readiness-check":
             sys.exit(handle_data_readiness_check(context, args.symbols, args.timeframes, getattr(args, 'from_cache', True)))
+        elif args.command == "active-universe-info":
+            sys.exit(handle_active_universe_info(context))
+        elif args.command == "active-universe-symbols":
+            sys.exit(handle_active_universe_symbols(context, getattr(args, 'limit', 0) or 0, getattr(args, 'asset_type', '') or '', getattr(args, 'include_inactive', False)))
+        elif args.command == "active-universe-plan":
+            sys.exit(handle_active_universe_plan(context, getattr(args, 'timeframes', '') or '', getattr(args, 'provider', 'yfinance'), getattr(args, 'limit', 0) or 0, getattr(args, 'asset_type', '') or '', getattr(args, 'force', False), getattr(args, 'no_cache', False)))
+        elif args.command == "active-universe-download":
+            sys.exit(handle_active_universe_download(context, getattr(args, 'timeframes', '') or '', getattr(args, 'provider', 'yfinance'), getattr(args, 'limit', 0) or 0, getattr(args, 'asset_type', '') or '', getattr(args, 'force', False), getattr(args, 'no_cache', False)))
+        elif args.command == "active-universe-readiness":
+            sys.exit(handle_active_universe_readiness(context, getattr(args, 'latest_run', True), getattr(args, 'from_cache', False)))
+        elif args.command == "active-universe-runs":
+            sys.exit(handle_active_universe_runs(context))
+        elif args.command == "active-universe-latest-run":
+            sys.exit(handle_active_universe_latest_run(context))
+        elif args.command == "active-universe-eligible":
+            sys.exit(handle_active_universe_eligible(context, getattr(args, 'latest_run', True), getattr(args, 'format', 'txt')))
+
 
         # End of new handlers
         # Keep this to not break replace logic
