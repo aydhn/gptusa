@@ -222,3 +222,12 @@ class FeatureValidationError(FeatureError):
 
 class FeatureStorageError(FeatureError):
     pass
+
+class TrendFeatureError(FeatureError):
+    pass
+
+class TrendIndicatorError(IndicatorError):
+    pass
+
+class IndicatorSetError(FeatureError):
+    pass

@@ -274,3 +274,24 @@ class FeatureValidationStatus(str, Enum):
 class FeatureStorageFormat(str, Enum):
     JSONL = "JSONL"
     CSV = "CSV"
+
+class TrendFeatureType(str, Enum):
+    MOVING_AVERAGE = "MOVING_AVERAGE"
+    MACD = "MACD"
+    PRICE_DISTANCE = "PRICE_DISTANCE"
+    SLOPE = "SLOPE"
+    ALIGNMENT = "ALIGNMENT"
+    TREND_STRENGTH = "TREND_STRENGTH"
+
+class MovingAverageType(str, Enum):
+    SMA = "SMA"
+    EMA = "EMA"
+    WMA = "WMA"
+    DEMA = "DEMA"
+    TEMA = "TEMA"
+
+class TrendDirection(str, Enum):
+    UP = "UP"
+    DOWN = "DOWN"
+    FLAT = "FLAT"
+    UNKNOWN = "UNKNOWN"
