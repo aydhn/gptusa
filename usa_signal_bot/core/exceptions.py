@@ -198,3 +198,27 @@ class UniverseDataRunError(USASignalBotError):
 
 class ActiveUniversePipelineError(USASignalBotError):
     pass
+
+class FeatureError(USASignalBotError):
+    pass
+
+class IndicatorError(FeatureError):
+    pass
+
+class IndicatorRegistrationError(IndicatorError):
+    pass
+
+class IndicatorParameterError(IndicatorError):
+    pass
+
+class FeatureInputError(FeatureError):
+    pass
+
+class FeatureComputationError(FeatureError):
+    pass
+
+class FeatureValidationError(FeatureError):
+    pass
+
+class FeatureStorageError(FeatureError):
+    pass
