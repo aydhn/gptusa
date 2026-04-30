@@ -356,7 +356,191 @@ def handle_storage_list(context, area: str = None) -> int:
         print(f"Error listing storage: {e}")
         return 1
 
+
+def handle_active_universe_info(context) -> int:
+    from usa_signal_bot.universe.active import resolve_active_universe, active_universe_resolution_to_text
+    try:
+        res = resolve_active_universe(
+            data_root=context.data_dir,
+            fallback_to_watchlist=context.config.active_universe.fallback_to_watchlist,
+            fallback_to_latest_snapshot=context.config.active_universe.fallback_to_latest_snapshot
+        )
+        print(active_universe_resolution_to_text(res))
+        return 0
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
+
+def handle_active_universe_symbols(context, limit: int = None, asset_type: str = None, include_inactive: bool = False) -> int:
+    from usa_signal_bot.universe.active import resolve_active_universe
+    try:
+        res = resolve_active_universe(
+            data_root=context.data_dir,
+            fallback_to_watchlist=context.config.active_universe.fallback_to_watchlist,
+            fallback_to_latest_snapshot=context.config.active_universe.fallback_to_latest_snapshot
+        )
+        symbols = res.universe.symbols
+        if asset_type:
+            at = asset_type.upper()
+            symbols = [s for s in symbols if s.asset_type.value == at]
+        if not include_inactive:
+            symbols = [s for s in symbols if s.active]
+        if limit and limit > 0:
+            symbols = symbols[:limit]
+        print(f"Symbols ({len(symbols)}):")
+        for s in symbols:
+            print(f"- {s.symbol} ({s.asset_type.value})")
+        return 0
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
+
+def handle_active_universe_plan(context, timeframes: str, provider: str, limit: int, asset_type: str, force: bool, no_cache: bool) -> int:
+    from usa_signal_bot.universe.active import resolve_active_universe
+    from usa_signal_bot.data.multitimeframe import MultiTimeframeDataRequest, build_timeframe_specs_from_list
+    from usa_signal_bot.data.refresh import build_cache_refresh_plan, cache_refresh_plan_to_text
+    from usa_signal_bot.data.cache import LocalMarketDataCache
+    try:
+        res = resolve_active_universe(
+            data_root=context.data_dir,
+            fallback_to_watchlist=context.config.active_universe.fallback_to_watchlist,
+            fallback_to_latest_snapshot=context.config.active_universe.fallback_to_latest_snapshot
+        )
+        symbols = [s.symbol for s in res.universe.symbols if s.active]
+        if asset_type:
+            at = asset_type.upper()
+            symbols = [s.symbol for s in res.universe.symbols if s.active and s.asset_type.value == at]
+        if limit and limit > 0:
+            symbols = symbols[:limit]
+        tfs = timeframes.split(',')
+        specs = build_timeframe_specs_from_list(tfs)
+        req = MultiTimeframeDataRequest(
+            symbols=symbols,
+            provider_name=provider,
+            timeframe_specs=specs,
+            force_refresh=force,
+            use_cache=not no_cache
+        )
+        cache = LocalMarketDataCache(context.data_dir)
+        plan = build_cache_refresh_plan(req, cache)
+        print(f"=== Active Universe Plan ===")
+        print(f"Universe: {res.universe.name} ({len(symbols)} symbols)")
+        print(cache_refresh_plan_to_text(plan))
+        return 0
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
+
+def handle_active_universe_download(context, timeframes: str, provider: str, limit: int, asset_type: str, force: bool, no_cache: bool) -> int:
+    from usa_signal_bot.data.active_universe_pipeline import ActiveUniverseDataPipeline, ActiveUniversePipelineRequest, active_pipeline_result_to_text
+    from usa_signal_bot.data.pipeline import MultiTimeframeDataPipeline
+    from usa_signal_bot.data.downloader import MarketDataDownloader
+    from usa_signal_bot.data.cache import LocalMarketDataCache
+    from usa_signal_bot.data.provider_registry import ProviderRegistry
+    from usa_signal_bot.data.yfinance_provider import YFinanceMarketDataProvider
+    from usa_signal_bot.data.mock_provider import MockMarketDataProvider
+    from usa_signal_bot.data.normalizer import DataNormalizer
+    try:
+        registry = ProviderRegistry(context.config)
+        registry.register(MockMarketDataProvider())
+        registry.register(YFinanceMarketDataProvider())
+        downloader = MarketDataDownloader(registry, DataNormalizer(context.config))
+        cache = LocalMarketDataCache(context.data_dir)
+        mtf_pipeline = MultiTimeframeDataPipeline(downloader, cache, context.config, context.data_dir)
+        pipeline = ActiveUniverseDataPipeline(mtf_pipeline, context.data_dir)
+        req = ActiveUniversePipelineRequest(
+            provider_name=provider,
+            timeframes=timeframes.split(','),
+            asset_type=asset_type,
+            max_symbols=limit,
+            force_refresh=force,
+            use_cache=not no_cache,
+            fallback_to_watchlist=context.config.active_universe.fallback_to_watchlist
+        )
+        print(f"Starting active universe download...")
+        res = pipeline.run(req)
+        print(active_pipeline_result_to_text(res))
+        if not res.success:
+            return 1
+        return 0
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
+
+def handle_active_universe_runs(context) -> int:
+    from usa_signal_bot.data.universe_runs import list_universe_data_runs
+    try:
+        runs = list_universe_data_runs(context.data_dir)
+        print(f"Found {len(runs)} universe data runs.")
+        for r in runs:
+            print(f"- {r.created_at_utc} | ID: {r.run_id} | Status: {r.status.value} | Symbols: {r.total_symbols}")
+        return 0
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
+
+def handle_active_universe_latest_run(context) -> int:
+    from usa_signal_bot.data.universe_runs import get_latest_universe_data_run, universe_data_run_to_text
+    try:
+        run = get_latest_universe_data_run(context.data_dir)
+        if not run:
+            print("No runs found.")
+        else:
+            print(universe_data_run_to_text(run))
+        return 0
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
+
+def handle_active_universe_readiness(context, latest_run: bool) -> int:
+    from usa_signal_bot.data.universe_runs import get_latest_universe_data_run
+    import json
+    try:
+        run = get_latest_universe_data_run(context.data_dir)
+        if not run:
+            print("No runs found to check readiness.")
+            return 0
+        gate_path = run.output_paths.get("readiness_gate_report")
+        if not gate_path:
+             print("Latest run has no readiness gate report.")
+             return 0
+        with open(gate_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        print("=== Readiness Gate Report ===")
+        print(f"Status: {data.get('status')}")
+        print(f"Eligible Symbols: {data.get('eligible_symbols')}")
+        print(f"Ineligible Symbols: {data.get('ineligible_symbols')}")
+        return 0
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
+
+def handle_active_universe_eligible(context, latest_run: bool, format: str) -> int:
+    from usa_signal_bot.data.universe_runs import get_latest_universe_data_run
+    try:
+        run = get_latest_universe_data_run(context.data_dir)
+        if not run:
+            print("No runs found.")
+            return 0
+        txt_path = run.output_paths.get("eligible_symbols_txt")
+        if not txt_path:
+             print("Latest run has no eligible symbols text output.")
+             return 0
+        with open(txt_path, "r", encoding="utf-8") as f:
+            content = f.read().strip()
+        if not content:
+            print("No eligible symbols found in the latest run.")
+        else:
+            symbols = content.split('\n')
+            print(f"Found {len(symbols)} eligible symbols:")
+            print(content)
+        return 0
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
+
 def main() -> int:
+
     """Main CLI entrypoint."""
     parser = argparse.ArgumentParser(description="USA Signal Bot CLI")
     subparsers = parser.add_subparsers(dest="command", help="Available commands")

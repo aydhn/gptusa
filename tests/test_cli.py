@@ -195,3 +195,44 @@ def test_universe_export_command():
     )
     assert result.returncode == 0
     assert "Export successful:" in result.stdout
+
+
+def test_active_universe_info_command():
+    result = subprocess.run(
+        [sys.executable, "-m", "usa_signal_bot", "active-universe-info"],
+        capture_output=True,
+        text=True
+    )
+    assert result.returncode == 0
+
+def test_active_universe_symbols_command():
+    result = subprocess.run(
+        [sys.executable, "-m", "usa_signal_bot", "active-universe-symbols", "--limit", "5"],
+        capture_output=True,
+        text=True
+    )
+    assert result.returncode == 0
+
+def test_active_universe_plan_command():
+    result = subprocess.run(
+        [sys.executable, "-m", "usa_signal_bot", "active-universe-plan", "--timeframes", "1d,1h", "--limit", "5"],
+        capture_output=True,
+        text=True
+    )
+    assert result.returncode == 0
+
+def test_active_universe_runs_command():
+    result = subprocess.run(
+        [sys.executable, "-m", "usa_signal_bot", "active-universe-runs"],
+        capture_output=True,
+        text=True
+    )
+    assert result.returncode == 0
+
+def test_active_universe_latest_run_command():
+    result = subprocess.run(
+        [sys.executable, "-m", "usa_signal_bot", "active-universe-latest-run"],
+        capture_output=True,
+        text=True
+    )
+    assert result.returncode == 0
