@@ -78,6 +78,12 @@ def register_builtin_indicators(registry) -> 'IndicatorRegistry':
         KeltnerChannelIndicator, DonchianChannelIndicator, RollingVolatilityIndicator,
         PriceRangeIndicator, VolatilityCompressionIndicator, VolatilityExpansionIndicator
     )
+    from usa_signal_bot.features.volume_indicators import (
+        OBVIndicator, VWAPIndicator, RollingVWAPIndicator,
+        MFIIndicator, CMFIndicator, AccumulationDistributionIndicator,
+        VolumeAverageIndicator, RelativeVolumeIndicator, VolumeChangeIndicator,
+        VolumeROCIndicator, DollarVolumeIndicator, VolumeTrendStrengthIndicator
+    )
 
     registry.register(CloseReturnIndicator())
     registry.register(CloseSMAIndicator())
@@ -119,6 +125,19 @@ def register_builtin_indicators(registry) -> 'IndicatorRegistry':
     registry.register(PriceRangeIndicator())
     registry.register(VolatilityCompressionIndicator())
     registry.register(VolatilityExpansionIndicator())
+
+    registry.register(OBVIndicator())
+    registry.register(VWAPIndicator())
+    registry.register(RollingVWAPIndicator())
+    registry.register(MFIIndicator())
+    registry.register(CMFIndicator())
+    registry.register(AccumulationDistributionIndicator())
+    registry.register(VolumeAverageIndicator())
+    registry.register(RelativeVolumeIndicator())
+    registry.register(VolumeChangeIndicator())
+    registry.register(VolumeROCIndicator())
+    registry.register(DollarVolumeIndicator())
+    registry.register(VolumeTrendStrengthIndicator())
 
     return registry
 
