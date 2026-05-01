@@ -660,6 +660,179 @@ def handle_momentum_feature_summary(context) -> int:
     print("Feature Outputs Summary")
     return 0
 
+
+def run_volatility_indicator_list() -> int:
+    try:
+        from usa_signal_bot.features.indicator_registry import get_default_registry
+        from usa_signal_bot.core.enums import IndicatorCategory
+
+        reg = get_default_registry()
+        v_inds = reg.list_by_category(IndicatorCategory.VOLATILITY)
+
+        if not v_inds:
+            print("No volatility indicators registered.")
+            return 0
+
+        print(f"Registered Volatility Indicators ({len(v_inds)}):\n")
+        for ind in v_inds:
+            m = ind.metadata
+            print(f"- {m.name} (v{m.version})")
+            print(f"  Description: {m.description}")
+            print(f"  Min bars: {m.min_bars}")
+            print(f"  Produces: {', '.join(m.produces)}")
+            print()
+        return 0
+    except Exception as e:
+        print(f"Error listing volatility indicators: {e}")
+        return 1
+
+def run_volatility_indicator_set_info(args) -> int:
+    try:
+        from usa_signal_bot.features.volatility_sets import get_volatility_indicator_set, list_volatility_indicator_sets
+        from usa_signal_bot.features.indicator_registry import get_default_registry
+
+        if not args.set:
+            sets = list_volatility_indicator_sets()
+            print("Available Volatility Indicator Sets:\n")
+            for s in sets:
+                print(f"- {s.name}")
+            print("\nUse --set <name> to see details.")
+            return 0
+
+        try:
+            ind_set = get_volatility_indicator_set(args.set)
+        except Exception as e:
+            print(f"Error: {e}")
+            return 1
+
+        reg = get_default_registry()
+
+        print(f"Volatility Indicator Set: {ind_set.name}\n")
+        print("Indicators and Parameters:")
+        for name in ind_set.indicators:
+            params = ind_set.params_by_indicator.get(name, {})
+            try:
+                ind_meta = reg.get(name).metadata
+                desc = ind_meta.description
+            except:
+                desc = "Unknown indicator"
+
+            print(f"  - {name} ({desc})")
+            if params:
+                for k, v in params.items():
+                    print(f"      {k}: {v}")
+            else:
+                print("      (default parameters)")
+
+        return 0
+    except Exception as e:
+        print(f"Error getting volatility indicator set info: {e}")
+        return 1
+
+def run_volatility_feature_compute_cache(args) -> int:
+    try:
+        from usa_signal_bot.core.runtime_state import RuntimeContext
+        from usa_signal_bot.features.indicator_registry import get_default_registry
+        from usa_signal_bot.features.engine import FeatureEngine
+        from usa_signal_bot.features.reporting import (
+            write_volatility_feature_report_json,
+            volatility_feature_summary_to_text
+        )
+        from usa_signal_bot.features.volatility_sets import get_volatility_indicator_set
+        from usa_signal_bot.features.validation import (
+             validate_volatility_feature_columns,
+             feature_validation_report_to_text
+        )
+
+        ctx = RuntimeContext.create()
+        reg = get_default_registry()
+        engine = FeatureEngine(reg, ctx.paths.data_dir)
+
+        symbols = args.symbols.split(",") if args.symbols else []
+        timeframes = args.timeframes.split(",") if args.timeframes else ["1d"]
+        provider = args.provider
+        set_name = args.set
+
+        print(f"Computing volatility features from cache for {len(symbols) if symbols else 'ALL'} symbols...")
+        print(f"Timeframes: {timeframes}")
+        print(f"Set: {set_name}")
+        print(f"Provider: {provider}")
+
+        try:
+             ind_set = get_volatility_indicator_set(set_name)
+        except Exception as e:
+             print(f"Error: {e}")
+             return 1
+
+        res = engine.compute_volatility_set_from_cache(symbols, timeframes, set_name, provider)
+
+        print("\n" + volatility_feature_summary_to_text(res))
+
+        if not res.is_successful():
+             print("\nFeature computation failed or was partially successful. Check errors.")
+             return 1
+
+        val_report = None
+        if res.feature_rows:
+            import pandas as pd
+            from usa_signal_bot.features.dataframe_utils import feature_rows_to_dataframe
+            df = feature_rows_to_dataframe(res.feature_rows)
+            val_report = validate_volatility_feature_columns(df, res.produced_features)
+            print("\n" + feature_validation_report_to_text(val_report))
+
+        if args.write and res.is_successful() and res.feature_rows:
+             meta = engine.write_result(res)
+
+             import uuid
+             from usa_signal_bot.features.feature_store import build_feature_output_path
+             from usa_signal_bot.core.enums import FeatureStorageFormat
+             out_id = uuid.uuid4().hex
+             group = "all"
+             report_path = build_feature_output_path(
+                ctx.paths.data_dir, provider, res.request.universe_name, "meta", group, FeatureStorageFormat.JSONL
+             ).with_name(f"{out_id}_volatility_report.json")
+
+             write_volatility_feature_report_json(report_path, res, ind_set)
+             print(f"\nOutputs written. Meta ID: {meta.output_id}")
+
+        return 0
+    except Exception as e:
+        print(f"Error computing volatility features: {e}")
+        return 1
+
+def run_volatility_feature_summary(args) -> int:
+    try:
+        from usa_signal_bot.core.runtime_state import RuntimeContext
+        from usa_signal_bot.features.feature_store import list_feature_metadata
+
+        ctx = RuntimeContext.create()
+        metas = list_feature_metadata(ctx.paths.data_dir)
+
+        vol_metas = []
+        for m in metas:
+             # Basic heuristic: Check if it has volatility indicators in its list
+             has_vol = any(i in ["atr", "true_range", "bollinger_bands", "keltner_channel"] for i in m.indicators)
+             if has_vol:
+                  vol_metas.append(m)
+
+        if not vol_metas:
+            print("No volatility feature outputs found in storage.")
+            return 0
+
+        print(f"Found {len(vol_metas)} volatility feature outputs:\n")
+        for m in vol_metas:
+            print(f"- Output ID: {m.output_id}")
+            print(f"  Created: {m.created_at_utc}")
+            print(f"  Provider: {m.provider_name}, Universe: {m.universe_name or 'N/A'}")
+            print(f"  Symbols: {len(m.symbols)}, Timeframes: {m.timeframes}")
+            print(f"  Indicators: {len(m.indicators)}, Features: {len(m.produced_features)}")
+            print(f"  Rows: {m.row_count}")
+            print()
+        return 0
+    except Exception as e:
+        print(f"Error listing volatility feature summary: {e}")
+        return 1
+
 def main() -> int:
     """Main CLI entrypoint."""
     parser = argparse.ArgumentParser(description="USA Signal Bot CLI")
@@ -887,6 +1060,21 @@ def main() -> int:
     mom_compute.add_argument("--provider", type=str, default="yfinance")
     mom_compute.add_argument("--write", action="store_true")
     subparsers.add_parser("momentum-feature-summary", help="Show summary")
+
+    vol_ind_list_parser = subparsers.add_parser("volatility-indicator-list", help="List all registered volatility indicators")
+
+    vol_ind_set_info_parser = subparsers.add_parser("volatility-indicator-set-info", help="Show info for a volatility indicator set")
+    vol_ind_set_info_parser.add_argument("--set", type=str, help="Name of the indicator set (e.g. basic_volatility)")
+
+    vol_feat_compute_cache_parser = subparsers.add_parser("volatility-feature-compute-cache", help="Compute volatility features from cached data")
+    vol_feat_compute_cache_parser.add_argument("--symbols", type=str, help="Comma-separated list of symbols (optional, defaults to all in cache)")
+    vol_feat_compute_cache_parser.add_argument("--timeframes", type=str, default="1d", help="Comma-separated list of timeframes (default: 1d)")
+    vol_feat_compute_cache_parser.add_argument("--set", type=str, default="basic_volatility", help="Indicator set to use (default: basic_volatility)")
+    vol_feat_compute_cache_parser.add_argument("--provider", type=str, default="yfinance", help="Data provider (default: yfinance)")
+    vol_feat_compute_cache_parser.add_argument("--write", action="store_true", help="Write results to storage")
+
+    vol_feat_summary_parser = subparsers.add_parser("volatility-feature-summary", help="List volatility feature outputs in storage")
+
     args = parser.parse_args()
 
 

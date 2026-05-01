@@ -54,3 +54,22 @@ def test_detect_extreme_momentum_values():
     df = pd.DataFrame({"symbol": ["AAPL", "AAPL"], "timeframe": ["1d", "1d"], "roc": [1005.0, 50.0], "momentum": [-2000.0, 20.0]})
     issues = detect_extreme_momentum_values(df, ["roc", "momentum"], absolute_threshold=1000.0)
     assert len(issues) == 2
+
+
+def test_validate_volatility_features_detect_negative():
+    from usa_signal_bot.features.validation import detect_negative_volatility_features
+    df = pd.DataFrame({"atr_14": [1.0, 2.0, -0.5, 3.0], "symbol": ["AAPL"]*4, "timeframe": ["1d"]*4})
+    issues = detect_negative_volatility_features(df, ["atr_14"])
+    assert len(issues) == 1
+    assert issues[0].severity == "ERROR"
+
+def test_validate_volatility_features_band_order():
+    from usa_signal_bot.features.validation import detect_invalid_band_order
+    df = pd.DataFrame({
+        "close_bb_upper_20_2": [110.0, 115.0, 100.0],
+        "close_bb_middle_20_2": [105.0, 110.0, 105.0],
+        "close_bb_lower_20_2": [100.0, 105.0, 110.0] # 110 > 100 on last row
+    })
+    issues = detect_invalid_band_order(df, "close_bb_upper_20_2", "close_bb_middle_20_2", "close_bb_lower_20_2")
+    assert len(issues) > 0
+    assert any(i.severity == "ERROR" for i in issues)

@@ -171,3 +171,26 @@ momentum_features:
   allow_partial_momentum_features: true
   oscillator_min_value: 0.0
   oscillator_max_value: 100.0
+
+
+volatility_features:
+  enabled: true
+  default_indicator_set: "basic_volatility"
+  available_indicator_sets:
+    - "basic_volatility"
+    - "band_volatility"
+    - "channel_volatility"
+    - "compression_volatility"
+    - "full_volatility"
+  default_atr_window: 14
+  default_bollinger_window: 20
+  default_bollinger_std: 2.0
+  default_keltner_ema_window: 20
+  default_keltner_atr_window: 10
+  default_keltner_multiplier: 2.0
+  default_donchian_window: 20
+  default_rolling_volatility_window: 20
+  default_reference_window: 100
+  max_window: 1000
+  allow_partial_volatility_features: true
+  fail_on_negative_volatility: true

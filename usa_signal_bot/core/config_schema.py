@@ -349,6 +349,31 @@ class MomentumFeatureConfig:
         if any(w > self.max_window for w in windows):
             raise ValueError("Values in default windows cannot exceed max_window")
 
+
+@dataclass
+class VolatilityFeatureConfig:
+    enabled: bool = True
+    default_indicator_set: str = "basic_volatility"
+    available_indicator_sets: list[str] = field(default_factory=lambda: [
+        "basic_volatility",
+        "band_volatility",
+        "channel_volatility",
+        "compression_volatility",
+        "full_volatility"
+    ])
+    default_atr_window: int = 14
+    default_bollinger_window: int = 20
+    default_bollinger_std: float = 2.0
+    default_keltner_ema_window: int = 20
+    default_keltner_atr_window: int = 10
+    default_keltner_multiplier: float = 2.0
+    default_donchian_window: int = 20
+    default_rolling_volatility_window: int = 20
+    default_reference_window: int = 100
+    max_window: int = 1000
+    allow_partial_volatility_features: bool = True
+    fail_on_negative_volatility: bool = True
+
 @dataclass
 class AppConfig:
 
@@ -375,3 +400,4 @@ class AppConfig:
     universe_runs: UniverseRunsConfig = field(default_factory=UniverseRunsConfig)
     trend_features: TrendFeatureConfig = field(default_factory=TrendFeatureConfig)
     momentum_features: MomentumFeatureConfig = field(default_factory=MomentumFeatureConfig)
+    volatility_features: VolatilityFeatureConfig = field(default_factory=VolatilityFeatureConfig)

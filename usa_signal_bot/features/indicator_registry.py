@@ -32,6 +32,9 @@ class IndicatorRegistry:
         if name in self._indicators:
             del self._indicators[name]
 
+    def list_all(self) -> List[Indicator]:
+        return list(self._indicators.values())
+
     def list_names(self) -> List[str]:
         return list(self._indicators.keys())
 
@@ -46,6 +49,14 @@ class IndicatorRegistry:
             validate_indicator_metadata(ind.metadata)
             validate_parameter_schema(ind.parameter_schema)
 
+_DEFAULT_REGISTRY = None
+
+def get_default_registry() -> IndicatorRegistry:
+    global _DEFAULT_REGISTRY
+    if _DEFAULT_REGISTRY is None:
+        _DEFAULT_REGISTRY = create_default_indicator_registry()
+    return _DEFAULT_REGISTRY
+
 def register_builtin_indicators(registry) -> 'IndicatorRegistry':
     from usa_signal_bot.features.builtins_basic import (
         CloseReturnIndicator, CloseSMAIndicator, CloseEMAIndicator,
@@ -57,16 +68,24 @@ def register_builtin_indicators(registry) -> 'IndicatorRegistry':
         MASlopeIndicator, MAAlignmentIndicator, TrendStrengthBasicIndicator
     )
     from usa_signal_bot.features.momentum_indicators import (
-        RSIIndicator, StochasticIndicator, ROCIndicator, MomentumIndicator,
-        WilliamsRIndicator, CCIIndicator, MomentumSlopeIndicator,
-        MomentumAccelerationIndicator, NormalizedMomentumIndicator
+        RSIIndicator, StochasticIndicator, ROCIndicator,
+        MomentumIndicator, WilliamsRIndicator, CCIIndicator,
+        MomentumSlopeIndicator, MomentumAccelerationIndicator, NormalizedMomentumIndicator
     )
+    from usa_signal_bot.features.volatility_indicators import (
+        TrueRangeIndicator, ATRIndicator, NormalizedATRIndicator,
+        BollingerBandsIndicator, BollingerBandwidthIndicator, BollingerPercentBIndicator,
+        KeltnerChannelIndicator, DonchianChannelIndicator, RollingVolatilityIndicator,
+        PriceRangeIndicator, VolatilityCompressionIndicator, VolatilityExpansionIndicator
+    )
+
     registry.register(CloseReturnIndicator())
     registry.register(CloseSMAIndicator())
     registry.register(CloseEMAIndicator())
     registry.register(VolumeSMAIndicator())
     registry.register(RollingHighIndicator())
     registry.register(RollingLowIndicator())
+
     registry.register(SMAIndicator())
     registry.register(EMAIndicator())
     registry.register(WMAIndicator())
@@ -77,6 +96,7 @@ def register_builtin_indicators(registry) -> 'IndicatorRegistry':
     registry.register(MASlopeIndicator())
     registry.register(MAAlignmentIndicator())
     registry.register(TrendStrengthBasicIndicator())
+
     registry.register(RSIIndicator())
     registry.register(StochasticIndicator())
     registry.register(ROCIndicator())
@@ -86,6 +106,20 @@ def register_builtin_indicators(registry) -> 'IndicatorRegistry':
     registry.register(MomentumSlopeIndicator())
     registry.register(MomentumAccelerationIndicator())
     registry.register(NormalizedMomentumIndicator())
+
+    registry.register(TrueRangeIndicator())
+    registry.register(ATRIndicator())
+    registry.register(NormalizedATRIndicator())
+    registry.register(BollingerBandsIndicator())
+    registry.register(BollingerBandwidthIndicator())
+    registry.register(BollingerPercentBIndicator())
+    registry.register(KeltnerChannelIndicator())
+    registry.register(DonchianChannelIndicator())
+    registry.register(RollingVolatilityIndicator())
+    registry.register(PriceRangeIndicator())
+    registry.register(VolatilityCompressionIndicator())
+    registry.register(VolatilityExpansionIndicator())
+
     return registry
 
 def create_default_indicator_registry() -> IndicatorRegistry:

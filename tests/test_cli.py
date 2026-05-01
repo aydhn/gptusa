@@ -222,3 +222,28 @@ def test_cli_momentum_feature_summary():
     result = subprocess.run([sys.executable, "-m", "usa_signal_bot", "momentum-feature-summary"], capture_output=True, text=True)
     assert result.returncode == 0
     assert "Feature Outputs Summary" in result.stdout
+
+
+def test_cli_volatility_indicator_list():
+    import subprocess
+    import sys
+    def run_cli(args):
+        return subprocess.run([sys.executable, "-m", "usa_signal_bot"] + args, capture_output=True, text=True)
+    res = run_cli(["volatility-indicator-list"])
+    assert res.returncode == 0
+
+def test_cli_volatility_indicator_set_info():
+    import subprocess
+    import sys
+    def run_cli(args):
+        return subprocess.run([sys.executable, "-m", "usa_signal_bot"] + args, capture_output=True, text=True)
+    res = run_cli(["volatility-indicator-set-info", "--set", "basic_volatility"])
+    assert res.returncode == 0
+
+def test_cli_volatility_feature_summary():
+    import subprocess
+    import sys
+    def run_cli(args):
+        return subprocess.run([sys.executable, "-m", "usa_signal_bot"] + args, capture_output=True, text=True)
+    res = run_cli(["volatility-feature-summary"])
+    assert res.returncode == 0

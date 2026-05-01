@@ -76,3 +76,15 @@ def test_engine_compute_momentum_set_for_batch(registry, tmp_path, fake_input):
     batch = FeatureBatchInput([fake_input], "2023", "test")
     res = engine.compute_momentum_set_for_batch(batch, "oscillator_momentum")
     assert res.is_successful()
+
+
+def test_engine_compute_volatility_set_for_input(registry, fake_input):
+    from usa_signal_bot.features.engine import FeatureEngine
+    import tempfile
+    from pathlib import Path
+    with tempfile.TemporaryDirectory() as d:
+        engine = FeatureEngine(registry, Path(d))
+        res = engine.compute_volatility_set_for_input(fake_input, "basic_volatility")
+        assert res.is_successful()
+        assert len(res.produced_features) > 0
+        assert any("atr" in f for f in res.produced_features)
