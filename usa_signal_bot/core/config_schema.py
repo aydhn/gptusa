@@ -303,6 +303,52 @@ class TrendFeatureConfig:
         if self.default_macd_signal <= 0:
             raise ValueError("MACD signal must be positive")
 
+
+@dataclass
+class MomentumFeatureConfig:
+    enabled: bool = True
+    default_indicator_set: str = "basic_momentum"
+    available_indicator_sets: List[str] = field(default_factory=lambda: ["basic_momentum", "oscillator_momentum", "rate_of_change_momentum", "full_momentum"])
+    default_rsi_window: int = 14
+    default_stochastic_k_window: int = 14
+    default_stochastic_d_window: int = 3
+    default_roc_window: int = 12
+    default_momentum_window: int = 10
+    default_cci_window: int = 20
+    max_window: int = 500
+    allow_partial_momentum_features: bool = True
+    oscillator_min_value: float = 0.0
+    oscillator_max_value: float = 100.0
+
+    def __post_init__(self):
+        if not self.enabled:
+            raise ValueError("momentum_features.enabled must be True")
+        if not self.available_indicator_sets:
+            raise ValueError("available_indicator_sets cannot be empty")
+        if self.default_indicator_set not in self.available_indicator_sets:
+            raise ValueError("default_indicator_set must be in available_indicator_sets")
+        if self.default_rsi_window <= 0:
+            raise ValueError("default_rsi_window must be positive")
+        if self.default_stochastic_k_window <= 0:
+            raise ValueError("default_stochastic_k_window must be positive")
+        if self.default_stochastic_d_window <= 0:
+            raise ValueError("default_stochastic_d_window must be positive")
+        if self.default_roc_window <= 0:
+            raise ValueError("default_roc_window must be positive")
+        if self.default_momentum_window <= 0:
+            raise ValueError("default_momentum_window must be positive")
+        if self.default_cci_window <= 0:
+            raise ValueError("default_cci_window must be positive")
+        if self.max_window <= 0:
+            raise ValueError("max_window must be positive")
+        if self.oscillator_min_value >= self.oscillator_max_value:
+            raise ValueError("oscillator_min_value must be less than oscillator_max_value")
+        windows = [self.default_rsi_window, self.default_stochastic_k_window,
+                   self.default_stochastic_d_window, self.default_roc_window,
+                   self.default_momentum_window, self.default_cci_window]
+        if any(w > self.max_window for w in windows):
+            raise ValueError("Values in default windows cannot exceed max_window")
+
 @dataclass
 class AppConfig:
 
@@ -328,3 +374,4 @@ class AppConfig:
     universe_readiness_gate: UniverseReadinessGateConfig = field(default_factory=UniverseReadinessGateConfig)
     universe_runs: UniverseRunsConfig = field(default_factory=UniverseRunsConfig)
     trend_features: TrendFeatureConfig = field(default_factory=TrendFeatureConfig)
+    momentum_features: MomentumFeatureConfig = field(default_factory=MomentumFeatureConfig)

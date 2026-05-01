@@ -59,3 +59,10 @@ def test_list_by_category():
 def test_validate_all():
     reg = create_default_indicator_registry()
     reg.validate_all() # Should not raise
+
+def test_momentum_in_registry():
+    from usa_signal_bot.features.indicator_registry import create_default_indicator_registry
+    reg = create_default_indicator_registry()
+    assert reg.has("rsi")
+    assert reg.has("stochastic")
+    assert reg.has("roc")

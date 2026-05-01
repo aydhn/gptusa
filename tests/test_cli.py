@@ -195,3 +195,30 @@ def test_universe_export_command():
     )
     assert result.returncode == 0
     assert "Export successful:" in result.stdout
+
+def test_cli_momentum_indicator_list():
+    import subprocess
+    import sys
+    result = subprocess.run([sys.executable, "-m", "usa_signal_bot", "momentum-indicator-list"], capture_output=True, text=True)
+    assert result.returncode == 0
+    assert "Momentum Indicator Registry" in result.stdout
+
+def test_cli_momentum_indicator_set_info():
+    import subprocess
+    import sys
+    result = subprocess.run([sys.executable, "-m", "usa_signal_bot", "momentum-indicator-set-info", "--set", "basic_momentum"], capture_output=True, text=True)
+    assert result.returncode == 0
+    assert "Momentum Indicator Set: basic_momentum" in result.stdout
+
+def test_cli_momentum_feature_compute_cache():
+    import subprocess
+    import sys
+    result = subprocess.run([sys.executable, "-m", "usa_signal_bot", "momentum-feature-compute-cache", "--symbols", "AAPL", "--timeframes", "1d", "--set", "basic_momentum", "--provider", "mock"], capture_output=True, text=True)
+    assert "Momentum Feature Compute from Cache" in result.stdout
+
+def test_cli_momentum_feature_summary():
+    import subprocess
+    import sys
+    result = subprocess.run([sys.executable, "-m", "usa_signal_bot", "momentum-feature-summary"], capture_output=True, text=True)
+    assert result.returncode == 0
+    assert "Feature Outputs Summary" in result.stdout

@@ -152,3 +152,22 @@ data_readiness:
   max_error_count: 0
   max_warning_ratio: 0.30
   write_reports: true
+
+momentum_features:
+  enabled: true
+  default_indicator_set: "basic_momentum"
+  available_indicator_sets:
+    - "basic_momentum"
+    - "oscillator_momentum"
+    - "rate_of_change_momentum"
+    - "full_momentum"
+  default_rsi_window: 14
+  default_stochastic_k_window: 14
+  default_stochastic_d_window: 3
+  default_roc_window: 12
+  default_momentum_window: 10
+  default_cci_window: 20
+  max_window: 500
+  allow_partial_momentum_features: true
+  oscillator_min_value: 0.0
+  oscillator_max_value: 100.0

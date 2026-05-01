@@ -40,3 +40,17 @@ def test_assert_features_valid():
         assert_features_valid(rep2, allow_warnings=False)
 
     assert_features_valid(rep2, allow_warnings=True)
+
+def test_detect_out_of_range_oscillators():
+    from usa_signal_bot.features.validation import detect_out_of_range_oscillators
+    import pandas as pd
+    df = pd.DataFrame({"symbol": ["AAPL", "AAPL"], "timeframe": ["1d", "1d"], "rsi": [105.0, 50.0], "stoch": [-5.0, 20.0]})
+    issues = detect_out_of_range_oscillators(df, ["rsi", "stoch"])
+    assert len(issues) == 2
+
+def test_detect_extreme_momentum_values():
+    from usa_signal_bot.features.validation import detect_extreme_momentum_values
+    import pandas as pd
+    df = pd.DataFrame({"symbol": ["AAPL", "AAPL"], "timeframe": ["1d", "1d"], "roc": [1005.0, 50.0], "momentum": [-2000.0, 20.0]})
+    issues = detect_extreme_momentum_values(df, ["roc", "momentum"], absolute_threshold=1000.0)
+    assert len(issues) == 2

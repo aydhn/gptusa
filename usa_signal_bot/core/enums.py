@@ -295,3 +295,22 @@ class TrendDirection(str, Enum):
     DOWN = "DOWN"
     FLAT = "FLAT"
     UNKNOWN = "UNKNOWN"
+
+class MomentumFeatureType(str, Enum):
+    RSI = "RSI"
+    STOCHASTIC = "STOCHASTIC"
+    ROC = "ROC"
+    MOMENTUM = "MOMENTUM"
+    WILLIAMS_R = "WILLIAMS_R"
+    CCI = "CCI"
+    MOMENTUM_SLOPE = "MOMENTUM_SLOPE"
+    MOMENTUM_ACCELERATION = "MOMENTUM_ACCELERATION"
+    NORMALIZED_MOMENTUM = "NORMALIZED_MOMENTUM"
+
+class MomentumZone(str, Enum):
+    EXTREME_HIGH = "EXTREME_HIGH"
+    HIGH = "HIGH"
+    NEUTRAL = "NEUTRAL"
+    LOW = "LOW"
+    EXTREME_LOW = "EXTREME_LOW"
+    UNKNOWN = "UNKNOWN"
