@@ -46,31 +46,20 @@ class IndicatorRegistry:
             validate_indicator_metadata(ind.metadata)
             validate_parameter_schema(ind.parameter_schema)
 
-def create_default_indicator_registry() -> IndicatorRegistry:
-    registry = IndicatorRegistry()
-    register_builtin_indicators(registry)
-    return registry
-
-def register_builtin_indicators(registry: IndicatorRegistry) -> IndicatorRegistry:
+def register_builtin_indicators(registry) -> 'IndicatorRegistry':
     from usa_signal_bot.features.builtins_basic import (
-        CloseReturnIndicator,
-        CloseSMAIndicator,
-        CloseEMAIndicator,
-        VolumeSMAIndicator,
-        RollingHighIndicator,
-        RollingLowIndicator
+        CloseReturnIndicator, CloseSMAIndicator, CloseEMAIndicator,
+        VolumeSMAIndicator, RollingHighIndicator, RollingLowIndicator
     )
     from usa_signal_bot.features.trend_indicators import (
-        SMAIndicator,
-        EMAIndicator,
-        WMAIndicator,
-        DEMAIndicator,
-        TEMAIndicator,
-        MACDIndicator,
-        PriceDistanceToMAIndicator,
-        MASlopeIndicator,
-        MAAlignmentIndicator,
-        TrendStrengthBasicIndicator
+        SMAIndicator, EMAIndicator, WMAIndicator, DEMAIndicator,
+        TEMAIndicator, MACDIndicator, PriceDistanceToMAIndicator,
+        MASlopeIndicator, MAAlignmentIndicator, TrendStrengthBasicIndicator
+    )
+    from usa_signal_bot.features.momentum_indicators import (
+        RSIIndicator, StochasticIndicator, ROCIndicator, MomentumIndicator,
+        WilliamsRIndicator, CCIIndicator, MomentumSlopeIndicator,
+        MomentumAccelerationIndicator, NormalizedMomentumIndicator
     )
     registry.register(CloseReturnIndicator())
     registry.register(CloseSMAIndicator())
@@ -88,4 +77,18 @@ def register_builtin_indicators(registry: IndicatorRegistry) -> IndicatorRegistr
     registry.register(MASlopeIndicator())
     registry.register(MAAlignmentIndicator())
     registry.register(TrendStrengthBasicIndicator())
+    registry.register(RSIIndicator())
+    registry.register(StochasticIndicator())
+    registry.register(ROCIndicator())
+    registry.register(MomentumIndicator())
+    registry.register(WilliamsRIndicator())
+    registry.register(CCIIndicator())
+    registry.register(MomentumSlopeIndicator())
+    registry.register(MomentumAccelerationIndicator())
+    registry.register(NormalizedMomentumIndicator())
+    return registry
+
+def create_default_indicator_registry() -> IndicatorRegistry:
+    registry = IndicatorRegistry()
+    register_builtin_indicators(registry)
     return registry

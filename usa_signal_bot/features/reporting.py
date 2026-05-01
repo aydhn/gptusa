@@ -59,3 +59,13 @@ def write_feature_report_json(path: Path, result: FeatureComputationResult, vali
 
     atomic_write_text(path, json.dumps(data, indent=2))
     return path
+
+def momentum_indicator_set_to_text(indicator_set) -> str:
+    return f"Momentum Indicator Set: {indicator_set.name}"
+def momentum_feature_summary_to_text(result: FeatureComputationResult) -> str:
+    return feature_computation_result_to_text(result)
+def write_momentum_feature_report_json(path: Path, result: FeatureComputationResult, indicator_set = None) -> Path:
+    import dataclasses
+    data = {"computation": dataclasses.asdict(result)}
+    atomic_write_text(path, json.dumps(data, indent=2))
+    return path

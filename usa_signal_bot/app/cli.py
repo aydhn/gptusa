@@ -628,6 +628,38 @@ def handle_active_universe_eligible(context, latest_run: bool, format: str) -> i
         return 1
 
 
+
+def handle_momentum_indicator_list(context) -> int:
+    from usa_signal_bot.features.indicator_registry import create_default_indicator_registry
+    from usa_signal_bot.core.enums import IndicatorCategory
+    print("--- Momentum Indicator Registry ---")
+    reg = create_default_indicator_registry()
+    for ind in reg.list_by_category(IndicatorCategory.MOMENTUM): print(ind.metadata.name)
+    return 0
+
+def handle_momentum_indicator_set_info(context, set_name: str) -> int:
+    from usa_signal_bot.features.momentum_sets import get_momentum_indicator_set
+    from usa_signal_bot.features.reporting import momentum_indicator_set_to_text
+    print(momentum_indicator_set_to_text(get_momentum_indicator_set(set_name)))
+    return 0
+
+def handle_momentum_feature_compute_cache(context, symbols_str: str, timeframes_str: str, set_name: str, provider: str, write: bool) -> int:
+    from usa_signal_bot.features.engine import FeatureEngine
+    from usa_signal_bot.features.indicator_registry import create_default_indicator_registry
+    from usa_signal_bot.features.reporting import momentum_feature_summary_to_text
+    print("Momentum Feature Compute from Cache")
+    symbols = [s.strip() for s in symbols_str.split(",")] if symbols_str else []
+    timeframes = [t.strip() for t in timeframes_str.split(",")] if timeframes_str else ["1d"]
+    engine = FeatureEngine(create_default_indicator_registry(), context.data_dir)
+    res = engine.compute_momentum_set_from_cache(symbols, timeframes, set_name=set_name, provider_name=provider)
+    print(momentum_feature_summary_to_text(res))
+    return 0 if res.is_successful() else 1
+
+def handle_momentum_feature_summary(context) -> int:
+    from usa_signal_bot.features.feature_store import feature_store_dir
+    print("Feature Outputs Summary")
+    return 0
+
 def main() -> int:
     """Main CLI entrypoint."""
     parser = argparse.ArgumentParser(description="USA Signal Bot CLI")
@@ -845,7 +877,18 @@ def main() -> int:
     readiness_parser.add_argument("--timeframes", help="Comma-separated timeframes")
     readiness_parser.add_argument("--from-cache", action="store_true", default=True, help="Check readiness from cache")
 
+    subparsers.add_parser("momentum-indicator-list", help="List momentum indicators")
+    mom_set_info = subparsers.add_parser("momentum-indicator-set-info", help="Show momentum indicator set details")
+    mom_set_info.add_argument("--set", type=str, default="basic_momentum")
+    mom_compute = subparsers.add_parser("momentum-feature-compute-cache", help="Compute from cache")
+    mom_compute.add_argument("--symbols", type=str)
+    mom_compute.add_argument("--timeframes", type=str)
+    mom_compute.add_argument("--set", type=str, default="basic_momentum")
+    mom_compute.add_argument("--provider", type=str, default="yfinance")
+    mom_compute.add_argument("--write", action="store_true")
+    subparsers.add_parser("momentum-feature-summary", help="Show summary")
     args = parser.parse_args()
+
 
     if not args.command:
         parser.print_help()
@@ -970,11 +1013,14 @@ def main() -> int:
             sys.exit(handle_active_universe_latest_run(context))
         elif args.command == "active-universe-eligible":
             sys.exit(handle_active_universe_eligible(context, getattr(args, 'latest_run', True), getattr(args, 'format', 'txt')))
+        elif args.command == "momentum-indicator-list": sys.exit(handle_momentum_indicator_list(context))
+        elif args.command == "momentum-indicator-set-info": sys.exit(handle_momentum_indicator_set_info(context, getattr(args, 'set', 'basic_momentum')))
+        elif args.command == "momentum-feature-compute-cache": sys.exit(handle_momentum_feature_compute_cache(context, args.symbols, args.timeframes, getattr(args, 'set', 'basic_momentum'), getattr(args, 'provider', 'yfinance'), getattr(args, 'write', False)))
+        elif args.command == "momentum-feature-summary": sys.exit(handle_momentum_feature_summary(context))
 
 
         # End of new handlers
         # Keep this to not break replace logic
-            sys.exit(handle_provider_mock_fetch(context, args.symbols, args.timeframe))
 
 
     except Exception as e:

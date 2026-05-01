@@ -62,3 +62,17 @@ def test_engine_compute_from_cache(registry, tmp_path):
     # Batch would be empty, valid inputs empty
     # Engine will return FAILED because no rows produced and no valid symbols
     assert res.status == FeatureComputationStatus.COMPLETED
+
+def test_engine_compute_momentum_set_for_input(registry, tmp_path, fake_input):
+    from usa_signal_bot.features.engine import FeatureEngine
+    engine = FeatureEngine(registry, tmp_path)
+    res = engine.compute_momentum_set_for_input(fake_input, "basic_momentum")
+    assert res.is_successful()
+
+def test_engine_compute_momentum_set_for_batch(registry, tmp_path, fake_input):
+    from usa_signal_bot.features.engine import FeatureEngine
+    from usa_signal_bot.features.input_contract import FeatureBatchInput
+    engine = FeatureEngine(registry, tmp_path)
+    batch = FeatureBatchInput([fake_input], "2023", "test")
+    res = engine.compute_momentum_set_for_batch(batch, "oscillator_momentum")
+    assert res.is_successful()

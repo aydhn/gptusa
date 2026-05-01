@@ -231,3 +231,10 @@ class TrendIndicatorError(IndicatorError):
 
 class IndicatorSetError(FeatureError):
     pass
+
+class MomentumFeatureError(FeatureError):
+    pass
+class MomentumIndicatorError(IndicatorError):
+    pass
+class MomentumIndicatorSetError(IndicatorSetError):
+    pass

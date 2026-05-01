@@ -171,3 +171,34 @@ def assert_features_valid(report: FeatureValidationReport, allow_warnings: bool 
         raise FeatureValidationError(f"Features invalid. Errors: {report.errors}")
     if report.status == FeatureValidationStatus.WARNING and not allow_warnings:
         raise FeatureValidationError(f"Features have warnings and allow_warnings is False. Warnings: {report.warnings}")
+
+def validate_momentum_feature_columns(df: pd.DataFrame, feature_columns: list[str]) -> FeatureValidationReport:
+    return validate_feature_dataframe(df, feature_columns)
+
+def detect_out_of_range_oscillators(df: pd.DataFrame, oscillator_columns: list[str], lower: float = 0.0, upper: float = 100.0) -> list[FeatureValidationIssue]:
+    issues = []
+    if df.empty: return issues
+    symbol = df["symbol"].iloc[0] if "symbol" in df.columns and not df["symbol"].isna().all() else "UNKNOWN"
+    timeframe = df["timeframe"].iloc[0] if "timeframe" in df.columns and not df["timeframe"].isna().all() else "UNKNOWN"
+    for col in oscillator_columns:
+        if col in df.columns:
+            valid_data = df[col].dropna()
+            if not valid_data.empty:
+                out = valid_data[(valid_data < lower) | (valid_data > upper)]
+                if not out.empty:
+                    issues.append(FeatureValidationIssue(symbol=symbol, timeframe=timeframe, feature_name=col, severity="WARNING", message="Out of range"))
+    return issues
+
+def detect_extreme_momentum_values(df: pd.DataFrame, feature_columns: list[str], absolute_threshold: float = 1000.0) -> list[FeatureValidationIssue]:
+    issues = []
+    if df.empty: return issues
+    symbol = df["symbol"].iloc[0] if "symbol" in df.columns and not df["symbol"].isna().all() else "UNKNOWN"
+    timeframe = df["timeframe"].iloc[0] if "timeframe" in df.columns and not df["timeframe"].isna().all() else "UNKNOWN"
+    for col in feature_columns:
+        if col in df.columns:
+            valid_data = df[col].dropna()
+            if not valid_data.empty:
+                extremes = valid_data[np.abs(valid_data) > absolute_threshold]
+                if not extremes.empty:
+                    issues.append(FeatureValidationIssue(symbol=symbol, timeframe=timeframe, feature_name=col, severity="WARNING", message="Extreme"))
+    return issues
