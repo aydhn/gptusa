@@ -1075,6 +1075,21 @@ def main() -> int:
 
     vol_feat_summary_parser = subparsers.add_parser("volatility-feature-summary", help="List volatility feature outputs in storage")
 
+    parser_vol_ind_list = subparsers.add_parser("volume-indicator-list", help="List all registered volume indicators")
+
+    parser_vol_ind_info = subparsers.add_parser("volume-indicator-set-info", help="Show info for a volume indicator set")
+    parser_vol_ind_info.add_argument("--set", type=str, required=True, help="Set name (e.g., basic_volume)")
+
+    parser_vol_feat_cache = subparsers.add_parser("volume-feature-compute-cache", help="Compute volume features from cached data")
+    parser_vol_feat_cache.add_argument("--symbols", type=str, help="Comma-separated symbols")
+    parser_vol_feat_cache.add_argument("--timeframes", type=str, help="Comma-separated timeframes")
+    parser_vol_feat_cache.add_argument("--set", type=str, default="basic_volume", help="Indicator set name")
+    parser_vol_feat_cache.add_argument("--provider", type=str, default="yfinance", help="Provider name")
+    parser_vol_feat_cache.add_argument("--write", action="store_true", help="Write feature output to disk")
+
+    parser_vol_feat_summary = subparsers.add_parser("volume-feature-summary", help="List volume feature outputs in storage")
+
+
     args = parser.parse_args()
 
 
@@ -1205,6 +1220,16 @@ def main() -> int:
         elif args.command == "momentum-indicator-set-info": sys.exit(handle_momentum_indicator_set_info(context, getattr(args, 'set', 'basic_momentum')))
         elif args.command == "momentum-feature-compute-cache": sys.exit(handle_momentum_feature_compute_cache(context, args.symbols, args.timeframes, getattr(args, 'set', 'basic_momentum'), getattr(args, 'provider', 'yfinance'), getattr(args, 'write', False)))
         elif args.command == "momentum-feature-summary": sys.exit(handle_momentum_feature_summary(context))
+
+        elif args.command == "volume-indicator-list":
+            sys.exit(handle_volume_indicator_list(context))
+        elif args.command == "volume-indicator-set-info":
+            sys.exit(handle_volume_indicator_set_info(context, args.set))
+        elif args.command == "volume-feature-compute-cache":
+            sys.exit(handle_volume_feature_compute_cache(context, args.symbols, args.timeframes, getattr(args, "set"), args.provider, args.write))
+        elif args.command == "volume-feature-summary":
+            sys.exit(handle_volume_feature_summary(context))
+
 
 
         # End of new handlers
@@ -2208,3 +2233,117 @@ def handle_universe_presets(context) -> int:
              print(f"[{p.stem}] - Error loading: {e}")
 
     return 0
+
+
+def handle_volume_indicator_list(context) -> int:
+    from usa_signal_bot.features.indicator_registry import create_default_indicator_registry
+    from usa_signal_bot.core.enums import IndicatorCategory
+    print("--- Volume Indicator Registry ---")
+    try:
+        registry = create_default_indicator_registry()
+        indicators = registry.list_by_category(IndicatorCategory.VOLUME)
+        for ind in sorted(indicators, key=lambda x: x.metadata.name):
+            m = ind.metadata
+            print(f"[{m.category.value}] {m.name} (v{m.version}) - Min Bars: {m.min_bars}, Produces: {', '.join(m.produces)}")
+        return 0
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
+
+def handle_volume_indicator_set_info(context, set_name: str) -> int:
+    from usa_signal_bot.features.volume_sets import get_volume_indicator_set
+    import json
+    try:
+        ind_set = get_volume_indicator_set(set_name)
+        print(f"--- Volume Indicator Set: {set_name} ---")
+        print("Indicators:")
+        for i in ind_set.indicators:
+            print(f"  - {i}")
+        print("\nParams:")
+        print(json.dumps(ind_set.params_by_indicator, indent=2))
+        return 0
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
+
+def handle_volume_feature_compute_cache(context, symbols_str: str, timeframes_str: str, set_name: str, provider: str, write: bool) -> int:
+    from usa_signal_bot.features.engine import FeatureEngine
+    from usa_signal_bot.features.indicator_registry import create_default_indicator_registry
+    from usa_signal_bot.features.reporting import feature_computation_result_to_text, feature_output_metadata_to_text
+    from usa_signal_bot.features.validation import validate_volume_feature_columns, feature_validation_report_to_text
+    from usa_signal_bot.features.dataframe_utils import feature_rows_to_dataframe
+    from usa_signal_bot.data.cache import market_data_cache_dir
+
+    print("--- Volume Feature Compute from Cache ---")
+    symbols = [s.strip().upper() for s in symbols_str.split(",")] if symbols_str else []
+    timeframes = [t.strip() for t in timeframes_str.split(",")] if timeframes_str else ["1d"]
+
+    # Check if cache exists by trying to find at least one bar
+    cache_dir = market_data_cache_dir(context.data_dir)
+    if not list(cache_dir.glob("*.json")):
+        print("Error: No cached data found. Please run a data download command first.")
+        return 1
+
+    try:
+        registry = create_default_indicator_registry()
+        engine = FeatureEngine(registry, context.data_dir)
+
+        print(f"Computing '{set_name}' for {len(symbols)} symbols over {len(timeframes)} timeframes...")
+
+        res = engine.compute_volume_set_from_cache(symbols, timeframes, set_name=set_name, provider_name=provider)
+
+        print("\n" + feature_computation_result_to_text(res))
+
+        if res.feature_rows:
+            df = feature_rows_to_dataframe(res.feature_rows)
+            val_report = validate_volume_feature_columns(df, res.produced_features)
+            print("\n" + feature_validation_report_to_text(val_report))
+        else:
+            print("\nError: No feature rows generated. Have you downloaded data for these symbols?")
+            return 1
+
+        if write and res.is_successful():
+            from usa_signal_bot.core.enums import FeatureStorageFormat
+            fmt = FeatureStorageFormat("JSONL")
+            from usa_signal_bot.features.volume_sets import get_volume_indicator_set
+            ind_set = get_volume_indicator_set(set_name)
+
+            original_names = res.request.indicator_names
+            res.request.indicator_names = [set_name]
+            meta = engine.write_result(res, fmt)
+            res.request.indicator_names = original_names
+            print("\n" + feature_output_metadata_to_text(meta))
+
+        return 0 if res.is_successful() else 1
+    except Exception as e:
+        print(f"Execution failed: {e}")
+        return 1
+
+def handle_volume_feature_summary(context) -> int:
+    from usa_signal_bot.features.feature_store import feature_store_dir
+    import json
+    print("--- Volume Feature Outputs Summary ---")
+    try:
+        d = feature_store_dir(context.data_dir)
+        meta_files = sorted(list(d.glob("*_volume_meta.json")), key=lambda x: x.stat().st_mtime, reverse=True)
+        if not meta_files:
+            meta_files = [f for f in d.glob("*_meta.json") if "volume" in f.name]
+            if not meta_files:
+                print("No volume feature metadata files found.")
+                return 0
+
+        print(f"Found {len(meta_files)} metadata files. Showing latest 5:\n")
+
+        for f in meta_files[:5]:
+            try:
+                with open(f, "r") as mf:
+                    meta = json.load(mf)
+                print(f"[{meta.get('created_at_utc')}] Output ID: {meta.get('output_id')}")
+                print(f"  Symbols: {len(meta.get('symbols', []))}, Indicators: {len(meta.get('indicators', []))}")
+                print(f"  Rows: {meta.get('row_count')}, Provider: {meta.get('provider_name')}")
+            except Exception:
+                print(f"  [Error reading metadata file {f.name}]")
+        return 0
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
