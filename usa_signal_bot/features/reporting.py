@@ -69,3 +69,19 @@ def write_momentum_feature_report_json(path: Path, result: FeatureComputationRes
     data = {"computation": dataclasses.asdict(result)}
     atomic_write_text(path, json.dumps(data, indent=2))
     return path
+
+
+def volatility_indicator_set_to_text(indicator_set) -> str:
+    return f"Volatility Indicator Set: {indicator_set.name}"
+
+def volatility_feature_summary_to_text(result: FeatureComputationResult) -> str:
+    return feature_computation_result_to_text(result)
+
+def write_volatility_feature_report_json(path: Path, result: FeatureComputationResult, indicator_set = None) -> Path:
+    import dataclasses
+    data = {"computation": dataclasses.asdict(result)}
+    if indicator_set:
+        from usa_signal_bot.features.volatility_sets import volatility_indicator_set_to_dict
+        data["indicator_set"] = volatility_indicator_set_to_dict(indicator_set)
+    atomic_write_text(path, json.dumps(data, indent=2))
+    return path

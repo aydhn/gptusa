@@ -383,3 +383,56 @@ def check_cache_refresh_health(context):
 
 def check_momentum_feature_health(context):
     return HealthCheckResult("Momentum Features", True, "OK")
+
+
+def check_volatility_feature_health(context: 'RuntimeContext') -> HealthCheckResult:
+    import pandas as pd
+    from usa_signal_bot.features.indicator_registry import get_default_registry
+    from usa_signal_bot.features.engine import FeatureEngine
+    from usa_signal_bot.features.input_contract import FeatureInput
+    from usa_signal_bot.features.models import OHLCVBar
+    from usa_signal_bot.features.volatility_sets import get_volatility_indicator_set
+    from datetime import datetime, timezone
+
+    try:
+        if not hasattr(context.config, "volatility_features"):
+            return HealthCheckResult("volatility_feature_health", HealthStatus.WARNING, "volatility_features config missing")
+
+        cfg = context.config.volatility_features
+        if not cfg.enabled:
+            return HealthCheckResult("volatility_feature_health", HealthStatus.PASS, "Volatility features are disabled")
+
+        reg = get_default_registry()
+        for ind_name in ["atr", "bollinger_bands", "rolling_volatility"]:
+            if not reg.has(ind_name):
+                 return HealthCheckResult("volatility_feature_health", HealthStatus.FAIL, f"Missing required volatility indicator: {ind_name}")
+
+        try:
+             vol_set = get_volatility_indicator_set(cfg.default_indicator_set)
+        except Exception as e:
+             return HealthCheckResult("volatility_feature_health", HealthStatus.FAIL, f"Could not load default volatility set: {e}")
+
+        engine = FeatureEngine(reg, context.paths.data_dir)
+        bars = []
+        base_time = datetime(2023, 1, 1, tzinfo=timezone.utc)
+        for i in range(50):
+            bars.append(OHLCVBar(
+                timestamp_utc=base_time.isoformat(),
+                open=100.0 + i,
+                high=102.0 + i,
+                low=98.0 + i,
+                close=101.0 + i,
+                volume=1000 + i,
+                adjusted_close=101.0 + i
+            ))
+
+        f_input = FeatureInput(symbol="TEST", timeframe="1d", source="mock", bars=bars)
+        res = engine.compute_volatility_set_for_input(f_input, set_name=cfg.default_indicator_set)
+
+        if res.is_successful():
+            return HealthCheckResult("volatility_feature_health", HealthStatus.PASS, f"Volatility engine healthy, produced {len(res.produced_features)} features")
+        else:
+            return HealthCheckResult("volatility_feature_health", HealthStatus.FAIL, f"Volatility engine compute failed: {res.errors}")
+
+    except Exception as e:
+        return HealthCheckResult("volatility_feature_health", HealthStatus.FAIL, f"Exception during volatility feature health check: {e}")

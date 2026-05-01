@@ -1,3 +1,4 @@
+from usa_signal_bot.features.indicator_registry import create_default_indicator_registry
 from usa_signal_bot.core.enums import IndicatorOutputType
 import pytest
 from usa_signal_bot.features.indicator_registry import IndicatorRegistry, create_default_indicator_registry
@@ -66,3 +67,16 @@ def test_momentum_in_registry():
     assert reg.has("rsi")
     assert reg.has("stochastic")
     assert reg.has("roc")
+
+
+def test_volatility_indicators_registered(registry):
+    assert registry.has("true_range")
+    assert registry.has("bollinger_bands")
+    assert registry.has("volatility_compression")
+
+    vol_inds = registry.list_by_category(IndicatorCategory.VOLATILITY)
+    assert len(vol_inds) >= 12
+
+@pytest.fixture
+def registry():
+    return create_default_indicator_registry()

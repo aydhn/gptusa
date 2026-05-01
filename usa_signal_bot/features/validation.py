@@ -202,3 +202,82 @@ def detect_extreme_momentum_values(df: pd.DataFrame, feature_columns: list[str],
                 if not extremes.empty:
                     issues.append(FeatureValidationIssue(symbol=symbol, timeframe=timeframe, feature_name=col, severity="WARNING", message="Extreme"))
     return issues
+
+
+def validate_volatility_feature_columns(df: pd.DataFrame, feature_columns: list[str]) -> FeatureValidationReport:
+    report = validate_feature_dataframe(df, feature_columns)
+    issues = report.issues.copy()
+
+    issues.extend(detect_negative_volatility_features(df, feature_columns))
+
+    # Simple heuristic to find bollinger/keltner band groups
+    cols = list(df.columns)
+    for col in cols:
+        if "_upper_" in col:
+            prefix = col.split("_upper_")[0]
+            suffix = col.split("_upper_")[1]
+            mid_col = f"{prefix}_middle_{suffix}"
+            low_col = f"{prefix}_lower_{suffix}"
+            if mid_col in cols and low_col in cols:
+                issues.extend(detect_invalid_band_order(df, col, mid_col, low_col))
+
+    issues.extend(detect_extreme_volatility_values(df, feature_columns))
+
+    report.issues = issues
+    if any(iss.severity == "ERROR" for iss in issues):
+        report.status = FeatureValidationStatus.INVALID
+    elif any(iss.severity == "WARNING" for iss in issues) and report.status == FeatureValidationStatus.VALID:
+        report.status = FeatureValidationStatus.WARNING
+
+    return report
+
+def detect_negative_volatility_features(df: pd.DataFrame, feature_columns: list[str]) -> list[FeatureValidationIssue]:
+    issues = []
+    if df.empty: return issues
+    symbol = df["symbol"].iloc[0] if "symbol" in df.columns and not df["symbol"].isna().all() else "UNKNOWN"
+    timeframe = df["timeframe"].iloc[0] if "timeframe" in df.columns and not df["timeframe"].isna().all() else "UNKNOWN"
+
+    for col in feature_columns:
+        if "atr" in col or "volatility" in col or "bandwidth" in col or "range" in col:
+            if col in df.columns:
+                valid_data = df[col].dropna()
+                if not valid_data.empty:
+                    neg = valid_data[valid_data < 0]
+                    if not neg.empty:
+                        issues.append(FeatureValidationIssue(symbol=symbol, timeframe=timeframe, feature_name=col, severity="ERROR", message="Negative volatility feature"))
+    return issues
+
+def detect_invalid_band_order(df: pd.DataFrame, upper_col: str, middle_col: str, lower_col: str) -> list[FeatureValidationIssue]:
+    issues = []
+    if df.empty: return issues
+    symbol = df["symbol"].iloc[0] if "symbol" in df.columns and not df["symbol"].isna().all() else "UNKNOWN"
+    timeframe = df["timeframe"].iloc[0] if "timeframe" in df.columns and not df["timeframe"].isna().all() else "UNKNOWN"
+
+    # Check upper >= lower
+    valid_data = df[[upper_col, middle_col, lower_col]].dropna()
+    if not valid_data.empty:
+        invalid_order = valid_data[valid_data[upper_col] < valid_data[lower_col]]
+        if not invalid_order.empty:
+             issues.append(FeatureValidationIssue(symbol=symbol, timeframe=timeframe, feature_name=upper_col, severity="ERROR", message="Upper band < Lower band"))
+
+        # Check middle band bounds
+        out_of_bounds = valid_data[(valid_data[middle_col] > valid_data[upper_col]) | (valid_data[middle_col] < valid_data[lower_col])]
+        if not out_of_bounds.empty:
+             issues.append(FeatureValidationIssue(symbol=symbol, timeframe=timeframe, feature_name=middle_col, severity="WARNING", message="Middle band outside upper/lower bounds"))
+
+    return issues
+
+def detect_extreme_volatility_values(df: pd.DataFrame, feature_columns: list[str], absolute_threshold: float = 1000.0) -> list[FeatureValidationIssue]:
+    issues = []
+    if df.empty: return issues
+    symbol = df["symbol"].iloc[0] if "symbol" in df.columns and not df["symbol"].isna().all() else "UNKNOWN"
+    timeframe = df["timeframe"].iloc[0] if "timeframe" in df.columns and not df["timeframe"].isna().all() else "UNKNOWN"
+
+    for col in feature_columns:
+        if col in df.columns:
+            valid_data = df[col].dropna()
+            if not valid_data.empty:
+                extremes = valid_data[np.abs(valid_data) > absolute_threshold]
+                if not extremes.empty:
+                    issues.append(FeatureValidationIssue(symbol=symbol, timeframe=timeframe, feature_name=col, severity="WARNING", message="Extreme volatility value"))
+    return issues

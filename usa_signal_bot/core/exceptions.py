@@ -238,3 +238,13 @@ class MomentumIndicatorError(IndicatorError):
     pass
 class MomentumIndicatorSetError(IndicatorSetError):
     pass
+
+
+class VolatilityFeatureError(FeatureComputationError):
+    pass
+
+class VolatilityIndicatorError(IndicatorError):
+    pass
+
+class VolatilityIndicatorSetError(FeatureComputationError):
+    pass
