@@ -42,3 +42,16 @@ class FeatureSetMetadata(BaseDomainModel):
     def validate(self) -> None:
         super().validate()
         ensure_non_empty_string(self.name, "name")
+
+@dataclass
+class IndicatorSet(BaseDomainModel):
+    name: str = ""
+    description: str = ""
+    indicators: list[str] = None
+    params_by_indicator: dict[str, dict[str, Any]] = None
+
+    def __post_init__(self):
+        if self.indicators is None:
+            self.indicators = []
+        if self.params_by_indicator is None:
+            self.params_by_indicator = {}
