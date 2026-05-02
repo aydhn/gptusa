@@ -237,6 +237,95 @@ def check_extended_universe_health(context) -> HealthCheckResult:
     except Exception as e:
         return HealthCheckResult("Extended Universe Check", False, f"Extended Universe check failed: {e}")
 
+
+def check_strategy_engine_health(context: 'RuntimeContext') -> HealthCheckResult:
+    result = HealthCheckResult(
+        component="strategy_engine",
+        status=HealthStatus.HEALTHY,
+        message="Strategy engine initialized",
+        details={}
+    )
+
+    try:
+        if not context.config.strategies.enabled:
+            result.status = HealthStatus.DEGRADED
+            result.message = "Strategies are disabled in config"
+            return result
+
+        from usa_signal_bot.strategies.strategy_registry import create_default_strategy_registry
+        from usa_signal_bot.strategies.strategy_engine import StrategyEngine
+        from usa_signal_bot.strategies.strategy_input import StrategyInputBatch, StrategyFeatureFrame
+        import datetime
+
+        registry = create_default_strategy_registry()
+        engine = StrategyEngine(registry, context.data_dir)
+
+        result.details["registered_strategies"] = len(registry.list_names())
+
+        if not registry.has("trend_following_skeleton"):
+            result.status = HealthStatus.UNHEALTHY
+            result.message = "trend_following_skeleton missing from registry"
+            return result
+
+        # Try a fake input batch
+        now = datetime.datetime.now(datetime.timezone.utc).isoformat()
+        frame = StrategyFeatureFrame(
+            symbol="FAKE",
+            timeframe="1d",
+            rows=[{"timestamp_utc": now, "close_ema_20": 105.0, "close_ema_50": 100.0}],
+            feature_names=["close_ema_20", "close_ema_50"]
+        )
+        batch = StrategyInputBatch(frames=[frame], provider_name="health", symbols=["FAKE"], timeframes=["1d"], created_at_utc=now)
+
+        run_res = engine.run_strategy("trend_following_skeleton", batch)
+        if run_res.status.value == "FAILED":
+            result.status = HealthStatus.UNHEALTHY
+            result.message = f"Strategy run failed: {run_res.errors}"
+            return result
+
+        if len(run_res.signals) != 1:
+            result.status = HealthStatus.DEGRADED
+            result.message = f"Expected 1 signal, got {len(run_res.signals)}"
+
+    except Exception as e:
+        result.status = HealthStatus.UNHEALTHY
+        result.message = f"Strategy engine error: {e}"
+
+    return result
+
+def check_signal_contract_health(context: 'RuntimeContext') -> HealthCheckResult:
+    result = HealthCheckResult(
+        component="signal_contract",
+        status=HealthStatus.HEALTHY,
+        message="Signal contract initialized",
+        details={}
+    )
+
+    try:
+        from usa_signal_bot.strategies.signal_store import signal_store_dir
+
+        d = signal_store_dir(context.data_dir)
+        result.details["store_dir"] = str(d)
+
+        # Check permissions
+        import tempfile
+        import os
+        try:
+            with tempfile.NamedTemporaryFile(dir=d, suffix=".tmp", delete=False) as tf:
+                tf.write(b"test")
+                tf_name = tf.name
+            os.remove(tf_name)
+        except Exception as e:
+            result.status = HealthStatus.UNHEALTHY
+            result.message = f"Cannot write to signal directory: {e}"
+            return result
+
+    except Exception as e:
+        result.status = HealthStatus.UNHEALTHY
+        result.message = f"Signal contract error: {e}"
+
+    return result
+
 def run_health_checks(context) -> List[HealthCheckResult]:
 
     """Runs all health checks and returns the results."""

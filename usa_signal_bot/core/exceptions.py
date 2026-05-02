@@ -283,3 +283,30 @@ class FeatureCheckpointError(CompositeFeatureError):
 
 class CompositeFeatureValidationError(FeatureValidationError):
     pass
+
+class StrategyError(USASignalBotError):
+    pass
+
+class StrategyMetadataError(StrategyError):
+    pass
+
+class StrategyParameterError(StrategyError):
+    pass
+
+class StrategyRegistrationError(StrategyError):
+    pass
+
+class StrategyInputError(StrategyError):
+    pass
+
+class StrategyExecutionError(StrategyError):
+    pass
+
+class SignalContractError(StrategyError):
+    pass
+
+class SignalValidationError(StrategyError):
+    pass
+
+class SignalStorageError(StrategyError):
+    pass
