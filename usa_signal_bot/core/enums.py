@@ -420,3 +420,40 @@ class DivergenceStrength(str, Enum):
     STRONG = "STRONG"
     VERY_STRONG = "VERY_STRONG"
     UNKNOWN = "UNKNOWN"
+
+class FeatureGroupType(str, Enum):
+    BASIC = "BASIC"
+    TREND = "TREND"
+    MOMENTUM = "MOMENTUM"
+    VOLATILITY = "VOLATILITY"
+    VOLUME = "VOLUME"
+    PRICE_ACTION = "PRICE_ACTION"
+    DIVERGENCE = "DIVERGENCE"
+    COMPOSITE = "COMPOSITE"
+    CUSTOM = "CUSTOM"
+
+class CompositeFeatureSetName(str, Enum):
+    MINIMAL = "MINIMAL"
+    CORE = "CORE"
+    TECHNICAL = "TECHNICAL"
+    FULL = "FULL"
+    RESEARCH = "RESEARCH"
+
+class FeaturePipelineStatus(str, Enum):
+    NOT_STARTED = "NOT_STARTED"
+    RUNNING = "RUNNING"
+    COMPLETED = "COMPLETED"
+    PARTIAL_SUCCESS = "PARTIAL_SUCCESS"
+    FAILED = "FAILED"
+
+class FeatureCheckpointStatus(str, Enum):
+    PASSED = "PASSED"
+    PARTIAL = "PARTIAL"
+    FAILED = "FAILED"
+    NOT_EVALUATED = "NOT_EVALUATED"
+
+class FeatureOutputPartition(str, Enum):
+    BY_SYMBOL = "BY_SYMBOL"
+    BY_TIMEFRAME = "BY_TIMEFRAME"
+    BY_GROUP = "BY_GROUP"
+    COMBINED = "COMBINED"

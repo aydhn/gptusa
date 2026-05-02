@@ -125,3 +125,72 @@ def feature_store_summary(data_root: Path) -> Dict[str, Any]:
         "csv_files": csv_count,
         "metadata_files": meta_count
     }
+
+from usa_signal_bot.features.composite_models import CompositeFeatureMetadata, composite_feature_metadata_to_dict
+import logging
+logger = logging.getLogger(__name__)
+
+def composite_feature_store_dir(data_root: Path) -> Path:
+    d = feature_store_dir(data_root) / "composite"
+    d.mkdir(parents=True, exist_ok=True)
+    return d
+
+def build_composite_output_dir(data_root: Path, composite_set_name: str, timestamp_utc: Optional[str] = None) -> Path:
+    d = composite_feature_store_dir(data_root) / composite_set_name
+    if timestamp_utc:
+        ts = timestamp_utc.replace(":", "").replace("-", "")
+        d = d / ts
+    d.mkdir(parents=True, exist_ok=True)
+    return d
+
+def write_group_feature_output(data_root: Path, group_result: 'FeatureComputationResult', group_name: str) -> Optional[Path]:
+    try:
+        d = feature_store_dir(data_root) / "groups" / group_name
+        d.mkdir(parents=True, exist_ok=True)
+        ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+        f = d / f"{group_name}_{ts}.json"
+
+        data = {
+            "status": group_result.status.value,
+            "row_count": len(group_result.feature_rows),
+            "produced_features": group_result.produced_features,
+            "errors": group_result.errors,
+            "warnings": group_result.warnings
+        }
+        with open(f, 'w') as fh:
+            json.dump(data, fh, indent=2)
+        return f
+    except Exception as e:
+        logger.error(f"Failed to write group feature output for {group_name}: {e}")
+        return None
+
+def write_composite_metadata_json(data_root: Path, metadata: CompositeFeatureMetadata) -> Path:
+    from usa_signal_bot.core.exceptions import FeatureStorageError
+    try:
+        d = build_composite_output_dir(data_root, metadata.composite_set_name)
+        f = d / f"{metadata.metadata_id}_metadata.json"
+        data = composite_feature_metadata_to_dict(metadata)
+        with open(f, 'w') as fh:
+            json.dump(data, fh, indent=2)
+        return f
+    except Exception as e:
+        raise FeatureStorageError(f"Failed to write composite metadata: {e}")
+
+def list_composite_feature_outputs(data_root: Path) -> List[Path]:
+    d = composite_feature_store_dir(data_root)
+    if not d.exists():
+        return []
+
+    outputs = []
+    for cset_dir in d.iterdir():
+        if cset_dir.is_dir():
+            for meta_file in cset_dir.glob("*_metadata.json"):
+                outputs.append(meta_file)
+    return sorted(outputs)
+
+def composite_feature_store_summary(data_root: Path) -> Dict[str, Any]:
+    outputs = list_composite_feature_outputs(data_root)
+    return {
+        "total_outputs": len(outputs),
+        "recent_outputs": [str(p.name) for p in outputs[-5:]] if outputs else []
+    }

@@ -268,3 +268,18 @@ class DivergenceDetectionError(DivergenceFeatureError):
 class PivotDetectionError(DivergenceFeatureError):
     """Raised during pivot point detection failures."""
     pass
+
+class CompositeFeatureError(FeatureError):
+    pass
+
+class FeatureGroupError(CompositeFeatureError):
+    pass
+
+class FeaturePipelineError(CompositeFeatureError):
+    pass
+
+class FeatureCheckpointError(CompositeFeatureError):
+    pass
+
+class CompositeFeatureValidationError(FeatureValidationError):
+    pass

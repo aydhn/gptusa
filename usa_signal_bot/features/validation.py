@@ -1,5 +1,7 @@
 from usa_signal_bot.core.enums import ValidationSeverity
 from dataclasses import dataclass
+from typing import Dict, List, Any
+from pathlib import Path
 from typing import List, Optional
 import pandas as pd
 import numpy as np
@@ -282,3 +284,108 @@ def detect_extreme_volatility_values(df: pd.DataFrame, feature_columns: list[str
                 if not extremes.empty:
                     issues.append(FeatureValidationIssue(symbol=symbol, timeframe=timeframe, feature_name=col, severity="WARNING", message="Extreme volatility value"))
     return issues
+
+from usa_signal_bot.core.enums import FeatureValidationStatus
+
+@dataclass
+class CompositeFeatureValidationReport:
+    status: FeatureValidationStatus
+    group_reports: Dict[str, 'FeatureValidationReport']
+    total_rows: int
+    total_features: int
+    total_issues: int
+    warnings: List[str]
+    errors: List[str]
+
+def aggregate_feature_validation_reports(group_reports: Dict[str, 'FeatureValidationReport']) -> CompositeFeatureValidationReport:
+    warnings = []
+    errors = []
+    total_rows = 0
+    total_features = 0
+    total_issues = 0
+    has_invalid = False
+    has_warning = False
+
+    for group_name, report in group_reports.items():
+        total_rows = max(total_rows, report.row_count)
+        total_features += len(report.features_checked)
+
+        for w in report.warnings:
+            warnings.append(f"[{group_name}] {w}")
+            total_issues += 1
+
+        for e in report.errors:
+            errors.append(f"[{group_name}] {e}")
+            total_issues += 1
+
+        if report.status == FeatureValidationStatus.INVALID:
+            has_invalid = True
+        elif report.status == FeatureValidationStatus.WARNING:
+            has_warning = True
+
+    if has_invalid:
+        status = FeatureValidationStatus.INVALID
+    elif has_warning:
+        status = FeatureValidationStatus.WARNING
+    else:
+        status = FeatureValidationStatus.VALID
+
+    return CompositeFeatureValidationReport(
+        status=status,
+        group_reports=group_reports,
+        total_rows=total_rows,
+        total_features=total_features,
+        total_issues=total_issues,
+        warnings=warnings,
+        errors=errors
+    )
+
+def composite_feature_validation_report_to_text(report: CompositeFeatureValidationReport) -> str:
+    lines = ["--- Composite Feature Validation Report ---"]
+    lines.append(f"Status: {report.status.value}")
+    lines.append(f"Total Rows: {report.total_rows}")
+    lines.append(f"Total Features: {report.total_features}")
+    lines.append(f"Total Issues: {report.total_issues}")
+    lines.append("")
+
+    if report.warnings:
+        lines.append("Warnings:")
+        for w in report.warnings:
+            lines.append(f"  - {w}")
+
+    if report.errors:
+        lines.append("Errors:")
+        for e in report.errors:
+            lines.append(f"  - {e}")
+
+    return "\n".join(lines)
+
+def write_composite_feature_validation_report_json(path: Path, report: CompositeFeatureValidationReport) -> Path:
+    import json
+
+    group_reports_dict = {}
+    for k, v in report.group_reports.items():
+        group_reports_dict[k] = {
+            "status": v.status.value,
+            "row_count": v.row_count,
+            "features_checked": v.features_checked,
+            "missing_values": v.missing_values,
+            "infinite_values": v.infinite_values,
+            "warnings": v.warnings,
+            "errors": v.errors
+        }
+
+    data = {
+        "status": report.status.value,
+        "total_rows": report.total_rows,
+        "total_features": report.total_features,
+        "total_issues": report.total_issues,
+        "warnings": report.warnings,
+        "errors": report.errors,
+        "group_reports": group_reports_dict
+    }
+
+    with open(path, 'w') as f:
+        json.dump(data, f, indent=2)
+
+    return path

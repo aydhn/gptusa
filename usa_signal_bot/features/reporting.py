@@ -85,3 +85,87 @@ def write_volatility_feature_report_json(path: Path, result: FeatureComputationR
         data["indicator_set"] = volatility_indicator_set_to_dict(indicator_set)
     atomic_write_text(path, json.dumps(data, indent=2))
     return path
+
+from usa_signal_bot.features.composite_models import (
+    CompositeFeatureResult, CompositeFeatureMetadata, FeatureGroupResult
+)
+from usa_signal_bot.features.feature_pipeline import FeaturePipelineResult
+import json
+
+def feature_group_result_to_text(result: FeatureGroupResult) -> str:
+    lines = [f"Group: {result.group_name} ({result.group_type.value}) - {result.status.value}"]
+    lines.append(f"  Rows: {result.row_count}, Features: {len(result.produced_features)}")
+    if result.storage_paths:
+        lines.append(f"  Storage: {', '.join(result.storage_paths)}")
+    if result.warnings:
+        lines.append(f"  Warnings: {len(result.warnings)}")
+    if result.errors:
+        lines.append(f"  Errors: {len(result.errors)}")
+    return "\n".join(lines)
+
+def composite_feature_result_to_text(result: CompositeFeatureResult) -> str:
+    lines = [f"--- Composite Feature Result: {result.composite_set_name} ---"]
+    lines.append(f"Status: {result.status.value}")
+    lines.append(f"Created At: {result.created_at_utc}")
+    lines.append(f"Total Rows: {result.total_rows}")
+    lines.append(f"Total Features: {result.total_features}")
+    lines.append(f"Symbols Processed: {len(result.symbols_processed)}")
+    lines.append(f"Timeframes Processed: {len(result.timeframes_processed)}")
+    lines.append("")
+    lines.append("Group Results:")
+    for gr in result.group_results:
+        lines.append(feature_group_result_to_text(gr))
+
+    if result.warnings:
+        lines.append("")
+        lines.append("Warnings:")
+        for w in result.warnings:
+            lines.append(f"  - {w}")
+
+    if result.errors:
+        lines.append("")
+        lines.append("Errors:")
+        for e in result.errors:
+            lines.append(f"  - {e}")
+
+    return "\n".join(lines)
+
+def composite_feature_metadata_to_text(metadata: CompositeFeatureMetadata) -> str:
+    lines = [f"--- Composite Feature Metadata: {metadata.composite_set_name} ---"]
+    lines.append(f"ID: {metadata.metadata_id}")
+    lines.append(f"Provider: {metadata.provider_name}")
+    if metadata.universe_name:
+        lines.append(f"Universe: {metadata.universe_name}")
+    lines.append(f"Symbols: {len(metadata.symbols)}")
+    lines.append(f"Timeframes: {', '.join(metadata.timeframes)}")
+    lines.append(f"Feature Groups: {', '.join(metadata.feature_groups)}")
+    lines.append(f"Produced Features: {metadata.total_features}")
+    lines.append(f"Created At: {metadata.created_at_utc}")
+    return "\n".join(lines)
+
+def feature_pipeline_result_to_text(result: FeaturePipelineResult) -> str:
+    lines = ["--- Feature Pipeline Result ---"]
+    lines.append(f"Status: {result.status.value}")
+    lines.append(f"Requested Symbols: {len(result.request.symbols) if result.request.symbols else 'Auto'}")
+    lines.append(f"Used Eligible Symbols: {len(result.eligible_symbols_used)}")
+    if result.missing_cache_symbols:
+        lines.append(f"Missing Cache Data: {len(result.missing_cache_symbols)} symbols")
+
+    lines.append("")
+    lines.append(composite_feature_result_to_text(result.composite_result))
+
+    return "\n".join(lines)
+
+def write_composite_feature_report_json(path: Path, result: CompositeFeatureResult, metadata: CompositeFeatureMetadata | None = None) -> Path:
+    from usa_signal_bot.features.composite_models import composite_feature_result_to_dict, composite_feature_metadata_to_dict
+
+    data = {
+        "result": composite_feature_result_to_dict(result)
+    }
+    if metadata:
+        data["metadata"] = composite_feature_metadata_to_dict(metadata)
+
+    with open(path, 'w') as f:
+        json.dump(data, f, indent=2)
+
+    return path
