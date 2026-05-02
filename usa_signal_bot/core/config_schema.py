@@ -374,6 +374,58 @@ class VolatilityFeatureConfig:
     allow_partial_volatility_features: bool = True
     fail_on_negative_volatility: bool = True
 
+
+@dataclass
+class StrategiesConfig:
+    enabled: bool = True
+    default_strategies: list[str] = field(default_factory=lambda: [
+        "trend_following_skeleton",
+        "mean_reversion_skeleton",
+        "momentum_skeleton",
+        "volatility_breakout_skeleton"
+    ])
+    allow_experimental_strategies: bool = True
+    default_action_mode: str = "watch_only"
+    allow_long_candidates: bool = True
+    allow_short_candidates: bool = False
+    max_signals_per_strategy_run: int = 200
+    min_confidence: float = 0.0
+    max_confidence_allowed_without_backtest: float = 0.70
+    write_signal_outputs: bool = True
+    write_strategy_reports: bool = True
+
+    def __post_init__(self):
+        if not self.default_strategies:
+            raise ValueError("default_strategies cannot be empty")
+        if self.default_action_mode != "watch_only":
+            raise ValueError("default_action_mode must be 'watch_only'")
+        if self.max_signals_per_strategy_run <= 0:
+            raise ValueError("max_signals_per_strategy_run must be positive")
+        if not (0.0 <= self.min_confidence <= 1.0):
+            raise ValueError("min_confidence must be between 0.0 and 1.0")
+        if not (0.0 <= self.max_confidence_allowed_without_backtest <= 1.0):
+            raise ValueError("max_confidence_allowed_without_backtest must be between 0.0 and 1.0")
+
+@dataclass
+class SignalsConfig:
+    enabled: bool = True
+    store_dir: str = "data/signals"
+    default_format: str = "jsonl"
+    expire_after_hours: int = 24
+    require_reasons: bool = True
+    reject_duplicate_signal_ids: bool = True
+    overconfidence_warning_threshold: float = 0.80
+
+    def __post_init__(self):
+        if not self.store_dir:
+            raise ValueError("store_dir cannot be empty")
+        if self.default_format != "jsonl":
+            raise ValueError("default_format must be 'jsonl'")
+        if self.expire_after_hours <= 0:
+            raise ValueError("expire_after_hours must be positive")
+        if not (0.0 <= self.overconfidence_warning_threshold <= 1.0):
+            raise ValueError("overconfidence_warning_threshold must be between 0.0 and 1.0")
+
 @dataclass
 class AppConfig:
 
@@ -401,3 +453,6 @@ class AppConfig:
     trend_features: TrendFeatureConfig = field(default_factory=TrendFeatureConfig)
     momentum_features: MomentumFeatureConfig = field(default_factory=MomentumFeatureConfig)
     volatility_features: VolatilityFeatureConfig = field(default_factory=VolatilityFeatureConfig)
+
+    strategies: StrategiesConfig = field(default_factory=StrategiesConfig)
+    signals: SignalsConfig = field(default_factory=SignalsConfig)

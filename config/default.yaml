@@ -194,3 +194,29 @@ volatility_features:
   max_window: 1000
   allow_partial_volatility_features: true
   fail_on_negative_volatility: true
+
+strategies:
+  enabled: true
+  default_strategies:
+    - "trend_following_skeleton"
+    - "mean_reversion_skeleton"
+    - "momentum_skeleton"
+    - "volatility_breakout_skeleton"
+  allow_experimental_strategies: true
+  default_action_mode: "watch_only"
+  allow_long_candidates: true
+  allow_short_candidates: false
+  max_signals_per_strategy_run: 200
+  min_confidence: 0.0
+  max_confidence_allowed_without_backtest: 0.70
+  write_signal_outputs: true
+  write_strategy_reports: true
+
+signals:
+  enabled: true
+  store_dir: "data/signals"
+  default_format: "jsonl"
+  expire_after_hours: 24
+  require_reasons: true
+  reject_duplicate_signal_ids: true
+  overconfidence_warning_threshold: 0.80

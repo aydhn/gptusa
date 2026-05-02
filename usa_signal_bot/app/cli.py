@@ -12,9 +12,9 @@ from usa_signal_bot.app.runtime import initialize_runtime, run_startup_checks, b
 def handle_universe_info(context) -> int:
     from usa_signal_bot.universe.registry import get_default_watchlist_path, get_sample_stocks_path, get_sample_etfs_path
 
-    print("--- USA Signal Bot Universe Info ---")
-    print("This seed file is NOT the entire USA universe.")
-    print("It is meant for sample purposes and will be expanded later.")
+    print("\n--- USA Signal Bot Universe Info ---")
+    print("\nThis seed file is NOT the entire USA universe.")
+    print("\nIt is meant for sample purposes and will be expanded later.")
     print(f"Default Watchlist : {context.config.universe.default_watchlist_file}")
     print(f"Sample Stocks     : {get_sample_stocks_path(context.data_dir)}")
     print(f"Sample ETFs       : {get_sample_etfs_path(context.data_dir)}")
@@ -74,7 +74,7 @@ def handle_universe_build(context) -> int:
     from usa_signal_bot.universe.reporting import summarize_universe, universe_summary_to_text
 
     try:
-        print("Building default universe snapshot...")
+        print("\nBuilding default universe snapshot...")
         u = build_default_universe(context.data_dir)
         p = write_default_universe_snapshot(context.data_dir, u)
 
@@ -114,22 +114,22 @@ def handle_cli_exception(e: Exception) -> int:
 
 def handle_smoke(context) -> None:
     """Runs a quick smoke test of the core components."""
-    print("--- USA Signal Bot Smoke Test ---")
+    print("\n--- USA Signal Bot Smoke Test ---")
     checks = run_startup_checks(context)
     for check in checks:
         print(f"✓ {check}")
-    print("\nSmoke test completed successfully. System is ready.")
+    print("\n\nSmoke test completed successfully. System is ready.")
 
 def handle_show_config(context) -> None:
     """Displays the currently loaded and merged configuration."""
-    print("--- Loaded Configuration ---")
+    print("\n--- Loaded Configuration ---")
     import pprint
     cfg_dict = config_to_dict(context.config)
     pprint.pprint(cfg_dict, width=80)
 
 def handle_show_paths() -> None:
     """Displays all resolved system paths."""
-    print("--- Resolved System Paths ---")
+    print("\n--- Resolved System Paths ---")
     print(f"Project Root   : {paths.PROJECT_ROOT}")
     print(f"Config Dir     : {paths.CONFIG_DIR}")
     print(f"Data Dir       : {paths.DATA_DIR}")
@@ -141,14 +141,14 @@ def handle_show_paths() -> None:
 
 def handle_validate_config(context) -> None:
     """Validates configuration rules."""
-    print("--- Configuration Validation ---")
-    print("Rules applied:")
-    print("- broker_order_routing_enabled MUST be False")
-    print("- web_scraping_allowed MUST be False")
-    print("- dashboard_enabled MUST be False")
-    print("- mode MUST be 'local_paper_only'")
+    print("\n--- Configuration Validation ---")
+    print("\nRules applied:")
+    print("\n- broker_order_routing_enabled MUST be False")
+    print("\n- web_scraping_allowed MUST be False")
+    print("\n- dashboard_enabled MUST be False")
+    print("\n- mode MUST be 'local_paper_only'")
     print(f"Current mode: {context.config.runtime.mode}")
-    print("\nResult: OK. All strict conditions are met.")
+    print("\n\nResult: OK. All strict conditions are met.")
 
 def handle_runtime_summary(context) -> None:
     """Displays a JSON summary of the runtime state."""
@@ -159,7 +159,7 @@ def handle_runtime_summary(context) -> None:
 def handle_check_env(context) -> None:
     """Checks required and optional environment variables."""
     from usa_signal_bot.core.environment import get_env
-    print("--- Environment Variables Check ---")
+    print("\n--- Environment Variables Check ---")
 
     # For Phase 2, we just verify the mechanism works
     # We might expect TELEGRAM_BOT_TOKEN to be present if telegram is enabled
@@ -177,14 +177,14 @@ def handle_check_env(context) -> None:
     else:
         print(f"- {bot_token_env_name} is not required because telegram is disabled.")
 
-    print("\nEnvironment check completed.")
+    print("\n\nEnvironment check completed.")
 
 def handle_health(context) -> int:
     """Runs the system health checks and prints the result."""
     from usa_signal_bot.core.health import run_health_checks, health_results_to_dict
     from usa_signal_bot.utils.json_utils import safe_json_dumps
 
-    print("--- System Health Check ---")
+    print("\n--- System Health Check ---")
     results = run_health_checks(context)
 
     # Simple console output
@@ -197,14 +197,14 @@ def handle_health(context) -> int:
     # Determine overall status
     all_passed = all(res.passed for res in results)
 
-    print("\n--- Summary JSON ---")
+    print("\n\n--- Summary JSON ---")
     print(safe_json_dumps(health_results_to_dict(results)))
 
     return 0 if all_passed else 1
 
 def handle_log_info(context) -> None:
     """Displays information about the logging subsystem."""
-    print("--- Logging Subsystem Info ---")
+    print("\n--- Logging Subsystem Info ---")
     print(f"Log Level     : {context.config.logging.level}")
     print(f"Log File Path : {context.log_file_path}")
     print(f"Audit Log Path: {context.audit_log_path}")
@@ -216,27 +216,27 @@ def handle_log_info(context) -> None:
         size_kb = context.log_file_path.stat().st_size / 1024
         print(f"Main Log Size : {size_kb:.2f} KB")
     else:
-        print("Main Log      : Not created yet")
+        print("\nMain Log      : Not created yet")
 
     if context.audit_log_path.exists():
         size_kb = context.audit_log_path.stat().st_size / 1024
         print(f"Audit Log Size: {size_kb:.2f} KB")
     else:
-        print("Audit Log     : Not created yet")
+        print("\nAudit Log     : Not created yet")
 
 
 def handle_audit_tail(context, limit: int) -> None:
     """Tails the last N events from the audit log."""
     print(f"--- Last {limit} Audit Events ---")
     if not context.audit_log_path.exists():
-        print("Audit log file does not exist yet.")
+        print("\nAudit log file does not exist yet.")
         return
 
     from usa_signal_bot.utils.file_utils import read_last_lines
     lines = read_last_lines(context.audit_log_path, limit)
 
     if not lines:
-        print("Audit log is empty.")
+        print("\nAudit log is empty.")
         return
 
     import json
@@ -256,11 +256,11 @@ def handle_storage_info(context) -> None:
     from usa_signal_bot.storage.file_store import LocalFileStore
     from usa_signal_bot.storage.paths import StorageArea
 
-    print("--- USA Signal Bot Storage Info ---")
+    print("\n--- USA Signal Bot Storage Info ---")
     store = LocalFileStore(context.data_dir)
     print(f"Root Directory: {store.root_dir}")
 
-    print("\nStorage Areas:")
+    print("\n\nStorage Areas:")
     for area in StorageArea:
         path = store.area_path(area.value)
         exists = path.exists()
@@ -273,14 +273,14 @@ def handle_storage_check(context) -> int:
     from usa_signal_bot.storage.integrity import verify_file_integrity
     from usa_signal_bot.storage.file_store import LocalFileStore
 
-    print("--- USA Signal Bot Storage Integrity Check ---")
+    print("\n--- USA Signal Bot Storage Integrity Check ---")
     store = LocalFileStore(context.data_dir)
 
     try:
         # Example check: just verify all manifests
         manifests = store.list_files("manifests", "*.json")
         if not manifests:
-            print("No manifests found to check.")
+            print("\nNo manifests found to check.")
             return 0
 
         all_passed = True
@@ -330,7 +330,7 @@ def handle_storage_list(context, area: str = "") -> int:
     from usa_signal_bot.storage.paths import StorageArea
     from usa_signal_bot.utils.file_utils import normalize_safe_filename
 
-    print("--- USA Signal Bot Storage List ---")
+    print("\n--- USA Signal Bot Storage List ---")
     store = LocalFileStore(context.data_dir)
 
     try:
@@ -388,7 +388,7 @@ def handle_active_universe_symbols(context, limit: int = 0, asset_type: str = ""
             symbols = [s for s in symbols if hasattr(s, "asset_type") and (s.asset_type.value.lower() if hasattr(s.asset_type, 'value') else str(s.asset_type).lower()) == at_lower]
 
         print(f"Active Universe Symbols ({len(symbols)} found)")
-        print("-" * 50)
+        print("\n-" * 50)
 
         display_limit = limit if limit and limit > 0 else len(symbols)
         for sym in symbols[:display_limit]:
@@ -562,7 +562,7 @@ def handle_active_universe_readiness(context, latest_run: bool, from_cache: bool
             print(universe_readiness_gate_report_to_text(report))
             return 0
         else:
-            print("No latest run gate report found. Please run active-universe-download first.")
+            print("\nNo latest run gate report found. Please run active-universe-download first.")
             return 1
 
     except Exception as e:
@@ -575,7 +575,7 @@ def handle_active_universe_runs(context) -> int:
     try:
         runs = list_universe_data_runs(context.data_dir)
         print(f"Universe Data Runs ({len(runs)} found)")
-        print("-" * 100)
+        print("\n-" * 100)
 
         for run in runs:
             print(f"{run.run_id:30} | {run.status.value:15} | {run.universe_name:20} | {run.total_symbols} symbols | {run.created_at_utc}")
@@ -591,7 +591,7 @@ def handle_active_universe_latest_run(context) -> int:
     try:
         run = get_latest_universe_data_run(context.data_dir)
         if not run:
-            print("No universe data runs found.")
+            print("\nNo universe data runs found.")
             return 0
 
         print(universe_data_run_to_text(run))
@@ -621,7 +621,7 @@ def handle_active_universe_eligible(context, latest_run: bool, format: str) -> i
                 print(f"Eligible symbols file not found: {path}")
                 return 1
         else:
-            print("Only latest-run is currently supported for eligible symbols.")
+            print("\nOnly latest-run is currently supported for eligible symbols.")
             return 1
     except Exception as e:
         print(f"Error: {e}")
@@ -632,7 +632,7 @@ def handle_active_universe_eligible(context, latest_run: bool, format: str) -> i
 def handle_momentum_indicator_list(context) -> int:
     from usa_signal_bot.features.indicator_registry import create_default_indicator_registry
     from usa_signal_bot.core.enums import IndicatorCategory
-    print("--- Momentum Indicator Registry ---")
+    print("\n--- Momentum Indicator Registry ---")
     reg = create_default_indicator_registry()
     for ind in reg.list_by_category(IndicatorCategory.MOMENTUM): print(ind.metadata.name)
     return 0
@@ -647,7 +647,7 @@ def handle_momentum_feature_compute_cache(context, symbols_str: str, timeframes_
     from usa_signal_bot.features.engine import FeatureEngine
     from usa_signal_bot.features.indicator_registry import create_default_indicator_registry
     from usa_signal_bot.features.reporting import momentum_feature_summary_to_text
-    print("Momentum Feature Compute from Cache")
+    print("\nMomentum Feature Compute from Cache")
     symbols = [s.strip() for s in symbols_str.split(",")] if symbols_str else []
     timeframes = [t.strip() for t in timeframes_str.split(",")] if timeframes_str else ["1d"]
     engine = FeatureEngine(create_default_indicator_registry(), context.data_dir)
@@ -657,7 +657,7 @@ def handle_momentum_feature_compute_cache(context, symbols_str: str, timeframes_
 
 def handle_momentum_feature_summary(context) -> int:
     from usa_signal_bot.features.feature_store import feature_store_dir
-    print("Feature Outputs Summary")
+    print("\nFeature Outputs Summary")
     return 0
 
 
@@ -670,7 +670,7 @@ def run_volatility_indicator_list() -> int:
         v_inds = reg.list_by_category(IndicatorCategory.VOLATILITY)
 
         if not v_inds:
-            print("No volatility indicators registered.")
+            print("\nNo volatility indicators registered.")
             return 0
 
         print(f"Registered Volatility Indicators ({len(v_inds)}):\n")
@@ -693,10 +693,10 @@ def run_volatility_indicator_set_info(args) -> int:
 
         if not args.set:
             sets = list_volatility_indicator_sets()
-            print("Available Volatility Indicator Sets:\n")
+            print("\nAvailable Volatility Indicator Sets:\n")
             for s in sets:
                 print(f"- {s.name}")
-            print("\nUse --set <name> to see details.")
+            print("\n\nUse --set <name> to see details.")
             return 0
 
         try:
@@ -708,7 +708,7 @@ def run_volatility_indicator_set_info(args) -> int:
         reg = get_default_registry()
 
         print(f"Volatility Indicator Set: {ind_set.name}\n")
-        print("Indicators and Parameters:")
+        print("\nIndicators and Parameters:")
         for name in ind_set.indicators:
             params = ind_set.params_by_indicator.get(name, {})
             try:
@@ -722,7 +722,7 @@ def run_volatility_indicator_set_info(args) -> int:
                 for k, v in params.items():
                     print(f"      {k}: {v}")
             else:
-                print("      (default parameters)")
+                print("\n      (default parameters)")
 
         return 0
     except Exception as e:
@@ -766,10 +766,10 @@ def run_volatility_feature_compute_cache(args) -> int:
 
         res = engine.compute_volatility_set_from_cache(symbols, timeframes, set_name, provider)
 
-        print("\n" + volatility_feature_summary_to_text(res))
+        print("\n\n" + volatility_feature_summary_to_text(res))
 
         if not res.is_successful():
-             print("\nFeature computation failed or was partially successful. Check errors.")
+             print("\n\nFeature computation failed or was partially successful. Check errors.")
              return 1
 
         val_report = None
@@ -778,7 +778,7 @@ def run_volatility_feature_compute_cache(args) -> int:
             from usa_signal_bot.features.dataframe_utils import feature_rows_to_dataframe
             df = feature_rows_to_dataframe(res.feature_rows)
             val_report = validate_volatility_feature_columns(df, res.produced_features)
-            print("\n" + feature_validation_report_to_text(val_report))
+            print("\n\n" + feature_validation_report_to_text(val_report))
 
         if args.write and res.is_successful() and res.feature_rows:
              meta = engine.write_result(res)
@@ -816,7 +816,7 @@ def run_volatility_feature_summary(args) -> int:
                   vol_metas.append(m)
 
         if not vol_metas:
-            print("No volatility feature outputs found in storage.")
+            print("\nNo volatility feature outputs found in storage.")
             return 0
 
         print(f"Found {len(vol_metas)} volatility feature outputs:\n")
@@ -833,7 +833,211 @@ def run_volatility_feature_summary(args) -> int:
         print(f"Error listing volatility feature summary: {e}")
         return 1
 
+
+def handle_strategy_list(context) -> int:
+    from usa_signal_bot.strategies.strategy_registry import create_default_strategy_registry
+    from usa_signal_bot.strategies.strategy_reporting import strategy_registry_to_text
+    print("\n--- Strategy Registry ---")
+    try:
+        registry = create_default_strategy_registry()
+        print(strategy_registry_to_text(registry))
+        return 0
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
+
+def handle_strategy_info(context, name: str) -> int:
+    from usa_signal_bot.strategies.strategy_registry import create_default_strategy_registry
+    from usa_signal_bot.strategies.strategy_metadata import strategy_metadata_summary_text
+    from usa_signal_bot.strategies.strategy_params import strategy_parameter_schema_to_dict
+    import json
+
+    try:
+        registry = create_default_strategy_registry()
+        if not registry.has(name):
+            print(f"Error: Strategy '{name}' not found.")
+            return 1
+
+        strategy = registry.get(name)
+        print(strategy_metadata_summary_text(strategy.metadata))
+        print("\nParameters:")
+        print(json.dumps(strategy_parameter_schema_to_dict(strategy.parameter_schema), indent=2))
+
+        has_warning = any("execution" in str(n).lower() and "not" in str(n).lower() for n in strategy.metadata.notes)
+        if has_warning:
+             print("\nNote: This strategy generates candidates only. NO EXECUTION will be performed.")
+
+        return 0
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
+
+def handle_strategy_run_feature_store(context, strategy_name: str, symbols_str: str, timeframes_str: str, write: bool) -> int:
+    from usa_signal_bot.strategies.strategy_registry import create_default_strategy_registry
+    from usa_signal_bot.strategies.strategy_engine import StrategyEngine
+    from usa_signal_bot.strategies.strategy_reporting import strategy_run_result_to_text, strategy_signal_list_to_text
+    from usa_signal_bot.features.feature_store import list_feature_outputs
+
+    print(f"--- Strategy Run (Feature Store): {strategy_name} ---")
+
+    if not list_feature_outputs(context.data_dir):
+         print("\nError: No feature outputs found. Please run a feature-pipeline-run command first.")
+         return 1
+
+    symbols = [s.strip().upper() for s in symbols_str.split(",")] if symbols_str else []
+    if not symbols:
+        print("\nError: --symbols is required for this command")
+        return 1
+
+    timeframes = [t.strip() for t in timeframes_str.split(",")] if timeframes_str else ["1d"]
+
+    try:
+        registry = create_default_strategy_registry()
+        engine = StrategyEngine(registry, context.data_dir)
+
+        res = engine.run_strategy_from_feature_store(strategy_name, symbols, timeframes, write_outputs=write)
+
+        print("\n" + strategy_run_result_to_text(res))
+        if res.signals:
+            print("\n" + strategy_signal_list_to_text(res.signals))
+
+        return 0 if str(res.status) != "FAILED" else 1
+    except Exception as e:
+        print(f"Execution failed: {e}")
+        return 1
+
+def handle_strategy_run_defaults(context, symbols_str: str, timeframes_str: str, write: bool) -> int:
+    from usa_signal_bot.strategies.strategy_registry import create_default_strategy_registry
+    from usa_signal_bot.strategies.strategy_engine import StrategyEngine
+    from usa_signal_bot.strategies.strategy_reporting import strategy_run_result_to_text
+    from usa_signal_bot.features.feature_store import list_feature_outputs
+
+    print(f"--- Strategy Run Defaults ---")
+
+    if not list_feature_outputs(context.data_dir):
+         print("\nError: No feature outputs found. Please run a feature-pipeline-run command first.")
+         return 1
+
+    symbols = [s.strip().upper() for s in symbols_str.split(",")] if symbols_str else []
+    if not symbols:
+        print("\nError: --symbols is required for this command")
+        return 1
+
+    timeframes = [t.strip() for t in timeframes_str.split(",")] if timeframes_str else ["1d"]
+
+    try:
+        registry = create_default_strategy_registry()
+        engine = StrategyEngine(registry, context.data_dir)
+
+        strategies = context.config.strategies.default_strategies
+        print(f"Running {len(strategies)} default strategies...")
+
+        success = True
+        for strat in strategies:
+            if registry.has(strat):
+                print(f"\n--- Strategy: {strat} ---")
+                res = engine.run_strategy_from_feature_store(strat, symbols, timeframes, write_outputs=write)
+                print(strategy_run_result_to_text(res))
+                if str(res.status) == "FAILED":
+                    success = False
+            else:
+                 print(f"Warning: Strategy '{strat}' not found in registry.")
+
+        return 0 if success else 1
+    except Exception as e:
+        print(f"Execution failed: {e}")
+        return 1
+
+def handle_signal_store_info(context) -> int:
+    from usa_signal_bot.strategies.signal_store import signal_store_summary
+    import json
+    try:
+        summary = signal_store_summary(context.data_dir)
+        print("\n--- Signal Store Info ---")
+        print(json.dumps(summary, indent=2))
+        return 0
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
+
+def handle_signal_summary(context) -> int:
+    from usa_signal_bot.strategies.signal_store import list_signal_outputs
+    import json
+
+    print("\n--- Signal Outputs Summary ---")
+    try:
+        files = list_signal_outputs(context.data_dir)
+        if not files:
+            print("\nNo signal outputs found.")
+            return 0
+
+        print(f"Found {len(files)} signal files. Showing latest 5:\n")
+
+        for f in files[:5]:
+            try:
+                count = 0
+                strat = "Unknown"
+                tf = "Unknown"
+                with open(f, "r") as jsonl_file:
+                    for line in jsonl_file:
+                        if line.strip():
+                            count += 1
+                            if count == 1:
+                                d = json.loads(line)
+                                strat = d.get("strategy_name", "Unknown")
+                                tf = d.get("timeframe", "Unknown")
+                print(f"[{f.name}] Strategy: {strat}, Timeframe: {tf}, Signals: {count}")
+            except Exception:
+                print(f"  [Error reading file {f.name}]")
+        return 0
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
+
+def handle_signal_validate(context, file_path_str: str) -> int:
+    from usa_signal_bot.strategies.signal_store import read_signals_jsonl
+    from usa_signal_bot.strategies.signal_contract import StrategySignal
+    from usa_signal_bot.strategies.signal_validation import validate_signal_list, signal_validation_report_to_text
+    from pathlib import Path
+
+    print("\n--- Signal File Validation ---")
+    if not file_path_str:
+        print("\nError: --file is required")
+        return 1
+
+    path = Path(file_path_str)
+    if not path.exists():
+        print(f"Error: File {path} does not exist")
+        return 1
+
+    try:
+        raw_signals = read_signals_jsonl(path)
+
+        # Simple instantiation logic for validation
+        signals = []
+        for r in raw_signals:
+            try:
+                # Remove extra fields if any, to avoid init errors
+                if "metadata" in r and not r["metadata"]:
+                    r["metadata"] = {}
+                signals.append(StrategySignal(**r))
+            except Exception as e:
+                 print(f"Failed to instantiate signal: {e}")
+
+        if not signals and raw_signals:
+            print("\nError: Could not parse signals from file.")
+            return 1
+
+        val_report = validate_signal_list(signals)
+        print("\n" + signal_validation_report_to_text(val_report))
+        return 0 if val_report.valid else 1
+    except Exception as e:
+        print(f"Validation failed: {e}")
+        return 1
+
+
 def main() -> int:
+
     """Main CLI entrypoint."""
     parser = argparse.ArgumentParser(description="USA Signal Bot CLI")
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
@@ -1090,6 +1294,29 @@ def main() -> int:
     parser_vol_feat_summary = subparsers.add_parser("volume-feature-summary", help="List volume feature outputs in storage")
 
 
+
+    # Strategy and Signal Commands
+    subparsers.add_parser("strategy-list", help="List registered strategies")
+
+    parser_strat_info = subparsers.add_parser("strategy-info", help="Get info about a strategy")
+    parser_strat_info.add_argument("--name", required=True, help="Strategy name")
+
+    parser_srf = subparsers.add_parser("strategy-run-feature-store", help="Run strategy from feature store")
+    parser_srf.add_argument("--strategy", required=True, help="Strategy name")
+    parser_srf.add_argument("--symbols", help="Comma-separated symbols")
+    parser_srf.add_argument("--timeframes", help="Comma-separated timeframes")
+    parser_srf.add_argument("--write", action="store_true", help="Write signals to file")
+
+    parser_srd = subparsers.add_parser("strategy-run-defaults", help="Run default strategies from feature store")
+    parser_srd.add_argument("--symbols", help="Comma-separated symbols")
+    parser_srd.add_argument("--timeframes", help="Comma-separated timeframes")
+    parser_srd.add_argument("--write", action="store_true", help="Write signals to file")
+
+    subparsers.add_parser("signal-store-info", help="Show signal store info")
+    subparsers.add_parser("signal-summary", help="Show recent signal outputs")
+
+    parser_sig_val = subparsers.add_parser("signal-validate", help="Validate a signal file")
+    parser_sig_val.add_argument("--file", required=True, help="Path to signal JSONL file")
     args = parser.parse_args()
 
 
@@ -1232,6 +1459,21 @@ def main() -> int:
 
 
 
+
+        elif args.command == "strategy-list":
+            sys.exit(handle_strategy_list(context))
+        elif args.command == "strategy-info":
+            sys.exit(handle_strategy_info(context, args.name))
+        elif args.command == "strategy-run-feature-store":
+            sys.exit(handle_strategy_run_feature_store(context, args.strategy, getattr(args, 'symbols', ''), getattr(args, 'timeframes', ''), getattr(args, 'write', False)))
+        elif args.command == "strategy-run-defaults":
+            sys.exit(handle_strategy_run_defaults(context, getattr(args, 'symbols', ''), getattr(args, 'timeframes', ''), getattr(args, 'write', False)))
+        elif args.command == "signal-store-info":
+            sys.exit(handle_signal_store_info(context))
+        elif args.command == "signal-summary":
+            sys.exit(handle_signal_summary(context))
+        elif args.command == "signal-validate":
+            sys.exit(handle_signal_validate(context, args.file))
         # End of new handlers
         # Keep this to not break replace logic
 
@@ -1246,10 +1488,10 @@ def main() -> int:
 def handle_provider_info(context) -> int:
     """Display data provider configuration and rules."""
     p_cfg = context.config.providers
-    print("--- USA Signal Bot Provider Info ---")
+    print("\n--- USA Signal Bot Provider Info ---")
     print(f"Default Provider: {p_cfg.default_provider}")
     print(f"Enabled Providers: {', '.join(p_cfg.enabled_providers)}")
-    print("\nSecurity and Constraints (Phase 7):")
+    print("\n\nSecurity and Constraints (Phase 7):")
     print(f"  Allow Paid APIs: {p_cfg.allow_paid_providers}")
     print(f"  Allow Web Scraping: {p_cfg.allow_scraping_providers}")
     print(f"  Allow Broker Data: {p_cfg.allow_broker_data_providers}")
@@ -1260,10 +1502,10 @@ def handle_provider_list(context) -> int:
     """List registered data providers."""
     from usa_signal_bot.data.provider_registry import create_default_provider_registry
     registry = create_default_provider_registry()
-    print("--- USA Signal Bot Registered Providers ---")
+    print("\n--- USA Signal Bot Registered Providers ---")
     caps = registry.list_capabilities()
     if not caps:
-        print("No providers registered.")
+        print("\nNo providers registered.")
         return 0
     for cap in caps:
          print(f"- {cap.provider_name.upper()}")
@@ -1278,7 +1520,7 @@ def handle_provider_check(context) -> int:
     """Check provider status and guard compliance."""
     from usa_signal_bot.data.provider_registry import create_default_provider_registry
     registry = create_default_provider_registry()
-    print("--- Provider Check ---")
+    print("\n--- Provider Check ---")
     p_cfg = context.config.providers
     provider_name = p_cfg.default_provider
     try:
@@ -1287,7 +1529,7 @@ def handle_provider_check(context) -> int:
          provider.assert_free_provider()
          provider.assert_no_scraping()
          provider.assert_no_broker_routing()
-         print("All guard checks passed.")
+         print("\nAll guard checks passed.")
          status = provider.check_status()
          print(f"Status: {'Available' if status.available else 'Unavailable'} - {status.message}")
          return 0 if status.available else 1
@@ -1305,7 +1547,7 @@ def handle_provider_plan(context, symbols_str: str, timeframe: str) -> int:
     try:
          req = MarketDataRequest(symbols=symbols, timeframe=timeframe, provider_name=provider.name)
          plan = provider.build_fetch_plan(req)
-         print("--- Provider Fetch Plan ---")
+         print("\n--- Provider Fetch Plan ---")
          print(f"Provider: {plan.provider_name}")
          print(f"Symbols: {len(plan.symbols)}")
          print(f"Timeframe: {plan.timeframe}")
@@ -1326,9 +1568,9 @@ def handle_provider_mock_fetch(context, symbols_str: str, timeframe: str) -> int
     try:
          req = MarketDataRequest(symbols=symbols, timeframe=timeframe, provider_name=provider.name)
          resp = provider.fetch_ohlcv(req)
-         print("--- Mock Data Fetch Result ---")
-         print("WARNING: This is deterministically generated fake data for testing interface.")
-         print("It is NOT real market data.\n")
+         print("\n--- Mock Data Fetch Result ---")
+         print("\nWARNING: This is deterministically generated fake data for testing interface.")
+         print("\nIt is NOT real market data.\n")
          print(f"Success: {resp.success}")
          print(f"Provider: {resp.provider_name}")
          print(f"Bars Returned: {resp.bar_count()}")
@@ -1342,7 +1584,7 @@ def handle_provider_mock_fetch(context, symbols_str: str, timeframe: str) -> int
 def handle_data_provider_info(context) -> int:
     from usa_signal_bot.data.provider_registry import create_default_provider_registry
     registry = create_default_provider_registry(include_yfinance=context.config.providers.yfinance_enabled)
-    print("--- Market Data Providers ---")
+    print("\n--- Market Data Providers ---")
     for cap in registry.list_capabilities():
         print(f"[{cap.provider_name.upper()}]")
         print(f"  Free Only: {cap.free_only}")
@@ -1377,15 +1619,15 @@ def handle_data_download(context, symbols_str: str, timeframe: str, start: str, 
         print(f"Bars: {resp.bar_count()}")
 
         if resp.errors:
-            print("Errors:")
+            print("\nErrors:")
             for e in resp.errors: print(f"  - {e}")
         if resp.warnings:
-            print("Warnings:")
+            print("\nWarnings:")
             for w in resp.warnings: print(f"  - {w}")
 
         if resp.bar_count() > 0:
             report = validate_ohlcv_bars_quality(resp.bars, symbols, provider, timeframe)
-            print("\n" + data_quality_report_to_text(report))
+            print("\n\n" + data_quality_report_to_text(report))
             downloader.write_download_summary(resp, report)
 
         return 0 if resp.success else 1
@@ -1434,7 +1676,7 @@ def handle_data_download_universe(context, file: str, timeframe: str, provider: 
             symbols_requested = universe.get_active_symbols()
             if limit: symbols_requested = symbols_requested[:limit]
             report = validate_ohlcv_bars_quality(resp.bars, symbols_requested, provider, timeframe)
-            print("\n" + data_quality_report_to_text(report))
+            print("\n\n" + data_quality_report_to_text(report))
             downloader.write_download_summary(resp, report)
 
         return 0 if resp.success else 1
@@ -1445,11 +1687,11 @@ def handle_data_download_universe(context, file: str, timeframe: str, provider: 
 def handle_data_cache_info(context) -> int:
     from usa_signal_bot.data.cache import market_data_cache_dir
     cache_dir = market_data_cache_dir(context.data_dir)
-    print("--- Market Data Cache Info ---")
+    print("\n--- Market Data Cache Info ---")
     print(f"Cache Directory: {cache_dir}")
 
     if not cache_dir.exists():
-        print("Directory does not exist.")
+        print("\nDirectory does not exist.")
         return 0
 
     files = list(cache_dir.glob("*.jsonl"))
@@ -1462,7 +1704,7 @@ def handle_data_cache_info(context) -> int:
     print(f"Total JSONL size: {total_size / (1024*1024):.2f} MB")
 
     if files:
-        print("\nRecent cache files:")
+        print("\n\nRecent cache files:")
         recent = sorted(files, key=lambda x: x.stat().st_mtime, reverse=True)[:5]
         for f in recent:
             print(f"  - {f.name} ({f.stat().st_size / 1024:.1f} KB)")
@@ -1475,7 +1717,7 @@ def handle_data_quality_check(context, cache_file: str, symbols_str: str, timefr
     from usa_signal_bot.data.quality import validate_ohlcv_bars_quality, data_quality_report_to_text
 
     cache_dir = market_data_cache_dir(context.data_dir)
-    print("--- Data Quality Check ---")
+    print("\n--- Data Quality Check ---")
 
     if cache_file:
         path = cache_dir / cache_file
@@ -1491,10 +1733,10 @@ def handle_data_quality_check(context, cache_file: str, symbols_str: str, timefr
 
         symbols = [s.strip().upper() for s in symbols_str.split(",")] if symbols_str else list(set(b.symbol for b in bars))
         report = validate_ohlcv_bars_quality(bars, symbols, "unknown_from_cache", timeframe)
-        print("\n" + data_quality_report_to_text(report))
+        print("\n\n" + data_quality_report_to_text(report))
         return 0 if report.status.value != "ERROR" else 1
     else:
-        print("No cache file specified. Usage requires --cache-file.")
+        print("\nNo cache file specified. Usage requires --cache-file.")
         return 1
 
 
@@ -1506,7 +1748,7 @@ def handle_data_cache_validate(context, cache_file: str, symbols_str: str, timef
     from usa_signal_bot.data.quality import data_quality_report_to_text
 
     cache_dir = market_data_cache_dir(context.data_dir)
-    print("--- Data Cache Validate ---")
+    print("\n--- Data Cache Validate ---")
 
     if cache_file:
         path = cache_dir / cache_file
@@ -1517,7 +1759,7 @@ def handle_data_cache_validate(context, cache_file: str, symbols_str: str, timef
         symbols = [s.strip().upper() for s in symbols_str.split(",")] if symbols_str else None
         try:
             report = validate_cache_file(path, symbols)
-            print("\n" + data_quality_report_to_text(report))
+            print("\n\n" + data_quality_report_to_text(report))
             return 0 if report.status.value != "ERROR" else 1
         except Exception as e:
             print(f"Validation failed: {e}")
@@ -1528,7 +1770,7 @@ def handle_data_cache_validate(context, cache_file: str, symbols_str: str, timef
         from usa_signal_bot.data.cache import list_market_data_cache_files
         files = list_market_data_cache_files(context.data_dir)
         if not files:
-            print("No cache files found to validate.")
+            print("\nNo cache files found to validate.")
             return 0 # Safe exit
 
         path = sorted(files, key=lambda x: x.stat().st_mtime)[-1]
@@ -1536,7 +1778,7 @@ def handle_data_cache_validate(context, cache_file: str, symbols_str: str, timef
         symbols = [s.strip().upper() for s in symbols_str.split(",")] if symbols_str else None
         try:
             report = validate_cache_file(path, symbols)
-            print("\n" + data_quality_report_to_text(report))
+            print("\n\n" + data_quality_report_to_text(report))
             return 0 if report.status.value != "ERROR" else 1
         except Exception as e:
             print(f"Validation failed: {e}")
@@ -1548,10 +1790,10 @@ def handle_data_cache_repair(context, cache_file: str, output: str, overwrite: b
     import shutil
 
     cache_dir = market_data_cache_dir(context.data_dir)
-    print("--- Data Cache Repair ---")
+    print("\n--- Data Cache Repair ---")
 
     if not cache_file:
-        print("Error: --cache-file is required.")
+        print("\nError: --cache-file is required.")
         return 1
 
     path = cache_dir / cache_file
@@ -1564,7 +1806,7 @@ def handle_data_cache_repair(context, cache_file: str, output: str, overwrite: b
         print(f"Read {len(bars)} bars from {cache_file}.")
 
         repaired_bars, report = repair_ohlcv_bars(bars)
-        print("\n" + repair_report_to_text(report))
+        print("\n\n" + repair_report_to_text(report))
 
         out_path = path
         if not overwrite:
@@ -1588,10 +1830,10 @@ def handle_data_cache_repair(context, cache_file: str, output: str, overwrite: b
 def handle_data_refresh_plan(context, symbols_str: str, timeframe: str, provider: str, start: str, end: str, force: bool, no_cache: bool) -> int:
     from usa_signal_bot.data.refresh import CacheRefreshRequest, build_cache_refresh_plan, cache_refresh_plan_to_text
 
-    print("--- Data Refresh Plan ---")
+    print("\n--- Data Refresh Plan ---")
     symbols = [s.strip().upper() for s in symbols_str.split(",")] if symbols_str else []
     if not symbols:
-        print("Error: --symbols required.")
+        print("\nError: --symbols required.")
         return 1
 
     req = CacheRefreshRequest(
@@ -1608,7 +1850,7 @@ def handle_data_refresh_plan(context, symbols_str: str, timeframe: str, provider
         ttl = context.config.cache_refresh.default_ttl_seconds
         batch = context.config.providers.max_symbols_per_batch
         plan = build_cache_refresh_plan(context.data_dir, req, ttl, batch)
-        print("\n" + cache_refresh_plan_to_text(plan))
+        print("\n\n" + cache_refresh_plan_to_text(plan))
         return 0
     except Exception as e:
         print(f"Failed to build plan: {e}")
@@ -1620,10 +1862,10 @@ def handle_data_refresh_execute(context, symbols_str: str, timeframe: str, provi
     from usa_signal_bot.data.provider_registry import create_default_provider_registry
     from usa_signal_bot.storage.file_store import LocalFileStore
 
-    print("--- Data Refresh Execute ---")
+    print("\n--- Data Refresh Execute ---")
     symbols = [s.strip().upper() for s in symbols_str.split(",")] if symbols_str else []
     if not symbols:
-        print("Error: --symbols required.")
+        print("\nError: --symbols required.")
         return 1
 
     if limit:
@@ -1656,7 +1898,7 @@ def handle_data_refresh_execute(context, symbols_str: str, timeframe: str, provi
         print(f"Failed: {len(result.failed_symbols)}")
 
         if result.errors:
-            print("Errors:")
+            print("\nErrors:")
             for e in result.errors:
                 print(f"  - {e}")
 
@@ -1669,18 +1911,18 @@ def handle_data_validation_report(context, latest: bool, reports_dir: str) -> in
     from pathlib import Path
     import json
 
-    print("--- Data Validation Report ---")
+    print("\n--- Data Validation Report ---")
     d_root = Path(reports_dir) if reports_dir else context.data_dir / "reports"
 
     if not d_root.exists():
-        print("Reports directory not found.")
+        print("\nReports directory not found.")
         return 0
 
     q_files = list(d_root.glob("quality_*.json"))
     a_files = list(d_root.glob("anomaly_*.json"))
 
     if not q_files:
-        print("No quality reports found.")
+        print("\nNo quality reports found.")
         return 0
 
     # Pick the latest
@@ -1712,10 +1954,10 @@ def handle_data_mtf_plan(context, symbols_str: str, timeframes_str: str, provide
     from usa_signal_bot.data.multitimeframe import MultiTimeframeDataRequest, parse_timeframe_list, build_timeframe_specs_from_list
     from usa_signal_bot.data.refresh import build_multitimeframe_refresh_plan, multitimeframe_refresh_plan_to_text
 
-    print("--- Multi-Timeframe Data Plan ---")
+    print("\n--- Multi-Timeframe Data Plan ---")
     symbols = [s.strip().upper() for s in symbols_str.split(",")] if symbols_str else []
     if not symbols:
-        print("Error: --symbols required.")
+        print("\nError: --symbols required.")
         return 1
 
     tfs = parse_timeframe_list(timeframes_str)
@@ -1733,7 +1975,7 @@ def handle_data_mtf_plan(context, symbols_str: str, timeframes_str: str, provide
         ttl = context.config.cache_refresh.default_ttl_seconds
         batch = context.config.providers.max_symbols_per_batch
         plan = build_multitimeframe_refresh_plan(context.data_dir, req, ttl, batch)
-        print("\n" + multitimeframe_refresh_plan_to_text(plan))
+        print("\n\n" + multitimeframe_refresh_plan_to_text(plan))
         return 0
     except Exception as e:
         print(f"Failed to build plan: {e}")
@@ -1747,10 +1989,10 @@ def handle_data_mtf_download(context, symbols_str: str, timeframes_str: str, pro
     from usa_signal_bot.data.provider_registry import create_default_provider_registry
     from usa_signal_bot.storage.file_store import LocalFileStore
 
-    print("--- Multi-Timeframe Data Download ---")
+    print("\n--- Multi-Timeframe Data Download ---")
     symbols = [s.strip().upper() for s in symbols_str.split(",")] if symbols_str else []
     if not symbols:
-        print("Error: --symbols required.")
+        print("\nError: --symbols required.")
         return 1
 
     tfs = parse_timeframe_list(timeframes_str)
@@ -1777,7 +2019,7 @@ def handle_data_mtf_download(context, symbols_str: str, timeframes_str: str, pro
 
         print(f"Status: {result.status.value}")
         print(f"Total Bars: {result.total_bars}")
-        print("\n" + readiness_report_to_text(readiness))
+        print("\n\n" + readiness_report_to_text(readiness))
         return 0 if result.status.value != "FAILED" else 1
     except Exception as e:
         print(f"Execution failed: {e}")
@@ -1792,7 +2034,7 @@ def handle_data_mtf_universe(context, file: str, timeframes_str: str, provider: 
     from usa_signal_bot.storage.file_store import LocalFileStore
     from usa_signal_bot.universe.loader import load_universe
 
-    print("--- Multi-Timeframe Universe Download ---")
+    print("\n--- Multi-Timeframe Universe Download ---")
     tfs = parse_timeframe_list(timeframes_str)
     u_file = file or context.config.universe.default_watchlist_file
 
@@ -1822,7 +2064,7 @@ def handle_data_mtf_universe(context, file: str, timeframes_str: str, provider: 
         )
 
         print(f"Status: {result.status.value}")
-        print("\n" + readiness_report_to_text(readiness))
+        print("\n\n" + readiness_report_to_text(readiness))
         return 0 if result.status.value != "FAILED" else 1
     except Exception as e:
         print(f"Execution failed: {e}")
@@ -1832,7 +2074,7 @@ def handle_data_coverage_report(context, latest: bool, reports_dir: str) -> int:
     from pathlib import Path
     import json
 
-    print("--- Data Coverage Report ---")
+    print("\n--- Data Coverage Report ---")
     d_root = Path(reports_dir) if reports_dir else context.data_dir / "reports" / "data_readiness"
 
     if not d_root.exists():
@@ -1842,7 +2084,7 @@ def handle_data_coverage_report(context, latest: bool, reports_dir: str) -> int:
     c_files = list(d_root.glob("coverage_*.json"))
 
     if not c_files:
-        print("No coverage reports found.")
+        print("\nNo coverage reports found.")
         return 0
 
     latest_c = sorted(c_files, key=lambda x: x.stat().st_mtime)[-1]
@@ -1864,16 +2106,16 @@ def handle_data_readiness_check(context, symbols_str: str, timeframes_str: str, 
     from usa_signal_bot.data.coverage import calculate_coverage_report
     from usa_signal_bot.data.cache import read_cached_bars_for_symbols_timeframe
 
-    print("--- Data Readiness Check ---")
+    print("\n--- Data Readiness Check ---")
     symbols = [s.strip().upper() for s in symbols_str.split(",")] if symbols_str else []
     if not symbols:
-        print("Error: --symbols required.")
+        print("\nError: --symbols required.")
         return 1
 
     tfs = parse_timeframe_list(timeframes_str)
 
     if not from_cache:
-        print("Live readiness check not implemented yet. Use --from-cache.")
+        print("\nLive readiness check not implemented yet. Use --from-cache.")
         return 1
 
     try:
@@ -1894,7 +2136,7 @@ def handle_data_readiness_check(context, symbols_str: str, timeframes_str: str, 
         )
 
         readiness = evaluate_readiness_from_coverage(coverage, criteria)
-        print("\n" + readiness_report_to_text(readiness))
+        print("\n\n" + readiness_report_to_text(readiness))
 
         return 0 if readiness.overall_status.value not in ["NOT_READY", "FAILED"] else 1
     except Exception as e:
@@ -1903,7 +2145,7 @@ def handle_data_readiness_check(context, symbols_str: str, timeframes_str: str, 
 
 def handle_universe_sources(context) -> int:
     from usa_signal_bot.universe.sources import default_universe_sources
-    print("--- USA Signal Bot Universe Sources ---")
+    print("\n--- USA Signal Bot Universe Sources ---")
     sources = default_universe_sources(context.data_dir)
     for src in sources:
         status = "Active" if src.enabled else "Disabled"
@@ -1917,7 +2159,7 @@ def handle_universe_import(context, file: str, name: str, overwrite: bool) -> in
     from usa_signal_bot.universe.importer import import_universe_csv
     from pathlib import Path
 
-    print("--- Universe Import ---")
+    print("\n--- Universe Import ---")
     try:
         dest_dir = context.project_root / context.config.universe.imports_dir
         dest_path = import_universe_csv(
@@ -1937,7 +2179,7 @@ def handle_universe_expand(context, name: str, include_layers: str, exclude_laye
     from usa_signal_bot.universe.sources import default_universe_sources
     from usa_signal_bot.core.enums import UniverseLayer, UniverseConflictResolution
 
-    print("--- Universe Expand ---")
+    print("\n--- Universe Expand ---")
 
     try:
         inc_layers = [UniverseLayer(l.strip().upper()) for l in include_layers.split(",")] if include_layers else None
@@ -1958,7 +2200,7 @@ def handle_universe_expand(context, name: str, include_layers: str, exclude_laye
         )
 
         res = expand_universe(req, context.data_dir)
-        print("\n" + expansion_result_to_text(res))
+        print("\n\n" + expansion_result_to_text(res))
 
         return 0 if res.success else 1
     except Exception as e:
@@ -1967,13 +2209,13 @@ def handle_universe_expand(context, name: str, include_layers: str, exclude_laye
 
 def handle_universe_snapshots(context) -> int:
     from usa_signal_bot.universe.snapshots import list_universe_snapshots, get_latest_active_snapshot
-    print("--- Universe Snapshots ---")
+    print("\n--- Universe Snapshots ---")
 
     active_snap = get_latest_active_snapshot(context.data_dir)
     snapshots = list_universe_snapshots(context.data_dir)
 
     if not snapshots:
-        print("No snapshots found.")
+        print("\nNo snapshots found.")
         return 0
 
     for s in snapshots:
@@ -1989,7 +2231,7 @@ def handle_universe_activate_snapshot(context, snapshot_id: str) -> int:
     print(f"--- Activating Snapshot: {snapshot_id} ---")
     try:
         mark_snapshot_active(context.data_dir, snapshot_id)
-        print("Snapshot activated successfully.")
+        print("\nSnapshot activated successfully.")
         return 0
     except Exception as e:
         print(f"Failed to activate snapshot: {e}")
@@ -1997,10 +2239,10 @@ def handle_universe_activate_snapshot(context, snapshot_id: str) -> int:
 
 def handle_universe_catalog(context) -> int:
     from usa_signal_bot.universe.catalog import build_universe_catalog, catalog_to_text
-    print("--- Universe Catalog ---")
+    print("\n--- Universe Catalog ---")
     try:
         cat = build_universe_catalog(context.data_dir)
-        print("\n" + catalog_to_text(cat))
+        print("\n\n" + catalog_to_text(cat))
         return 0
     except Exception as e:
         print(f"Failed to build catalog: {e}")
@@ -2011,7 +2253,7 @@ def handle_universe_export(context, snapshot_id: str, format: str, name: str, ac
     from usa_signal_bot.universe.snapshots import get_latest_active_snapshot, read_universe_snapshot, build_snapshot_paths
     from usa_signal_bot.universe.loader import load_universe_csv, load_default_watchlist
 
-    print("--- Universe Export ---")
+    print("\n--- Universe Export ---")
     try:
         universe = None
         if snapshot_id:
@@ -2027,12 +2269,12 @@ def handle_universe_export(context, snapshot_id: str, format: str, name: str, ac
                      res = load_universe_csv(paths["universe"])
                      universe = res.universe
             else:
-                 print("No active snapshot found. Exporting default watchlist instead.")
+                 print("\nNo active snapshot found. Exporting default watchlist instead.")
                  res = load_default_watchlist(context.data_dir)
                  universe = res.universe
 
         if not universe:
-            print("Failed to load universe for export.")
+            print("\nFailed to load universe for export.")
             return 1
 
         name = name or universe.name or "export"
@@ -2062,7 +2304,7 @@ def handle_universe_export(context, snapshot_id: str, format: str, name: str, ac
 
 def handle_indicator_list(context) -> int:
     from usa_signal_bot.features.indicator_registry import create_default_indicator_registry
-    print("--- Indicator Registry ---")
+    print("\n--- Indicator Registry ---")
     try:
         registry = create_default_indicator_registry()
         metadata_list = registry.list_metadata()
@@ -2086,9 +2328,9 @@ def handle_indicator_info(context, name: str) -> int:
             return 1
 
         indicator = registry.get(name)
-        print("--- Indicator Information ---")
+        print("\n--- Indicator Information ---")
         print(metadata_summary_text(indicator.metadata))
-        print("\nParameters Schema:")
+        print("\n\nParameters Schema:")
         schema_dict = parameter_schema_to_dict(indicator.parameter_schema)
         print(json.dumps(schema_dict["parameters"], indent=2))
         return 0
@@ -2098,7 +2340,7 @@ def handle_indicator_info(context, name: str) -> int:
 
 def handle_feature_store_info(context) -> int:
     from usa_signal_bot.features.feature_store import feature_store_summary
-    print("--- Feature Store Info ---")
+    print("\n--- Feature Store Info ---")
     try:
         summary = feature_store_summary(context.data_dir)
         for k, v in summary.items():
@@ -2117,10 +2359,10 @@ def handle_feature_compute_cache(context, symbols_str: str, timeframes_str: str,
     from usa_signal_bot.features.reporting import feature_computation_result_to_text, feature_output_metadata_to_text
     from usa_signal_bot.features.validation import validate_feature_rows, feature_validation_report_to_text
 
-    print("--- Feature Compute from Cache ---")
+    print("\n--- Feature Compute from Cache ---")
     symbols = [s.strip().upper() for s in symbols_str.split(",")] if symbols_str else []
     if not symbols:
-        print("Error: --symbols is required")
+        print("\nError: --symbols is required")
         return 1
 
     timeframes = [t.strip() for t in timeframes_str.split(",")] if timeframes_str else ["1d"]
@@ -2134,20 +2376,20 @@ def handle_feature_compute_cache(context, symbols_str: str, timeframes_str: str,
 
         res = engine.compute_from_cache(symbols, timeframes, indicators, provider_name=provider)
 
-        print("\n" + feature_computation_result_to_text(res))
+        print("\n\n" + feature_computation_result_to_text(res))
 
         if res.feature_rows:
             val_report = validate_feature_rows(res.feature_rows, res.produced_features)
-            print("\n" + feature_validation_report_to_text(val_report))
+            print("\n\n" + feature_validation_report_to_text(val_report))
         else:
-            print("\nError: No feature rows generated. Have you downloaded data for these symbols?")
+            print("\n\nError: No feature rows generated. Have you downloaded data for these symbols?")
             return 1
 
         if write and res.is_successful():
             from usa_signal_bot.core.enums import FeatureStorageFormat
             fmt = FeatureStorageFormat(context.config.features.default_storage_format.upper())
             meta = engine.write_result(res, fmt)
-            print("\n" + feature_output_metadata_to_text(meta))
+            print("\n\n" + feature_output_metadata_to_text(meta))
 
         return 0 if res.is_successful() else 1
     except Exception as e:
@@ -2160,9 +2402,9 @@ def handle_feature_validate(context, file_path_str: str) -> int:
     from usa_signal_bot.features.validation import validate_feature_rows, feature_validation_report_to_text
     from pathlib import Path
 
-    print("--- Feature Output Validation ---")
+    print("\n--- Feature Output Validation ---")
     if not file_path_str:
-        print("Error: --file is required")
+        print("\nError: --file is required")
         return 1
 
     path = Path(file_path_str)
@@ -2175,13 +2417,13 @@ def handle_feature_validate(context, file_path_str: str) -> int:
         rows = [FeatureRow(**r) for r in raw_rows]
 
         if not rows:
-            print("Error: File is empty")
+            print("\nError: File is empty")
             return 1
 
         produced_features = list(rows[0].features.keys())
 
         val_report = validate_feature_rows(rows, produced_features)
-        print("\n" + feature_validation_report_to_text(val_report))
+        print("\n\n" + feature_validation_report_to_text(val_report))
         return 0 if val_report.status.value != "INVALID" else 1
     except Exception as e:
         print(f"Validation failed: {e}")
@@ -2190,13 +2432,13 @@ def handle_feature_validate(context, file_path_str: str) -> int:
 def handle_feature_summary(context) -> int:
     from usa_signal_bot.features.feature_store import list_feature_outputs, feature_store_dir
     import json
-    print("--- Feature Outputs Summary ---")
+    print("\n--- Feature Outputs Summary ---")
     try:
         d = feature_store_dir(context.data_dir)
         meta_files = sorted(list(d.glob("*_meta.json")), key=lambda x: x.stat().st_mtime, reverse=True)
 
         if not meta_files:
-            print("No feature metadata files found.")
+            print("\nNo feature metadata files found.")
             return 0
 
         print(f"Found {len(meta_files)} metadata files. Showing latest 5:\n")
@@ -2218,11 +2460,11 @@ def handle_feature_summary(context) -> int:
 
 def handle_universe_presets(context) -> int:
     from usa_signal_bot.universe.presets import list_preset_files, load_preset_universe
-    print("--- Universe Presets ---")
+    print("\n--- Universe Presets ---")
 
     presets = list_preset_files(context.data_dir)
     if not presets:
-        print("No presets found.")
+        print("\nNo presets found.")
         return 0
 
     for p in presets:
@@ -2238,7 +2480,7 @@ def handle_universe_presets(context) -> int:
 def handle_volume_indicator_list(context) -> int:
     from usa_signal_bot.features.indicator_registry import create_default_indicator_registry
     from usa_signal_bot.core.enums import IndicatorCategory
-    print("--- Volume Indicator Registry ---")
+    print("\n--- Volume Indicator Registry ---")
     try:
         registry = create_default_indicator_registry()
         indicators = registry.list_by_category(IndicatorCategory.VOLUME)
@@ -2256,10 +2498,10 @@ def handle_volume_indicator_set_info(context, set_name: str) -> int:
     try:
         ind_set = get_volume_indicator_set(set_name)
         print(f"--- Volume Indicator Set: {set_name} ---")
-        print("Indicators:")
+        print("\nIndicators:")
         for i in ind_set.indicators:
             print(f"  - {i}")
-        print("\nParams:")
+        print("\n\nParams:")
         print(json.dumps(ind_set.params_by_indicator, indent=2))
         return 0
     except Exception as e:
@@ -2274,14 +2516,14 @@ def handle_volume_feature_compute_cache(context, symbols_str: str, timeframes_st
     from usa_signal_bot.features.dataframe_utils import feature_rows_to_dataframe
     from usa_signal_bot.data.cache import market_data_cache_dir
 
-    print("--- Volume Feature Compute from Cache ---")
+    print("\n--- Volume Feature Compute from Cache ---")
     symbols = [s.strip().upper() for s in symbols_str.split(",")] if symbols_str else []
     timeframes = [t.strip() for t in timeframes_str.split(",")] if timeframes_str else ["1d"]
 
     # Check if cache exists by trying to find at least one bar
     cache_dir = market_data_cache_dir(context.data_dir)
     if not list(cache_dir.glob("*.json")):
-        print("Error: No cached data found. Please run a data download command first.")
+        print("\nError: No cached data found. Please run a data download command first.")
         return 1
 
     try:
@@ -2292,14 +2534,14 @@ def handle_volume_feature_compute_cache(context, symbols_str: str, timeframes_st
 
         res = engine.compute_volume_set_from_cache(symbols, timeframes, set_name=set_name, provider_name=provider)
 
-        print("\n" + feature_computation_result_to_text(res))
+        print("\n\n" + feature_computation_result_to_text(res))
 
         if res.feature_rows:
             df = feature_rows_to_dataframe(res.feature_rows)
             val_report = validate_volume_feature_columns(df, res.produced_features)
-            print("\n" + feature_validation_report_to_text(val_report))
+            print("\n\n" + feature_validation_report_to_text(val_report))
         else:
-            print("\nError: No feature rows generated. Have you downloaded data for these symbols?")
+            print("\n\nError: No feature rows generated. Have you downloaded data for these symbols?")
             return 1
 
         if write and res.is_successful():
@@ -2312,7 +2554,7 @@ def handle_volume_feature_compute_cache(context, symbols_str: str, timeframes_st
             res.request.indicator_names = [set_name]
             meta = engine.write_result(res, fmt)
             res.request.indicator_names = original_names
-            print("\n" + feature_output_metadata_to_text(meta))
+            print("\n\n" + feature_output_metadata_to_text(meta))
 
         return 0 if res.is_successful() else 1
     except Exception as e:
@@ -2322,14 +2564,14 @@ def handle_volume_feature_compute_cache(context, symbols_str: str, timeframes_st
 def handle_volume_feature_summary(context) -> int:
     from usa_signal_bot.features.feature_store import feature_store_dir
     import json
-    print("--- Volume Feature Outputs Summary ---")
+    print("\n--- Volume Feature Outputs Summary ---")
     try:
         d = feature_store_dir(context.data_dir)
         meta_files = sorted(list(d.glob("*_volume_meta.json")), key=lambda x: x.stat().st_mtime, reverse=True)
         if not meta_files:
             meta_files = [f for f in d.glob("*_meta.json") if "volume" in f.name]
             if not meta_files:
-                print("No volume feature metadata files found.")
+                print("\nNo volume feature metadata files found.")
                 return 0
 
         print(f"Found {len(meta_files)} metadata files. Showing latest 5:\n")

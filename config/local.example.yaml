@@ -86,3 +86,9 @@ volatility_features:
   max_window: 1000
   allow_partial_volatility_features: true
   fail_on_negative_volatility: true
+
+strategies:
+  enabled: true
+
+signals:
+  enabled: true
