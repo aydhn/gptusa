@@ -209,6 +209,22 @@ class FeatureEngine:
         ind_set = get_volatility_indicator_set(set_name)
         return self.compute_from_cache(symbols, timeframes, ind_set.indicators, ind_set.params_by_indicator, provider_name)
 
+
+    def compute_divergence_set_for_input(self, input_: FeatureInput, set_name: str = "basic_divergence") -> FeatureComputationResult:
+        from usa_signal_bot.features.divergence_sets import get_divergence_indicator_set
+        ind_set = get_divergence_indicator_set(set_name)
+        return self.compute_for_input(input_, ind_set.indicators, ind_set.params_by_indicator)
+
+    def compute_divergence_set_for_batch(self, batch: FeatureBatchInput, set_name: str = "basic_divergence") -> FeatureComputationResult:
+        from usa_signal_bot.features.divergence_sets import get_divergence_indicator_set
+        ind_set = get_divergence_indicator_set(set_name)
+        return self.compute_for_batch(batch, ind_set.indicators, ind_set.params_by_indicator)
+
+    def compute_divergence_set_from_cache(self, symbols: list[str], timeframes: list[str], set_name: str = "basic_divergence", provider_name: str = "yfinance") -> FeatureComputationResult:
+        from usa_signal_bot.features.divergence_sets import get_divergence_indicator_set
+        ind_set = get_divergence_indicator_set(set_name)
+        return self.compute_from_cache(symbols, timeframes, ind_set.indicators, ind_set.params_by_indicator, provider_name)
+
     def write_result(self, result: FeatureComputationResult, fmt: FeatureStorageFormat = FeatureStorageFormat.JSONL) -> FeatureOutputMetadata:
         if not result.is_successful() or not result.feature_rows:
             raise FeatureComputationError("Cannot write unsuccessful or empty result")

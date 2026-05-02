@@ -248,3 +248,23 @@ class VolatilityIndicatorError(IndicatorError):
 
 class VolatilityIndicatorSetError(FeatureComputationError):
     pass
+
+class DivergenceFeatureError(FeatureError):
+    """Base class for divergence feature errors."""
+    pass
+
+class DivergenceIndicatorError(DivergenceFeatureError):
+    """Raised when a divergence indicator encounters an error."""
+    pass
+
+class DivergenceIndicatorSetError(DivergenceFeatureError):
+    """Raised for errors related to divergence indicator sets."""
+    pass
+
+class DivergenceDetectionError(DivergenceFeatureError):
+    """Raised during divergence detection failures."""
+    pass
+
+class PivotDetectionError(DivergenceFeatureError):
+    """Raised during pivot point detection failures."""
+    pass

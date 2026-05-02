@@ -383,3 +383,40 @@ class MarketStructureState(str, Enum):
     LOWER_LOW = "LOWER_LOW"
     RANGE = "RANGE"
     UNKNOWN = "UNKNOWN"
+
+class DivergenceType(str, Enum):
+    REGULAR_BULLISH = "REGULAR_BULLISH"
+    REGULAR_BEARISH = "REGULAR_BEARISH"
+    HIDDEN_BULLISH = "HIDDEN_BULLISH"
+    HIDDEN_BEARISH = "HIDDEN_BEARISH"
+    NONE = "NONE"
+    UNKNOWN = "UNKNOWN"
+
+class DivergenceSource(str, Enum):
+    RSI = "RSI"
+    MACD_HIST = "MACD_HIST"
+    ROC = "ROC"
+    MOMENTUM = "MOMENTUM"
+    MFI = "MFI"
+    OBV = "OBV"
+    CUSTOM = "CUSTOM"
+
+class PivotType(str, Enum):
+    PRICE_HIGH = "PRICE_HIGH"
+    PRICE_LOW = "PRICE_LOW"
+    OSC_HIGH = "OSC_HIGH"
+    OSC_LOW = "OSC_LOW"
+    NONE = "NONE"
+
+class DivergenceConfirmationMode(str, Enum):
+    CONFIRMED_PIVOT = "CONFIRMED_PIVOT"
+    LEFT_ONLY_PIVOT = "LEFT_ONLY_PIVOT"
+    ROLLING_EXTREME = "ROLLING_EXTREME"
+    UNKNOWN = "UNKNOWN"
+
+class DivergenceStrength(str, Enum):
+    WEAK = "WEAK"
+    MODERATE = "MODERATE"
+    STRONG = "STRONG"
+    VERY_STRONG = "VERY_STRONG"
+    UNKNOWN = "UNKNOWN"

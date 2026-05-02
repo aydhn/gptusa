@@ -1,3 +1,4 @@
+from usa_signal_bot.core.enums import ValidationSeverity
 from dataclasses import dataclass
 from typing import List, Optional
 import pandas as pd
