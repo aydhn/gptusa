@@ -247,3 +247,21 @@ def test_cli_volatility_feature_summary():
         return subprocess.run([sys.executable, "-m", "usa_signal_bot"] + args, capture_output=True, text=True)
     res = run_cli(["volatility-feature-summary"])
     assert res.returncode == 0
+
+def test_cli_rule_strategy_list():
+    import subprocess
+    import sys
+    result = subprocess.run([sys.executable, "-m", "usa_signal_bot", "rule-strategy-list"], capture_output=True, text=True)
+    assert result.returncode == 0
+
+def test_cli_rule_strategy_set_info():
+    import subprocess
+    import sys
+    result = subprocess.run([sys.executable, "-m", "usa_signal_bot", "rule-strategy-set-info", "--set", "basic_rules"], capture_output=True, text=True)
+    assert result.returncode == 0
+
+def test_cli_rule_strategy_summary():
+    import subprocess
+    import sys
+    result = subprocess.run([sys.executable, "-m", "usa_signal_bot", "rule-strategy-summary"], capture_output=True, text=True)
+    assert result.returncode == 0

@@ -1343,6 +1343,26 @@ def main() -> int:
     # signal-quality-summary
     p_sig_qual_summary = subparsers.add_parser("signal-quality-summary", help="Show summary of recent quality and confluence reports")
 
+    parser_rsl = subparsers.add_parser("rule-strategy-list", help="List available rule-based strategies")
+
+    parser_rssi = subparsers.add_parser("rule-strategy-set-info", help="Get info about a rule strategy set")
+    parser_rssi.add_argument("--set", type=str, default="basic_rules", help="Name of the strategy set")
+
+    parser_rsrfs = subparsers.add_parser("rule-strategy-run-feature-store", help="Run a rule strategy from feature store")
+    parser_rsrfs.add_argument("--strategy", type=str, required=True, help="Strategy name")
+    parser_rsrfs.add_argument("--symbols", type=str, default="", help="Comma separated symbols")
+    parser_rsrfs.add_argument("--timeframes", type=str, default="1d", help="Comma separated timeframes")
+    parser_rsrfs.add_argument("--write", action="store_true", help="Write outputs to disk")
+
+    parser_rsrs = subparsers.add_parser("rule-strategy-run-set", help="Run a rule strategy set from feature store")
+    parser_rsrs.add_argument("--set", type=str, default="basic_rules", help="Strategy set name")
+    parser_rsrs.add_argument("--symbols", type=str, default="", help="Comma separated symbols")
+    parser_rsrs.add_argument("--timeframes", type=str, default="1d", help="Comma separated timeframes")
+    parser_rsrs.add_argument("--write", action="store_true", help="Write outputs to disk")
+
+    parser_rss = subparsers.add_parser("rule-strategy-summary", help="Show latest rule strategy reports")
+
+
     args = parser.parse_args()
 
 
@@ -1500,6 +1520,17 @@ def main() -> int:
             sys.exit(handle_signal_summary(context))
         elif args.command == "signal-validate":
             sys.exit(handle_signal_validate(context, args.file))
+        elif args.command == "rule-strategy-list":
+            sys.exit(handle_rule_strategy_list(context))
+        elif args.command == "rule-strategy-set-info":
+            sys.exit(handle_rule_strategy_set_info(context, args.set))
+        elif args.command == "rule-strategy-run-feature-store":
+            sys.exit(handle_rule_strategy_run_feature_store(context, args.strategy, args.symbols, args.timeframes, args.write))
+        elif args.command == "rule-strategy-run-set":
+            sys.exit(handle_rule_strategy_run_set(context, args.set, args.symbols, args.timeframes, args.write))
+        elif args.command == "rule-strategy-summary":
+            sys.exit(handle_rule_strategy_summary(context))
+
         # End of new handlers
         # Keep this to not break replace logic
 
@@ -2772,3 +2803,118 @@ def do_signal_quality_summary(args, config):
     print(f"Found {len(files)} reports. Latest:")
     for f in files[:10]:
         print(f" - {f.name} (Size: {f.stat().st_size} bytes)")
+
+def handle_rule_strategy_list(context) -> int:
+    from usa_signal_bot.strategies.strategy_registry import create_default_strategy_registry
+    registry = create_default_strategy_registry()
+    strategies = [s for s in registry.list_metadata() if "rule" in s.name]
+
+    import sys
+    sys.stdout.write("\n--- Rule Based Strategies ---\n")
+    if not strategies:
+        sys.stdout.write("No rule strategies found.\n")
+        return 0
+
+    for meta in strategies:
+        sys.stdout.write(f"[{meta.category.value if hasattr(meta.category, 'value') else meta.category}] {meta.name}\n")
+        sys.stdout.write(f"  Description: {meta.description}\n")
+        sys.stdout.write(f"  Required Features: {', '.join(meta.required_features)}\n\n")
+    return 0
+
+def handle_rule_strategy_set_info(context, set_name: str) -> int:
+    from usa_signal_bot.strategies.rule_strategy_sets import get_rule_strategy_set, rule_strategy_set_to_text
+    from usa_signal_bot.strategies.strategy_registry import create_default_strategy_registry
+
+    try:
+        rule_set = get_rule_strategy_set(set_name)
+    except Exception as e:
+        import sys
+        sys.stdout.write(f"Error: {e}\n")
+        return 1
+
+    import sys
+    sys.stdout.write(rule_strategy_set_to_text(rule_set) + "\n")
+
+    registry = create_default_strategy_registry()
+    sys.stdout.write("\nRequired Features across all strategies:\n")
+    all_features = set()
+    for s_name in rule_set.strategies:
+        try:
+             strat = registry.get(s_name)
+             all_features.update(strat.required_features())
+        except:
+             pass
+    for f in sorted(list(all_features)):
+        sys.stdout.write(f"  - {f}\n")
+
+    sys.stdout.write("\nNote: Strategy outputs are signal candidates only and not for direct execution.\n")
+    return 0
+
+def handle_rule_strategy_run_feature_store(context, strategy_name: str, symbols: str, timeframes: str, write: bool) -> int:
+    from usa_signal_bot.strategies.strategy_registry import create_default_strategy_registry
+    from usa_signal_bot.strategies.strategy_engine import StrategyEngine
+    from usa_signal_bot.strategies.strategy_input import load_strategy_feature_frames_from_feature_store
+
+    syms = [s.strip().upper() for s in symbols.split(",")] if symbols else []
+    tfs = [t.strip() for t in timeframes.split(",")] if timeframes else ["1d"]
+
+    import sys
+    registry = create_default_strategy_registry()
+    engine = StrategyEngine(registry, context.data_dir, app_config=context.config)
+
+    try:
+         batch = load_strategy_feature_frames_from_feature_store(context.data_dir, syms, tfs)
+    except Exception as e:
+         sys.stdout.write(f"Failed to load features: {e}\n")
+         return 1
+
+    if not batch.frames:
+         sys.stdout.write("No features found for the requested symbols/timeframes. Please run feature pipeline first.\n")
+         return 0
+
+    try:
+         res = engine.run_strategy(strategy_name, batch, write_outputs=write)
+         from usa_signal_bot.strategies.strategy_reporting import strategy_run_result_to_text
+         sys.stdout.write(strategy_run_result_to_text(res) + "\n")
+    except Exception as e:
+         sys.stdout.write(f"Failed to run strategy: {e}\n")
+         return 1
+    return 0
+
+def handle_rule_strategy_run_set(context, set_name: str, symbols: str, timeframes: str, write: bool) -> int:
+    from usa_signal_bot.strategies.strategy_registry import create_default_strategy_registry
+    from usa_signal_bot.strategies.strategy_engine import StrategyEngine
+
+    syms = [s.strip().upper() for s in symbols.split(",")] if symbols else []
+    tfs = [t.strip() for t in timeframes.split(",")] if timeframes else ["1d"]
+
+    import sys
+    registry = create_default_strategy_registry()
+    engine = StrategyEngine(registry, context.data_dir, app_config=context.config)
+
+    try:
+         results, confluence = engine.run_rule_strategy_set_from_feature_store(set_name, syms, tfs, write_outputs=write)
+         from usa_signal_bot.strategies.strategy_reporting import rule_strategy_set_result_to_text
+         sys.stdout.write(rule_strategy_set_result_to_text(results, confluence) + "\n")
+    except Exception as e:
+         sys.stdout.write(f"Failed to run rule strategy set: {e}\n")
+         return 1
+    return 0
+
+def handle_rule_strategy_summary(context) -> int:
+    import sys
+    from usa_signal_bot.strategies.signal_store import signal_reports_dir
+    d = signal_reports_dir(context.data_dir)
+    if not d.exists():
+        sys.stdout.write(f"Reports directory does not exist: {d}\n")
+        return 0
+
+    files = sorted(list(d.glob("quality_*.json*")) + list(d.glob("confluence_*.json*")) + list(d.glob("run_*.json*")), key=lambda x: x.stat().st_mtime, reverse=True)
+    if not files:
+        sys.stdout.write(f"No rule/strategy reports found in {d}\n")
+        return 0
+
+    sys.stdout.write(f"Found {len(files)} reports. Latest 10:\n")
+    for f in files[:10]:
+        sys.stdout.write(f" - {f.name} (Size: {f.stat().st_size} bytes)\n")
+    return 0
