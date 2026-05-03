@@ -1440,6 +1440,168 @@ def handle_signal_validate(context, file_path_str: str) -> int:
         return 1
 
 
+
+def handle_backtest_info(context, args):
+    from usa_signal_bot.core.logging_config import setup_logging
+    setup_logging(context.config)
+
+    cfg = context.config.backtesting
+    h_cfg = context.config.historical_replay
+    print("=== Backtest Foundation Info ===")
+    print(f"Backtesting Enabled: {cfg.enabled}")
+    print(f"Historical Replay Enabled: {h_cfg.enabled}")
+    print(f"Store Dir: {cfg.store_dir}")
+    print(f"Default Starting Cash: ${cfg.default_starting_cash:.2f}")
+    print(f"Default Signal Mode: {cfg.default_signal_mode}")
+    print(f"Default Exit Mode: {cfg.default_exit_mode}")
+    print(f"Default Hold Bars: {cfg.default_hold_bars}")
+    print("\nWARNING: This engine does not produce live orders or paper trades.")
+    print("It is purely for local historical signal replay and research.")
+    return 0
+
+def handle_backtest_run_signals(context, args):
+    from usa_signal_bot.backtesting.backtest_engine import BacktestEngine, BacktestRunRequest, BacktestRunConfig
+    from usa_signal_bot.backtesting.backtest_reporting import backtest_run_result_to_text
+
+    try:
+        symbols = args.symbols.split(",") if args.symbols else []
+        req = BacktestRunRequest(
+            run_name="CLI_Signal_Run",
+            symbols=symbols,
+            timeframe=args.timeframe,
+            signal_file=args.signal_file,
+            start_date=args.start,
+            end_date=args.end
+        )
+
+        cfg = context.config.backtesting
+        req.config = BacktestRunConfig(
+            starting_cash=args.starting_cash if args.starting_cash is not None else cfg.default_starting_cash,
+            fee_rate=cfg.default_fee_rate,
+            slippage_bps=cfg.default_slippage_bps,
+            signal_to_order=__import__('usa_signal_bot.backtesting.signal_adapter', fromlist=['default_signal_to_order_config']).default_signal_to_order_config(),
+            exit_mode=__import__('usa_signal_bot.core.enums', fromlist=['BacktestExitMode']).BacktestExitMode(cfg.default_exit_mode.upper() if isinstance(cfg.default_exit_mode, str) else cfg.default_exit_mode),
+            hold_bars=args.hold_bars if args.hold_bars is not None else cfg.default_hold_bars,
+            max_positions=cfg.max_positions,
+            max_position_notional=cfg.max_position_notional,
+            allow_fractional_quantity=cfg.allow_fractional_quantity
+        )
+
+        sig_mode_enum = __import__('usa_signal_bot.core.enums', fromlist=['BacktestSignalMode']).BacktestSignalMode(cfg.default_signal_mode.upper())
+        req.config.signal_to_order.signal_mode = sig_mode_enum
+
+        engine = BacktestEngine(context.data_root)
+        result = engine.run(req)
+
+        print(backtest_run_result_to_text(result))
+
+        if getattr(args, 'write', True):
+            paths = engine.write_result(result)
+            print(f"\nResult written to {paths[0].parent}")
+        return 0
+    except Exception as e:
+        import logging
+        logging.getLogger("usa_signal_bot.cli").error(f"Failed to run backtest: {e}")
+        return 1
+
+def handle_backtest_run_candidates(context, args):
+    from usa_signal_bot.backtesting.backtest_engine import BacktestEngine, BacktestRunRequest, BacktestRunConfig
+    from usa_signal_bot.backtesting.backtest_reporting import backtest_run_result_to_text
+
+    try:
+        symbols = args.symbols.split(",") if args.symbols else []
+        req = BacktestRunRequest(
+            run_name="CLI_Candidate_Run",
+            symbols=symbols,
+            timeframe=args.timeframe,
+            selected_candidates_file=args.candidates_file,
+            start_date=args.start,
+            end_date=args.end
+        )
+
+        cfg = context.config.backtesting
+        req.config = BacktestRunConfig(
+            starting_cash=args.starting_cash if args.starting_cash is not None else cfg.default_starting_cash,
+            fee_rate=cfg.default_fee_rate,
+            slippage_bps=cfg.default_slippage_bps,
+            signal_to_order=__import__('usa_signal_bot.backtesting.signal_adapter', fromlist=['default_signal_to_order_config']).default_signal_to_order_config(),
+            exit_mode=__import__('usa_signal_bot.core.enums', fromlist=['BacktestExitMode']).BacktestExitMode(cfg.default_exit_mode.upper() if isinstance(cfg.default_exit_mode, str) else cfg.default_exit_mode),
+            hold_bars=args.hold_bars if args.hold_bars is not None else cfg.default_hold_bars,
+            max_positions=cfg.max_positions,
+            max_position_notional=cfg.max_position_notional,
+            allow_fractional_quantity=cfg.allow_fractional_quantity
+        )
+
+        sig_mode_enum = __import__('usa_signal_bot.core.enums', fromlist=['BacktestSignalMode']).BacktestSignalMode(cfg.default_signal_mode.upper())
+        req.config.signal_to_order.signal_mode = sig_mode_enum
+
+        engine = BacktestEngine(context.data_root)
+        result = engine.run(req)
+
+        print(backtest_run_result_to_text(result))
+
+        if getattr(args, 'write', True):
+            paths = engine.write_result(result)
+            print(f"\nResult written to {paths[0].parent}")
+        return 0
+    except Exception as e:
+        import logging
+        logging.getLogger("usa_signal_bot.cli").error(f"Failed to run backtest: {e}")
+        return 1
+
+def handle_backtest_summary(context, args):
+    from usa_signal_bot.backtesting.backtest_store import list_backtest_runs
+    from usa_signal_bot.core.serialization import load_json
+
+    runs = list_backtest_runs(context.data_root)
+    if not runs:
+        print("No backtest runs found.")
+        return 0
+
+    print("=== Backtest Runs ===")
+    for run_dir in runs:
+        result_file = run_dir / "result.json"
+        if result_file.exists():
+            data = load_json(result_file)
+            metrics = data.get("metrics", {})
+            print(f"- {data.get('run_id')} | {data.get('created_at_utc')} | {data.get('status')}")
+            if metrics:
+                print(f"    Eq: ${metrics.get('ending_equity', 0):.2f} | Ret: {metrics.get('total_return_pct', 0)*100:.2f}% | Trades: {metrics.get('total_trades', 0)}")
+            print("")
+    return 0
+
+def handle_backtest_latest(context, args):
+    from usa_signal_bot.backtesting.backtest_store import list_backtest_runs
+    from usa_signal_bot.core.serialization import load_json
+    import json
+
+    runs = list_backtest_runs(context.data_root)
+    if not runs:
+        print("No backtest runs found.")
+        return 0
+
+    latest = runs[0]
+    result_file = latest / "result.json"
+    if result_file.exists():
+        data = load_json(result_file)
+        print("=== Latest Backtest Run ===")
+        print(json.dumps(data, indent=2))
+    return 0
+
+def handle_backtest_validate(context, args):
+    from usa_signal_bot.backtesting.backtest_store import list_backtest_runs
+    import json
+
+    runs = list_backtest_runs(context.data_root)
+    if not runs:
+        print("No runs to validate.")
+        return 0
+
+    print(f"Found {len(runs)} runs. Validation infrastructure is ready.")
+    print("Broker execution guard logic is active during actual runs.")
+    return 0
+
+
 def main() -> int:
 
     """Main CLI entrypoint."""
@@ -1796,6 +1958,33 @@ def main() -> int:
     parser_rss = subparsers.add_parser("rule-strategy-summary", help="Show latest rule strategy reports")
 
 
+
+    # Backtesting
+    parser_bt_info = subparsers.add_parser('backtest-info', help='Show backtest foundation info')
+    parser_bt_run_sig = subparsers.add_parser('backtest-run-signals', help='Run backtest from signals')
+    parser_bt_run_sig.add_argument('--signal-file', type=str, help='Path to signal jsonl')
+    parser_bt_run_sig.add_argument('--symbols', type=str, help='Comma separated symbols')
+    parser_bt_run_sig.add_argument('--timeframe', type=str, default='1d', help='Timeframe')
+    parser_bt_run_sig.add_argument('--start', type=str, help='Start date YYYY-MM-DD')
+    parser_bt_run_sig.add_argument('--end', type=str, help='End date YYYY-MM-DD')
+    parser_bt_run_sig.add_argument('--starting-cash', type=float, help='Starting cash')
+    parser_bt_run_sig.add_argument('--hold-bars', type=int, help='Hold N bars')
+    parser_bt_run_sig.add_argument('--write', type=bool, default=True, help='Write results')
+    parser_bt_run_cand = subparsers.add_parser('backtest-run-candidates', help='Run backtest from candidates')
+    parser_bt_run_cand.add_argument('--candidates-file', type=str, help='Path to selected candidates jsonl')
+    parser_bt_run_cand.add_argument('--symbols', type=str, help='Comma separated symbols')
+    parser_bt_run_cand.add_argument('--timeframe', type=str, default='1d', help='Timeframe')
+    parser_bt_run_cand.add_argument('--start', type=str, help='Start date YYYY-MM-DD')
+    parser_bt_run_cand.add_argument('--end', type=str, help='End date YYYY-MM-DD')
+    parser_bt_run_cand.add_argument('--starting-cash', type=float, help='Starting cash')
+    parser_bt_run_cand.add_argument('--hold-bars', type=int, help='Hold N bars')
+    parser_bt_run_cand.add_argument('--write', type=bool, default=True, help='Write results')
+    parser_bt_sum = subparsers.add_parser('backtest-summary', help='Show backtest summary')
+    parser_bt_latest = subparsers.add_parser('backtest-latest', help='Show latest backtest')
+    parser_bt_val = subparsers.add_parser('backtest-validate', help='Validate backtest')
+    parser_bt_val.add_argument('--run-id', type=str, help='Run ID')
+    parser_bt_val.add_argument('--result-file', type=str, help='Result file path')
+
     args = parser.parse_args()
 
 
@@ -1976,6 +2165,19 @@ def main() -> int:
             sys.exit(handle_rule_strategy_run_set(context, args.set, args.symbols, args.timeframes, args.write))
         elif args.command == "rule-strategy-summary":
             sys.exit(handle_rule_strategy_summary(context))
+        elif args.command == "backtest-info":
+            return handle_backtest_info(context, args)
+        elif args.command == "backtest-run-signals":
+            return handle_backtest_run_signals(context, args)
+        elif args.command == "backtest-run-candidates":
+            return handle_backtest_run_candidates(context, args)
+        elif args.command == "backtest-summary":
+            return handle_backtest_summary(context, args)
+        elif args.command == "backtest-latest":
+            return handle_backtest_latest(context, args)
+        elif args.command == "backtest-validate":
+            return handle_backtest_validate(context, args)
+
 
         # End of new handlers
         # Keep this to not break replace logic

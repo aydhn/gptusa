@@ -619,3 +619,61 @@ class SignalCollapseMode(str, Enum):
     BEST_PER_SYMBOL_TIMEFRAME = "BEST_PER_SYMBOL_TIMEFRAME"
     BEST_PER_SYMBOL = "BEST_PER_SYMBOL"
     MERGE_BY_SYMBOL_TIMEFRAME = "MERGE_BY_SYMBOL_TIMEFRAME"
+
+
+class BacktestEventType(str, Enum):
+    MARKET_BAR = "MARKET_BAR"
+    SIGNAL = "SIGNAL"
+    ORDER_INTENT = "ORDER_INTENT"
+    FILL = "FILL"
+    POSITION_UPDATE = "POSITION_UPDATE"
+    PORTFOLIO_SNAPSHOT = "PORTFOLIO_SNAPSHOT"
+    EQUITY_UPDATE = "EQUITY_UPDATE"
+    WARNING = "WARNING"
+    ERROR = "ERROR"
+
+class BacktestRunStatus(str, Enum):
+    NOT_STARTED = "NOT_STARTED"
+    RUNNING = "RUNNING"
+    COMPLETED = "COMPLETED"
+    PARTIAL_SUCCESS = "PARTIAL_SUCCESS"
+    FAILED = "FAILED"
+
+class BacktestOrderSide(str, Enum):
+    BUY = "BUY"
+    SELL = "SELL"
+    HOLD = "HOLD"
+
+class BacktestOrderType(str, Enum):
+    MARKET = "MARKET"
+    NEXT_OPEN = "NEXT_OPEN"
+    NEXT_CLOSE = "NEXT_CLOSE"
+
+class BacktestFillStatus(str, Enum):
+    FILLED = "FILLED"
+    PARTIALLY_FILLED = "PARTIALLY_FILLED"
+    REJECTED = "REJECTED"
+    SKIPPED = "SKIPPED"
+
+class BacktestPositionSide(str, Enum):
+    LONG = "LONG"
+    FLAT = "FLAT"
+    SHORT = "SHORT"
+
+class BacktestSignalMode(str, Enum):
+    WATCH_AS_LONG_CANDIDATE = "WATCH_AS_LONG_CANDIDATE"
+    LONG_ONLY = "LONG_ONLY"
+    WATCH_ONLY_NO_TRADES = "WATCH_ONLY_NO_TRADES"
+    SIGNAL_ACTION_BASED = "SIGNAL_ACTION_BASED"
+
+class BacktestExitMode(str, Enum):
+    HOLD_N_BARS = "HOLD_N_BARS"
+    OPPOSITE_SIGNAL = "OPPOSITE_SIGNAL"
+    END_OF_DATA = "END_OF_DATA"
+    STOP_LOSS_TAKE_PROFIT_RESERVED = "STOP_LOSS_TAKE_PROFIT_RESERVED"
+
+class BacktestMetricStatus(str, Enum):
+    OK = "OK"
+    WARNING = "WARNING"
+    INVALID = "INVALID"
+    EMPTY = "EMPTY"

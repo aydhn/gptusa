@@ -361,3 +361,27 @@ class SignalAggregationError(USASignalBotError):
 
 class RankingStorageError(USASignalBotError):
     pass
+
+
+class BacktestError(USASignalBotError):
+    pass
+class BacktestEventError(BacktestError):
+    pass
+class BacktestMarketReplayError(BacktestError):
+    pass
+class BacktestSignalReplayError(BacktestError):
+    pass
+class BacktestOrderError(BacktestError):
+    pass
+class BacktestFillError(BacktestError):
+    pass
+class BacktestPositionError(BacktestError):
+    pass
+class BacktestPortfolioError(BacktestError):
+    pass
+class BacktestValidationError(BacktestError):
+    pass
+class BacktestStorageError(BacktestError):
+    pass
+class BacktestMetricError(BacktestError):
+    pass
