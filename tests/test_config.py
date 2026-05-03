@@ -42,3 +42,22 @@ def test_invalid_risk_ratio():
     from usa_signal_bot.core.config_schema import RiskConfig
     rc = RiskConfig(max_position_pct=1.5)
     assert rc.max_position_pct == 1.5
+
+def test_signal_scoring_config_defaults():
+    default_config = load_app_config()
+    assert default_config.signal_scoring.enabled is True
+    assert default_config.signal_scoring.min_score == 0.0
+    assert default_config.signal_scoring.max_score == 100.0
+    assert default_config.signal_scoring.base_score == 50.0
+
+def test_signal_quality_config_defaults():
+    default_config = load_app_config()
+    assert default_config.signal_quality.enabled is True
+    assert default_config.signal_quality.min_confidence_for_review == 0.25
+    assert default_config.signal_quality.reject_missing_reasons is True
+
+def test_confluence_config_defaults():
+    default_config = load_app_config()
+    assert default_config.confluence.enabled is True
+    assert default_config.confluence.default_aggregation_mode == "by_symbol_timeframe"
+    assert default_config.confluence.min_signals_for_confluence == 2

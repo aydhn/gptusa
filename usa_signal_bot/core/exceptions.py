@@ -310,3 +310,24 @@ class SignalValidationError(StrategyError):
 
 class SignalStorageError(StrategyError):
     pass
+
+
+class SignalScoringError(USASignalBotError):
+    """Raised when an error occurs during signal scoring."""
+    pass
+
+class SignalQualityError(USASignalBotError):
+    """Raised when an error occurs in the signal quality guard."""
+    pass
+
+class SignalConfluenceError(USASignalBotError):
+    """Raised when an error occurs in the confluence engine."""
+    pass
+
+class SignalRiskFlagError(USASignalBotError):
+    """Raised when an error occurs assigning risk flags."""
+    pass
+
+class SignalQualityGuardError(USASignalBotError):
+    """Raised when a critical quality guard fails."""
+    pass

@@ -220,3 +220,37 @@ signals:
   require_reasons: true
   reject_duplicate_signal_ids: true
   overconfidence_warning_threshold: 0.80
+
+signal_scoring:
+  enabled: true
+  min_score: 0.0
+  max_score: 100.0
+  base_score: 50.0
+  confidence_weight: 25.0
+  reason_quality_weight: 15.0
+  feature_snapshot_weight: 10.0
+  risk_penalty_weight: 20.0
+  max_allowed_score_without_backtest: 70.0
+  overconfidence_penalty: 15.0
+  min_score_for_review: 40.0
+
+signal_quality:
+  enabled: true
+  min_confidence_for_review: 0.25
+  min_score_for_review: 40.0
+  reject_missing_reasons: true
+  reject_missing_feature_snapshot: true
+  reject_expired_signals: true
+  overconfidence_warning_threshold: 0.70
+  max_rejected_ratio_warning: 0.80
+  allow_empty_signal_list: true
+
+confluence:
+  enabled: true
+  default_aggregation_mode: "by_symbol_timeframe"
+  min_signals_for_confluence: 2
+  conflict_penalty: 25.0
+  strong_threshold: 70.0
+  moderate_threshold: 50.0
+  weak_threshold: 25.0
+  write_confluence_reports: true

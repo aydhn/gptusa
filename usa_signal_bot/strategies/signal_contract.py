@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from typing import List, Dict, Any, Optional
 import hashlib
-from usa_signal_bot.core.enums import SignalAction, SignalConfidenceBucket, SignalRiskFlag, SignalLifecycleStatus
+from usa_signal_bot.core.enums import SignalAction, SignalConfidenceBucket, SignalRiskFlag, SignalLifecycleStatus, SignalQualityStatus, ConfluenceDirection
 from usa_signal_bot.core.exceptions import SignalContractError
 
 @dataclass
@@ -21,6 +21,10 @@ class StrategySignal:
     lifecycle_status: SignalLifecycleStatus = SignalLifecycleStatus.CREATED
     expires_at_utc: Optional[str] = None
     metadata: Dict[str, Any] = field(default_factory=dict)
+    quality_status: Optional[SignalQualityStatus] = None
+    score_breakdown: Dict[str, Any] = field(default_factory=dict)
+    confluence_score: Optional[float] = None
+    confluence_direction: Optional[ConfluenceDirection] = None
 
 def validate_strategy_signal(signal: StrategySignal) -> None:
     if not signal.signal_id:
@@ -45,6 +49,15 @@ def validate_strategy_signal(signal: StrategySignal) -> None:
         raise SignalContractError("action must be a SignalAction")
     if not isinstance(signal.lifecycle_status, SignalLifecycleStatus):
         raise SignalContractError("lifecycle_status must be a SignalLifecycleStatus")
+    if signal.confluence_score is not None and not (0.0 <= signal.confluence_score <= 100.0):
+        raise SignalContractError(f"confluence_score must be between 0.0 and 100.0, got {signal.confluence_score}")
+
+    if signal.quality_status is not None and not isinstance(signal.quality_status, SignalQualityStatus):
+        raise SignalContractError("quality_status must be a SignalQualityStatus")
+
+    if not isinstance(signal.score_breakdown, dict):
+        raise SignalContractError("score_breakdown must be a dict")
+
 
 def create_signal_id(strategy_name: str, symbol: str, timeframe: str, timestamp_utc: str) -> str:
     raw = f"{strategy_name}_{symbol}_{timeframe}_{timestamp_utc}"
@@ -63,7 +76,7 @@ def confidence_to_bucket(confidence: float) -> SignalConfidenceBucket:
         return SignalConfidenceBucket.VERY_HIGH
 
 def signal_to_dict(signal: StrategySignal) -> dict:
-    return {
+    d = {
         "signal_id": signal.signal_id,
         "strategy_name": signal.strategy_name,
         "symbol": signal.symbol,
@@ -80,6 +93,17 @@ def signal_to_dict(signal: StrategySignal) -> dict:
         "expires_at_utc": signal.expires_at_utc,
         "metadata": signal.metadata
     }
+
+    if signal.quality_status is not None:
+        d["quality_status"] = signal.quality_status.value
+    if signal.score_breakdown:
+        d["score_breakdown"] = signal.score_breakdown
+    if signal.confluence_score is not None:
+        d["confluence_score"] = signal.confluence_score
+    if signal.confluence_direction is not None:
+        d["confluence_direction"] = signal.confluence_direction.value
+
+    return d
 
 def signal_to_text(signal: StrategySignal) -> str:
     lines = [

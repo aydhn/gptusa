@@ -3,6 +3,10 @@ from pathlib import Path
 from typing import List, Dict, Any, Optional
 from usa_signal_bot.strategies.signal_contract import StrategySignal, signal_to_dict
 from usa_signal_bot.strategies.signal_validation import SignalValidationReport
+from usa_signal_bot.strategies.signal_scoring import SignalScoringResult
+from usa_signal_bot.strategies.signal_quality import SignalQualityReport
+from usa_signal_bot.strategies.signal_confluence import ConfluenceReport
+from usa_signal_bot.core.serialization import dataclass_to_json, dataclass_to_dict
 from usa_signal_bot.core.exceptions import SignalStorageError
 
 def signal_store_dir(data_root: Path) -> Path:
@@ -98,3 +102,64 @@ def signal_store_summary(data_root: Path) -> Dict[str, Any]:
         "latest_file": str(files[0].name) if files else None,
         "latest_file_mtime": files[0].stat().st_mtime if files else None
     }
+
+
+def signal_reports_dir(data_root: Path) -> Path:
+    d = data_root / "signals" / "reports"
+    d.mkdir(parents=True, exist_ok=True)
+    return d
+
+def build_signal_report_path(data_root: Path, report_name: str, run_id: str) -> Path:
+    d = signal_reports_dir(data_root)
+    clean_name = report_name.replace("/", "_").replace("\\", "_")
+    clean_run = run_id.replace("/", "_").replace("\\", "_")
+    filename = f"{clean_name}_{clean_run}.json"
+    path = d / filename
+
+    if not path.resolve().is_relative_to(d.resolve()):
+        raise SignalStorageError(f"Invalid path traversal detected: {path}")
+
+    return path
+
+def write_scoring_results_jsonl(path: Path, results: List[SignalScoringResult]) -> Path:
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with open(path, "w", encoding="utf-8") as f:
+            for res in results:
+                d = dataclass_to_dict(res)
+                f.write(json.dumps(d) + "\n")
+        return path
+    except Exception as e:
+        raise SignalStorageError(f"Failed to write scoring results to {path}: {e}")
+
+def read_scoring_results_jsonl(path: Path) -> List[Dict[str, Any]]:
+    if not path.exists():
+        raise SignalStorageError(f"File does not exist: {path}")
+
+    results = []
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            for line in f:
+                if line.strip():
+                    results.append(json.loads(line))
+        return results
+    except Exception as e:
+        raise SignalStorageError(f"Failed to read scoring results from {path}: {e}")
+
+def write_signal_quality_report_json(path: Path, report: SignalQualityReport) -> Path:
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(dataclass_to_json(report))
+        return path
+    except Exception as e:
+        raise SignalStorageError(f"Failed to write quality report to {path}: {e}")
+
+def write_confluence_report_json(path: Path, report: ConfluenceReport) -> Path:
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(dataclass_to_json(report))
+        return path
+    except Exception as e:
+        raise SignalStorageError(f"Failed to write confluence report to {path}: {e}")
