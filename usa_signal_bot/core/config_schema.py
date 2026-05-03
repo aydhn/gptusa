@@ -511,6 +511,37 @@ class StrategyPortfolioConfigSchema:
     write_portfolio_reports: bool = True
 
 
+
+@dataclass
+class BacktestingConfig:
+    enabled: bool = True
+    store_dir: str = "data/backtests"
+    default_starting_cash: float = 100000.0
+    default_fee_rate: float = 0.0
+    default_slippage_bps: float = 0.0
+    default_order_type: str = "next_open"
+    default_signal_mode: str = "watch_as_long_candidate"
+    default_exit_mode: str = "hold_n_bars"
+    default_hold_bars: int = 5
+    max_positions: int = 10
+    max_position_notional: float = 10000.0
+    allow_fractional_quantity: bool = True
+    allow_short: bool = False
+    write_events: bool = True
+    write_fills: bool = True
+    write_equity_curve: bool = True
+    warn_on_backtest_limitations: bool = True
+
+@dataclass
+class HistoricalReplayConfig:
+    enabled: bool = True
+    require_cached_market_data: bool = True
+    require_signal_file: bool = True
+    prevent_same_bar_fill: bool = True
+    default_timeframe: str = "1d"
+    max_symbols_per_backtest: int = 50
+    max_events_per_run: int = 100000
+
 @dataclass
 class AppConfig:
 
@@ -533,6 +564,8 @@ class AppConfig:
     multi_timeframe: MultiTimeframeConfig = field(default_factory=MultiTimeframeConfig)
     data_readiness: DataReadinessConfig = field(default_factory=DataReadinessConfig)
     active_universe: ActiveUniverseConfig = field(default_factory=ActiveUniverseConfig)
+    backtesting: BacktestingConfig = field(default_factory=BacktestingConfig)
+    historical_replay: HistoricalReplayConfig = field(default_factory=HistoricalReplayConfig)
     signal_ranking: SignalRankingConfigSchema = field(default_factory=SignalRankingConfigSchema)
     candidate_selection: CandidateSelectionConfigSchema = field(default_factory=CandidateSelectionConfigSchema)
     strategy_portfolio: StrategyPortfolioConfigSchema = field(default_factory=StrategyPortfolioConfigSchema)
