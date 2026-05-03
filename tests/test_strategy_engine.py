@@ -62,3 +62,35 @@ def test_run_strategies_with_confluence():
         results, confluence = engine.run_strategies_with_confluence([], batch)
         assert len(results) == 0
         assert confluence.total_groups == 0
+
+def test_run_strategies_ranked():
+    from usa_signal_bot.strategies.strategy_registry import create_default_strategy_registry
+    from usa_signal_bot.strategies.strategy_engine import StrategyEngine
+    from usa_signal_bot.strategies.strategy_input import StrategyInputBatch
+    from pathlib import Path
+
+    registry = create_default_strategy_registry()
+    engine = StrategyEngine(registry, Path("/tmp"))
+
+    batch = StrategyInputBatch(provider_name="test", symbols=[], timeframes=[], created_at_utc="", frames=[]) # empty, but method should handle it gracefully
+    res = engine.run_strategies_ranked(["trend_following_rule"], batch)
+
+    assert res is not None
+    assert hasattr(res, "portfolio_run")
+    assert res.portfolio_run.signal_count == 0
+
+def test_run_rule_strategy_set_ranked():
+    from usa_signal_bot.strategies.strategy_registry import create_default_strategy_registry
+    from usa_signal_bot.strategies.strategy_engine import StrategyEngine
+    from usa_signal_bot.strategies.strategy_input import StrategyInputBatch
+    from pathlib import Path
+
+    registry = create_default_strategy_registry()
+    engine = StrategyEngine(registry, Path("/tmp"))
+
+    batch = StrategyInputBatch(provider_name="test", symbols=[], timeframes=[], created_at_utc="", frames=[]) # empty
+    res = engine.run_rule_strategy_set_ranked("basic_rules", batch)
+
+    assert res is not None
+    assert hasattr(res, "portfolio_run")
+    assert res.portfolio_run.signal_count == 0

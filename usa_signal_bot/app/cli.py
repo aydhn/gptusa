@@ -9,6 +9,410 @@ from usa_signal_bot.core import paths
 from usa_signal_bot.core.config import config_to_dict
 from usa_signal_bot.app.runtime import initialize_runtime, run_startup_checks, build_runtime_summary
 
+
+def handle_signal_rank_file(context, file_path: str, min_rank_score: float, write: bool) -> int:
+    from usa_signal_bot.strategies.signal_store import read_signals_jsonl
+    from usa_signal_bot.strategies.signal_ranking import rank_signals, filter_ranked_signals, ranking_report_to_text
+    from usa_signal_bot.strategies.ranking_store import write_ranking_report_json, build_ranking_report_path
+    from pathlib import Path
+
+    path = Path(file_path)
+    if not path.exists():
+        print(f"Error: Signal file not found at {file_path}")
+        return 1
+
+    try:
+        signals = read_signals_jsonl(path)
+        print(f"Loaded {len(signals)} signals from {file_path}")
+
+        config = context.config.signal_ranking if hasattr(context.config, 'signal_ranking') else None
+        report = rank_signals(signals, config)
+
+        if min_rank_score is not None:
+            report = filter_ranked_signals(report, min_rank_score)
+
+        print("\n" + ranking_report_to_text(report))
+
+        if write:
+            out_path = build_ranking_report_path(context.data_dir, report.report_id)
+            write_ranking_report_json(out_path, report)
+            print(f"\nReport written to: {out_path}")
+
+        return 0
+    except Exception as e:
+        print(f"Error ranking signals: {e}")
+        return 1
+
+def handle_signal_select_candidates(context, file_path: str, max_candidates: int, min_rank_score: float, write: bool) -> int:
+    from usa_signal_bot.strategies.signal_store import read_signals_jsonl
+    from usa_signal_bot.strategies.signal_ranking import rank_signals
+    from usa_signal_bot.strategies.candidate_selection import select_candidates, candidate_selection_report_to_text
+    from usa_signal_bot.strategies.ranking_store import write_candidate_selection_report_json, write_selected_candidates_jsonl, build_candidate_selection_report_path, build_selected_candidates_path
+    from pathlib import Path
+
+    path = Path(file_path)
+    if not path.exists():
+        print(f"Error: Signal file not found at {file_path}")
+        return 1
+
+    try:
+        signals = read_signals_jsonl(path)
+        rank_config = context.config.signal_ranking if hasattr(context.config, 'signal_ranking') else None
+        sel_config = context.config.candidate_selection if hasattr(context.config, 'candidate_selection') else None
+
+        if sel_config is not None:
+            if max_candidates is not None:
+                sel_config.max_candidates = max_candidates
+            if min_rank_score is not None:
+                sel_config.min_rank_score = min_rank_score
+
+        ranking_report = rank_signals(signals, rank_config)
+        report = select_candidates(ranking_report, sel_config)
+
+        print("\n" + candidate_selection_report_to_text(report))
+
+        if write:
+            out_path = build_candidate_selection_report_path(context.data_dir, report.report_id)
+            write_candidate_selection_report_json(out_path, report)
+            print(f"\nReport written to: {out_path}")
+
+            if report.selected_candidates:
+                cand_path = build_selected_candidates_path(context.data_dir, report.report_id)
+                write_selected_candidates_jsonl(cand_path, report.selected_candidates)
+                print(f"Selected candidates written to: {cand_path}")
+
+        return 0
+    except Exception as e:
+        print(f"Error selecting candidates: {e}")
+        return 1
+
+def handle_signal_ranking_summary(context) -> int:
+    from usa_signal_bot.strategies.ranking_store import ranking_store_summary
+
+    summary = ranking_store_summary(context.data_dir)
+    print("\n--- Signal Ranking Storage Summary ---")
+    print(f"Total Files: {summary['total_files']}")
+    print(f"Ranking Reports: {summary['ranking_reports']}")
+    print(f"Selection Reports: {summary['selection_reports']}")
+    print(f"Portfolio Reports: {summary['portfolio_reports']}")
+    print(f"Candidate JSONL Files: {summary['candidate_files']}")
+
+    if summary['total_files'] == 0:
+        print("\nNo ranking or selection outputs found. Try running 'signal-rank-file' or 'strategy-portfolio-run' first.")
+    else:
+        print(f"\nLatest file: {summary['latest_file']}")
+
+    return 0
+
+def handle_selected_candidates_summary(context) -> int:
+    from usa_signal_bot.strategies.ranking_store import list_ranking_outputs, read_selected_candidates_jsonl
+
+    outputs = list_ranking_outputs(context.data_dir)
+    candidate_files = [p for p in outputs if p.name.startswith("candidates_") and p.suffix == ".jsonl"]
+
+    print("\n--- Selected Candidates Summary ---")
+    if not candidate_files:
+        print("No selected candidates files found.")
+        return 0
+
+    latest = candidate_files[0]
+    print(f"Latest Candidates File: {latest.name}")
+
+    try:
+        cands = read_selected_candidates_jsonl(latest)
+        print(f"Total Candidates: {len(cands)}")
+
+        # Simple stats
+        strategies = {}
+        symbols = set()
+
+        for c in cands:
+            strat = c['signal']['strategy_name']
+            sym = c['signal']['symbol']
+            strategies[strat] = strategies.get(strat, 0) + 1
+            symbols.add(sym)
+
+        print(f"Unique Symbols: {len(symbols)}")
+        print("\nBreakdown by Strategy:")
+        for s, count in strategies.items():
+            print(f"  {s}: {count}")
+
+    except Exception as e:
+        print(f"Error reading candidates file: {e}")
+
+    return 0
+
+def handle_strategy_portfolio_run(context, strategies_str: str, symbols_str: str, timeframes_str: str, write: bool) -> int:
+    from usa_signal_bot.strategies.strategy_registry import StrategyRegistry
+    from usa_signal_bot.strategies.strategy_engine import StrategyEngine
+    from usa_signal_bot.strategies.strategy_portfolio import strategy_portfolio_result_to_text
+
+    strategy_names = [s.strip() for s in strategies_str.split(",")] if strategies_str else []
+    symbols = [s.strip().upper() for s in symbols_str.split(",")] if symbols_str else []
+    timeframes = [t.strip() for t in timeframes_str.split(",")] if timeframes_str else ["1d"]
+
+    if not strategy_names:
+        print("Error: No strategies provided.")
+        return 1
+
+    registry = StrategyRegistry()
+    engine = StrategyEngine(registry, context.data_dir, context.config)
+
+    from usa_signal_bot.strategies.strategy_input import load_strategy_feature_frames_from_feature_store, filter_valid_strategy_frames, StrategyInputBatch
+
+    try:
+        # Load and filter frames
+        frames = load_strategy_feature_frames_from_feature_store(context.data_dir, symbols, timeframes)
+        valid_frames = filter_valid_strategy_frames(frames, strategy_names, registry)
+
+        if not valid_frames:
+            print("No valid feature frames found for the requested strategies/symbols/timeframes. Ensure feature engineering has run.")
+            return 0
+
+        batch = StrategyInputBatch(frames=valid_frames)
+        result = engine.run_strategies_ranked(strategy_names, batch, write_outputs=write)
+
+        print("\n" + strategy_portfolio_result_to_text(result))
+
+        if write:
+            print(f"\nPortfolio reports written to data/signals/ranking")
+
+        return 0
+    except Exception as e:
+        print(f"Error in strategy portfolio run: {e}")
+        return 1
+
+def handle_rule_strategy_run_ranked(context, strategy_set_name: str, symbols_str: str, timeframes_str: str, write: bool) -> int:
+    from usa_signal_bot.strategies.strategy_registry import StrategyRegistry
+    from usa_signal_bot.strategies.strategy_engine import StrategyEngine
+    from usa_signal_bot.strategies.strategy_portfolio import strategy_portfolio_result_to_text
+
+    symbols = [s.strip().upper() for s in symbols_str.split(",")] if symbols_str else []
+    timeframes = [t.strip() for t in timeframes_str.split(",")] if timeframes_str else ["1d"]
+
+    registry = StrategyRegistry()
+    engine = StrategyEngine(registry, context.data_dir, context.config)
+
+    try:
+        result = engine.run_rule_strategy_set_ranked_from_feature_store(
+            strategy_set_name=strategy_set_name,
+            symbols=symbols,
+            timeframes=timeframes,
+            write_outputs=write
+        )
+
+        print("\n" + strategy_portfolio_result_to_text(result))
+
+        if write:
+            print(f"\nPortfolio reports written to data/signals/ranking")
+
+        return 0
+    except Exception as e:
+        print(f"Error running rule strategy set ranked: {e}")
+        return 1
+
+
+def handle_signal_rank_file(context, file_path: str, min_rank_score: float, write: bool) -> int:
+    from usa_signal_bot.strategies.signal_store import read_signals_jsonl
+    from usa_signal_bot.strategies.signal_ranking import rank_signals, filter_ranked_signals, ranking_report_to_text
+    from usa_signal_bot.strategies.ranking_store import write_ranking_report_json, build_ranking_report_path
+    from pathlib import Path
+
+    path = Path(file_path)
+    if not path.exists():
+        print(f"Error: Signal file not found at {file_path}")
+        return 1
+
+    try:
+        signals = read_signals_jsonl(path)
+        print(f"Loaded {len(signals)} signals from {file_path}")
+
+        config = context.config.signal_ranking if hasattr(context.config, 'signal_ranking') else None
+        report = rank_signals(signals, config)
+
+        if min_rank_score is not None:
+            report = filter_ranked_signals(report, min_rank_score)
+
+        print("\n" + ranking_report_to_text(report))
+
+        if write:
+            out_path = build_ranking_report_path(context.data_dir, report.report_id)
+            write_ranking_report_json(out_path, report)
+            print(f"\nReport written to: {out_path}")
+
+        return 0
+    except Exception as e:
+        print(f"Error ranking signals: {e}")
+        return 1
+
+def handle_signal_select_candidates(context, file_path: str, max_candidates: int, min_rank_score: float, write: bool) -> int:
+    from usa_signal_bot.strategies.signal_store import read_signals_jsonl
+    from usa_signal_bot.strategies.signal_ranking import rank_signals
+    from usa_signal_bot.strategies.candidate_selection import select_candidates, candidate_selection_report_to_text
+    from usa_signal_bot.strategies.ranking_store import write_candidate_selection_report_json, write_selected_candidates_jsonl, build_candidate_selection_report_path, build_selected_candidates_path
+    from pathlib import Path
+
+    path = Path(file_path)
+    if not path.exists():
+        print(f"Error: Signal file not found at {file_path}")
+        return 1
+
+    try:
+        signals = read_signals_jsonl(path)
+        rank_config = context.config.signal_ranking if hasattr(context.config, 'signal_ranking') else None
+        sel_config = context.config.candidate_selection if hasattr(context.config, 'candidate_selection') else None
+
+        if sel_config is not None:
+            if max_candidates is not None:
+                sel_config.max_candidates = max_candidates
+            if min_rank_score is not None:
+                sel_config.min_rank_score = min_rank_score
+
+        ranking_report = rank_signals(signals, rank_config)
+        report = select_candidates(ranking_report, sel_config)
+
+        print("\n" + candidate_selection_report_to_text(report))
+
+        if write:
+            out_path = build_candidate_selection_report_path(context.data_dir, report.report_id)
+            write_candidate_selection_report_json(out_path, report)
+            print(f"\nReport written to: {out_path}")
+
+            if report.selected_candidates:
+                cand_path = build_selected_candidates_path(context.data_dir, report.report_id)
+                write_selected_candidates_jsonl(cand_path, report.selected_candidates)
+                print(f"Selected candidates written to: {cand_path}")
+
+        return 0
+    except Exception as e:
+        print(f"Error selecting candidates: {e}")
+        return 1
+
+def handle_signal_ranking_summary(context) -> int:
+    from usa_signal_bot.strategies.ranking_store import ranking_store_summary
+
+    summary = ranking_store_summary(context.data_dir)
+    print("\n--- Signal Ranking Storage Summary ---")
+    print(f"Total Files: {summary['total_files']}")
+    print(f"Ranking Reports: {summary['ranking_reports']}")
+    print(f"Selection Reports: {summary['selection_reports']}")
+    print(f"Portfolio Reports: {summary['portfolio_reports']}")
+    print(f"Candidate JSONL Files: {summary['candidate_files']}")
+
+    if summary['total_files'] == 0:
+        print("\nNo ranking or selection outputs found. Try running 'signal-rank-file' or 'strategy-portfolio-run' first.")
+    else:
+        print(f"\nLatest file: {summary['latest_file']}")
+
+    return 0
+
+def handle_selected_candidates_summary(context) -> int:
+    from usa_signal_bot.strategies.ranking_store import list_ranking_outputs, read_selected_candidates_jsonl
+
+    outputs = list_ranking_outputs(context.data_dir)
+    candidate_files = [p for p in outputs if p.name.startswith("candidates_") and p.suffix == ".jsonl"]
+
+    print("\n--- Selected Candidates Summary ---")
+    if not candidate_files:
+        print("No selected candidates files found.")
+        return 0
+
+    latest = candidate_files[0]
+    print(f"Latest Candidates File: {latest.name}")
+
+    try:
+        cands = read_selected_candidates_jsonl(latest)
+        print(f"Total Candidates: {len(cands)}")
+
+        # Simple stats
+        strategies = {}
+        symbols = set()
+
+        for c in cands:
+            strat = c['signal']['strategy_name']
+            sym = c['signal']['symbol']
+            strategies[strat] = strategies.get(strat, 0) + 1
+            symbols.add(sym)
+
+        print(f"Unique Symbols: {len(symbols)}")
+        print("\nBreakdown by Strategy:")
+        for s, count in strategies.items():
+            print(f"  {s}: {count}")
+
+    except Exception as e:
+        print(f"Error reading candidates file: {e}")
+
+    return 0
+
+def handle_strategy_portfolio_run(context, strategies_str: str, symbols_str: str, timeframes_str: str, write: bool) -> int:
+    from usa_signal_bot.strategies.strategy_registry import StrategyRegistry
+    from usa_signal_bot.strategies.strategy_engine import StrategyEngine
+    from usa_signal_bot.strategies.strategy_portfolio import strategy_portfolio_result_to_text
+
+    strategy_names = [s.strip() for s in strategies_str.split(",")] if strategies_str else []
+    symbols = [s.strip().upper() for s in symbols_str.split(",")] if symbols_str else []
+    timeframes = [t.strip() for t in timeframes_str.split(",")] if timeframes_str else ["1d"]
+
+    if not strategy_names:
+        print("Error: No strategies provided.")
+        return 1
+
+    registry = StrategyRegistry()
+    engine = StrategyEngine(registry, context.data_dir, context.config)
+
+    from usa_signal_bot.strategies.strategy_input import load_strategy_feature_frames_from_feature_store, filter_valid_strategy_frames, StrategyInputBatch
+
+    try:
+        # Load and filter frames
+        frames = load_strategy_feature_frames_from_feature_store(context.data_dir, symbols, timeframes)
+        valid_frames = filter_valid_strategy_frames(frames, strategy_names, registry)
+
+        if not valid_frames:
+            print("No valid feature frames found for the requested strategies/symbols/timeframes. Ensure feature engineering has run.")
+            return 0
+
+        batch = StrategyInputBatch(frames=valid_frames)
+        result = engine.run_strategies_ranked(strategy_names, batch, write_outputs=write)
+
+        print("\n" + strategy_portfolio_result_to_text(result))
+
+        if write:
+            print(f"\nPortfolio reports written to data/signals/ranking")
+
+        return 0
+    except Exception as e:
+        print(f"Error in strategy portfolio run: {e}")
+        return 1
+
+def handle_rule_strategy_run_ranked(context, strategy_set_name: str, symbols_str: str, timeframes_str: str, write: bool) -> int:
+    from usa_signal_bot.strategies.strategy_registry import StrategyRegistry
+    from usa_signal_bot.strategies.strategy_engine import StrategyEngine
+    from usa_signal_bot.strategies.strategy_portfolio import strategy_portfolio_result_to_text
+
+    symbols = [s.strip().upper() for s in symbols_str.split(",")] if symbols_str else []
+    timeframes = [t.strip() for t in timeframes_str.split(",")] if timeframes_str else ["1d"]
+
+    registry = StrategyRegistry()
+    engine = StrategyEngine(registry, context.data_dir, context.config)
+
+    try:
+        result = engine.run_rule_strategy_set_ranked_from_feature_store(
+            strategy_set_name=strategy_set_name,
+            symbols=symbols,
+            timeframes=timeframes,
+            write_outputs=write
+        )
+
+        print("\n" + strategy_portfolio_result_to_text(result))
+
+        if write:
+            print(f"\nPortfolio reports written to data/signals/ranking")
+
+        return 0
+    except Exception as e:
+        print(f"Error running rule strategy set ranked: {e}")
+        return 1
+
 def handle_universe_info(context) -> int:
     from usa_signal_bot.universe.registry import get_default_watchlist_path, get_sample_stocks_path, get_sample_etfs_path
 
@@ -1051,6 +1455,35 @@ def main() -> int:
     # Command: show-paths
     subparsers.add_parser("show-paths", help="Display resolved system paths")
 
+    # Signal Ranking Commands
+    parser_signal_rank = subparsers.add_parser("signal-rank-file", help="Rank signals from a JSONL file")
+    parser_signal_rank.add_argument("--file", required=True, help="Path to signal JSONL file")
+    parser_signal_rank.add_argument("--min-rank-score", type=float, help="Minimum rank score filter")
+    parser_signal_rank.add_argument("--write", action="store_true", help="Write ranking report to disk")
+
+    parser_signal_select = subparsers.add_parser("signal-select-candidates", help="Select candidates from a signal JSONL file")
+    parser_signal_select.add_argument("--file", required=True, help="Path to signal JSONL file")
+    parser_signal_select.add_argument("--max-candidates", type=int, help="Override max candidates")
+    parser_signal_select.add_argument("--min-rank-score", type=float, help="Override min rank score")
+    parser_signal_select.add_argument("--write", action="store_true", help="Write candidates to disk")
+
+    subparsers.add_parser("signal-ranking-summary", help="Show summary of ranking storage")
+    subparsers.add_parser("selected-candidates-summary", help="Show summary of selected candidates")
+
+    # Portfolio Commands
+    parser_portfolio = subparsers.add_parser("strategy-portfolio-run", help="Run a portfolio of strategies and aggregate/rank candidates")
+    parser_portfolio.add_argument("--strategies", help="Comma-separated strategy names")
+    parser_portfolio.add_argument("--symbols", help="Comma-separated symbols (optional, uses all available if empty)")
+    parser_portfolio.add_argument("--timeframes", default="1d", help="Comma-separated timeframes (default: 1d)")
+    parser_portfolio.add_argument("--write", action="store_true", help="Write portfolio reports to disk")
+
+    parser_rule_ranked = subparsers.add_parser("rule-strategy-run-ranked", help="Run a rule strategy set and aggregate/rank candidates")
+    parser_rule_ranked.add_argument("--set", dest="strategy_set", default="basic_rules", help="Rule strategy set name (default: basic_rules)")
+    parser_rule_ranked.add_argument("--symbols", help="Comma-separated symbols (optional)")
+    parser_rule_ranked.add_argument("--timeframes", default="1d", help="Comma-separated timeframes (default: 1d)")
+    parser_rule_ranked.add_argument("--write", action="store_true", help="Write portfolio reports to disk")
+
+
     # Command: validate-config
     subparsers.add_parser("validate-config", help="Validate config rules")
 
@@ -1380,7 +1813,20 @@ def main() -> int:
         # All other commands require a valid runtime context
         context = initialize_runtime()
 
-        if args.command == "smoke":
+
+        if args.command == "signal-rank-file":
+            return handle_signal_rank_file(context, args.file, args.min_rank_score, args.write)
+        elif args.command == "signal-select-candidates":
+            return handle_signal_select_candidates(context, args.file, args.max_candidates, args.min_rank_score, args.write)
+        elif args.command == "signal-ranking-summary":
+            return handle_signal_ranking_summary(context)
+        elif args.command == "selected-candidates-summary":
+            return handle_selected_candidates_summary(context)
+        elif args.command == "strategy-portfolio-run":
+            return handle_strategy_portfolio_run(context, args.strategies, args.symbols, args.timeframes, args.write)
+        elif args.command == "rule-strategy-run-ranked":
+            return handle_rule_strategy_run_ranked(context, args.strategy_set, args.symbols, args.timeframes, args.write)
+        elif args.command == "smoke":
             handle_smoke(context)
         elif args.command == "show-config":
             handle_show_config(context)

@@ -346,3 +346,18 @@ class RuleStrategySetError(RuleStrategyError):
 
 class RuleFeatureRequirementError(RuleStrategyError):
     pass
+
+class SignalRankingError(USASignalBotError):
+    pass
+
+class CandidateSelectionError(USASignalBotError):
+    pass
+
+class StrategyPortfolioError(USASignalBotError):
+    pass
+
+class SignalAggregationError(USASignalBotError):
+    pass
+
+class RankingStorageError(USASignalBotError):
+    pass

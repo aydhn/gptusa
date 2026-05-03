@@ -465,6 +465,52 @@ class ConfluenceConfig:
     weak_threshold: float = 25.0
     write_confluence_reports: bool = True
 
+
+@dataclass
+class SignalRankingConfigSchema:
+    enabled: bool = True
+    min_rank_score: float = 0.0
+    max_rank_score: float = 100.0
+    signal_score_weight: float = 35.0
+    confidence_weight: float = 15.0
+    confluence_weight: float = 20.0
+    quality_weight: float = 15.0
+    recency_weight: float = 5.0
+    risk_penalty_weight: float = 20.0
+    action_priority_weight: float = 10.0
+    max_rank_score_without_backtest: float = 75.0
+    default_min_rank_score_for_candidates: float = 45.0
+
+@dataclass
+class CandidateSelectionConfigSchema:
+    enabled: bool = True
+    max_candidates: int = 20
+    max_candidates_per_symbol: int = 1
+    max_candidates_per_strategy: int = 10
+    min_rank_score: float = 45.0
+    min_confidence: float = 0.25
+    min_confluence_score: Optional[float] = None
+    allow_watch_action: bool = True
+    allow_long_action: bool = True
+    allow_short_action: bool = False
+    reject_high_risk_flags: bool = True
+    collapse_mode: str = "best_per_symbol_timeframe"
+    write_selected_candidates: bool = True
+
+@dataclass
+class StrategyPortfolioConfigSchema:
+    enabled: bool = True
+    default_mode: str = "research_pool"
+    default_rule_set: str = "basic_rules"
+    max_candidates: int = 20
+    max_per_strategy: int = 10
+    max_per_symbol: int = 1
+    require_confluence: bool = False
+    min_confluence_score: Optional[float] = None
+    diversify_by_strategy: bool = True
+    write_portfolio_reports: bool = True
+
+
 @dataclass
 class AppConfig:
 
@@ -487,6 +533,9 @@ class AppConfig:
     multi_timeframe: MultiTimeframeConfig = field(default_factory=MultiTimeframeConfig)
     data_readiness: DataReadinessConfig = field(default_factory=DataReadinessConfig)
     active_universe: ActiveUniverseConfig = field(default_factory=ActiveUniverseConfig)
+    signal_ranking: SignalRankingConfigSchema = field(default_factory=SignalRankingConfigSchema)
+    candidate_selection: CandidateSelectionConfigSchema = field(default_factory=CandidateSelectionConfigSchema)
+    strategy_portfolio: StrategyPortfolioConfigSchema = field(default_factory=StrategyPortfolioConfigSchema)
     universe_readiness_gate: UniverseReadinessGateConfig = field(default_factory=UniverseReadinessGateConfig)
     universe_runs: UniverseRunsConfig = field(default_factory=UniverseRunsConfig)
     trend_features: TrendFeatureConfig = field(default_factory=TrendFeatureConfig)
