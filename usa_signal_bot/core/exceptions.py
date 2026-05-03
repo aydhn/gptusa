@@ -331,3 +331,18 @@ class SignalRiskFlagError(USASignalBotError):
 class SignalQualityGuardError(USASignalBotError):
     """Raised when a critical quality guard fails."""
     pass
+
+class RuleStrategyError(USASignalBotError):
+    pass
+
+class RuleConditionError(RuleStrategyError):
+    pass
+
+class RuleEvaluationError(RuleStrategyError):
+    pass
+
+class RuleStrategySetError(RuleStrategyError):
+    pass
+
+class RuleFeatureRequirementError(RuleStrategyError):
+    pass
