@@ -19,6 +19,13 @@ from usa_signal_bot.core.enums import SignalAggregationMode
 from usa_signal_bot.core.config_schema import AppConfig
 
 
+
+from usa_signal_bot.strategies.signal_ranking import SignalRankingConfig
+from usa_signal_bot.strategies.candidate_selection import CandidateSelectionConfig
+from usa_signal_bot.strategies.strategy_portfolio import StrategyPortfolioAggregationResult, aggregate_strategy_portfolio_results, write_strategy_portfolio_run_json, write_strategy_portfolio_result_json
+from usa_signal_bot.strategies.ranking_store import build_portfolio_report_path, write_ranking_report_json, write_candidate_selection_report_json, write_selected_candidates_jsonl, build_ranking_report_path, build_candidate_selection_report_path, build_selected_candidates_path
+from usa_signal_bot.strategies.rule_strategy_sets import basic_rule_strategy_set, trend_rule_strategy_set, momentum_rule_strategy_set, get_rule_strategy_set
+
 class StrategyEngine:
     def __init__(self, registry: StrategyRegistry, data_root: Path, app_config: Optional[AppConfig] = None):
         self.app_config = app_config
@@ -246,3 +253,80 @@ class StrategyEngine:
             write_confluence_report_json(cr_path, confluence_report)
 
         return run_results, confluence_report
+
+    def run_strategies_ranked(self, strategy_names: List[str], batch: StrategyInputBatch, params_by_strategy: Optional[Dict[str, Dict[str, Any]]] = None, write_outputs: bool = False) -> StrategyPortfolioAggregationResult:
+        if params_by_strategy is None:
+            params_by_strategy = {}
+
+        results = []
+        for name in strategy_names:
+            params = params_by_strategy.get(name)
+            res = self.run_strategy(name, batch, params=params, write_outputs=write_outputs)
+            results.append(res)
+
+        confluence_report = None
+        portfolio_config = self.app_config.strategy_portfolio if self.app_config else None
+
+        if len(strategy_names) > 1 and portfolio_config and portfolio_config.require_confluence:
+            all_signals = []
+            for r in results:
+                all_signals.extend(r.signals) # used to be scored_signals
+            from usa_signal_bot.core.enums import SignalAggregationMode
+            confluence_report = evaluate_confluence(all_signals, SignalAggregationMode.BY_SYMBOL_TIMEFRAME)
+
+        ranking_config = self.app_config.signal_ranking if self.app_config else None
+        selection_config = self.app_config.candidate_selection if self.app_config else None
+
+        agg_result = aggregate_strategy_portfolio_results(
+            strategy_results=results,
+            confluence_report=confluence_report,
+            ranking_config=ranking_config,  # type: ignore
+            selection_config=selection_config # type: ignore
+        )
+
+        if write_outputs:
+            self.write_portfolio_aggregation_result(agg_result)
+
+        return agg_result
+
+    def run_rule_strategy_set_ranked(self, strategy_set_name: str, batch: StrategyInputBatch, write_outputs: bool = False) -> StrategyPortfolioAggregationResult:
+        rule_set = get_rule_strategy_set(strategy_set_name)
+        return self.run_strategies_ranked(
+            strategy_names=rule_set.strategies,
+            batch=batch,
+            params_by_strategy=rule_set.params_by_strategy,
+            write_outputs=write_outputs
+        )
+
+    def run_rule_strategy_set_ranked_from_feature_store(self, strategy_set_name: str, symbols: List[str], timeframes: List[str], write_outputs: bool = False) -> StrategyPortfolioAggregationResult:
+        rule_set = get_rule_strategy_set(strategy_set_name)
+        from usa_signal_bot.strategies.strategy_input import load_strategy_feature_frames_from_feature_store, filter_valid_strategy_frames
+        frames = load_strategy_feature_frames_from_feature_store(self.data_root, symbols, timeframes)
+        valid_frames = filter_valid_strategy_frames(frames, rule_set.strategies, self.registry)
+
+        batch = StrategyInputBatch(frames=valid_frames)
+        return self.run_rule_strategy_set_ranked(strategy_set_name, batch, write_outputs=write_outputs)
+
+    def write_portfolio_aggregation_result(self, result: StrategyPortfolioAggregationResult) -> List[Path]:
+        paths = []
+        run_id = result.portfolio_run.run_id
+
+        p_run = build_portfolio_report_path(self.data_root, run_id)
+        paths.append(write_strategy_portfolio_run_json(p_run, result.portfolio_run))
+
+        p_res = build_portfolio_report_path(self.data_root, f"{run_id}_full")
+        paths.append(write_strategy_portfolio_result_json(p_res, result))
+
+        if result.ranking_report:
+            p_rank = build_ranking_report_path(self.data_root, result.ranking_report.report_id)
+            paths.append(write_ranking_report_json(p_rank, result.ranking_report))
+
+        if result.selection_report:
+            p_sel = build_candidate_selection_report_path(self.data_root, result.selection_report.report_id)
+            paths.append(write_candidate_selection_report_json(p_sel, result.selection_report))
+
+            if result.selection_report.selected_candidates:
+                p_cand = build_selected_candidates_path(self.data_root, result.selection_report.report_id)
+                paths.append(write_selected_candidates_jsonl(p_cand, result.selection_report.selected_candidates))
+
+        return paths
