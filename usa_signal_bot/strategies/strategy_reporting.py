@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from typing import List, Optional, Any
+from typing import List, Optional, Any, Dict
 from usa_signal_bot.strategies.strategy_models import StrategyRunResult, StrategyExecutionSummary, summarize_strategy_run
 from usa_signal_bot.strategies.signal_contract import StrategySignal, signal_to_text
 from usa_signal_bot.strategies.strategy_registry import StrategyRegistry
@@ -103,3 +103,82 @@ def write_strategy_run_report_json(path: Path, result: StrategyRunResult, valida
     except Exception as e:
         print(f"Failed to write run report to {path}: {e}")
         return path
+
+from usa_signal_bot.strategies.signal_scoring import SignalScoringResult
+from usa_signal_bot.strategies.signal_quality import SignalQualityReport, quality_report_to_text
+from usa_signal_bot.strategies.signal_confluence import ConfluenceReport, confluence_report_to_text
+from usa_signal_bot.strategies.signal_store import write_signal_quality_report_json, write_confluence_report_json, build_signal_report_path
+
+def signal_scoring_result_to_text(result: SignalScoringResult) -> str:
+    lines = [
+        f"Signal ID: {result.original_signal.signal_id}",
+        f"Symbol: {result.original_signal.symbol} | Action: {result.original_signal.action.value if hasattr(result.original_signal.action, 'value') else result.original_signal.action}",
+        f"Accepted for Review: {result.accepted_for_review}",
+        f"Final Score: {result.breakdown.total_score:.1f} | Final Confidence: {result.breakdown.final_confidence:.2f}",
+        f"Confidence Bucket: {result.breakdown.confidence_bucket.value if hasattr(result.breakdown.confidence_bucket, 'value') else result.breakdown.confidence_bucket}",
+        "Breakdown:"
+    ]
+    for comp, val in result.breakdown.components.items():
+        lines.append(f"  + {comp}: {val:.1f}")
+    for pen, val in result.breakdown.penalties.items():
+        lines.append(f"  - {pen}: {val:.1f}")
+    for bon, val in result.breakdown.bonuses.items():
+        lines.append(f"  + {bon}: {val:.1f}")
+
+    if result.breakdown.notes:
+        lines.append("Notes:")
+        for n in result.breakdown.notes:
+            lines.append(f"  * {n}")
+
+    if result.warnings:
+        lines.append("Warnings:")
+        for w in result.warnings:
+            lines.append(f"  ! {w}")
+
+    if result.errors:
+        lines.append("Errors:")
+        for e in result.errors:
+            lines.append(f"  X {e}")
+
+    return "\n".join(lines)
+
+def signal_scoring_results_to_text(results: List[SignalScoringResult], limit: int = 20) -> str:
+    if not results:
+        return "No scoring results to display."
+
+    lines = [f"--- Scoring Results Summary ({len(results)} signals) ---"]
+    accepted = sum(1 for r in results if r.accepted_for_review)
+    lines.append(f"Accepted for Review: {accepted}/{len(results)}")
+    lines.append("")
+
+    for i, res in enumerate(results[:limit]):
+        lines.append(signal_scoring_result_to_text(res))
+        lines.append("-" * 40)
+
+    if len(results) > limit:
+        lines.append(f"... and {len(results) - limit} more signals.")
+
+    return "\n".join(lines)
+
+def write_full_strategy_quality_report_json(
+    data_root: Path,
+    run_result: StrategyRunResult,
+    scoring_results: List[SignalScoringResult],
+    quality_report: SignalQualityReport,
+    confluence_report: Optional[ConfluenceReport] = None
+) -> Dict[str, Path]:
+
+    written_paths = {}
+
+    # Write quality report
+    qr_path = build_signal_report_path(data_root, f"quality_{run_result.strategy_name}", run_result.run_id)
+    write_signal_quality_report_json(qr_path, quality_report)
+    written_paths["quality_report"] = qr_path
+
+    # Write confluence report if exists
+    if confluence_report:
+        cr_path = build_signal_report_path(data_root, f"confluence_{run_result.strategy_name}", run_result.run_id)
+        write_confluence_report_json(cr_path, confluence_report)
+        written_paths["confluence_report"] = cr_path
+
+    return written_paths

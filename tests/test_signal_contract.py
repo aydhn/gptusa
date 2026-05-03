@@ -55,3 +55,26 @@ def test_signal_utils():
     id2 = create_signal_id("test", "AAPL", "1d", "ts1")
     assert id1 == id2
     assert len(id1) > 0
+
+def test_signal_contract_new_fields():
+    sample_signal = StrategySignal(signal_id='test', strategy_name='test', symbol='AAPL', timeframe='1d', timestamp_utc='2024-01-01T00:00:00Z', action=SignalAction.LONG, confidence=0.8, confidence_bucket=SignalConfidenceBucket.HIGH, score=80.0, reasons=['test'], feature_snapshot={}, risk_flags=[])
+    from usa_signal_bot.core.enums import SignalQualityStatus, ConfluenceDirection
+
+    sample_signal.quality_status = SignalQualityStatus.ACCEPTED
+    sample_signal.score_breakdown = {"base": 50, "bonus": 10}
+    sample_signal.confluence_score = 80.0
+    sample_signal.confluence_direction = ConfluenceDirection.LONG_BIAS
+
+    validate_strategy_signal(sample_signal)
+
+    d = signal_to_dict(sample_signal)
+    assert d["quality_status"] == "ACCEPTED"
+    assert d["score_breakdown"] == {"base": 50, "bonus": 10}
+    assert d["confluence_score"] == 80.0
+    assert d["confluence_direction"] == "LONG_BIAS"
+
+def test_signal_contract_invalid_confluence_score():
+    sample_signal = StrategySignal(signal_id='test', strategy_name='test', symbol='AAPL', timeframe='1d', timestamp_utc='2024-01-01T00:00:00Z', action=SignalAction.LONG, confidence=0.8, confidence_bucket=SignalConfidenceBucket.HIGH, score=80.0, reasons=['test'], feature_snapshot={}, risk_flags=[])
+    sample_signal.confluence_score = 150.0
+    with pytest.raises(SignalContractError):
+        validate_strategy_signal(sample_signal)

@@ -24,3 +24,12 @@ def test_signal_store_operations(tmp_path):
     summary = signal_store_summary(tmp_path)
     assert summary["file_count"] == 1
     assert summary["total_size_bytes"] > 0
+
+def test_build_signal_report_path(tmp_path):
+    from usa_signal_bot.strategies.signal_store import build_signal_report_path
+    p = build_signal_report_path(tmp_path, "my_report", "run-123")
+    assert p.parent.name == "reports"
+    assert p.parent.parent.name == "signals"
+    assert "my_report" in p.name
+    assert "run-123" in p.name
+    assert p.suffix == ".json"

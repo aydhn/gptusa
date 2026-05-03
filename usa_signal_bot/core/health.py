@@ -326,6 +326,64 @@ def check_signal_contract_health(context: 'RuntimeContext') -> HealthCheckResult
 
     return result
 
+
+def check_signal_scoring_health(context: 'RuntimeContext') -> HealthCheckResult:
+    from usa_signal_bot.strategies.signal_scoring import default_signal_scoring_config, validate_signal_scoring_config
+    try:
+        config = context.app_config.signal_scoring if context.app_config else default_signal_scoring_config()
+        validate_signal_scoring_config(config)
+        return HealthCheckResult(
+            component="signal_scoring",
+            status=HealthStatus.PASS,
+            message="Signal scoring config is valid."
+        )
+    except Exception as e:
+        return HealthCheckResult(
+            component="signal_scoring",
+            status=HealthStatus.FAIL,
+            message=f"Signal scoring error: {e}"
+        )
+
+def check_signal_quality_health(context: 'RuntimeContext') -> HealthCheckResult:
+    try:
+        if context.app_config and not context.app_config.signal_quality.enabled:
+            return HealthCheckResult(
+                component="signal_quality",
+                status=HealthStatus.PASS,
+                message="Signal quality guard is disabled in config."
+            )
+        return HealthCheckResult(
+            component="signal_quality",
+            status=HealthStatus.PASS,
+            message="Signal quality guard is configured."
+        )
+    except Exception as e:
+        return HealthCheckResult(
+            component="signal_quality",
+            status=HealthStatus.FAIL,
+            message=f"Signal quality guard error: {e}"
+        )
+
+def check_confluence_health(context: 'RuntimeContext') -> HealthCheckResult:
+    try:
+        if context.app_config and not context.app_config.confluence.enabled:
+            return HealthCheckResult(
+                component="confluence_engine",
+                status=HealthStatus.PASS,
+                message="Confluence engine is disabled in config."
+            )
+        return HealthCheckResult(
+            component="confluence_engine",
+            status=HealthStatus.PASS,
+            message="Confluence engine is configured."
+        )
+    except Exception as e:
+        return HealthCheckResult(
+            component="confluence_engine",
+            status=HealthStatus.FAIL,
+            message=f"Confluence engine error: {e}"
+        )
+
 def run_health_checks(context) -> List[HealthCheckResult]:
 
     """Runs all health checks and returns the results."""

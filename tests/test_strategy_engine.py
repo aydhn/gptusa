@@ -23,3 +23,42 @@ def test_strategy_engine_unknown_strategy():
     res = e.run_strategy("unknown", batch)
     assert res.status.value == "FAILED"
     assert len(res.errors) > 0
+
+def test_score_and_validate_signals():
+    from usa_signal_bot.strategies.signal_contract import StrategySignal
+    from usa_signal_bot.core.enums import SignalAction, SignalConfidenceBucket
+    from usa_signal_bot.strategies.strategy_registry import StrategyRegistry
+    import tempfile
+    from pathlib import Path
+
+    with tempfile.TemporaryDirectory() as tmp:
+        engine = StrategyEngine(StrategyRegistry(), Path(tmp))
+
+        sig = StrategySignal(
+            signal_id="TEST-1", strategy_name="TEST_STRAT", symbol="AAPL", timeframe="1d",
+            timestamp_utc="2024-01-01T00:00:00Z", action=SignalAction.LONG,
+            confidence=0.8, confidence_bucket=SignalConfidenceBucket.HIGH,
+            score=0.0, reasons=["Reason"], feature_snapshot={"k": 1}, risk_flags=[]
+        )
+
+        scored, scoring_results, quality_report = engine.score_and_validate_signals([sig])
+        assert len(scored) == 1
+        assert len(scoring_results) == 0 # Disabled by default unless config is passed
+        assert len(quality_report.accepted_signal_ids) == 1
+
+def test_run_strategies_with_confluence():
+    from usa_signal_bot.strategies.strategy_registry import StrategyRegistry
+    from usa_signal_bot.strategies.strategy_input import StrategyInputBatch
+    import tempfile
+    from pathlib import Path
+
+    with tempfile.TemporaryDirectory() as tmp:
+        engine = StrategyEngine(StrategyRegistry(), Path(tmp))
+
+        # This will return empty since we don't have valid strategies registered here
+        # But it should not crash
+        import datetime
+        batch = StrategyInputBatch("1d", ["1d"], datetime.datetime.now(datetime.timezone.utc).isoformat(), [], {})
+        results, confluence = engine.run_strategies_with_confluence([], batch)
+        assert len(results) == 0
+        assert confluence.total_groups == 0

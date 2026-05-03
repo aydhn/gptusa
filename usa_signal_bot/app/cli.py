@@ -1317,6 +1317,32 @@ def main() -> int:
 
     parser_sig_val = subparsers.add_parser("signal-validate", help="Validate a signal file")
     parser_sig_val.add_argument("--file", required=True, help="Path to signal JSONL file")
+
+    # signal-score-file
+    p_signal_score_file = subparsers.add_parser("signal-score-file", help="Score signals from a JSONL file")
+    p_signal_score_file.add_argument("--file", required=True, help="Path to signals.jsonl")
+    p_signal_score_file.add_argument("--write", action="store_true", help="Write scoring results report")
+
+    # signal-quality-check
+    p_signal_quality_check = subparsers.add_parser("signal-quality-check", help="Check signal quality rules")
+    p_signal_quality_check.add_argument("--file", required=True, help="Path to signals.jsonl")
+
+    # signal-confluence
+    p_signal_confluence = subparsers.add_parser("signal-confluence", help="Evaluate confluence from signals")
+    p_signal_confluence.add_argument("--file", required=True, help="Path to signals.jsonl")
+    p_signal_confluence.add_argument("--mode", default="by_symbol_timeframe", help="Aggregation mode")
+    p_signal_confluence.add_argument("--write", action="store_true", help="Write confluence report")
+
+    # strategy-run-confluence
+    p_strat_run_confluence = subparsers.add_parser("strategy-run-confluence", help="Run multiple strategies and evaluate confluence")
+    p_strat_run_confluence.add_argument("--strategies", help="Comma separated strategy names")
+    p_strat_run_confluence.add_argument("--symbols", help="Comma separated symbols")
+    p_strat_run_confluence.add_argument("--timeframes", help="Comma separated timeframes (default: 1d)")
+    p_strat_run_confluence.add_argument("--write", action="store_true", help="Write reports")
+
+    # signal-quality-summary
+    p_sig_qual_summary = subparsers.add_parser("signal-quality-summary", help="Show summary of recent quality and confluence reports")
+
     args = parser.parse_args()
 
 
@@ -2589,3 +2615,160 @@ def handle_volume_feature_summary(context) -> int:
     except Exception as e:
         print(f"Error: {e}")
         return 1
+
+def do_signal_score_file(args, config):
+    from usa_signal_bot.strategies.signal_store import read_signals_jsonl, build_signal_report_path, write_scoring_results_jsonl
+    from usa_signal_bot.strategies.signal_scoring import score_signal_list
+    from usa_signal_bot.strategies.strategy_reporting import signal_scoring_results_to_text
+    from usa_signal_bot.strategies.signal_contract import StrategySignal
+    import json
+    from pathlib import Path
+
+    raw_signals = read_signals_jsonl(Path(args.file))
+    signals = []
+    from usa_signal_bot.core.enums import SignalAction, SignalConfidenceBucket
+    for d in raw_signals:
+        if isinstance(d.get("action"), str):
+            try:
+                d["action"] = SignalAction[d["action"]]
+            except:
+                pass
+        if isinstance(d.get("confidence_bucket"), str):
+            try:
+                d["confidence_bucket"] = SignalConfidenceBucket[d["confidence_bucket"]]
+            except:
+                pass
+        signals.append(StrategySignal(**d))
+
+    print(f"Loaded {len(signals)} signals from {args.file}")
+    results = score_signal_list(signals, config.signal_scoring)
+    print(signal_scoring_results_to_text(results))
+
+    if getattr(args, 'write', False):
+        import uuid
+        run_id = f"score_run_{uuid.uuid4().hex[:8]}"
+        out_path = build_signal_report_path(Path(config.data.root_dir), "scoring_batch", run_id)
+        out_path = out_path.with_suffix(".jsonl")
+        write_scoring_results_jsonl(out_path, results)
+        print(f"Wrote scoring results to: {out_path}")
+
+def do_signal_quality_check(args, config):
+    from usa_signal_bot.strategies.signal_store import read_signals_jsonl
+    from usa_signal_bot.strategies.signal_quality import evaluate_signal_quality_list, quality_report_to_text
+    from usa_signal_bot.strategies.signal_contract import StrategySignal
+    from pathlib import Path
+
+    raw_signals = read_signals_jsonl(Path(args.file))
+    signals = []
+    from usa_signal_bot.core.enums import SignalAction, SignalConfidenceBucket
+    for d in raw_signals:
+        if isinstance(d.get("action"), str):
+            try:
+                d["action"] = SignalAction[d["action"]]
+            except:
+                pass
+        if isinstance(d.get("confidence_bucket"), str):
+            try:
+                d["confidence_bucket"] = SignalConfidenceBucket[d["confidence_bucket"]]
+            except:
+                pass
+        signals.append(StrategySignal(**d))
+
+    print(f"Loaded {len(signals)} signals from {args.file}")
+    report = evaluate_signal_quality_list(signals, None, config.signal_quality)
+    print(quality_report_to_text(report))
+
+def do_signal_confluence(args, config):
+    from usa_signal_bot.strategies.signal_store import read_signals_jsonl, build_signal_report_path, write_confluence_report_json
+    from usa_signal_bot.strategies.signal_confluence import evaluate_confluence, confluence_report_to_text
+    from usa_signal_bot.core.enums import SignalAggregationMode
+    from usa_signal_bot.strategies.signal_contract import StrategySignal
+    from pathlib import Path
+
+    raw_signals = read_signals_jsonl(Path(args.file))
+    signals = []
+    from usa_signal_bot.core.enums import SignalAction, SignalConfidenceBucket
+    for d in raw_signals:
+        if isinstance(d.get("action"), str):
+            try:
+                d["action"] = SignalAction[d["action"]]
+            except:
+                pass
+        if isinstance(d.get("confidence_bucket"), str):
+            try:
+                d["confidence_bucket"] = SignalConfidenceBucket[d["confidence_bucket"]]
+            except:
+                pass
+        signals.append(StrategySignal(**d))
+
+    print(f"Loaded {len(signals)} signals from {args.file}")
+
+    try:
+        mode = SignalAggregationMode[args.mode.upper()]
+    except:
+        mode = SignalAggregationMode.BY_SYMBOL_TIMEFRAME
+
+    report = evaluate_confluence(signals, mode, config.confluence)
+    print(confluence_report_to_text(report))
+
+    if getattr(args, 'write', False):
+        import uuid
+        run_id = f"confluence_run_{uuid.uuid4().hex[:8]}"
+        out_path = build_signal_report_path(Path(config.data.root_dir), "confluence_batch", run_id)
+        write_confluence_report_json(out_path, report)
+        print(f"Wrote confluence report to: {out_path}")
+
+def do_strategy_run_confluence(args, config):
+    from usa_signal_bot.strategies.strategy_registry import create_default_strategy_registry
+    from usa_signal_bot.strategies.strategy_engine import StrategyEngine
+    from usa_signal_bot.strategies.strategy_input import load_strategy_feature_frames_from_feature_store
+    from pathlib import Path
+    import sys
+
+    strategies = [s.strip() for s in getattr(args, 'strategies', '').split(",")] if getattr(args, 'strategies', None) else ["trend_following_skeleton", "momentum_skeleton"]
+    symbols = [s.strip() for s in getattr(args, 'symbols', '').split(",")] if getattr(args, 'symbols', None) else []
+    timeframes = [t.strip() for t in getattr(args, 'timeframes', '').split(",")] if getattr(args, 'timeframes', None) else ["1d"]
+
+    print(f"Running strategies: {strategies}")
+    print(f"Symbols: {symbols if symbols else 'ALL'}")
+    print(f"Timeframes: {timeframes}")
+
+    try:
+        batch = load_strategy_feature_frames_from_feature_store(
+            data_root=Path(config.data.root_dir),
+            timeframes=timeframes,
+            symbols=symbols
+        )
+    except Exception as e:
+        print(f"Failed to load features: {e}")
+        print("Run 'python -m usa_signal_bot feature-pipeline-run' first.")
+        sys.exit(1)
+
+    registry = create_default_strategy_registry()
+    engine = StrategyEngine(registry, Path(config.data.root_dir), app_config=config)
+
+    run_results, confluence_report = engine.run_strategies_with_confluence(
+        strategies,
+        batch,
+        write_outputs=getattr(args, 'write', False)
+    )
+
+    from usa_signal_bot.strategies.signal_confluence import confluence_report_to_text
+    print("\n" + confluence_report_to_text(confluence_report))
+
+def do_signal_quality_summary(args, config):
+    from usa_signal_bot.strategies.signal_store import signal_reports_dir
+    from pathlib import Path
+    d = signal_reports_dir(Path(config.data.root_dir))
+    if not d.exists():
+        print(f"Reports directory does not exist: {d}")
+        return
+
+    files = sorted(list(d.glob("*.json*")), key=lambda x: x.stat().st_mtime, reverse=True)
+    if not files:
+        print(f"No reports found in {d}")
+        return
+
+    print(f"Found {len(files)} reports. Latest:")
+    for f in files[:10]:
+        print(f" - {f.name} (Size: {f.stat().st_size} bytes)")

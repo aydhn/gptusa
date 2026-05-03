@@ -426,6 +426,45 @@ class SignalsConfig:
         if not (0.0 <= self.overconfidence_warning_threshold <= 1.0):
             raise ValueError("overconfidence_warning_threshold must be between 0.0 and 1.0")
 
+
+
+@dataclass
+class SignalScoringConfigSchema:
+    enabled: bool = True
+    min_score: float = 0.0
+    max_score: float = 100.0
+    base_score: float = 50.0
+    confidence_weight: float = 25.0
+    reason_quality_weight: float = 15.0
+    feature_snapshot_weight: float = 10.0
+    risk_penalty_weight: float = 20.0
+    max_allowed_score_without_backtest: float = 70.0
+    overconfidence_penalty: float = 15.0
+    min_score_for_review: float = 40.0
+
+@dataclass
+class SignalQualityConfig:
+    enabled: bool = True
+    min_confidence_for_review: float = 0.25
+    min_score_for_review: float = 40.0
+    reject_missing_reasons: bool = True
+    reject_missing_feature_snapshot: bool = True
+    reject_expired_signals: bool = True
+    overconfidence_warning_threshold: float = 0.70
+    max_rejected_ratio_warning: float = 0.80
+    allow_empty_signal_list: bool = True
+
+@dataclass
+class ConfluenceConfig:
+    enabled: bool = True
+    default_aggregation_mode: str = "by_symbol_timeframe"
+    min_signals_for_confluence: int = 2
+    conflict_penalty: float = 25.0
+    strong_threshold: float = 70.0
+    moderate_threshold: float = 50.0
+    weak_threshold: float = 25.0
+    write_confluence_reports: bool = True
+
 @dataclass
 class AppConfig:
 
@@ -456,3 +495,6 @@ class AppConfig:
 
     strategies: StrategiesConfig = field(default_factory=StrategiesConfig)
     signals: SignalsConfig = field(default_factory=SignalsConfig)
+    signal_scoring: SignalScoringConfigSchema = field(default_factory=SignalScoringConfigSchema)
+    signal_quality: SignalQualityConfig = field(default_factory=SignalQualityConfig)
+    confluence: ConfluenceConfig = field(default_factory=ConfluenceConfig)

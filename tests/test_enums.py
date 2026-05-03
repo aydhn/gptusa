@@ -1,5 +1,5 @@
 import pytest
-from usa_signal_bot.core.enums import AssetType, SignalSide, OrderStatus, RegimeType
+from usa_signal_bot.core.enums import AssetType, SignalSide, OrderStatus, RegimeType, SignalScoreComponent, SignalQualityStatus, SignalRejectionReason, ConfluenceDirection, ConfluenceStrength, SignalAggregationMode
 
 def test_enum_values_are_strings():
     assert isinstance(AssetType.STOCK.value, str)
@@ -27,3 +27,28 @@ def test_regime_type_values():
     assert "RISK_ON" in regimes
     assert "TRENDING_UP" in regimes
     assert "UNKNOWN" in regimes
+
+def test_signal_score_component():
+    assert SignalScoreComponent.STRATEGY_BASE == "STRATEGY_BASE"
+    assert SignalScoreComponent.CONFLUENCE == "CONFLUENCE"
+
+def test_signal_quality_status():
+    assert SignalQualityStatus.ACCEPTED == "ACCEPTED"
+    assert SignalQualityStatus.REJECTED == "REJECTED"
+
+def test_signal_rejection_reason():
+    assert SignalRejectionReason.LOW_CONFIDENCE == "LOW_CONFIDENCE"
+    assert SignalRejectionReason.CONFLICTING_SIGNAL == "CONFLICTING_SIGNAL"
+
+def test_confluence_direction():
+    assert ConfluenceDirection.LONG_BIAS == "LONG_BIAS"
+    assert ConfluenceDirection.SHORT_BIAS == "SHORT_BIAS"
+    assert ConfluenceDirection.CONFLICTED == "CONFLICTED"
+
+def test_confluence_strength():
+    assert ConfluenceStrength.WEAK == "WEAK"
+    assert ConfluenceStrength.VERY_STRONG == "VERY_STRONG"
+
+def test_signal_aggregation_mode():
+    assert SignalAggregationMode.BY_SYMBOL_TIMEFRAME == "BY_SYMBOL_TIMEFRAME"
+    assert SignalAggregationMode.GLOBAL == "GLOBAL"

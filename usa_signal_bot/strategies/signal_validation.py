@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
 from typing import List, Dict, Any, Optional
 from usa_signal_bot.strategies.signal_contract import StrategySignal, validate_strategy_signal
+from usa_signal_bot.core.enums import SignalLifecycleStatus, SignalQualityStatus
 from usa_signal_bot.core.exceptions import SignalValidationError
 
 @dataclass
@@ -142,3 +143,45 @@ def signal_validation_report_to_text(report: SignalValidationReport) -> str:
 def assert_signals_valid(report: SignalValidationReport) -> None:
     if not report.valid:
         raise SignalValidationError(f"Signal validation failed with {report.invalid_signals} invalid signals. Errors: {report.errors}")
+
+
+def validate_scored_signal(signal: StrategySignal) -> List[SignalValidationIssue]:
+    issues = []
+    issues.extend(validate_signal_score_breakdown(signal))
+    issues.extend(validate_confluence_fields(signal))
+
+    if signal.lifecycle_status == SignalLifecycleStatus.REJECTED and signal.quality_status == SignalQualityStatus.ACCEPTED:
+        issues.append(SignalValidationIssue(
+            signal_id=signal.signal_id,
+            symbol=signal.symbol,
+            severity="WARNING",
+            field="lifecycle_status",
+            message="Lifecycle status is REJECTED but quality status is ACCEPTED"
+        ))
+
+    return issues
+
+def validate_signal_score_breakdown(signal: StrategySignal) -> List[SignalValidationIssue]:
+    issues = []
+    if not isinstance(signal.score_breakdown, dict):
+        issues.append(SignalValidationIssue(
+            signal_id=signal.signal_id,
+            symbol=signal.symbol,
+            severity="ERROR",
+            field="score_breakdown",
+            message="score_breakdown must be a dict"
+        ))
+    return issues
+
+def validate_confluence_fields(signal: StrategySignal) -> List[SignalValidationIssue]:
+    issues = []
+    if signal.confluence_score is not None:
+        if not (0.0 <= signal.confluence_score <= 100.0):
+            issues.append(SignalValidationIssue(
+                signal_id=signal.signal_id,
+                symbol=signal.symbol,
+                severity="ERROR",
+                field="confluence_score",
+                message=f"confluence_score must be between 0.0 and 100.0, got {signal.confluence_score}"
+            ))
+    return issues
