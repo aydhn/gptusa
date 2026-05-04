@@ -265,3 +265,13 @@ def test_cli_rule_strategy_summary():
     import sys
     result = subprocess.run([sys.executable, "-m", "usa_signal_bot", "rule-strategy-summary"], capture_output=True, text=True)
     assert result.returncode == 0
+
+def test_cli_benchmark_commands():
+    import subprocess
+    import sys
+    res = subprocess.run([sys.executable, "-m", "usa_signal_bot", "benchmark-info"], capture_output=True, text=True)
+    assert res.returncode == 0
+
+
+    res2 = subprocess.run([sys.executable, "-m", "usa_signal_bot", "benchmark-summary"], capture_output=True, text=True)
+    assert res2.returncode == 0

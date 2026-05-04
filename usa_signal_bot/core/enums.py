@@ -732,3 +732,53 @@ class DrawdownState(str, Enum):
     DRAWDOWN = "DRAWDOWN"
     RECOVERY = "RECOVERY"
     UNKNOWN = "UNKNOWN"
+
+class BenchmarkType(str, Enum):
+    ETF = "ETF"
+    INDEX_PROXY = "INDEX_PROXY"
+    CASH = "CASH"
+    CUSTOM_SYMBOL = "CUSTOM_SYMBOL"
+    STRATEGY_BASELINE = "STRATEGY_BASELINE"
+
+class BenchmarkName(str, Enum):
+    SPY = "SPY"
+    QQQ = "QQQ"
+    IWM = "IWM"
+    DIA = "DIA"
+    VTI = "VTI"
+    CASH = "CASH"
+
+class BenchmarkComparisonStatus(str, Enum):
+    OK = "OK"
+    WARNING = "WARNING"
+    FAILED = "FAILED"
+    EMPTY = "EMPTY"
+
+class BaselineMode(str, Enum):
+    BUY_AND_HOLD = "BUY_AND_HOLD"
+    CASH_ONLY = "CASH_ONLY"
+    EQUAL_WEIGHT_BASKET = "EQUAL_WEIGHT_BASKET"
+    SINGLE_SYMBOL = "SINGLE_SYMBOL"
+
+class AttributionDimension(str, Enum):
+    STRATEGY = "STRATEGY"
+    SYMBOL = "SYMBOL"
+    TIMEFRAME = "TIMEFRAME"
+    ACTION = "ACTION"
+    MONTH = "MONTH"
+    YEAR = "YEAR"
+    HOLDING_PERIOD = "HOLDING_PERIOD"
+    UNKNOWN = "UNKNOWN"
+
+class AttributionStatus(str, Enum):
+    OK = "OK"
+    WARNING = "WARNING"
+    EMPTY = "EMPTY"
+    INVALID = "INVALID"
+
+class RelativePerformanceBucket(str, Enum):
+    OUTPERFORMED = "OUTPERFORMED"
+    UNDERPERFORMED = "UNDERPERFORMED"
+    MATCHED = "MATCHED"
+    INSUFFICIENT_DATA = "INSUFFICIENT_DATA"
+    UNKNOWN = "UNKNOWN"

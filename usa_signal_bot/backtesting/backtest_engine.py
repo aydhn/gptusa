@@ -30,6 +30,9 @@ class BacktestRunConfig:
     max_position_notional: float
     allow_fractional_quantity: bool
     transaction_cost_config: TransactionCostConfig | None = None
+    enable_benchmark_comparison: bool = False
+    benchmark_set_name: str = 'default'
+    enable_attribution: bool = True
     slippage_config: SlippageConfig | None = None
     enable_advanced_metrics: bool = True
     build_trade_ledger: bool = True
@@ -62,6 +65,9 @@ class BacktestRunResult:
     warnings: list[str]
     errors: list[str]
     created_at_utc: str
+    benchmark_comparison_report: Any | None = None
+    benchmark_comparison_table: Any | None = None
+    attribution_report: Any | None = None
 
 class BacktestEngine:
     def __init__(self, data_root: Path):
@@ -158,7 +164,7 @@ class BacktestEngine:
             timeframe=request.timeframe,
             start_date=request.start_date,
             end_date=request.end_date,
-            signal_mode=request.config.signal_to_order.signal_mode if request.config else BacktestSignalMode.WATCH_AS_LONG_CANDIDATE
+            signal_mode=BacktestSignalMode.SIGNAL_ACTION_BASED
         )
         return load_signals_for_replay(self.data_root, req)
 
