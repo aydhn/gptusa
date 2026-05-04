@@ -1,20 +1,113 @@
-# Copy this file to local.yaml for your local overrides.
-# Do NOT commit local.yaml to version control.
-# Environment secrets like Telegram tokens should be passed via env vars,
-# not hardcoded here.
+project:
+  name: "USA Signal Bot"
+  version: "0.2.0"
+  timezone: "America/New_York"
+
+runtime:
+  mode: "local_paper_only"
+  broker_order_routing_enabled: false
+  web_scraping_allowed: false
+  dashboard_enabled: false
+  dry_run: true
+  fail_fast: true
+
+data:
+  root_dir: "data"
+  cache_dir: "data/cache"
+  raw_dir: "data/raw"
+  processed_dir: "data/processed"
+  universe_dir: "data/universe"
+  max_download_workers: 4
+  request_timeout_seconds: 30
+  retry_attempts: 3
+
+logging:
+  level: "INFO"
+  log_dir: "data/logs"
+  log_file: "app.log"
+  enable_console: true
+  enable_file: true
+  max_bytes: 5000000
+  backup_count: 5
 
 telegram:
   enabled: false
   bot_token_env: "TELEGRAM_BOT_TOKEN"
   chat_id_env: "TELEGRAM_CHAT_ID"
-
-risk:
-  max_position_pct: 0.05
-  max_total_exposure_pct: 0.50
+  parse_mode: "HTML"
 
 universe:
-  max_symbols_per_scan: 100
-  allow_inactive_symbols: true
+  asset_types:
+    - "stock"
+    - "etf"
+  default_watchlist_file: "data/universe/watchlist.csv"
+  include_etfs: true
+  include_stocks: true
+  min_price: 1.0
+  max_symbols_per_scan: 500
+  allow_inactive_symbols: false
+  symbol_max_length: 15
+  default_currency: "USD"
+  snapshot_file: "data/universe/default_universe.csv"
+
+paper:
+  initial_cash: 100000.0
+  currency: "USD"
+  allow_short: false
+  commission_per_trade: 0.0
+  slippage_bps: 5.0
+
+risk:
+  max_position_pct: 0.10
+  max_total_exposure_pct: 0.80
+  max_daily_loss_pct: 0.03
+  max_open_positions: 10
+
+backtest:
+  default_initial_cash: 100000.0
+  default_benchmark: "SPY"
+  include_transaction_costs: true
+
+optimization:
+  enabled: false
+  max_trials: 100
+  walk_forward_enabled: true
+
+regime:
+  enabled: false
+  default_market_proxy: "SPY"
+
+ml:
+  enabled: false
+  model_dir: "data/models"
+  leakage_checks_enabled: true
+
+storage:
+  enabled: true
+  manifests_dir: "data/manifests"
+  features_dir: "data/features"
+  models_dir: "data/models"
+  atomic_writes: true
+  default_json_indent: 2
+  parquet_enabled: false
+
+providers:
+  default_provider: "yfinance"
+  enabled_providers:
+    - "mock"
+    - "yfinance"
+  allow_paid_providers: false
+  allow_scraping_providers: false
+  allow_broker_data_providers: false
+  request_timeout_seconds: 30
+  max_symbols_per_batch: 25
+  min_seconds_between_requests: 1.0
+  cache_enabled: true
+  cache_ttl_seconds: 86400
+  yfinance_enabled: true
+  yfinance_threads: true
+  yfinance_auto_adjust: false
+  yfinance_progress: false
 
 data_quality:
   enabled: true
@@ -63,6 +156,21 @@ data_readiness:
 momentum_features:
   enabled: true
   default_indicator_set: "basic_momentum"
+  available_indicator_sets:
+    - "basic_momentum"
+    - "oscillator_momentum"
+    - "rate_of_change_momentum"
+    - "full_momentum"
+  default_rsi_window: 14
+  default_stochastic_k_window: 14
+  default_stochastic_d_window: 3
+  default_roc_window: 12
+  default_momentum_window: 10
+  default_cci_window: 20
+  max_window: 500
+  allow_partial_momentum_features: true
+  oscillator_min_value: 0.0
+  oscillator_max_value: 100.0
 
 
 volatility_features:
@@ -89,9 +197,29 @@ volatility_features:
 
 strategies:
   enabled: true
+  default_strategies:
+    - "trend_following_skeleton"
+    - "mean_reversion_skeleton"
+    - "momentum_skeleton"
+    - "volatility_breakout_skeleton"
+  allow_experimental_strategies: true
+  default_action_mode: "watch_only"
+  allow_long_candidates: true
+  allow_short_candidates: false
+  max_signals_per_strategy_run: 200
+  min_confidence: 0.0
+  max_confidence_allowed_without_backtest: 0.70
+  write_signal_outputs: true
+  write_strategy_reports: true
 
 signals:
   enabled: true
+  store_dir: "data/signals"
+  default_format: "jsonl"
+  expire_after_hours: 24
+  require_reasons: true
+  reject_duplicate_signal_ids: true
+  overconfidence_warning_threshold: 0.80
 
 signal_scoring:
   enabled: true
@@ -126,3 +254,41 @@ confluence:
   moderate_threshold: 50.0
   weak_threshold: 25.0
   write_confluence_reports: true
+
+transaction_costs:
+  enabled: true
+  model_type: "bps"
+  flat_fee: 0.0
+  fee_bps: 1.0
+  per_share_fee: 0.0
+  min_fee: 0.0
+  max_fee: null
+
+slippage:
+  enabled: true
+  model_type: "fixed_bps"
+  fixed_bps: 2.0
+  spread_bps: 1.0
+  volume_participation_rate: 0.01
+  volume_impact_factor: 10.0
+  volatility_multiplier: 1.0
+  max_slippage_bps: 100.0
+
+trade_ledger:
+  enabled: true
+  build_trade_ledger: true
+  include_open_trades: true
+  fifo_pairing: true
+  write_trade_ledger: true
+  write_trade_breakdowns: true
+
+advanced_backtest_metrics:
+  enabled: true
+  periods_per_year: 252
+  calculate_sharpe_like: true
+  calculate_sortino_like: true
+  calculate_calmar_like: true
+  calculate_drawdown_periods: true
+  calculate_strategy_breakdown: true
+  calculate_symbol_breakdown: true
+  warn_metrics_are_not_guarantees: true

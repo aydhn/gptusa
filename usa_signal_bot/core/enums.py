@@ -677,3 +677,58 @@ class BacktestMetricStatus(str, Enum):
     WARNING = "WARNING"
     INVALID = "INVALID"
     EMPTY = "EMPTY"
+
+class TransactionCostModelType(str, Enum):
+    NONE = "NONE"
+    FLAT_FEE = "FLAT_FEE"
+    BPS = "BPS"
+    PER_SHARE = "PER_SHARE"
+    COMBINED = "COMBINED"
+
+class SlippageModelType(str, Enum):
+    NONE = "NONE"
+    FIXED_BPS = "FIXED_BPS"
+    VOLUME_PARTICIPATION = "VOLUME_PARTICIPATION"
+    SPREAD_PROXY = "SPREAD_PROXY"
+    VOLATILITY_ADJUSTED = "VOLATILITY_ADJUSTED"
+
+class LiquidityBucket(str, Enum):
+    VERY_LIQUID = "VERY_LIQUID"
+    LIQUID = "LIQUID"
+    NORMAL = "NORMAL"
+    ILLIQUID = "ILLIQUID"
+    VERY_ILLIQUID = "VERY_ILLIQUID"
+    UNKNOWN = "UNKNOWN"
+
+class TradeStatus(str, Enum):
+    OPEN = "OPEN"
+    CLOSED = "CLOSED"
+    PARTIAL = "PARTIAL"
+    CANCELLED = "CANCELLED"
+    ERROR = "ERROR"
+
+class TradeDirection(str, Enum):
+    LONG = "LONG"
+    SHORT = "SHORT"
+    FLAT = "FLAT"
+
+class TradeExitReason(str, Enum):
+    HOLD_PERIOD_EXIT = "HOLD_PERIOD_EXIT"
+    OPPOSITE_SIGNAL = "OPPOSITE_SIGNAL"
+    END_OF_DATA = "END_OF_DATA"
+    STOP_LOSS_RESERVED = "STOP_LOSS_RESERVED"
+    TAKE_PROFIT_RESERVED = "TAKE_PROFIT_RESERVED"
+    MANUAL_RESERVED = "MANUAL_RESERVED"
+    UNKNOWN = "UNKNOWN"
+
+class AdvancedMetricStatus(str, Enum):
+    OK = "OK"
+    WARNING = "WARNING"
+    INVALID = "INVALID"
+    EMPTY = "EMPTY"
+
+class DrawdownState(str, Enum):
+    NEW_HIGH = "NEW_HIGH"
+    DRAWDOWN = "DRAWDOWN"
+    RECOVERY = "RECOVERY"
+    UNKNOWN = "UNKNOWN"

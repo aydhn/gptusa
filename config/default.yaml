@@ -254,3 +254,41 @@ confluence:
   moderate_threshold: 50.0
   weak_threshold: 25.0
   write_confluence_reports: true
+
+transaction_costs:
+  enabled: true
+  model_type: "bps"
+  flat_fee: 0.0
+  fee_bps: 1.0
+  per_share_fee: 0.0
+  min_fee: 0.0
+  max_fee: null
+
+slippage:
+  enabled: true
+  model_type: "fixed_bps"
+  fixed_bps: 2.0
+  spread_bps: 1.0
+  volume_participation_rate: 0.01
+  volume_impact_factor: 10.0
+  volatility_multiplier: 1.0
+  max_slippage_bps: 100.0
+
+trade_ledger:
+  enabled: true
+  build_trade_ledger: true
+  include_open_trades: true
+  fifo_pairing: true
+  write_trade_ledger: true
+  write_trade_breakdowns: true
+
+advanced_backtest_metrics:
+  enabled: true
+  periods_per_year: 252
+  calculate_sharpe_like: true
+  calculate_sortino_like: true
+  calculate_calmar_like: true
+  calculate_drawdown_periods: true
+  calculate_strategy_breakdown: true
+  calculate_symbol_breakdown: true
+  warn_metrics_are_not_guarantees: true
