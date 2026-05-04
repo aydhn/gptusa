@@ -292,3 +292,29 @@ advanced_backtest_metrics:
   calculate_strategy_breakdown: true
   calculate_symbol_breakdown: true
   warn_metrics_are_not_guarantees: true
+
+walk_forward:
+  enabled: true
+  default_mode: "rolling"
+  train_window_days: 365
+  test_window_days: 90
+  step_days: 90
+  min_train_days: 180
+  max_windows: 20
+  include_partial_last_window: false
+  anchored_start: false
+  run_in_sample: true
+  run_out_of_sample: true
+  continue_on_window_error: true
+  write_window_backtests: true
+  write_walk_forward_reports: true
+  warn_no_optimization_performed: true
+
+out_of_sample_evaluation:
+  enabled: true
+  min_completed_windows: 2
+  min_oos_positive_window_ratio: 0.50
+  max_average_degradation_pct: 0.0
+  min_stability_score: 50.0
+  classify_results: true
+  warn_if_insufficient_windows: true

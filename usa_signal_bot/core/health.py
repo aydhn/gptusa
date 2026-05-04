@@ -240,7 +240,7 @@ def check_extended_universe_health(context) -> HealthCheckResult:
 
 def check_strategy_engine_health(context: 'RuntimeContext') -> HealthCheckResult:
     result = HealthCheckResult(
-        component="strategy_engine",
+        name="strategy_engine",
         status=HealthStatus.HEALTHY,
         message="Strategy engine initialized",
         details={}
@@ -295,7 +295,7 @@ def check_strategy_engine_health(context: 'RuntimeContext') -> HealthCheckResult
 
 def check_signal_contract_health(context: 'RuntimeContext') -> HealthCheckResult:
     result = HealthCheckResult(
-        component="signal_contract",
+        name="signal_contract",
         status=HealthStatus.HEALTHY,
         message="Signal contract initialized",
         details={}
@@ -330,57 +330,57 @@ def check_signal_contract_health(context: 'RuntimeContext') -> HealthCheckResult
 def check_signal_scoring_health(context: 'RuntimeContext') -> HealthCheckResult:
     from usa_signal_bot.strategies.signal_scoring import default_signal_scoring_config, validate_signal_scoring_config
     try:
-        config = context.app_config.signal_scoring if context.app_config else default_signal_scoring_config()
+        config = context.config.signal_scoring if context.config else default_signal_scoring_config()
         validate_signal_scoring_config(config)
         return HealthCheckResult(
-            component="signal_scoring",
-            status=HealthStatus.PASS,
+            name="signal_scoring",
+            passed=True,
             message="Signal scoring config is valid."
         )
     except Exception as e:
         return HealthCheckResult(
-            component="signal_scoring",
-            status=HealthStatus.FAIL,
+            name="signal_scoring",
+            passed=False,
             message=f"Signal scoring error: {e}"
         )
 
 def check_signal_quality_health(context: 'RuntimeContext') -> HealthCheckResult:
     try:
-        if context.app_config and not context.app_config.signal_quality.enabled:
+        if context.config and not context.config.signal_quality.enabled:
             return HealthCheckResult(
-                component="signal_quality",
-                status=HealthStatus.PASS,
+                name="signal_quality",
+                passed=True,
                 message="Signal quality guard is disabled in config."
             )
         return HealthCheckResult(
-            component="signal_quality",
-            status=HealthStatus.PASS,
+            name="signal_quality",
+            passed=True,
             message="Signal quality guard is configured."
         )
     except Exception as e:
         return HealthCheckResult(
-            component="signal_quality",
-            status=HealthStatus.FAIL,
+            name="signal_quality",
+            passed=False,
             message=f"Signal quality guard error: {e}"
         )
 
 def check_confluence_health(context: 'RuntimeContext') -> HealthCheckResult:
     try:
-        if context.app_config and not context.app_config.confluence.enabled:
+        if context.config and not context.config.confluence.enabled:
             return HealthCheckResult(
-                component="confluence_engine",
-                status=HealthStatus.PASS,
+                name="confluence_engine",
+                passed=True,
                 message="Confluence engine is disabled in config."
             )
         return HealthCheckResult(
-            component="confluence_engine",
-            status=HealthStatus.PASS,
+            name="confluence_engine",
+            passed=True,
             message="Confluence engine is configured."
         )
     except Exception as e:
         return HealthCheckResult(
-            component="confluence_engine",
-            status=HealthStatus.FAIL,
+            name="confluence_engine",
+            passed=False,
             message=f"Confluence engine error: {e}"
         )
 
@@ -393,6 +393,10 @@ def run_health_checks(context) -> List[HealthCheckResult]:
         check_logging_health(context),
         check_safe_mode_health(context),
         check_storage_health(context),
+        check_walk_forward_config_health(context),
+        check_walk_forward_windows_health(context),
+        check_walk_forward_metrics_health(context),
+        check_walk_forward_store_health(context),
         check_universe_health(context),
         check_extended_universe_health(context),
         check_market_data_cache_health(context),
@@ -583,3 +587,70 @@ def check_volatility_feature_health(context: 'RuntimeContext') -> HealthCheckRes
 
     except Exception as e:
         return HealthCheckResult("volatility_feature_health", HealthStatus.FAIL, f"Exception during volatility feature health check: {e}")
+
+
+def check_walk_forward_config_health(context: 'RuntimeContext') -> HealthCheckResult:
+    config = context.config
+    wf_config = getattr(config, 'walk_forward', None)
+
+    if not wf_config or not getattr(wf_config, 'enabled', False):
+         return HealthCheckResult(name="walk_forward_config", passed=True, message="Walk-Forward is disabled in config.", details={"enabled": False})
+
+    try:
+        from usa_signal_bot.backtesting.walk_forward_models import WalkForwardConfig, validate_walk_forward_config
+        from usa_signal_bot.core.enums import WalkForwardMode
+
+        mode = WalkForwardMode(wf_config.default_mode.upper())
+        c = WalkForwardConfig(
+            mode=mode,
+            train_window_days=wf_config.train_window_days,
+            test_window_days=wf_config.test_window_days,
+            step_days=wf_config.step_days,
+            min_train_days=wf_config.min_train_days,
+            max_windows=wf_config.max_windows,
+            anchored_start=wf_config.anchored_start,
+            include_partial_last_window=wf_config.include_partial_last_window
+        )
+        validate_walk_forward_config(c)
+        return HealthCheckResult(name="walk_forward_config", passed=True, message="Walk-Forward config is valid.", details={"mode": str(mode)})
+    except Exception as e:
+        return HealthCheckResult(name="walk_forward_config", passed=False, message=f"Walk-Forward config validation failed: {e}", details={"error": str(e)})
+
+def check_walk_forward_windows_health(context: 'RuntimeContext') -> HealthCheckResult:
+    try:
+        from usa_signal_bot.backtesting.walk_forward_windows import generate_rolling_windows
+        windows = generate_rolling_windows("2020-01-01", "2021-01-01", 100, 30, 30, 10)
+        if len(windows) > 0:
+             return HealthCheckResult(name="walk_forward_windows", passed=True, message="Window generator working.", details={"windows_generated": len(windows)})
+        else:
+             return HealthCheckResult(name="walk_forward_windows", passed=False, message="Window generator produced 0 windows.", details={})
+    except Exception as e:
+         return HealthCheckResult(name="walk_forward_windows", passed=False, message=f"Window generator failed: {e}", details={"error": str(e)})
+
+def check_walk_forward_metrics_health(context: 'RuntimeContext') -> HealthCheckResult:
+    try:
+        from usa_signal_bot.backtesting.walk_forward_metrics import calculate_walk_forward_aggregate_metrics
+        from usa_signal_bot.backtesting.walk_forward_models import WalkForwardWindowResult, WalkForwardWindow
+        from usa_signal_bot.core.enums import WalkForwardMode, WalkForwardWindowStatus
+
+        w = WalkForwardWindow("win_001", 1, WalkForwardMode.ROLLING, "2020-01-01", "2020-02-01", "2020-02-01", "2020-03-01", "2020-01-01", "2020-03-01", WalkForwardWindowStatus.COMPLETED)
+        r = WalkForwardWindowResult(w, "is1", "oos1", {"total_return_pct": 5.0}, {"total_return_pct": 2.0}, {}, {}, [], [])
+        metrics = calculate_walk_forward_aggregate_metrics([r])
+
+        if getattr(metrics.status, "value", metrics.status) == "OK":
+             return HealthCheckResult(name="walk_forward_metrics", passed=True, message="Aggregate metrics calculator working.", details={"status": getattr(metrics.status, "value", metrics.status)})
+        else:
+             return HealthCheckResult(name="walk_forward_metrics", passed=False, message="Aggregate metrics calculator produced unexpected status.", details={"status": getattr(metrics.status, "value", metrics.status)})
+    except Exception as e:
+         return HealthCheckResult(name="walk_forward_metrics", passed=False, message=f"Aggregate metrics calculator failed: {e}", details={"error": str(e)})
+
+def check_walk_forward_store_health(context: 'RuntimeContext') -> HealthCheckResult:
+    try:
+        from usa_signal_bot.backtesting.walk_forward_store import walk_forward_store_dir
+        path = walk_forward_store_dir(context.data_dir)
+        if path.exists() and path.is_dir():
+            return HealthCheckResult(name="walk_forward_store", passed=True, message="Walk-Forward store directory is accessible.", details={"path": str(path)})
+        else:
+            return HealthCheckResult(name="walk_forward_store", passed=False, message="Walk-Forward store directory is not accessible.", details={"path": str(path)})
+    except Exception as e:
+         return HealthCheckResult(name="walk_forward_store", passed=False, message=f"Walk-Forward store health check failed: {e}", details={"error": str(e)})

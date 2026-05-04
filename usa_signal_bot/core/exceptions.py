@@ -416,3 +416,32 @@ class PerformanceAttributionError(BenchmarkError):
 
 class BenchmarkStorageError(BenchmarkError):
     pass
+
+
+class WalkForwardError(Exception):
+    """Base class for Walk Forward exceptions."""
+    pass
+
+class WalkForwardWindowError(WalkForwardError):
+    """Raised when there is an issue with Walk Forward Windows."""
+    pass
+
+class WalkForwardEngineError(WalkForwardError):
+    """Raised when there is an issue in the Walk Forward Engine."""
+    pass
+
+class WalkForwardMetricError(WalkForwardError):
+    """Raised when there is an issue with Walk Forward Metrics."""
+    pass
+
+class WalkForwardValidationError(WalkForwardError):
+    """Raised when Walk Forward validation fails."""
+    pass
+
+class WalkForwardStorageError(WalkForwardError):
+    """Raised when there is an issue storing Walk Forward results."""
+    pass
+
+class OutOfSampleEvaluationError(WalkForwardError):
+    """Raised when there is an issue with Out-of-Sample evaluation."""
+    pass

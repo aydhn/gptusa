@@ -1617,6 +1617,53 @@ def main() -> int:
     # Command: show-paths
     subparsers.add_parser("show-paths", help="Display resolved system paths")
 
+
+    # Walk-Forward Commands
+    parser_wf_info = subparsers.add_parser("walk-forward-info", help="Display Walk-Forward configuration")
+
+    parser_wf_plan = subparsers.add_parser("walk-forward-plan", help="Generate Walk-Forward window plan")
+    parser_wf_plan.add_argument("--start", type=str, help="Start date (YYYY-MM-DD)")
+    parser_wf_plan.add_argument("--end", type=str, help="End date (YYYY-MM-DD)")
+    parser_wf_plan.add_argument("--mode", type=str, help="Mode (rolling, anchored, expanding)")
+    parser_wf_plan.add_argument("--train-days", type=int, help="Train window days")
+    parser_wf_plan.add_argument("--test-days", type=int, help="Test window days")
+    parser_wf_plan.add_argument("--step-days", type=int, help="Step days")
+    parser_wf_plan.add_argument("--max-windows", type=int, help="Max windows")
+
+    parser_wf_signals = subparsers.add_parser("walk-forward-run-signals", help="Run walk-forward on signals")
+    parser_wf_signals.add_argument("--signal-file", type=str, help="Path to signal file")
+    parser_wf_signals.add_argument("--symbols", type=str, help="Comma-separated symbols")
+    parser_wf_signals.add_argument("--timeframe", type=str, default="1d", help="Timeframe")
+    parser_wf_signals.add_argument("--start", type=str, help="Start date (YYYY-MM-DD)")
+    parser_wf_signals.add_argument("--end", type=str, help="End date (YYYY-MM-DD)")
+    parser_wf_signals.add_argument("--mode", type=str, help="Mode")
+    parser_wf_signals.add_argument("--train-days", type=int, help="Train window days")
+    parser_wf_signals.add_argument("--test-days", type=int, help="Test window days")
+    parser_wf_signals.add_argument("--step-days", type=int, help="Step days")
+    parser_wf_signals.add_argument("--max-windows", type=int, help="Max windows")
+    parser_wf_signals.add_argument("--write", action="store_true", help="Write results")
+
+    parser_wf_cands = subparsers.add_parser("walk-forward-run-candidates", help="Run walk-forward on candidates")
+    parser_wf_cands.add_argument("--candidates-file", type=str, help="Path to selected candidates file")
+    parser_wf_cands.add_argument("--symbols", type=str, help="Comma-separated symbols")
+    parser_wf_cands.add_argument("--timeframe", type=str, default="1d", help="Timeframe")
+    parser_wf_cands.add_argument("--start", type=str, help="Start date (YYYY-MM-DD)")
+    parser_wf_cands.add_argument("--end", type=str, help="End date (YYYY-MM-DD)")
+    parser_wf_cands.add_argument("--mode", type=str, help="Mode")
+    parser_wf_cands.add_argument("--train-days", type=int, help="Train window days")
+    parser_wf_cands.add_argument("--test-days", type=int, help="Test window days")
+    parser_wf_cands.add_argument("--step-days", type=int, help="Step days")
+    parser_wf_cands.add_argument("--max-windows", type=int, help="Max windows")
+    parser_wf_cands.add_argument("--write", action="store_true", help="Write results")
+
+    parser_wf_sum = subparsers.add_parser("walk-forward-summary", help="Summarize walk-forward runs")
+
+    parser_wf_lat = subparsers.add_parser("walk-forward-latest", help="Show latest walk-forward run")
+
+    parser_wf_val = subparsers.add_parser("walk-forward-validate", help="Validate a walk-forward run")
+    parser_wf_val.add_argument("--run-id", type=str, help="Run ID to validate")
+    parser_wf_val.add_argument("--latest", action="store_true", help="Validate latest run")
+
     # Signal Ranking Commands
     parser_signal_rank = subparsers.add_parser("signal-rank-file", help="Rank signals from a JSONL file")
     parser_signal_rank.add_argument("--file", required=True, help="Path to signal JSONL file")
@@ -2178,6 +2225,20 @@ def main() -> int:
             return handle_backtest_latest(context, args)
         elif args.command == "backtest-validate":
             return handle_backtest_validate(context, args)
+        elif args.command == "walk-forward-info":
+            sys.exit(command_walk_forward_info(args))
+        elif args.command == "walk-forward-plan":
+            sys.exit(command_walk_forward_plan(args))
+        elif args.command == "walk-forward-run-signals":
+            sys.exit(command_walk_forward_run_signals(args))
+        elif args.command == "walk-forward-run-candidates":
+            sys.exit(command_walk_forward_run_candidates(args))
+        elif args.command == "walk-forward-summary":
+            sys.exit(command_walk_forward_summary(args))
+        elif args.command == "walk-forward-latest":
+            sys.exit(command_walk_forward_latest(args))
+        elif args.command == "walk-forward-validate":
+            sys.exit(command_walk_forward_validate(args))
 
 
         # End of new handlers
@@ -3854,6 +3915,308 @@ def cmd_benchmark_summary(args, config, context) -> int:
         print(f"Total Reports:  {summary['total_reports']}")
         print(f"Latest Report:  {summary['latest_report'] or 'None'}")
         return 0
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
+
+
+
+def command_walk_forward_info(args) -> int:
+    try:
+        from usa_signal_bot.core.config import load_app_config
+        config = load_app_config()
+        wf_config = getattr(config, 'walk_forward', None)
+        if not wf_config:
+            print("Walk-forward analysis configuration not found.")
+            return 1
+
+        print("Walk-Forward Analysis Configuration")
+        print("---------------------------------")
+        print(f"Enabled:       {wf_config.enabled}")
+        print(f"Mode:          {wf_config.default_mode}")
+        print(f"Train Days:    {wf_config.train_window_days}")
+        print(f"Test Days:     {wf_config.test_window_days}")
+        print(f"Step Days:     {wf_config.step_days}")
+        print(f"Max Windows:   {wf_config.max_windows}")
+        print("\nNote: This system performs OUT-OF-SAMPLE EVALUATION only.")
+        print("It DOES NOT run any parameter optimization.")
+        return 0
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
+
+def command_walk_forward_plan(args) -> int:
+    try:
+        from usa_signal_bot.backtesting.walk_forward_windows import generate_walk_forward_windows, parse_date
+        from usa_signal_bot.backtesting.walk_forward_models import WalkForwardConfig
+        from usa_signal_bot.core.enums import WalkForwardMode
+        from usa_signal_bot.core.config import load_app_config
+
+        config = load_app_config()
+        wf_config = getattr(config, 'walk_forward', None)
+        if not wf_config:
+            print("Walk-forward config not found.")
+            return 1
+
+        start = args.start or "2020-01-01"
+        end = args.end or "2024-01-01"
+        mode = args.mode.upper() if args.mode else wf_config.default_mode.upper()
+
+        try:
+             parse_date(start)
+             parse_date(end)
+        except ValueError:
+             print("Invalid date format. Use YYYY-MM-DD")
+             return 1
+
+        c = WalkForwardConfig(
+            mode=WalkForwardMode(mode),
+            train_window_days=args.train_days or wf_config.train_window_days,
+            test_window_days=args.test_days or wf_config.test_window_days,
+            step_days=args.step_days or wf_config.step_days,
+            min_train_days=wf_config.min_train_days,
+            max_windows=args.max_windows or wf_config.max_windows,
+            anchored_start=wf_config.anchored_start,
+            include_partial_last_window=wf_config.include_partial_last_window
+        )
+
+        windows = generate_walk_forward_windows(start, end, c)
+
+        print(f"Walk-Forward Plan ({c.mode.value})")
+        print(f"Start: {start} | End: {end}")
+        print("-" * 80)
+        if not windows:
+            print("No windows generated. Check date range and window sizes.")
+            return 0
+
+        for w in windows:
+            print(f"[{w.window_id}] Train: {w.train_start} to {w.train_end} | Test: {w.test_start} to {w.test_end}")
+
+        print("-" * 80)
+        print(f"Total Windows: {len(windows)}")
+        return 0
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
+
+def command_walk_forward_run_signals(args) -> int:
+    try:
+        from usa_signal_bot.backtesting.walk_forward_engine import WalkForwardEngine
+        from usa_signal_bot.backtesting.walk_forward_models import WalkForwardRunRequest, WalkForwardConfig
+        from usa_signal_bot.core.enums import WalkForwardMode
+        from usa_signal_bot.core.config import load_app_config
+        from pathlib import Path
+
+        config = load_app_config()
+        data_root = Path("data")
+        wf_config = getattr(config, 'walk_forward', None)
+
+        mode_val = args.mode.upper() if args.mode else wf_config.default_mode.upper()
+        c = WalkForwardConfig(
+            mode=WalkForwardMode(mode_val),
+            train_window_days=args.train_days or wf_config.train_window_days,
+            test_window_days=args.test_days or wf_config.test_window_days,
+            step_days=args.step_days or wf_config.step_days,
+            min_train_days=wf_config.min_train_days,
+            max_windows=args.max_windows or wf_config.max_windows,
+            anchored_start=wf_config.anchored_start,
+            include_partial_last_window=wf_config.include_partial_last_window
+        )
+
+        symbols = [s.strip().upper() for s in args.symbols.split(",")] if args.symbols else ["AAPL", "MSFT"]
+
+        req = WalkForwardRunRequest(
+            run_name="wf_cli_signals",
+            symbols=symbols,
+            timeframe=args.timeframe,
+            signal_file=args.signal_file,
+            start_date=args.start,
+            end_date=args.end,
+            config=c,
+            backtest_config={}
+        )
+
+        engine = WalkForwardEngine(data_root)
+        print(f"Starting walk-forward analysis with {len(symbols)} symbols...")
+        res = engine.run(req)
+
+        from usa_signal_bot.backtesting.walk_forward_reporting import walk_forward_summary_to_text
+        print(walk_forward_summary_to_text(res))
+
+        if args.write:
+            if res.windows:
+                paths = engine.write_result(res)
+                print(f"Results written to: {Path(paths[0]).parent}")
+            else:
+                 print("No windows ran, skipping write.")
+
+        return 0
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
+
+def command_walk_forward_run_candidates(args) -> int:
+    try:
+        from usa_signal_bot.backtesting.walk_forward_engine import WalkForwardEngine
+        from usa_signal_bot.backtesting.walk_forward_models import WalkForwardRunRequest, WalkForwardConfig
+        from usa_signal_bot.core.enums import WalkForwardMode
+        from usa_signal_bot.core.config import load_app_config
+        from pathlib import Path
+
+        data_root = Path("data")
+        config = load_app_config()
+        wf_config = getattr(config, 'walk_forward', None)
+
+        mode_val = args.mode.upper() if args.mode else wf_config.default_mode.upper()
+        c = WalkForwardConfig(
+            mode=WalkForwardMode(mode_val),
+            train_window_days=args.train_days or wf_config.train_window_days,
+            test_window_days=args.test_days or wf_config.test_window_days,
+            step_days=args.step_days or wf_config.step_days,
+            min_train_days=wf_config.min_train_days,
+            max_windows=args.max_windows or wf_config.max_windows,
+            anchored_start=wf_config.anchored_start,
+            include_partial_last_window=wf_config.include_partial_last_window
+        )
+
+        symbols = [s.strip().upper() for s in args.symbols.split(",")] if args.symbols else ["AAPL", "MSFT"]
+
+        req = WalkForwardRunRequest(
+            run_name="wf_cli_candidates",
+            symbols=symbols,
+            timeframe=args.timeframe,
+            selected_candidates_file=args.candidates_file,
+            start_date=args.start,
+            end_date=args.end,
+            config=c,
+            backtest_config={}
+        )
+
+        engine = WalkForwardEngine(data_root)
+        print(f"Starting walk-forward analysis with {len(symbols)} symbols...")
+        res = engine.run(req)
+
+        from usa_signal_bot.backtesting.walk_forward_reporting import walk_forward_summary_to_text
+        print(walk_forward_summary_to_text(res))
+
+        if args.write:
+            if res.windows:
+                paths = engine.write_result(res)
+                print(f"Results written to: {Path(paths[0]).parent}")
+            else:
+                 print("No windows ran, skipping write.")
+
+        return 0
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
+
+def command_walk_forward_summary(args) -> int:
+    try:
+        from usa_signal_bot.backtesting.walk_forward_store import list_walk_forward_runs
+        from pathlib import Path
+        import json
+
+        data_root = Path("data")
+        runs = list_walk_forward_runs(data_root)
+
+        print("Walk-Forward Runs Summary")
+        print("-" * 80)
+        if not runs:
+            print("No walk-forward runs found.")
+            return 0
+
+        for r_dir in runs[:20]:
+            try:
+                res_path = r_dir / "result.json"
+                if res_path.exists():
+                    with open(res_path, "r") as f:
+                        data = json.load(f)
+                    rid = data.get("run_id", r_dir.name)
+                    st = data.get("status", "UNKNOWN")
+                    agg = data.get("aggregate_metrics", {})
+                    tw = agg.get("total_windows", 0)
+                    oos_ret = agg.get("average_out_of_sample_return_pct")
+                    oos_str = f"{oos_ret:.2f}%" if oos_ret is not None else "N/A"
+                    print(f"ID: {rid} | Status: {st} | Windows: {tw} | Avg OOS: {oos_str}")
+            except Exception:
+                print(f"Error reading run: {r_dir.name}")
+
+        return 0
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
+
+def command_walk_forward_latest(args) -> int:
+    try:
+        from usa_signal_bot.backtesting.walk_forward_store import get_latest_walk_forward_run_dir
+        from pathlib import Path
+        import json
+
+        data_root = Path("data")
+        latest_dir = get_latest_walk_forward_run_dir(data_root)
+
+        if not latest_dir:
+            print("No walk-forward runs found.")
+            return 0
+
+        res_path = latest_dir / "result.json"
+        if not res_path.exists():
+             print(f"Result file missing for latest run: {latest_dir.name}")
+             return 1
+
+        with open(res_path, "r") as f:
+             data = json.load(f)
+
+        report_path = latest_dir / "report.json"
+        if report_path.exists():
+             with open(report_path, "r") as f:
+                  rdata = json.load(f)
+                  print(rdata.get("report_text", "No text report found"))
+        else:
+             print(f"Latest Run ID: {data.get('run_id')}")
+             print(f"Status: {data.get('status')}")
+
+        return 0
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
+
+def command_walk_forward_validate(args) -> int:
+    try:
+        from usa_signal_bot.backtesting.walk_forward_store import get_latest_walk_forward_run_dir, build_walk_forward_run_dir
+        from pathlib import Path
+        import json
+
+        data_root = Path("data")
+        run_dir = None
+
+        if args.run_id:
+             run_dir = build_walk_forward_run_dir(data_root, args.run_id)
+        elif getattr(args, "latest", False):
+             run_dir = get_latest_walk_forward_run_dir(data_root)
+
+        if not run_dir or not run_dir.exists():
+             print("Run not found.")
+             return 1
+
+        res_path = run_dir / "result.json"
+        if not res_path.exists():
+             print(f"Result file missing in run dir")
+             return 1
+
+        with open(res_path, "r") as f:
+             data = json.load(f)
+
+        agg = data.get("aggregate_metrics", {})
+        if "optimization" in agg or "optimized_params" in agg:
+             print("Validation FAILED: Optimization detected.")
+             return 1
+
+        print("Validation PASSED: No optimization detected. Run is clean historical evaluation.")
+        return 0
+
     except Exception as e:
         print(f"Error: {e}")
         return 1

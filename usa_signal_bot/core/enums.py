@@ -782,3 +782,52 @@ class RelativePerformanceBucket(str, Enum):
     MATCHED = "MATCHED"
     INSUFFICIENT_DATA = "INSUFFICIENT_DATA"
     UNKNOWN = "UNKNOWN"
+from enum import Enum
+
+class WalkForwardMode(str, Enum):
+    ROLLING = "ROLLING"
+    ANCHORED = "ANCHORED"
+    EXPANDING = "EXPANDING"
+    CUSTOM = "CUSTOM"
+
+class WalkForwardWindowStatus(str, Enum):
+    CREATED = "CREATED"
+    RUNNING = "RUNNING"
+    COMPLETED = "COMPLETED"
+    FAILED = "FAILED"
+    SKIPPED = "SKIPPED"
+    PARTIAL_SUCCESS = "PARTIAL_SUCCESS"
+
+class WalkForwardSegmentType(str, Enum):
+    IN_SAMPLE = "IN_SAMPLE"
+    OUT_OF_SAMPLE = "OUT_OF_SAMPLE"
+    FULL_WINDOW = "FULL_WINDOW"
+
+class WalkForwardRunStatus(str, Enum):
+    NOT_STARTED = "NOT_STARTED"
+    RUNNING = "RUNNING"
+    COMPLETED = "COMPLETED"
+    PARTIAL_SUCCESS = "PARTIAL_SUCCESS"
+    FAILED = "FAILED"
+
+class WalkForwardMetricStatus(str, Enum):
+    OK = "OK"
+    WARNING = "WARNING"
+    INVALID = "INVALID"
+    EMPTY = "EMPTY"
+
+class WalkForwardStabilityBucket(str, Enum):
+    STABLE = "STABLE"
+    MODERATE = "MODERATE"
+    UNSTABLE = "UNSTABLE"
+    SEVERELY_UNSTABLE = "SEVERELY_UNSTABLE"
+    INSUFFICIENT_DATA = "INSUFFICIENT_DATA"
+    UNKNOWN = "UNKNOWN"
+
+class OutOfSampleResultBucket(str, Enum):
+    STRONG = "STRONG"
+    ACCEPTABLE = "ACCEPTABLE"
+    WEAK = "WEAK"
+    FAILED = "FAILED"
+    INSUFFICIENT_DATA = "INSUFFICIENT_DATA"
+    UNKNOWN = "UNKNOWN"
