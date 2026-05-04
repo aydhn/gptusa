@@ -398,3 +398,21 @@ class DrawdownAnalyticsError(USASignalBotError):
     pass
 class AdvancedBacktestMetricError(USASignalBotError):
     pass
+
+class BenchmarkError(USASignalBotError):
+    pass
+
+class BenchmarkLoaderError(BenchmarkError):
+    pass
+
+class BuyAndHoldError(BenchmarkError):
+    pass
+
+class BenchmarkComparisonError(BenchmarkError):
+    pass
+
+class PerformanceAttributionError(BenchmarkError):
+    pass
+
+class BenchmarkStorageError(BenchmarkError):
+    pass

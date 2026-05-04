@@ -35,3 +35,38 @@ def test_engine_process_stream():
     assert order_intents[1].side == BacktestOrderSide.SELL
     assert len(fills) == 2
     assert fills[0].fill_price == 110.0 # Next open from 01-01 is 01-02 open=110
+
+def test_backtest_benchmark_integration():
+    from usa_signal_bot.backtesting.backtest_engine import BacktestEngine, BacktestRunConfig, BacktestRunRequest
+    from usa_signal_bot.backtesting.order_models import SignalToOrderIntentConfig
+    from usa_signal_bot.core.enums import BacktestExitMode
+    import tempfile
+    from pathlib import Path
+
+    with tempfile.TemporaryDirectory() as td:
+        engine = BacktestEngine(Path(td))
+
+        cfg = BacktestRunConfig(
+            starting_cash=10000.0,
+            fee_rate=0.0,
+            slippage_bps=0.0,
+            signal_to_order=SignalToOrderIntentConfig(),
+            exit_mode=BacktestExitMode.HOLD_N_BARS,
+            hold_bars=5,
+            max_positions=5,
+            max_position_notional=2000.0,
+            allow_fractional_quantity=False,
+            enable_benchmark_comparison=True,
+            enable_attribution=True
+        )
+        req = BacktestRunRequest(
+            run_name="test_bm",
+            symbols=["SPY"],
+            timeframe="1d",
+
+            config=cfg
+        )
+
+        # It shouldn't crash if data is empty, just generate empty metrics/reports or warning
+        res = engine.run(req)
+        assert res is not None

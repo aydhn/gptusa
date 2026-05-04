@@ -108,3 +108,16 @@ def backtest_store_summary(data_root: Path) -> dict[str, Any]:
         "latest_run_time": datetime.fromtimestamp(runs[0].stat().st_mtime).isoformat() if runs else None
     }
     return summary
+
+def write_backtest_benchmark_report(path: Path, report: Any) -> Path:
+    from usa_signal_bot.backtesting.benchmark_models import benchmark_comparison_report_to_dict
+    save_json(benchmark_comparison_report_to_dict(report), path)
+    return path
+
+def write_backtest_benchmark_table(path: Path, table: Any) -> Path:
+    from usa_signal_bot.backtesting.benchmark_store import write_benchmark_comparison_table_json
+    return write_benchmark_comparison_table_json(path, table)
+
+def write_backtest_attribution_report(path: Path, report: Any) -> Path:
+    from usa_signal_bot.backtesting.benchmark_store import write_attribution_report_json
+    return write_attribution_report_json(path, report)

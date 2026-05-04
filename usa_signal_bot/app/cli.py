@@ -1985,6 +1985,7 @@ def main() -> int:
     parser_bt_val.add_argument('--run-id', type=str, help='Run ID')
     parser_bt_val.add_argument('--result-file', type=str, help='Result file path')
 
+    add_benchmark_commands(subparsers)
     args = parser.parse_args()
 
 
@@ -3566,3 +3567,293 @@ def handle_rule_strategy_summary(context) -> int:
     for f in files[:10]:
         sys.stdout.write(f" - {f.name} (Size: {f.stat().st_size} bytes)\n")
     return 0
+
+def add_benchmark_commands(subparsers):
+    # benchmark-info
+    p_info = subparsers.add_parser("benchmark-info", help="Show benchmark configuration and available sets")
+    p_info.set_defaults(func=cmd_benchmark_info)
+
+    # benchmark-cache-check
+    p_cache = subparsers.add_parser("benchmark-cache-check", help="Check if benchmark data is available in cache")
+    p_cache.add_argument("--set", type=str, default="default", help="Benchmark set name")
+    p_cache.add_argument("--timeframe", type=str, default="1d", help="Timeframe")
+    p_cache.set_defaults(func=cmd_benchmark_cache_check)
+
+    # buy-and-hold-baseline
+    p_bh = subparsers.add_parser("buy-and-hold-baseline", help="Run a buy-and-hold baseline for a symbol")
+    p_bh.add_argument("--symbol", type=str, default="SPY", help="Symbol to baseline")
+    p_bh.add_argument("--timeframe", type=str, default="1d", help="Timeframe")
+    p_bh.add_argument("--starting-cash", type=float, help="Starting cash override")
+    p_bh.add_argument("--start", type=str, help="Start date (YYYY-MM-DD)")
+    p_bh.add_argument("--end", type=str, help="End date (YYYY-MM-DD)")
+    p_bh.set_defaults(func=cmd_buy_and_hold_baseline)
+
+    # backtest-benchmark-compare
+    p_cmp = subparsers.add_parser("backtest-benchmark-compare", help="Compare a backtest run to a benchmark set")
+    p_cmp.add_argument("--run-id", type=str, help="Backtest Run ID")
+    p_cmp.add_argument("--latest", action="store_true", help="Use latest backtest run")
+    p_cmp.add_argument("--set", type=str, default="default", help="Benchmark set name")
+    p_cmp.add_argument("--write", action="store_true", help="Write report to storage")
+    p_cmp.set_defaults(func=cmd_backtest_benchmark_compare)
+
+    # backtest-attribution
+    p_attr = subparsers.add_parser("backtest-attribution", help="Generate performance attribution for a backtest")
+    p_attr.add_argument("--run-id", type=str, help="Backtest Run ID")
+    p_attr.add_argument("--latest", action="store_true", help="Use latest backtest run")
+    p_attr.add_argument("--dimensions", type=str, help="Comma separated dimensions (e.g., strategy,symbol,timeframe)")
+    p_attr.add_argument("--write", action="store_true", help="Write report to storage")
+    p_attr.set_defaults(func=cmd_backtest_attribution)
+
+    # benchmark-summary
+    p_sum = subparsers.add_parser("benchmark-summary", help="Show summary of stored benchmark reports")
+    p_sum.set_defaults(func=cmd_benchmark_summary)
+
+def cmd_benchmark_info(args, config, context) -> int:
+    try:
+        from usa_signal_bot.backtesting.benchmark_loader import list_benchmark_sets
+        from usa_signal_bot.backtesting.benchmark_reporting import benchmark_set_to_text
+        sets = list_benchmark_sets()
+        print("\n=== Available Benchmark Sets ===")
+        for bs in sets:
+            print(benchmark_set_to_text(bs))
+            print("-" * 40)
+        return 0
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
+
+def cmd_benchmark_cache_check(args, config, context) -> int:
+    try:
+        from usa_signal_bot.backtesting.benchmark_loader import get_benchmark_set, load_benchmark_market_data_from_cache, validate_benchmark_cache_coverage
+        bs = get_benchmark_set(args.set)
+        data = load_benchmark_market_data_from_cache(data_root=context.data_root, benchmark_set=bs, timeframe=args.timeframe)
+        val_msgs = validate_benchmark_cache_coverage(data, bs)
+        if val_msgs:
+            print("\nWarnings:")
+            for msg in val_msgs:
+                print(f"  - {msg}")
+            print("\nPlease run data pipeline or universe tools to fetch missing data.")
+            return 1
+        print(f"\nCache is ready for benchmark set '{args.set}' ({args.timeframe})")
+        return 0
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
+
+def cmd_buy_and_hold_baseline(args, config, context) -> int:
+    try:
+        from usa_signal_bot.backtesting.benchmark_loader import load_benchmark_market_data_from_cache, default_benchmark_set
+        from usa_signal_bot.backtesting.buy_and_hold import default_buy_and_hold_config, run_buy_and_hold_baseline, buy_and_hold_result_to_text
+        from usa_signal_bot.backtesting.benchmark_models import BenchmarkSpec
+        from usa_signal_bot.core.enums import BenchmarkType
+        from usa_signal_bot.data.cache import read_cached_bars_for_symbols_timeframe
+
+        bars = read_cached_bars_for_symbols_timeframe(
+            data_root=context.data_root,
+            symbols=[args.symbol],
+            timeframe=args.timeframe
+        )
+
+        if not bars:
+            print(f"No cache data found for {args.symbol} ({args.timeframe}). Run data pipeline first.")
+            return 1
+
+        if args.start or args.end:
+            filtered = []
+            for b in bars:
+                d = b.timestamp_utc[:10]
+                if args.start and d < args.start: continue
+                if args.end and d > args.end: continue
+                filtered.append(b)
+            bars = filtered
+
+        cash = args.starting_cash or config.buy_and_hold.default_starting_cash
+        cfg = default_buy_and_hold_config(symbol=args.symbol, timeframe=args.timeframe, starting_cash=cash)
+        spec = BenchmarkSpec(benchmark_id=args.symbol, name=args.symbol, symbol=args.symbol, benchmark_type=BenchmarkType.CUSTOM_SYMBOL)
+
+        res = run_buy_and_hold_baseline(bars, cfg, spec)
+        print("\n" + buy_and_hold_result_to_text(res))
+        return 0 if not res.errors else 1
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
+
+def _get_run_dir(args, data_root: Path):
+    from usa_signal_bot.backtesting.backtest_store import list_backtest_runs
+    if args.run_id:
+        from usa_signal_bot.backtesting.backtest_store import build_backtest_run_dir
+        return build_backtest_run_dir(data_root, args.run_id)
+    elif args.latest:
+        runs = list_backtest_runs(data_root)
+        if not runs:
+            print("No backtest runs found.")
+            return None
+        return runs[0]
+    else:
+        print("Please specify --run-id or --latest")
+        return None
+
+def cmd_backtest_benchmark_compare(args, config, context) -> int:
+    try:
+        from usa_signal_bot.backtesting.backtest_store import load_json
+        from usa_signal_bot.backtesting.benchmark_loader import get_benchmark_set, load_benchmark_market_data_from_cache
+        from usa_signal_bot.backtesting.buy_and_hold import run_buy_and_hold_baseline, BuyAndHoldConfig, build_cash_baseline
+        from usa_signal_bot.backtesting.benchmark_comparison import compare_strategy_to_benchmark_set, build_benchmark_comparison_report
+        from usa_signal_bot.backtesting.equity_curve import EquityCurve, EquityCurvePoint
+        from usa_signal_bot.backtesting.benchmark_reporting import full_benchmark_analysis_to_text
+        from usa_signal_bot.core.enums import BenchmarkType
+
+        run_dir = _get_run_dir(args, context.data_root)
+        if not run_dir or not run_dir.exists():
+            return 1
+
+        eq_file = run_dir / "equity_curve.jsonl"
+        res_file = run_dir / "backtest_result.json"
+
+        if not eq_file.exists() or not res_file.exists():
+            print("Missing equity curve or result file in run directory.")
+            return 1
+
+        import json
+        points = []
+        with open(eq_file, "r") as f:
+            for line in f:
+                d = json.loads(line)
+                points.append(EquityCurvePoint(**d))
+
+        res_dict = load_json(res_file)
+        start_cash = res_dict.get("metrics", {}).get("starting_cash", 100000.0)
+        end_eq = res_dict.get("metrics", {}).get("ending_equity", start_cash)
+        max_dd = res_dict.get("metrics", {}).get("max_drawdown", 0.0)
+
+        eq_curve = EquityCurve(points=points, starting_cash=start_cash, ending_equity=end_eq, max_drawdown=max_dd)
+
+        bm_set = get_benchmark_set(args.set)
+
+        # Get start/end from points
+        start_dt = points[0].timestamp_utc[:10] if points else None
+        end_dt = points[-1].timestamp_utc[:10] if points else None
+
+        bm_data = load_benchmark_market_data_from_cache(context.data_root, bm_set, "1d", start_dt, end_dt)
+
+        bm_curves = []
+        for spec in bm_set.benchmarks:
+            if not spec.enabled: continue
+            if spec.benchmark_type == BenchmarkType.CASH:
+                ts_list = [p.timestamp_utc for p in points]
+                bm_curves.append(build_cash_baseline(start_cash, ts_list))
+            else:
+                bars = bm_data.get(spec.symbol)
+                if bars:
+                    bh_conf = BuyAndHoldConfig(starting_cash=start_cash, symbol=spec.symbol, timeframe="1d")
+                    bh_res = run_buy_and_hold_baseline(bars, bh_conf, spec)
+                    if not bh_res.errors:
+                        bm_curves.append(bh_res.equity_curve)
+
+        if not bm_curves:
+            print("No benchmark curves could be generated. Check cache.")
+            return 1
+
+        table = compare_strategy_to_benchmark_set(eq_curve, bm_curves, strategy_run_id=run_dir.name)
+        report = build_benchmark_comparison_report(run_dir.name, bm_set.name, eq_curve, bm_curves)
+
+        print("\n" + full_benchmark_analysis_to_text(table))
+
+        if args.write:
+            from usa_signal_bot.backtesting.benchmark_store import write_benchmark_comparison_report_json
+            from usa_signal_bot.backtesting.backtest_store import write_backtest_benchmark_report
+            write_backtest_benchmark_report(run_dir / "benchmark_comparison_report.json", report)
+            print(f"Report written to {run_dir}")
+
+        return 0
+    except Exception as e:
+        import traceback
+        print(f"Error: {e}")
+        traceback.print_exc()
+        return 1
+
+def cmd_backtest_attribution(args, config, context) -> int:
+    try:
+        from usa_signal_bot.backtesting.backtest_store import load_json
+        from usa_signal_bot.backtesting.performance_attribution import build_full_attribution_report, attribution_report_to_text
+        from usa_signal_bot.backtesting.trade_ledger import TradeLedger, BacktestTrade
+        from usa_signal_bot.core.enums import AttributionDimension, TradeStatus, TradeDirection, TradeExitReason
+
+        run_dir = _get_run_dir(args, context.data_root)
+        if not run_dir or not run_dir.exists():
+            return 1
+
+        # Simplification: Trade Ledger needs to be reconstructed from json or we assume it's in the run
+        res_file = run_dir / "backtest_result.json"
+        if not res_file.exists():
+            print("Missing result file.")
+            return 1
+
+        res_dict = load_json(res_file)
+        ledger_dict = res_dict.get("portfolio", {}).get("trade_ledger", {})
+
+        trades = []
+        for t_dict in ledger_dict.get("trades", []):
+            try:
+                # Basic reconstruction, might need more fields if fully typed
+                trades.append(BacktestTrade(
+                    trade_id=t_dict.get("trade_id", "unknown"),
+                    symbol=t_dict.get("symbol", "UNKNOWN"),
+                    timeframe=t_dict.get("timeframe", "1d"),
+                    direction=TradeDirection(t_dict.get("direction", "LONG")),
+                    status=TradeStatus(t_dict.get("status", "CLOSED")),
+                    entry_fill_id=t_dict.get("entry_fill_id"),
+                    exit_fill_id=t_dict.get("exit_fill_id"),
+                    entry_time_utc=t_dict.get("entry_time_utc"),
+                    exit_time_utc=t_dict.get("exit_time_utc"),
+                    entry_price=t_dict.get("entry_price"),
+                    exit_price=t_dict.get("exit_price"),
+                    quantity=t_dict.get("quantity", 0.0),
+                    gross_pnl=t_dict.get("gross_pnl", 0.0),
+                    net_pnl=t_dict.get("net_pnl", 0.0),
+                    total_fees=t_dict.get("total_fees", 0.0),
+                    total_slippage_cost=t_dict.get("total_slippage_cost", 0.0),
+                    return_pct=t_dict.get("return_pct"),
+                    holding_bars=t_dict.get("holding_bars"),
+                    holding_seconds=t_dict.get("holding_seconds"),
+                    exit_reason=TradeExitReason(t_dict.get("exit_reason", "UNKNOWN"))
+                ))
+            except Exception:
+                pass
+
+        ledger = TradeLedger(max_closed_trades=1000)
+        ledger.trades = trades
+
+        dims = None
+        if args.dimensions:
+            dims = []
+            for d in args.dimensions.split(','):
+                try:
+                    dims.append(AttributionDimension(d.strip().upper()))
+                except ValueError:
+                    print(f"Warning: Unknown dimension {d}")
+
+        report = build_full_attribution_report(ledger, strategy_run_id=run_dir.name, dimensions=dims)
+        print("\n" + attribution_report_to_text(report))
+
+        if args.write:
+            from usa_signal_bot.backtesting.backtest_store import write_backtest_attribution_report
+            write_backtest_attribution_report(run_dir / "attribution_report.json", report)
+            print(f"Report written to {run_dir}")
+
+        return 0
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
+
+def cmd_benchmark_summary(args, config, context) -> int:
+    try:
+        from usa_signal_bot.backtesting.benchmark_store import benchmark_store_summary
+        summary = benchmark_store_summary(context.data_root)
+        print("\n=== Benchmark Storage Summary ===")
+        print(f"Total Reports:  {summary['total_reports']}")
+        print(f"Latest Report:  {summary['latest_report'] or 'None'}")
+        return 0
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
