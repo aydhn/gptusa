@@ -292,3 +292,7 @@ advanced_backtest_metrics:
   calculate_strategy_breakdown: true
   calculate_symbol_breakdown: true
   warn_metrics_are_not_guarantees: true
+
+walk_forward:
+  enabled: true
+  max_windows: 5

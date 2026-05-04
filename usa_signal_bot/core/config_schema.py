@@ -1,7 +1,7 @@
 """Data classes representing the configuration schema."""
 
-from dataclasses import dataclass, field
 from typing import List, Optional, Dict, Any
+from dataclasses import dataclass, field
 
 @dataclass
 class ProjectConfig:
@@ -618,6 +618,36 @@ class AdvancedBacktestMetricsConfig:
             raise ValueError("periods_per_year must be positive")
 
 @dataclass
+class WalkForwardConfigSchema:
+    enabled: bool = True
+    default_mode: str = "rolling"
+    train_window_days: int = 365
+    test_window_days: int = 90
+    step_days: int = 90
+    min_train_days: int = 180
+    max_windows: int = 20
+    include_partial_last_window: bool = False
+    anchored_start: bool = False
+    run_in_sample: bool = True
+    run_out_of_sample: bool = True
+    continue_on_window_error: bool = True
+    write_window_backtests: bool = True
+    write_walk_forward_reports: bool = True
+    warn_no_optimization_performed: bool = True
+
+@dataclass
+class OutOfSampleEvaluationConfig:
+    enabled: bool = True
+    min_completed_windows: int = 2
+    min_oos_positive_window_ratio: float = 0.50
+    max_average_degradation_pct: float = 0.0
+    min_stability_score: float = 50.0
+    classify_results: bool = True
+    warn_if_insufficient_windows: bool = True
+
+
+
+@dataclass
 class AppConfig:
     transaction_costs: TransactionCostsConfig = field(default_factory=TransactionCostsConfig)
     slippage: SlippageConfigSchema = field(default_factory=SlippageConfigSchema)
@@ -644,6 +674,8 @@ class AppConfig:
     data_readiness: DataReadinessConfig = field(default_factory=DataReadinessConfig)
     active_universe: ActiveUniverseConfig = field(default_factory=ActiveUniverseConfig)
     backtesting: BacktestingConfig = field(default_factory=BacktestingConfig)
+    walk_forward: WalkForwardConfigSchema = field(default_factory=WalkForwardConfigSchema)
+    out_of_sample_evaluation: OutOfSampleEvaluationConfig = field(default_factory=OutOfSampleEvaluationConfig)
     historical_replay: HistoricalReplayConfig = field(default_factory=HistoricalReplayConfig)
     signal_ranking: SignalRankingConfigSchema = field(default_factory=SignalRankingConfigSchema)
     candidate_selection: CandidateSelectionConfigSchema = field(default_factory=CandidateSelectionConfigSchema)
