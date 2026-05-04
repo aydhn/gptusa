@@ -1,6 +1,6 @@
 """Metrics for the backtest engine."""
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, Optional
 
 from usa_signal_bot.core.enums import BacktestMetricStatus, BacktestOrderSide
 from usa_signal_bot.backtesting.equity_curve import EquityCurve
@@ -156,5 +156,56 @@ def backtest_metrics_to_text(metrics: BacktestMetrics) -> str:
         lines.append("\nErrors:")
         for e in metrics.errors:
             lines.append(f"  - {e}")
+
+    return "\n".join(lines)
+
+def merge_basic_and_advanced_metrics(basic: BacktestMetrics, advanced: 'AdvancedBacktestMetrics') -> dict[str, Any]:
+    from usa_signal_bot.backtesting.advanced_metrics import advanced_metrics_to_dict
+    result = backtest_metrics_to_dict(basic)
+    if advanced:
+        adv_dict = advanced_metrics_to_dict(advanced)
+        result["advanced"] = adv_dict
+    return result
+
+def backtest_metrics_summary_text(basic: BacktestMetrics, advanced: Optional['AdvancedBacktestMetrics'] = None) -> str:
+    lines = [
+        "=== Backtest Metrics ===",
+        f"Status:             {basic.status.value if hasattr(basic.status, 'value') else basic.status}",
+        f"Starting Cash:      ${basic.starting_cash:.2f}",
+        f"Ending Equity:      ${basic.ending_equity:.2f}",
+        f"Total Return:       ${basic.total_return:.2f}",
+        f"Total Return %:     {(basic.total_return_pct * 100):.2f}%",
+        f"Max Drawdown:       ${basic.max_drawdown:.2f}",
+        f"Max Drawdown %:     {(basic.max_drawdown_pct * 100):.2f}%",
+        f"Total Fills:        {basic.total_fills}",
+        f"Estimated Trades:   {basic.total_trades}",
+        f"Winning Trades:     {basic.winning_trades}",
+        f"Losing Trades:      {basic.losing_trades}",
+    ]
+    if basic.win_rate is not None:
+        lines.append(f"Win Rate:           {(basic.win_rate * 100):.2f}%")
+    if basic.average_trade_pnl is not None:
+        lines.append(f"Avg Trade PnL:      ${basic.average_trade_pnl:.2f}")
+
+    if basic.warnings:
+        lines.append("\nWarnings:")
+        for w in basic.warnings:
+            lines.append(f"  - {w}")
+
+    if basic.errors:
+        lines.append("\nErrors:")
+        for e in basic.errors:
+            lines.append(f"  - {e}")
+
+    if advanced:
+        from usa_signal_bot.backtesting.advanced_metrics import advanced_metrics_to_text
+        from usa_signal_bot.backtesting.trade_analytics import trade_analytics_to_text
+
+        lines.append("\n")
+        lines.append(advanced_metrics_to_text(advanced))
+
+        if advanced.trade_analytics:
+            lines.append("\n")
+            lines.append(trade_analytics_to_text(advanced.trade_analytics))
 
     return "\n".join(lines)

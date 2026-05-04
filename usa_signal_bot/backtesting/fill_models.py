@@ -25,6 +25,11 @@ class BacktestFill:
     slippage: float = 0.0
     reason: str | None = None
     metadata: dict[str, Any] = field(default_factory=dict)
+    transaction_cost: float = 0.0
+    transaction_cost_breakdown: dict[str, Any] = field(default_factory=dict)
+    slippage_breakdown: dict[str, Any] = field(default_factory=dict)
+    gross_notional: float = 0.0
+    net_cash_impact: float = 0.0
 
 def apply_slippage(price: float, side: BacktestOrderSide, slippage_bps: float) -> float:
     """Apply slippage to a price based on order side."""

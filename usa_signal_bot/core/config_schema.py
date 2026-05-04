@@ -543,7 +543,86 @@ class HistoricalReplayConfig:
     max_events_per_run: int = 100000
 
 @dataclass
+@dataclass
+class TransactionCostsConfig:
+    enabled: bool = True
+    model_type: str = "bps"
+    flat_fee: float = 0.0
+    fee_bps: float = 0.0
+    per_share_fee: float = 0.0
+    min_fee: float = 0.0
+    max_fee: Optional[float] = None
+
+    def __post_init__(self):
+        valid_models = ["none", "flat_fee", "bps", "per_share", "combined"]
+        if self.model_type.lower() not in valid_models:
+            raise ValueError(f"model_type must be one of {valid_models}")
+        if self.flat_fee < 0 or self.fee_bps < 0 or self.per_share_fee < 0 or self.min_fee < 0:
+            raise ValueError("fee values cannot be negative")
+        if self.max_fee is not None and self.max_fee < self.min_fee:
+            raise ValueError("max_fee must be greater than or equal to min_fee")
+
+@dataclass
+class SlippageConfigSchema:
+    enabled: bool = True
+    model_type: str = "fixed_bps"
+    fixed_bps: float = 0.0
+    spread_bps: float = 0.0
+    volume_participation_rate: float = 0.01
+    volume_impact_factor: float = 10.0
+    volatility_multiplier: float = 1.0
+    max_slippage_bps: float = 100.0
+
+    def __post_init__(self):
+        valid_models = ["none", "fixed_bps", "volume_participation", "spread_proxy", "volatility_adjusted"]
+        if self.model_type.lower() not in valid_models:
+            raise ValueError(f"model_type must be one of {valid_models}")
+        if self.fixed_bps < 0 or self.spread_bps < 0:
+            raise ValueError("fixed_bps and spread_bps cannot be negative")
+        if not (0.0 <= self.volume_participation_rate <= 1.0):
+            raise ValueError("volume_participation_rate must be between 0.0 and 1.0")
+        if self.volume_impact_factor < 0:
+            raise ValueError("volume_impact_factor cannot be negative")
+        if self.max_slippage_bps <= 0:
+            raise ValueError("max_slippage_bps must be positive")
+
+@dataclass
+class TradeLedgerConfig:
+    enabled: bool = True
+    build_trade_ledger: bool = True
+    include_open_trades: bool = True
+    fifo_pairing: bool = True
+    write_trade_ledger: bool = True
+    write_trade_breakdowns: bool = True
+
+    def __post_init__(self):
+        if not self.build_trade_ledger:
+            raise ValueError("build_trade_ledger must be true")
+        if not self.fifo_pairing:
+            raise ValueError("fifo_pairing must be true")
+
+@dataclass
+class AdvancedBacktestMetricsConfig:
+    enabled: bool = True
+    periods_per_year: int = 252
+    calculate_sharpe_like: bool = True
+    calculate_sortino_like: bool = True
+    calculate_calmar_like: bool = True
+    calculate_drawdown_periods: bool = True
+    calculate_strategy_breakdown: bool = True
+    calculate_symbol_breakdown: bool = True
+    warn_metrics_are_not_guarantees: bool = True
+
+    def __post_init__(self):
+        if self.periods_per_year <= 0:
+            raise ValueError("periods_per_year must be positive")
+
+@dataclass
 class AppConfig:
+    transaction_costs: TransactionCostsConfig = field(default_factory=TransactionCostsConfig)
+    slippage: SlippageConfigSchema = field(default_factory=SlippageConfigSchema)
+    trade_ledger: TradeLedgerConfig = field(default_factory=TradeLedgerConfig)
+    advanced_backtest_metrics: AdvancedBacktestMetricsConfig = field(default_factory=AdvancedBacktestMetricsConfig)
 
     project: ProjectConfig = field(default_factory=ProjectConfig)
     runtime: RuntimeConfig = field(default_factory=RuntimeConfig)

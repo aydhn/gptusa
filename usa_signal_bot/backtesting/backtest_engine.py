@@ -6,7 +6,9 @@ from datetime import datetime, timezone
 import uuid
 
 from usa_signal_bot.core.enums import BacktestRunStatus, BacktestExitMode, BacktestOrderType, BacktestOrderSide, BacktestEventType, BacktestSignalMode
-from usa_signal_bot.backtesting.signal_adapter import SignalToOrderConfig, signal_to_order_intent, default_signal_to_order_config, build_exit_order_for_position
+from usa_signal_bot.backtesting.order_models import BacktestOrderIntent, is_trade_order, signal_to_order_intent, SignalToOrderIntentConfig, build_exit_order_for_position
+from usa_signal_bot.backtesting.transaction_costs import TransactionCostConfig
+from usa_signal_bot.backtesting.slippage_models import SlippageConfig
 from usa_signal_bot.backtesting.portfolio_models import BacktestPortfolio, BacktestPortfolioSnapshot, create_portfolio, apply_fill_to_portfolio, create_portfolio_snapshot
 from usa_signal_bot.backtesting.order_models import BacktestOrderIntent
 from usa_signal_bot.backtesting.fill_models import BacktestFill, simulate_market_fill, simulate_next_open_fill
@@ -21,12 +23,16 @@ class BacktestRunConfig:
     starting_cash: float
     fee_rate: float
     slippage_bps: float
-    signal_to_order: SignalToOrderConfig
+    signal_to_order: SignalToOrderIntentConfig
     exit_mode: BacktestExitMode
     hold_bars: int
     max_positions: int
     max_position_notional: float
     allow_fractional_quantity: bool
+    transaction_cost_config: TransactionCostConfig | None = None
+    slippage_config: SlippageConfig | None = None
+    enable_advanced_metrics: bool = True
+    build_trade_ledger: bool = True
 
 @dataclass
 class BacktestRunRequest:
@@ -72,7 +78,7 @@ class BacktestEngine:
                 starting_cash=100000.0,
                 fee_rate=0.0,
                 slippage_bps=0.0,
-                signal_to_order=default_signal_to_order_config(),
+                signal_to_order=SignalToOrderIntentConfig(allow_short=False),
                 exit_mode=BacktestExitMode.HOLD_N_BARS,
                 hold_bars=5,
                 max_positions=10,

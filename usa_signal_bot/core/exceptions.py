@@ -385,3 +385,16 @@ class BacktestStorageError(BacktestError):
     pass
 class BacktestMetricError(BacktestError):
     pass
+
+class TransactionCostError(USASignalBotError):
+    pass
+class SlippageModelError(USASignalBotError):
+    pass
+class TradeLedgerError(USASignalBotError):
+    pass
+class TradeAnalyticsError(USASignalBotError):
+    pass
+class DrawdownAnalyticsError(USASignalBotError):
+    pass
+class AdvancedBacktestMetricError(USASignalBotError):
+    pass

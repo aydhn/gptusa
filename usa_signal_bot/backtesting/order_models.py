@@ -77,3 +77,56 @@ def validate_order_intent(order: BacktestOrderIntent) -> None:
 def is_trade_order(order: BacktestOrderIntent) -> bool:
     """Return True if the order is a BUY or SELL order."""
     return order.side in (BacktestOrderSide.BUY, BacktestOrderSide.SELL)
+
+@dataclass
+class SignalToOrderIntentConfig:
+    allow_short: bool = False
+
+def signal_to_order_intent(signal: StrategySignal, mock_bar: Any, config: SignalToOrderIntentConfig) -> BacktestOrderIntent | None:
+    from usa_signal_bot.core.enums import SignalAction
+    side = BacktestOrderSide.HOLD
+    if signal.action.value == "LONG" or signal.action.value == "BUY":
+         side = BacktestOrderSide.BUY
+    elif signal.action.value == "SHORT" or signal.action.value == "SELL":
+         if not config.allow_short:
+              return None
+         side = BacktestOrderSide.SELL
+
+    if side == BacktestOrderSide.HOLD:
+         return None
+
+    return BacktestOrderIntent(
+        order_id=str(uuid.uuid4()),
+        signal_id=signal.signal_id,
+        symbol=signal.symbol,
+        timeframe=signal.timeframe,
+        timestamp_utc=signal.timestamp_utc,
+        side=side,
+        order_type=BacktestOrderType.MARKET,
+        quantity=1.0,
+        reason=f"Generated from signal {signal.signal_id}"
+    )
+
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from usa_signal_bot.backtesting.position_models import BacktestPosition
+
+def build_exit_order_for_position(position: 'BacktestPosition', timestamp_utc: str, timeframe: str, reason: str) -> BacktestOrderIntent | None:
+    if position.side.value == "LONG":
+         side = BacktestOrderSide.SELL
+    elif position.side.value == "SHORT":
+         side = BacktestOrderSide.BUY
+    else:
+         return None
+
+    return BacktestOrderIntent(
+        order_id=str(uuid.uuid4()),
+        signal_id=None,
+        symbol=position.symbol,
+        timeframe=timeframe,
+        timestamp_utc=timestamp_utc,
+        side=side,
+        order_type=BacktestOrderType.MARKET,
+        quantity=position.quantity,
+        reason=reason
+    )

@@ -159,6 +159,22 @@ def load_app_config(config_dir: Optional[Path] = None) -> AppConfig:
         if "storage" in merged_cfg_dict:
             for k, v in merged_cfg_dict["storage"].items():
                 setattr(config.storage, k, v)
+
+        if "transaction_costs" in merged_cfg_dict:
+            for k, v in merged_cfg_dict["transaction_costs"].items():
+                setattr(config.transaction_costs, k, v)
+
+        if "slippage" in merged_cfg_dict:
+            for k, v in merged_cfg_dict["slippage"].items():
+                setattr(config.slippage, k, v)
+
+        if "trade_ledger" in merged_cfg_dict:
+            for k, v in merged_cfg_dict["trade_ledger"].items():
+                setattr(config.trade_ledger, k, v)
+
+        if "advanced_backtest_metrics" in merged_cfg_dict:
+            for k, v in merged_cfg_dict["advanced_backtest_metrics"].items():
+                setattr(config.advanced_backtest_metrics, k, v)
         if "active_universe" in merged_cfg_dict:
             for k, v in merged_cfg_dict["active_universe"].items():
                 setattr(config.active_universe, k, v)
