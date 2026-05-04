@@ -1602,6 +1602,193 @@ def handle_backtest_validate(context, args):
     return 0
 
 
+
+
+def do_backtest_cost_info(args, config):
+    from usa_signal_bot.backtesting.transaction_costs import TransactionCostConfig, transaction_cost_breakdown_to_text, calculate_transaction_cost
+    from usa_signal_bot.backtesting.slippage_models import SlippageConfig, slippage_breakdown_to_text, calculate_slippage
+    from usa_signal_bot.core.enums import BacktestOrderSide
+    from usa_signal_bot.data.models import OHLCVBar
+
+    t_config = getattr(config, 'transaction_costs', TransactionCostConfig())
+    s_config = getattr(config, 'slippage', SlippageConfig())
+
+    print("=== Transaction Cost Model ===")
+    t_bd = calculate_transaction_cost(10000.0, 100.0, t_config)
+    print(transaction_cost_breakdown_to_text(t_bd))
+
+    print("\n=== Slippage Model ===")
+    mock_bar = OHLCVBar(symbol="TEST", timestamp_utc="2023-01-01T00:00:00Z", timeframe="1d", open=100.0, high=101.0, low=99.0, close=100.0, volume=1000000)
+    s_bd = calculate_slippage(100.0, 100.0, BacktestOrderSide.BUY, mock_bar, s_config)
+    print(slippage_breakdown_to_text(s_bd))
+
+    print("\nNote: These are simulated assumptions and do not guarantee real market liquidity or execution prices.")
+    print("This engine MUST NOT execute real orders.")
+
+def _run_advanced_backtest(args, config, is_candidate=False):
+    from usa_signal_bot.backtesting.backtest_engine import BacktestEngine, BacktestRunRequest, BacktestRunConfig
+    from pathlib import Path
+
+    symbols = [s.strip() for s in args.symbols.split(",")] if getattr(args, 'symbols', None) else []
+
+    tc_config = getattr(config, 'transaction_costs', None)
+    sl_config = getattr(config, 'slippage', None)
+
+    if getattr(args, 'fee_bps', None) is not None:
+        from usa_signal_bot.backtesting.transaction_costs import TransactionCostConfig
+        tc_config = TransactionCostConfig(fee_bps=args.fee_bps)
+
+    if getattr(args, 'slippage_bps', None) is not None:
+        from usa_signal_bot.backtesting.slippage_models import SlippageConfig
+        sl_config = SlippageConfig(fixed_bps=args.slippage_bps)
+
+    run_config = BacktestRunConfig(
+        starting_cash=getattr(args, 'starting_cash', 100000.0),
+        hold_bars=getattr(args, 'hold_bars', 5),
+        transaction_cost_config=tc_config,
+        slippage_config=sl_config,
+        enable_advanced_metrics=True,
+        build_trade_ledger=True
+    )
+
+    request = BacktestRunRequest(
+        run_name=f"advanced_{'candidates' if is_candidate else 'signals'}_run",
+        symbols=symbols,
+        timeframe=getattr(args, 'timeframe', '1d'),
+        start_date=getattr(args, 'start', None),
+        end_date=getattr(args, 'end', None),
+        signal_file=Path(args.file) if not is_candidate and getattr(args, 'file', None) else None,
+        selected_candidates_file=Path(args.file) if is_candidate and getattr(args, 'file', None) else None,
+        config=run_config
+    )
+
+    engine = BacktestEngine(Path(config.data.root_dir))
+    res = engine.run(request)
+
+    from usa_signal_bot.backtesting.backtest_reporting import advanced_backtest_report_to_text
+    print(advanced_backtest_report_to_text(res))
+
+    if getattr(args, 'write', True):
+        paths = engine.write_result(res)
+        print(f"\nWrote results to {paths[0].parent}")
+
+def do_backtest_run_signals_advanced(args, config):
+    _run_advanced_backtest(args, config, is_candidate=False)
+
+def do_backtest_run_candidates_advanced(args, config):
+    _run_advanced_backtest(args, config, is_candidate=True)
+
+def _get_latest_backtest_dir(data_root: str):
+    from pathlib import Path
+    d = Path(data_root) / "backtests"
+    if not d.exists():
+        return None
+    dirs = [x for x in d.iterdir() if x.is_dir()]
+    if not dirs:
+        return None
+    return sorted(dirs, key=lambda x: x.stat().st_mtime, reverse=True)[0]
+
+def do_backtest_trade_ledger(args, config):
+    from pathlib import Path
+    import json
+
+    run_dir = None
+    if getattr(args, 'run_id', None):
+        run_dir = Path(config.data.root_dir) / "backtests" / args.run_id
+    elif getattr(args, 'latest', False):
+        run_dir = _get_latest_backtest_dir(config.data.root_dir)
+
+    if not run_dir or not run_dir.exists():
+        print("Backtest run not found.")
+        return
+
+    ledger_path = run_dir / "trade_ledger.json"
+    if not ledger_path.exists():
+        print(f"No trade_ledger.json found in {run_dir}")
+        return
+
+    with open(ledger_path, "r") as f:
+        data = json.load(f)
+
+    print(f"=== Trade Ledger Summary ({run_dir.name}) ===")
+    print(f"Total Trades: {data.get('total_trades', 0)}")
+    print(f"Closed Trades: {data.get('closed_trades_count', 0)}")
+    print(f"Open Trades: {data.get('open_trades_count', 0)}")
+    if data.get('warnings'):
+        print("Warnings:")
+        for w in data.get('warnings'):
+            print(f"  - {w}")
+
+def do_backtest_advanced_metrics(args, config):
+    from pathlib import Path
+    import json
+
+    run_dir = None
+    if getattr(args, 'run_id', None):
+        run_dir = Path(config.data.root_dir) / "backtests" / args.run_id
+    elif getattr(args, 'latest', False):
+        run_dir = _get_latest_backtest_dir(config.data.root_dir)
+
+    if not run_dir or not run_dir.exists():
+        print("Backtest run not found.")
+        return
+
+    metrics_path = run_dir / "advanced_metrics.json"
+    if not metrics_path.exists():
+        print(f"No advanced_metrics.json found in {run_dir}")
+        return
+
+    with open(metrics_path, "r") as f:
+        data = json.load(f)
+
+    print(f"=== Advanced Metrics ({run_dir.name}) ===")
+    print(f"Total Return: {data.get('total_return_pct', 0)*100:.2f}%")
+    if data.get('annualized_return_pct') is not None:
+        print(f"Annualized: {data.get('annualized_return_pct')*100:.2f}%")
+    if data.get('max_drawdown_pct') is not None:
+        print(f"Max Drawdown: {data.get('max_drawdown_pct')*100:.2f}%")
+    if data.get('sharpe_like_ratio') is not None:
+        print(f"Sharpe-like: {data.get('sharpe_like_ratio'):.2f}")
+    if data.get('sortino_like_ratio') is not None:
+        print(f"Sortino-like: {data.get('sortino_like_ratio'):.2f}")
+    print("\nNote: These metrics do not guarantee future performance.")
+
+def do_backtest_cost_summary(args, config):
+    from pathlib import Path
+    import json
+
+    run_dir = None
+    if getattr(args, 'run_id', None):
+        run_dir = Path(config.data.root_dir) / "backtests" / args.run_id
+    elif getattr(args, 'latest', False):
+        run_dir = _get_latest_backtest_dir(config.data.root_dir)
+
+    if not run_dir or not run_dir.exists():
+        print("Backtest run not found.")
+        return
+
+    fills_path = run_dir / "fills.jsonl"
+    if not fills_path.exists():
+        print(f"No fills.jsonl found in {run_dir}")
+        return
+
+    total_fees = 0.0
+    total_slip = 0.0
+    with open(fills_path, "r") as f:
+        for line in f:
+            if not line.strip(): continue
+            try:
+                fill = json.loads(line)
+                total_fees += fill.get("transaction_cost", 0.0)
+                if "slippage_breakdown" in fill:
+                    total_slip += fill["slippage_breakdown"].get("total_slippage_cost", 0.0)
+            except:
+                pass
+
+    print(f"=== Cost Summary ({run_dir.name}) ===")
+    print(f"Total Fees Executed: ${total_fees:.2f}")
+    print(f"Total Slippage Cost: ${total_slip:.2f}")
+
 def main() -> int:
 
     """Main CLI entrypoint."""
@@ -1985,7 +2172,46 @@ def main() -> int:
     parser_bt_val.add_argument('--run-id', type=str, help='Run ID')
     parser_bt_val.add_argument('--result-file', type=str, help='Result file path')
 
+
+
+    p_bc_info = subparsers.add_parser("backtest-cost-info", help="Show transaction cost and slippage info")
+
+    p_br_adv = subparsers.add_parser("backtest-run-signals-advanced", help="Run backtest with advanced metrics")
+    p_br_adv.add_argument("--file", "-f", required=True, help="Signal file path")
+    p_br_adv.add_argument("--symbols", help="Comma-separated symbols")
+    p_br_adv.add_argument("--timeframe", default="1d")
+    p_br_adv.add_argument("--starting-cash", type=float, default=100000.0)
+    p_br_adv.add_argument("--hold-bars", type=int, default=5)
+    p_br_adv.add_argument("--fee-bps", type=float)
+    p_br_adv.add_argument("--slippage-bps", type=float)
+    p_br_adv.add_argument("--write", action="store_true", default=True)
+
+    p_br_cand_adv = subparsers.add_parser("backtest-run-candidates-advanced", help="Run backtest on candidates with advanced metrics")
+    p_br_cand_adv.add_argument("--file", "-f", required=True, help="Candidates file path")
+    p_br_cand_adv.add_argument("--symbols", help="Comma-separated symbols")
+    p_br_cand_adv.add_argument("--timeframe", default="1d")
+    p_br_cand_adv.add_argument("--starting-cash", type=float, default=100000.0)
+    p_br_cand_adv.add_argument("--hold-bars", type=int, default=5)
+    p_br_cand_adv.add_argument("--fee-bps", type=float)
+    p_br_cand_adv.add_argument("--slippage-bps", type=float)
+    p_br_cand_adv.add_argument("--write", action="store_true", default=True)
+
+    p_btl = subparsers.add_parser("backtest-trade-ledger", help="Show trade ledger for a run")
+    p_btl.add_argument("--run-id", help="Run ID")
+    p_btl.add_argument("--latest", action="store_true", help="Use latest run")
+
+    p_bam = subparsers.add_parser("backtest-advanced-metrics", help="Show advanced metrics for a run")
+    p_bam.add_argument("--run-id", help="Run ID")
+    p_bam.add_argument("--latest", action="store_true", help="Use latest run")
+
+    p_bcs = subparsers.add_parser("backtest-cost-summary", help="Show cost summary for a run")
+    p_bcs.add_argument("--run-id", help="Run ID")
+    p_bcs.add_argument("--latest", action="store_true", help="Use latest run")
+
     args = parser.parse_args()
+
+
+
 
 
     if not args.command:
