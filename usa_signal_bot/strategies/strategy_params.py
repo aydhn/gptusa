@@ -97,3 +97,36 @@ def strategy_parameter_schema_to_dict(schema: StrategyParameterSchema) -> dict:
             } for p in schema.parameters
         ]
     }
+
+# --- Helpers for Parameter Sensitivity & Grid ---
+
+def get_parameter_spec(schema: StrategyParameterSchema, name: str) -> StrategyParameterSpec | None:
+    for spec in schema.parameters:
+        if spec.name == name:
+            return spec
+    return None
+
+def strategy_schema_parameter_names(schema: StrategyParameterSchema) -> list[str]:
+    return [spec.name for spec in schema.parameters]
+
+def is_parameter_value_allowed(spec: StrategyParameterSpec, value: Any) -> bool:
+    if spec.allowed_values and value not in spec.allowed_values:
+        return False
+    if spec.min_value is not None and value < spec.min_value:
+        return False
+    if spec.max_value is not None and value > spec.max_value:
+        return False
+    return True
+
+def coerce_parameter_value(value: Any, param_type: str) -> Any:
+    if param_type == "int":
+        return int(value)
+    elif param_type == "float":
+        return float(value)
+    elif param_type == "bool":
+        if isinstance(value, str):
+            return value.lower() in ("true", "1", "yes")
+        return bool(value)
+    elif param_type == "str":
+        return str(value)
+    return value

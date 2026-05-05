@@ -397,6 +397,11 @@ def run_health_checks(context) -> List[HealthCheckResult]:
         check_walk_forward_windows_health(context),
         check_walk_forward_metrics_health(context),
         check_walk_forward_store_health(context),
+        check_parameter_sensitivity_config_health(context),
+        check_parameter_grid_health(context),
+        check_sensitivity_metrics_health(context),
+        check_stability_map_health(context),
+        check_sensitivity_store_health(context),
         check_universe_health(context),
         check_extended_universe_health(context),
         check_market_data_cache_health(context),
@@ -563,7 +568,7 @@ def check_volatility_feature_health(context: 'RuntimeContext') -> HealthCheckRes
         except Exception as e:
              return HealthCheckResult("volatility_feature_health", HealthStatus.FAIL, f"Could not load default volatility set: {e}")
 
-        engine = FeatureEngine(reg, context.paths.data_dir)
+        engine = FeatureEngine(reg, context.data_dir)
         bars = []
         base_time = datetime(2023, 1, 1, tzinfo=timezone.utc)
         for i in range(50):
@@ -654,3 +659,73 @@ def check_walk_forward_store_health(context: 'RuntimeContext') -> HealthCheckRes
             return HealthCheckResult(name="walk_forward_store", passed=False, message="Walk-Forward store directory is not accessible.", details={"path": str(path)})
     except Exception as e:
          return HealthCheckResult(name="walk_forward_store", passed=False, message=f"Walk-Forward store health check failed: {e}", details={"error": str(e)})
+
+# --- Parameter Sensitivity Checks ---
+
+def check_parameter_sensitivity_config_health(context: 'RuntimeContext') -> HealthCheckResult:
+    try:
+        from usa_signal_bot.core.config_schema import ParameterSensitivityConfigSchema
+        from usa_signal_bot.backtesting.parameter_sensitivity_models import ParameterSensitivityConfig, validate_parameter_sensitivity_config
+        from usa_signal_bot.core.enums import SensitivityMetricName
+
+        cfg = getattr(context.config, 'parameter_sensitivity', None)
+        if cfg is None:
+             return HealthCheckResult("Parameter Sensitivity Config Check", True, "Config not found (defaulting or disabled)", "Config")
+
+        if not cfg.enabled:
+             return HealthCheckResult("Parameter Sensitivity Config Check", True, "Parameter Sensitivity is disabled", "Config")
+
+        sens_config = ParameterSensitivityConfig(
+            max_cells=cfg.max_cells,
+            continue_on_cell_error=cfg.continue_on_cell_error,
+            run_backtest=cfg.run_backtest,
+            include_benchmark=cfg.include_benchmark,
+            include_monte_carlo=cfg.include_monte_carlo,
+            include_walk_forward=cfg.include_walk_forward,
+            primary_metric=SensitivityMetricName(cfg.primary_metric),
+            stability_metric=SensitivityMetricName(cfg.stability_metric),
+            min_completed_cells=cfg.min_completed_cells
+        )
+        validate_parameter_sensitivity_config(sens_config)
+        return HealthCheckResult("Parameter Sensitivity Config Check", True, "Config is valid", "Config")
+    except Exception as e:
+        return HealthCheckResult("Parameter Sensitivity Config Check", False, f"Config error: {str(e)}", "Config", {"error": str(e)})
+
+def check_parameter_grid_health(context: 'RuntimeContext') -> HealthCheckResult:
+    try:
+        from usa_signal_bot.backtesting.parameter_grid import create_single_parameter_grid, create_parameter_grid_cells
+        from usa_signal_bot.core.enums import ParameterValueType
+        grid_spec = create_single_parameter_grid("test_strat", "test_param", [1, 2, 3], ParameterValueType.INT)
+        cells = create_parameter_grid_cells(grid_spec)
+        if len(cells) != 3:
+            return HealthCheckResult("Parameter Grid Health", False, "Grid cell count mismatch", "Grid")
+        return HealthCheckResult("Parameter Grid Health", True, "Grid generation works", "Grid")
+    except Exception as e:
+        return HealthCheckResult("Parameter Grid Health", False, f"Grid error: {str(e)}", "Grid", {"error": str(e)})
+
+def check_sensitivity_metrics_health(context: 'RuntimeContext') -> HealthCheckResult:
+    try:
+        from usa_signal_bot.backtesting.sensitivity_metrics import calculate_sensitivity_aggregate_metrics
+        from usa_signal_bot.core.enums import SensitivityMetricName
+        # Just verifying the module can be imported and executed with empty
+        calculate_sensitivity_aggregate_metrics([], SensitivityMetricName.RETURN_PCT)
+        return HealthCheckResult("Sensitivity Metrics Health", True, "Metrics calculation works", "Metrics")
+    except Exception as e:
+        return HealthCheckResult("Sensitivity Metrics Health", False, f"Metrics error: {str(e)}", "Metrics", {"error": str(e)})
+
+def check_stability_map_health(context: 'RuntimeContext') -> HealthCheckResult:
+    try:
+        from usa_signal_bot.backtesting.stability_map import build_stability_map
+        from usa_signal_bot.core.enums import SensitivityMetricName
+        build_stability_map([], SensitivityMetricName.RETURN_PCT)
+        return HealthCheckResult("Stability Map Health", True, "Stability map works", "StabilityMap")
+    except Exception as e:
+        return HealthCheckResult("Stability Map Health", False, f"Stability map error: {str(e)}", "StabilityMap", {"error": str(e)})
+
+def check_sensitivity_store_health(context: 'RuntimeContext') -> HealthCheckResult:
+    try:
+        from usa_signal_bot.backtesting.sensitivity_store import sensitivity_store_dir
+        sensitivity_store_dir(context.data_dir)
+        return HealthCheckResult("Sensitivity Store Health", True, "Store dir reachable", "Store")
+    except Exception as e:
+        return HealthCheckResult("Sensitivity Store Health", False, f"Store dir error: {str(e)}", "Store", {"error": str(e)})

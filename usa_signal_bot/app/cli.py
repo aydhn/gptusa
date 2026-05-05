@@ -1504,7 +1504,7 @@ def handle_backtest_run_signals(context, args):
         sig_mode_enum = __import__('usa_signal_bot.core.enums', fromlist=['BacktestSignalMode']).BacktestSignalMode(cfg.default_signal_mode.upper())
         req.config.signal_to_order.signal_mode = sig_mode_enum
 
-        engine = BacktestEngine(context.data_root)
+        engine = BacktestEngine(context.data_dir)
         result = engine.run(req)
 
         print(backtest_run_result_to_text(result))
@@ -1549,7 +1549,7 @@ def handle_backtest_run_candidates(context, args):
         sig_mode_enum = __import__('usa_signal_bot.core.enums', fromlist=['BacktestSignalMode']).BacktestSignalMode(cfg.default_signal_mode.upper())
         req.config.signal_to_order.signal_mode = sig_mode_enum
 
-        engine = BacktestEngine(context.data_root)
+        engine = BacktestEngine(context.data_dir)
         result = engine.run(req)
 
         print(backtest_run_result_to_text(result))
@@ -1567,7 +1567,7 @@ def handle_backtest_summary(context, args):
     from usa_signal_bot.backtesting.backtest_store import list_backtest_runs
     from usa_signal_bot.core.serialization import load_json
 
-    runs = list_backtest_runs(context.data_root)
+    runs = list_backtest_runs(context.data_dir)
     if not runs:
         print("No backtest runs found.")
         return 0
@@ -1589,7 +1589,7 @@ def handle_backtest_latest(context, args):
     from usa_signal_bot.core.serialization import load_json
     import json
 
-    runs = list_backtest_runs(context.data_root)
+    runs = list_backtest_runs(context.data_dir)
     if not runs:
         print("No backtest runs found.")
         return 0
@@ -1606,7 +1606,7 @@ def handle_backtest_validate(context, args):
     from usa_signal_bot.backtesting.backtest_store import list_backtest_runs
     import json
 
-    runs = list_backtest_runs(context.data_root)
+    runs = list_backtest_runs(context.data_dir)
     if not runs:
         print("No runs to validate.")
         return 0
@@ -1973,7 +1973,7 @@ def command_robustness_validate(args) -> int:
         r_dir = None
         if args.run_id:
              r_dir = build_robustness_run_dir(data_root, args.run_id)
-        elif getattr(args, "latest", False):
+        elif getattr(parsed, "latest", False):
              r_dir = get_latest_robustness_run_dir(data_root)
 
         if not r_dir or not r_dir.exists():
@@ -2664,6 +2664,29 @@ def main() -> int:
             sys.exit(command_walk_forward_summary(args))
         elif args.command == "walk-forward-latest":
             sys.exit(command_walk_forward_latest(args))
+        elif args.command == "sensitivity-info":
+            cmd_sensitivity_info(context, args)
+            return 0
+        elif args.command == "parameter-grid-plan":
+            cmd_parameter_grid_plan(context, args)
+            return 0
+        elif args.command == "sensitivity-run":
+            cmd_sensitivity_run(context, args)
+            return 0
+        elif args.command == "stability-map":
+            cmd_stability_map(context, args)
+            return 0
+        elif args.command == "sensitivity-summary":
+            cmd_sensitivity_summary(context, args)
+            return 0
+        elif args.command == "sensitivity-latest":
+            cmd_sensitivity_latest(context, args)
+            return 0
+            cmd_sensitivity_latest(context, args)
+            return 0
+        elif args.command == "sensitivity-validate":
+            cmd_sensitivity_validate(context, args)
+            return 0
         elif args.command == "walk-forward-validate":
             sys.exit(command_walk_forward_validate(args))
 
@@ -4095,6 +4118,19 @@ def add_benchmark_commands(subparsers):
     # benchmark-summary
     p_sum = subparsers.add_parser("benchmark-summary", help="Show summary of stored benchmark reports")
     p_sum.set_defaults(func=cmd_benchmark_summary)
+    # Parameter Sensitivity Commands
+    subparsers.add_parser("sensitivity-info", help="Show parameter sensitivity configuration")
+    p_pgp = subparsers.add_parser("parameter-grid-plan", help="Plan a parameter grid")
+    p_pgp.add_argument("--strategy")
+    p_pgp.add_argument("--param")
+    p_pgp.add_argument("--values")
+    p_pgp.add_argument("--type", default="float")
+    p_pgp.add_argument("--max-cells", type=int, default=100)
+    subparsers.add_parser("sensitivity-run", help="Run a parameter sensitivity analysis")
+    subparsers.add_parser("stability-map", help="Show stability map for a sensitivity run")
+    subparsers.add_parser("sensitivity-summary", help="Show summary of sensitivity runs")
+    subparsers.add_parser("sensitivity-latest", help="Show info on the latest sensitivity run")
+    subparsers.add_parser("sensitivity-validate", help="Validate a sensitivity run for non-optimizer compliance")
 
 def cmd_benchmark_info(args, config, context) -> int:
     try:
@@ -4114,7 +4150,7 @@ def cmd_benchmark_cache_check(args, config, context) -> int:
     try:
         from usa_signal_bot.backtesting.benchmark_loader import get_benchmark_set, load_benchmark_market_data_from_cache, validate_benchmark_cache_coverage
         bs = get_benchmark_set(args.set)
-        data = load_benchmark_market_data_from_cache(data_root=context.data_root, benchmark_set=bs, timeframe=args.timeframe)
+        data = load_benchmark_market_data_from_cache(data_root=context.data_dir, benchmark_set=bs, timeframe=args.timeframe)
         val_msgs = validate_benchmark_cache_coverage(data, bs)
         if val_msgs:
             print("\nWarnings:")
@@ -4137,7 +4173,7 @@ def cmd_buy_and_hold_baseline(args, config, context) -> int:
         from usa_signal_bot.data.cache import read_cached_bars_for_symbols_timeframe
 
         bars = read_cached_bars_for_symbols_timeframe(
-            data_root=context.data_root,
+            data_root=context.data_dir,
             symbols=[args.symbol],
             timeframe=args.timeframe
         )
@@ -4191,7 +4227,7 @@ def cmd_backtest_benchmark_compare(args, config, context) -> int:
         from usa_signal_bot.backtesting.benchmark_reporting import full_benchmark_analysis_to_text
         from usa_signal_bot.core.enums import BenchmarkType
 
-        run_dir = _get_run_dir(args, context.data_root)
+        run_dir = _get_run_dir(args, context.data_dir)
         if not run_dir or not run_dir.exists():
             return 1
 
@@ -4222,7 +4258,7 @@ def cmd_backtest_benchmark_compare(args, config, context) -> int:
         start_dt = points[0].timestamp_utc[:10] if points else None
         end_dt = points[-1].timestamp_utc[:10] if points else None
 
-        bm_data = load_benchmark_market_data_from_cache(context.data_root, bm_set, "1d", start_dt, end_dt)
+        bm_data = load_benchmark_market_data_from_cache(context.data_dir, bm_set, "1d", start_dt, end_dt)
 
         bm_curves = []
         for spec in bm_set.benchmarks:
@@ -4267,7 +4303,7 @@ def cmd_backtest_attribution(args, config, context) -> int:
         from usa_signal_bot.backtesting.trade_ledger import TradeLedger, BacktestTrade
         from usa_signal_bot.core.enums import AttributionDimension, TradeStatus, TradeDirection, TradeExitReason
 
-        run_dir = _get_run_dir(args, context.data_root)
+        run_dir = _get_run_dir(args, context.data_dir)
         if not run_dir or not run_dir.exists():
             return 1
 
@@ -4337,7 +4373,7 @@ def cmd_backtest_attribution(args, config, context) -> int:
 def cmd_benchmark_summary(args, config, context) -> int:
     try:
         from usa_signal_bot.backtesting.benchmark_store import benchmark_store_summary
-        summary = benchmark_store_summary(context.data_root)
+        summary = benchmark_store_summary(context.data_dir)
         print("\n=== Benchmark Storage Summary ===")
         print(f"Total Reports:  {summary['total_reports']}")
         print(f"Latest Report:  {summary['latest_report'] or 'None'}")
@@ -4621,7 +4657,7 @@ def command_walk_forward_validate(args) -> int:
 
         if args.run_id:
              run_dir = build_walk_forward_run_dir(data_root, args.run_id)
-        elif getattr(args, "latest", False):
+        elif getattr(parsed, "latest", False):
              run_dir = get_latest_walk_forward_run_dir(data_root)
 
         if not run_dir or not run_dir.exists():
@@ -4647,3 +4683,208 @@ def command_walk_forward_validate(args) -> int:
     except Exception as e:
         print(f"Error: {e}")
         return 1
+
+# --- Parameter Sensitivity Commands ---
+
+def cmd_sensitivity_info(context, args) -> None:
+    import sys
+    args = sys.argv[2:]
+    cfg = getattr(context.config, 'parameter_sensitivity', None)
+    if cfg is None:
+        print("Parameter sensitivity configuration not found.")
+        return
+
+    print("Parameter Sensitivity Information:")
+    print("--------------------------------")
+    print(f"Enabled: {cfg.enabled}")
+    print(f"Max Cells: {cfg.max_cells}")
+    print(f"Hard Max Cells: {cfg.hard_max_cells}")
+    print(f"Primary Metric: {cfg.primary_metric}")
+    print("\nNOTE: This system is NOT an optimizer. It generates a non-optimization robustness grid to measure sensitivity.")
+
+def cmd_parameter_grid_plan(context, args) -> None:
+    import sys
+    args = sys.argv[2:]
+    import argparse
+    from usa_signal_bot.backtesting.parameter_grid import create_single_parameter_grid, create_parameter_grid_cells, grid_cells_to_text
+    from usa_signal_bot.backtesting.parameter_sensitivity_models import parameter_grid_spec_to_dict
+    from usa_signal_bot.core.enums import ParameterValueType
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--strategy", required=True)
+    parser.add_argument("--param", required=True)
+    parser.add_argument("--values", required=True)
+    parser.add_argument("--type", default="float")
+    parser.add_argument("--max-cells", type=int, default=100)
+
+    parsed, _ = parser.parse_known_args(args)
+
+    val_type = ParameterValueType(parsed.type.upper())
+    vals = [float(v) if val_type == ParameterValueType.FLOAT else int(v) if val_type == ParameterValueType.INT else v for v in parsed.values.split(",")]
+
+    grid = create_single_parameter_grid(parsed.strategy, parsed.param, vals, val_type, parsed.max_cells)
+    cells = create_parameter_grid_cells(grid)
+
+    print(grid_cells_to_text(cells))
+
+def cmd_sensitivity_run(context, args) -> None:
+    import sys
+    args = sys.argv[2:]
+    import argparse
+    from usa_signal_bot.backtesting.parameter_grid import create_single_parameter_grid
+    from usa_signal_bot.core.enums import ParameterValueType, SensitivityMetricName
+    from usa_signal_bot.backtesting.backtest_engine import BacktestRunRequest
+    from usa_signal_bot.backtesting.sensitivity_runner import ParameterSensitivityRunner
+    from usa_signal_bot.backtesting.parameter_sensitivity_models import ParameterSensitivityConfig
+    from usa_signal_bot.backtesting.sensitivity_store import write_sensitivity_result_json, build_sensitivity_run_dir
+    from usa_signal_bot.backtesting.sensitivity_reporting import parameter_sensitivity_run_result_to_text
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--strategy", required=True)
+    parser.add_argument("--param", required=True)
+    parser.add_argument("--values", required=True)
+    parser.add_argument("--signal-file", required=False)
+    parser.add_argument("--candidates-file", required=False)
+    parser.add_argument("--symbols", required=False)
+    parser.add_argument("--timeframe", default="1d")
+    parser.add_argument("--type", default="float")
+    parser.add_argument("--max-cells", type=int, default=100)
+    parser.add_argument("--write", action="store_true")
+
+    parsed, _ = parser.parse_known_args(args)
+
+    if not parsed.signal_file and not parsed.candidates_file:
+         print("Warning: No signal-file or candidates-file provided.")
+
+    symbols = parsed.symbols.split(",") if parsed.symbols else []
+
+    val_type = ParameterValueType(parsed.type.upper())
+    vals = [float(v) if val_type == ParameterValueType.FLOAT else int(v) if val_type == ParameterValueType.INT else v for v in parsed.values.split(",")]
+
+    grid = create_single_parameter_grid(parsed.strategy, parsed.param, vals, val_type, parsed.max_cells)
+
+    req = BacktestRunRequest(
+        run_name="sens_run",
+        symbols=symbols,
+        timeframe=parsed.timeframe,
+        signal_file=parsed.signal_file,
+        selected_candidates_file=parsed.candidates_file
+    )
+
+    config = ParameterSensitivityConfig(
+        max_cells=parsed.max_cells,
+        continue_on_cell_error=True,
+        run_backtest=True,
+        include_benchmark=False,
+        include_monte_carlo=False,
+        include_walk_forward=False,
+        primary_metric=SensitivityMetricName.RETURN_PCT,
+        stability_metric=SensitivityMetricName.STABILITY_SCORE,
+        min_completed_cells=1
+    )
+
+    runner = ParameterSensitivityRunner(context.data_dir)
+    result = runner.run(req, grid, config)
+
+    print(parameter_sensitivity_run_result_to_text(result))
+
+    if parsed.write:
+        d = build_sensitivity_run_dir(context.data_dir, result.run_id)
+        write_sensitivity_result_json(d / "result.json", result)
+        print(f"Result written to {d}")
+
+def cmd_stability_map(context, args) -> None:
+    import sys
+    args = sys.argv[2:]
+    import argparse
+    import json
+    from usa_signal_bot.backtesting.sensitivity_store import get_latest_sensitivity_run_dir, build_sensitivity_run_dir
+    from usa_signal_bot.backtesting.stability_map import StabilityMap, StabilityMapCell
+    from usa_signal_bot.core.enums import SensitivityMetricName, ParameterZoneType, StabilityBucket
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--run-id", required=False)
+    # parser.add_argument("--latest", action="store_true")
+
+    parsed, _ = parser.parse_known_args(args)
+
+    run_dir = None
+    if getattr(parsed, "latest", False):
+        run_dir = get_latest_sensitivity_run_dir(context.data_dir)
+    elif getattr(parsed, "run_id", None):
+        run_dir = build_sensitivity_run_dir(context.data_dir, parsed.run_id)
+
+    if not run_dir or not run_dir.exists():
+        print("Sensitivity run not found.")
+        return
+
+    res_file = run_dir / "result.json"
+    if not res_file.exists():
+        print(f"Result file not found in {run_dir}")
+        return
+
+    with open(res_file, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    print(f"Stability Map for Run: {data.get('run_id')}")
+    print(f"Strategy: {data.get('strategy_name')}")
+    print(f"Robust Regions: {len(data.get('robust_regions', []))}")
+    print(f"Fragile Regions: {len(data.get('fragile_regions', []))}")
+    print(f"Overfit Risk: {data.get('overfit_risk_hint')}")
+
+def cmd_sensitivity_summary(context, args) -> None:
+    import sys
+    args = sys.argv[2:]
+    from usa_signal_bot.backtesting.sensitivity_store import sensitivity_store_summary
+    summary = sensitivity_store_summary(context.data_dir)
+    print(f"Total Sensitivity Runs: {summary['total_runs']}")
+    for r in summary['run_ids']:
+        print(f"  - {r}")
+
+def cmd_sensitivity_latest(context, args) -> None:
+    import sys
+    args = sys.argv[2:]
+    from usa_signal_bot.backtesting.sensitivity_store import get_latest_sensitivity_run_dir
+    d = get_latest_sensitivity_run_dir(context.data_dir)
+    if not d:
+        print("No sensitivity runs found.")
+        return
+    print(f"Latest run dir: {d}")
+
+def cmd_sensitivity_validate(context, args) -> None:
+    import sys
+    args = sys.argv[2:]
+    import argparse
+    import json
+    from usa_signal_bot.backtesting.sensitivity_store import get_latest_sensitivity_run_dir
+    from usa_signal_bot.backtesting.parameter_sensitivity_models import ParameterSensitivityRunResult
+    from usa_signal_bot.backtesting.sensitivity_validation import validate_no_optimizer_behavior, sensitivity_validation_report_to_text
+
+    parser = argparse.ArgumentParser()
+    # parser.add_argument("--latest", action="store_true")
+    parsed, _ = parser.parse_known_args(args)
+
+    d = get_latest_sensitivity_run_dir(context.data_dir)
+    if not d:
+        print("No run found to validate.")
+        return
+
+    # We can perform a lightweight dictionary-based validation or load the full object.
+    # For simplicity, load raw json and check manually for best_params keys
+    res_file = d / "result.json"
+    if not res_file.exists():
+        print("result.json not found.")
+        return
+
+    with open(res_file, "r") as f:
+        data = json.load(f)
+
+    valid = True
+    if "best_params" in data or "recommended_params" in data:
+        print("[ERROR] Optimizer behavior detected! 'best_params' found.")
+        valid = False
+
+    if valid:
+        print("Validation Passed: No optimizer behavior detected.")
+
+# Add these functions to the dispatcher manually using sed

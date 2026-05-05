@@ -296,3 +296,37 @@ advanced_backtest_metrics:
 walk_forward:
   enabled: true
   max_windows: 5
+
+parameter_sensitivity:
+  enabled: true
+  max_cells: 100
+  hard_max_cells: 1000
+  continue_on_cell_error: true
+  run_backtest: true
+  include_benchmark: false
+  include_monte_carlo: false
+  include_walk_forward: false
+  primary_metric: "RETURN_PCT"
+  stability_metric: "STABILITY_SCORE"
+  min_completed_cells: 5
+  write_sensitivity_reports: true
+  warn_not_optimizer: true
+
+robustness_grid:
+  enabled: true
+  default_grid_type: "SINGLE_PARAMETER"
+  max_single_parameter_values: 20
+  max_two_parameter_cells: 100
+  max_multi_parameter_cells: 250
+  local_neighborhood_radius: 2
+  detect_robust_regions: true
+  detect_fragile_regions: true
+  min_robust_region_size: 2
+
+stability_map:
+  enabled: true
+  local_stability_neighbors: 2
+  robust_zone_min_stability_score: 65.0
+  fragile_zone_max_stability_score: 35.0
+  overfit_risk_high_range_ratio: 2.0
+  write_stability_map: true

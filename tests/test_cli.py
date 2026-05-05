@@ -275,3 +275,67 @@ def test_cli_benchmark_commands():
 
     res2 = subprocess.run([sys.executable, "-m", "usa_signal_bot", "benchmark-summary"], capture_output=True, text=True)
     assert res2.returncode == 0
+
+# --- Parameter Sensitivity CLI Tests ---
+
+def test_cli_sensitivity_info(monkeypatch, capsys):
+    monkeypatch.setattr("sys.argv", ["usa_signal_bot", "sensitivity-info"])
+    from usa_signal_bot.app.cli import main
+    try:
+        main()
+    except SystemExit as e:
+        assert e.code == 0
+    out, _ = capsys.readouterr()
+    assert "Parameter Sensitivity Information:" in out
+    assert "NOT an optimizer" in out
+
+def test_cli_parameter_grid_plan(monkeypatch, capsys):
+    monkeypatch.setattr("sys.argv", ["usa_signal_bot", "parameter-grid-plan", "--strategy", "s", "--param", "p", "--values", "1,2,3", "--type", "int"])
+    from usa_signal_bot.app.cli import main
+    try:
+        main()
+    except SystemExit as e:
+        assert e.code == 0
+    out, _ = capsys.readouterr()
+    assert "Total Cells: 3" in out
+    assert "params={'p': 1}" in out
+
+def test_cli_sensitivity_summary(monkeypatch, capsys):
+    monkeypatch.setattr("sys.argv", ["usa_signal_bot", "sensitivity-summary"])
+    from usa_signal_bot.app.cli import main
+    try:
+        main()
+    except SystemExit as e:
+        assert e.code == 0
+    out, _ = capsys.readouterr()
+    assert "Total Sensitivity Runs" in out
+
+def test_cli_sensitivity_latest(monkeypatch, capsys):
+    monkeypatch.setattr("sys.argv", ["usa_signal_bot", "sensitivity-latest"])
+    from usa_signal_bot.app.cli import main
+    try:
+        main()
+    except SystemExit as e:
+        assert e.code == 0
+    out, _ = capsys.readouterr()
+    assert "run" in out.lower()
+
+def test_cli_stability_map_no_latest(monkeypatch, capsys):
+    monkeypatch.setattr("sys.argv", ["usa_signal_bot", "stability-map"])
+    from usa_signal_bot.app.cli import main
+    try:
+        main()
+    except SystemExit as e:
+        assert e.code == 0
+    out, _ = capsys.readouterr()
+    assert "not found" in out.lower()
+
+def test_cli_sensitivity_validate_no_latest(monkeypatch, capsys):
+    monkeypatch.setattr("sys.argv", ["usa_signal_bot", "sensitivity-validate"])
+    from usa_signal_bot.app.cli import main
+    try:
+        main()
+    except SystemExit as e:
+        assert e.code == 0
+    out, _ = capsys.readouterr()
+    assert "No run found to validate." in out
