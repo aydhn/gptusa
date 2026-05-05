@@ -999,3 +999,94 @@ def check_scan_store_health(context: 'RuntimeContext') -> HealthCheckResult:
         result.status = "fail"
         result.message = str(e)
     return result
+
+def check_notification_config_health(context: 'RuntimeContext') -> HealthCheckResult:
+    result = HealthCheckResult(component="notification_config", status="unknown")
+    try:
+        from usa_signal_bot.core.config_schema import validate_notifications_config
+        if not hasattr(context.config, "notifications"):
+            return HealthCheckResult(component="notification_config", status="warning", message="No notifications config found")
+        validate_notifications_config(context.config.notifications)
+        result.status = "pass"
+        result.message = "Notification configuration is valid."
+    except Exception as e:
+        result.status = "fail"
+        result.message = str(e)
+    return result
+
+def check_telegram_config_health(context: 'RuntimeContext') -> HealthCheckResult:
+    result = HealthCheckResult(component="telegram_config", status="unknown")
+    try:
+        from usa_signal_bot.core.config_schema import validate_telegram_config
+        from usa_signal_bot.notifications.telegram_config import TelegramNotificationConfig, telegram_config_status
+        if not hasattr(context.config, "telegram"):
+            return HealthCheckResult(component="telegram_config", status="warning", message="No telegram config found")
+        validate_telegram_config(context.config.telegram)
+
+        tc = TelegramNotificationConfig(
+            enabled=context.config.telegram.enabled,
+            dry_run=context.config.telegram.dry_run,
+            allow_real_send=context.config.telegram.allow_real_send,
+            bot_token_env_var=context.config.telegram.bot_token_env_var,
+            chat_id_env_var=context.config.telegram.chat_id_env_var,
+            parse_mode=context.config.telegram.parse_mode,
+            timeout_seconds=context.config.telegram.timeout_seconds,
+            disable_web_page_preview=context.config.telegram.disable_web_page_preview,
+            redact_token_in_logs=context.config.telegram.redact_token_in_logs
+        )
+
+        status = telegram_config_status(tc)
+
+        if not tc.allow_real_send and tc.dry_run:
+            result.status = "pass"
+            result.message = "Telegram safe defaults confirmed."
+        else:
+            result.status = "warning"
+            result.message = f"Telegram live config: allow_real_send={tc.allow_real_send}, dry_run={tc.dry_run}"
+    except Exception as e:
+        result.status = "fail"
+        result.message = str(e)
+    return result
+
+def check_notification_queue_health(context: 'RuntimeContext') -> HealthCheckResult:
+    result = HealthCheckResult(component="notification_queue", status="unknown")
+    try:
+        from usa_signal_bot.notifications.notification_queue import NotificationQueue
+        from usa_signal_bot.notifications.notification_models import NotificationMessage
+        from usa_signal_bot.core.enums import NotificationType, NotificationChannel, NotificationPriority
+
+        queue = NotificationQueue(max_size=10)
+        msg = NotificationMessage(
+            message_id="test",
+            notification_type=NotificationType.HEALTH_SUMMARY,
+            channel=NotificationChannel.DRY_RUN,
+            priority=NotificationPriority.NORMAL,
+            title="Test",
+            body="Test",
+            created_at_utc="now"
+        )
+        queue.enqueue(msg)
+        popped = queue.dequeue()
+        if popped and popped.message.message_id == "test":
+            result.status = "pass"
+            result.message = "Queue enqueue/dequeue operational."
+        else:
+            result.status = "fail"
+            result.message = "Queue test failed."
+    except Exception as e:
+        result.status = "fail"
+        result.message = str(e)
+    return result
+
+def check_notification_store_health(context: 'RuntimeContext') -> HealthCheckResult:
+    result = HealthCheckResult(component="notification_store", status="unknown")
+    try:
+        from usa_signal_bot.notifications.notification_store import notification_store_dir
+        from pathlib import Path
+        d = notification_store_dir(Path(context.config.data.root_dir))
+        result.status = "pass"
+        result.message = f"Notification store dir valid: {d}"
+    except Exception as e:
+        result.status = "fail"
+        result.message = str(e)
+    return result

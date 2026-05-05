@@ -105,6 +105,7 @@ class ConcentrationGuardsConfig:
 
 @dataclass
 class RuntimeConfig:
+    notification_step_enabled: bool = False
     mode: str = "local_paper_only"
     broker_order_routing_enabled: bool = False
     web_scraping_allowed: bool = False
@@ -2844,7 +2845,80 @@ class AllocationDriftConfigSchema:
 
 
 @dataclass
+@dataclass
+class NotificationsConfig:
+    enabled: bool = True
+    default_channel: str = "dry_run"
+    dry_run: bool = True
+    log_only: bool = True
+    max_message_length: int = 3500
+    max_queue_size: int = 1000
+    suppress_duplicates: bool = True
+    duplicate_window_seconds: int = 3600
+    rate_limit_per_minute: int = 20
+    include_disclaimer: bool = True
+    disclaimer_text: str = "Research-only notification. Not investment advice. No live, broker, or paper order was created."
+    write_notification_reports: bool = True
+
+@dataclass
+class TelegramConfig:
+    enabled: bool = False
+    dry_run: bool = True
+    allow_real_send: bool = False
+    bot_token_env_var: str = "USA_SIGNAL_BOT_TELEGRAM_TOKEN"
+    chat_id_env_var: str = "USA_SIGNAL_BOT_TELEGRAM_CHAT_ID"
+    parse_mode: str = "none"
+    timeout_seconds: int = 10
+    disable_web_page_preview: bool = True
+    redact_token_in_logs: bool = True
+
+@dataclass
+class NotificationTemplatesConfig:
+    enabled: bool = True
+    include_scan_summary: bool = True
+    include_selected_candidates: bool = True
+    include_risk_summary: bool = True
+    include_portfolio_summary: bool = True
+    include_runtime_warnings: bool = True
+    include_runtime_errors: bool = True
+    max_candidates_in_message: int = 10
+    max_risk_decisions_in_message: int = 10
+    max_allocations_in_message: int = 10
+
+def validate_notifications_config(config: NotificationsConfig) -> None:
+    if config.max_message_length <= 0:
+        raise ValueError("max_message_length must be positive")
+    if config.max_queue_size <= 0:
+        raise ValueError("max_queue_size must be positive")
+    if config.duplicate_window_seconds <= 0:
+        raise ValueError("duplicate_window_seconds must be positive")
+    if config.rate_limit_per_minute <= 0:
+        raise ValueError("rate_limit_per_minute must be positive")
+    if config.include_disclaimer and not config.disclaimer_text:
+        raise ValueError("disclaimer_text must be provided if include_disclaimer is True")
+
+def validate_telegram_config(config: TelegramConfig) -> None:
+    if not config.bot_token_env_var:
+        raise ValueError("bot_token_env_var cannot be empty")
+    if not config.chat_id_env_var:
+        raise ValueError("chat_id_env_var cannot be empty")
+    if config.timeout_seconds <= 0:
+        raise ValueError("timeout_seconds must be positive")
+
+def validate_notification_templates_config(config: NotificationTemplatesConfig) -> None:
+    if config.max_candidates_in_message <= 0:
+        raise ValueError("max_candidates_in_message must be positive")
+    if config.max_risk_decisions_in_message <= 0:
+        raise ValueError("max_risk_decisions_in_message must be positive")
+    if config.max_allocations_in_message <= 0:
+        raise ValueError("max_allocations_in_message must be positive")
+
+
+@dataclass
 class AppConfig:
+    notifications: NotificationsConfig = field(default_factory=NotificationsConfig)
+    telegram: TelegramConfig = field(default_factory=TelegramConfig)
+    notification_templates: NotificationTemplatesConfig = field(default_factory=NotificationTemplatesConfig)
     basket_simulation: BasketSimulationConfigSchema = None
     allocation_replay: AllocationReplayConfig = None
     allocation_drift: AllocationDriftConfigSchema = None
@@ -2900,6 +2974,7 @@ class AppConfig:
 
 @dataclass
 class RuntimeConfig:
+    notification_step_enabled: bool = False
     enabled: bool = True
     default_mode: str = "manual_once"
     data_root: str = "data"
@@ -2915,6 +2990,8 @@ class RuntimeConfig:
 
 @dataclass
 class MarketScanConfig:
+    notify_default: bool = False
+    notification_channel_default: str = "dry_run"
     enabled: bool = True
     default_scope: str = "latest_eligible_universe"
     default_timeframes: List[str] = field(default_factory=lambda: ["1d"])

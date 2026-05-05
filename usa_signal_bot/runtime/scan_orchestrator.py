@@ -27,6 +27,7 @@ class MarketScanOrchestrator:
         self.fail_on_required = True
 
     def build_default_step_configs(self, request: MarketScanRequest) -> List[PipelineStepConfig]:
+
         return [
             PipelineStepConfig(step_name=PipelineStepName.PREFLIGHT, required=True),
             PipelineStepConfig(step_name=PipelineStepName.UNIVERSE_RESOLVE, required=True),
@@ -41,6 +42,7 @@ class MarketScanOrchestrator:
             PipelineStepConfig(step_name=PipelineStepName.PORTFOLIO_CONSTRUCTION, required=False),
             PipelineStepConfig(step_name=PipelineStepName.SCAN_REPORT, required=True),
             PipelineStepConfig(step_name=PipelineStepName.CLEANUP, required=False),
+            PipelineStepConfig(step_name=PipelineStepName.NOTIFICATION, required=False),
         ]
 
     def build_initial_context(self, request: MarketScanRequest, run_id: str) -> Dict[str, Any]:

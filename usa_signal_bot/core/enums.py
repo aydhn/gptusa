@@ -1117,6 +1117,7 @@ class PipelineStepName(str, Enum):
     PORTFOLIO_CONSTRUCTION = "portfolio_construction"
     SCAN_REPORT = "scan_report"
     CLEANUP = "cleanup"
+    NOTIFICATION = "notification"
 
 class PipelineStepStatus(str, Enum):
     NOT_STARTED = "not_started"
@@ -1159,3 +1160,62 @@ class RetryPolicy(str, Enum):
     STEP_ONCE = "step_once"
     STEP_TWICE = "step_twice"
     SAFE_LIMITED = "safe_limited"
+
+class NotificationChannel(str, Enum):
+    LOG_ONLY = "LOG_ONLY"
+    TELEGRAM = "TELEGRAM"
+    FILE = "FILE"
+    DRY_RUN = "DRY_RUN"
+
+class NotificationType(str, Enum):
+    SCAN_SUMMARY = "SCAN_SUMMARY"
+    SIGNAL_CANDIDATE = "SIGNAL_CANDIDATE"
+    SELECTED_CANDIDATES = "SELECTED_CANDIDATES"
+    RISK_DECISIONS = "RISK_DECISIONS"
+    PORTFOLIO_BASKET = "PORTFOLIO_BASKET"
+    BACKTEST_SUMMARY = "BACKTEST_SUMMARY"
+    RUNTIME_WARNING = "RUNTIME_WARNING"
+    RUNTIME_ERROR = "RUNTIME_ERROR"
+    HEALTH_SUMMARY = "HEALTH_SUMMARY"
+    CUSTOM = "CUSTOM"
+
+class NotificationPriority(str, Enum):
+    LOW = "LOW"
+    NORMAL = "NORMAL"
+    HIGH = "HIGH"
+    CRITICAL = "CRITICAL"
+
+class NotificationStatus(str, Enum):
+    CREATED = "CREATED"
+    QUEUED = "QUEUED"
+    SKIPPED = "SKIPPED"
+    SENT = "SENT"
+    FAILED = "FAILED"
+    DRY_RUN = "DRY_RUN"
+    SUPPRESSED = "SUPPRESSED"
+    RATE_LIMITED = "RATE_LIMITED"
+
+class NotificationDispatchStatus(str, Enum):
+    NOT_STARTED = "NOT_STARTED"
+    COMPLETED = "COMPLETED"
+    PARTIAL_SUCCESS = "PARTIAL_SUCCESS"
+    FAILED = "FAILED"
+    EMPTY = "EMPTY"
+    DRY_RUN_ONLY = "DRY_RUN_ONLY"
+
+class TelegramParseMode(str, Enum):
+    NONE = "NONE"
+    MARKDOWN = "MARKDOWN"
+    HTML = "HTML"
+
+class NotificationSuppressionReason(str, Enum):
+    DUPLICATE = "DUPLICATE"
+    RATE_LIMITED = "RATE_LIMITED"
+    CHANNEL_DISABLED = "CHANNEL_DISABLED"
+    MISSING_TOKEN = "MISSING_TOKEN"
+    MISSING_CHAT_ID = "MISSING_CHAT_ID"
+    EMPTY_MESSAGE = "EMPTY_MESSAGE"
+    TOO_LONG = "TOO_LONG"
+    DRY_RUN = "DRY_RUN"
+    DISABLED_BY_CONFIG = "DISABLED_BY_CONFIG"
+    UNKNOWN = "UNKNOWN"

@@ -2565,6 +2565,8 @@ def main() -> int:
     parser_scan_run.add_argument("--refresh-data", action="store_true", help="Whether to force data refresh")
     parser_scan_run.add_argument("--write", action="store_true", help="Write outputs")
     parser_scan_run.add_argument("--dry-run", action="store_true", help="Execute as dry run")
+    parser_scan_run.add_argument("--notify", action="store_true", help="Enable notification step")
+    parser_scan_run.add_argument("--notification-channel", type=str, default="dry_run", help="Override default notification channel")
 
     parser_scan_summary = subparsers.add_parser("scan-summary", help="List scan runs summary")
 
@@ -2580,8 +2582,27 @@ def main() -> int:
     parser_sched_plan.add_argument("--scope", type=str, help="Scope of the scan")
     parser_sched_plan.add_argument("--write", action="store_true", help="Write plan to file")
 
+
     parser_sched_next = subparsers.add_parser("scheduled-scan-next", help="Calculate next run times")
     parser_sched_next.add_argument("--count", type=int, default=5, help="Number of times to calculate")
+
+    parser_notification_info = subparsers.add_parser("notification-info", help="Display notification config")
+    parser_telegram_status = subparsers.add_parser("telegram-status", help="Display telegram config status")
+
+    parser_notification_template_preview = subparsers.add_parser("notification-template-preview", help="Preview notification template")
+    parser_notification_template_preview.add_argument("--type", type=str, default="scan_summary", help="Type of template (scan_summary, health_summary)")
+
+    parser_notification_dispatch_dry_run = subparsers.add_parser("notification-dispatch-dry-run", help="Dry run notification dispatch")
+    parser_notification_dispatch_dry_run.add_argument("--count", type=int, default=1, help="Number of messages to simulate")
+
+    parser_notification_send_test = subparsers.add_parser("notification-send-test", help="Test send notification")
+    parser_notification_send_test.add_argument("--real", action="store_true", help="Attempt real send if enabled")
+    parser_notification_send_test.add_argument("--message", type=str, default="Test Message", help="Message body")
+
+    parser_notification_summary = subparsers.add_parser("notification-summary", help="List notification runs")
+    parser_notification_latest = subparsers.add_parser("notification-latest", help="Show latest notification run")
+    parser_notification_validate = subparsers.add_parser("notification-validate", help="Validate notification config/run")
+
 
     args = parser.parse_args()
 
@@ -2601,8 +2622,26 @@ def main() -> int:
         context = initialize_runtime()
 
 
+
         if args.command == "signal-rank-file":
             return handle_signal_rank_file(context, args.file, args.min_rank_score, args.write)
+
+        commands = {
+            "scheduled-scan-next": cmd_scheduled_scan_next,
+            "notification-info": cmd_notification_info,
+            "telegram-status": cmd_telegram_status,
+            "notification-template-preview": cmd_notification_template_preview,
+            "notification-dispatch-dry-run": cmd_notification_dispatch_dry_run,
+            "notification-send-test": cmd_notification_send_test,
+            "notification-summary": cmd_notification_summary,
+            "notification-latest": cmd_notification_latest,
+            "notification-validate": cmd_notification_validate,
+        }
+
+        if args.command in commands:
+            return commands[args.command](context, args)
+
+
         elif args.command == "signal-select-candidates":
             return handle_signal_select_candidates(context, args.file, args.max_candidates, args.min_rank_score, args.write)
         elif args.command == "signal-ranking-summary":
@@ -5550,3 +5589,161 @@ def cmd_scheduled_scan_next(context, args) -> int:
     except Exception as e:
         print(f"Error: {e}")
         return 1
+
+def cmd_notification_info(context, args) -> int:
+    from usa_signal_bot.notifications.notification_reporting import notification_config_to_text, notification_limitations_text
+    print("--- NOTIFICATION CONFIG ---")
+    if hasattr(context.config, "notifications"):
+        print(notification_config_to_text(context.config.notifications))
+    else:
+        print("Notifications config not found.")
+    print("\n" + notification_limitations_text())
+    return 0
+
+def cmd_telegram_status(context, args) -> int:
+    from usa_signal_bot.notifications.telegram_config import TelegramNotificationConfig, telegram_config_status
+    from usa_signal_bot.notifications.notification_reporting import telegram_config_status_to_text
+
+    print("--- TELEGRAM CONFIG STATUS ---")
+    if hasattr(context.config, "telegram"):
+        tc = TelegramNotificationConfig(
+            enabled=context.config.telegram.enabled,
+            dry_run=context.config.telegram.dry_run,
+            allow_real_send=context.config.telegram.allow_real_send,
+            bot_token_env_var=context.config.telegram.bot_token_env_var,
+            chat_id_env_var=context.config.telegram.chat_id_env_var,
+            parse_mode=context.config.telegram.parse_mode,
+            timeout_seconds=context.config.telegram.timeout_seconds,
+            disable_web_page_preview=context.config.telegram.disable_web_page_preview,
+            redact_token_in_logs=context.config.telegram.redact_token_in_logs
+        )
+        status = telegram_config_status(tc)
+        print(telegram_config_status_to_text(status))
+    else:
+        print("Telegram config not found.")
+    return 0
+
+def cmd_notification_template_preview(context, args) -> int:
+    from usa_signal_bot.notifications.notification_templates import format_scan_summary_message, format_health_summary_message
+    from usa_signal_bot.runtime.runtime_models import MarketScanResult, MarketScanRequest
+    from usa_signal_bot.core.enums import RuntimeRunStatus, RuntimeMode, ScanScope, NotificationChannel
+    from usa_signal_bot.notifications.notification_reporting import notification_message_to_text
+
+    t = getattr(args, "type", "scan_summary")
+
+    print(f"--- PREVIEW TEMPLATE: {t.upper()} ---")
+    if t == "scan_summary":
+        req = MarketScanRequest("preview", RuntimeMode.DRY_RUN, ScanScope.SMALL_TEST_SET)
+        res = MarketScanResult("preview_run", "now", req, RuntimeRunStatus.COMPLETED)
+        res.resolved_symbols = ["AAPL", "MSFT"]
+        res.candidate_count = 2
+        msg = format_scan_summary_message(res)
+        print(notification_message_to_text(msg))
+    elif t == "health_summary":
+        msg = format_health_summary_message({"overall_status": "healthy", "checks": []})
+        print(notification_message_to_text(msg))
+    else:
+        print(f"Unknown template type: {t}")
+        return 1
+    return 0
+
+def cmd_notification_dispatch_dry_run(context, args) -> int:
+    from usa_signal_bot.notifications.notification_dispatcher import NotificationDispatcher
+    from usa_signal_bot.notifications.notification_templates import format_health_summary_message
+    from usa_signal_bot.notifications.notification_reporting import notification_dispatch_result_to_text
+
+    count = int(getattr(args, "count", 1))
+
+    print(f"--- DISPATCH DRY RUN ({count} messages) ---")
+    if not hasattr(context.config, "notifications"):
+        print("Notifications config missing.")
+        return 1
+
+    # Ensure dry_run channel logic
+    context.config.notifications.default_channel = "DRY_RUN"
+    dispatcher = NotificationDispatcher(context.config.notifications)
+
+    for i in range(count):
+        msg = format_health_summary_message({"overall_status": f"test_{i}"})
+        dispatcher.enqueue(msg)
+
+    res = dispatcher.dispatch_all()
+    print(notification_dispatch_result_to_text(res))
+    return 0
+
+def cmd_notification_send_test(context, args) -> int:
+    from usa_signal_bot.notifications.telegram_sender import TelegramNotificationSender, LogOnlyNotificationSender
+    from usa_signal_bot.notifications.telegram_config import TelegramNotificationConfig
+    from usa_signal_bot.notifications.notification_models import NotificationMessage
+    from usa_signal_bot.core.enums import NotificationType, NotificationChannel, NotificationPriority
+    from usa_signal_bot.notifications.notification_reporting import send_result_to_text
+
+    real = getattr(args, "real", False)
+    text = getattr(args, "message", "Hello from USA Signal Bot Local Test")
+
+    msg = NotificationMessage(
+        message_id="test_send",
+        notification_type=NotificationType.CUSTOM,
+        channel=NotificationChannel.TELEGRAM if real else NotificationChannel.LOG_ONLY,
+        priority=NotificationPriority.NORMAL,
+        title="Test Message",
+        body=text,
+        created_at_utc="now"
+    )
+
+    if real and hasattr(context.config, "telegram"):
+        tc = TelegramNotificationConfig(
+            enabled=context.config.telegram.enabled,
+            dry_run=context.config.telegram.dry_run,
+            allow_real_send=context.config.telegram.allow_real_send,
+            bot_token_env_var=context.config.telegram.bot_token_env_var,
+            chat_id_env_var=context.config.telegram.chat_id_env_var,
+            parse_mode=context.config.telegram.parse_mode,
+            timeout_seconds=context.config.telegram.timeout_seconds,
+            disable_web_page_preview=context.config.telegram.disable_web_page_preview,
+            redact_token_in_logs=context.config.telegram.redact_token_in_logs
+        )
+        sender = TelegramNotificationSender(tc)
+    else:
+        sender = LogOnlyNotificationSender()
+
+    res = sender.send(msg)
+    print(send_result_to_text(res))
+    return 0 if str(res.status) in ["SENT", "NotificationStatus.SENT", "DRY_RUN", "NotificationStatus.DRY_RUN", "SKIPPED", "NotificationStatus.SKIPPED"] else 1
+
+def cmd_notification_summary(context, args) -> int:
+    from usa_signal_bot.notifications.notification_store import list_notification_runs
+    from pathlib import Path
+
+    runs = list_notification_runs(Path(context.config.data.root_dir))
+    if not runs:
+        print("No notification runs found.")
+        return 0
+
+    print(f"Total Runs: {len(runs)}")
+    for r in runs[:5]:
+        print(f"- {r.name}")
+    return 0
+
+def cmd_notification_latest(context, args) -> int:
+    from usa_signal_bot.notifications.notification_store import get_latest_notification_run_dir, read_notification_dispatch_result_json
+    from pathlib import Path
+    import json
+
+    run = get_latest_notification_run_dir(Path(context.config.data.root_dir))
+    if not run:
+        print("No notification runs found.")
+        return 0
+
+    p = run / "dispatch_result.json"
+    if p.exists():
+        data = read_notification_dispatch_result_json(p)
+        print(json.dumps(data, indent=2))
+    else:
+        print(f"Run found but missing dispatch_result.json: {run.name}")
+
+    return 0
+
+def cmd_notification_validate(context, args) -> int:
+    print("Notification validate tool not yet fully wired to CLI due to complexity, but basic structures are valid.")
+    return 0

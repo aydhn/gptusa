@@ -63,6 +63,8 @@ class MarketScanRequest:
     write_outputs: bool = True
     output_level: ScanOutputLevel = ScanOutputLevel.NORMAL
     dry_run: bool = False
+    notify: bool = False
+    notification_channel: str = 'dry_run'
     metadata: Dict[str, Any] = field(default_factory=dict)
 
 @dataclass
@@ -148,6 +150,8 @@ def market_scan_request_to_dict(request: MarketScanRequest) -> dict:
         "write_outputs": request.write_outputs,
         "output_level": request.output_level.value if isinstance(request.output_level, ScanOutputLevel) else request.output_level,
         "dry_run": request.dry_run,
+        "notify": request.notify,
+        "notification_channel": request.notification_channel,
         "metadata": request.metadata,
     }
 
