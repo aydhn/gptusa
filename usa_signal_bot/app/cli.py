@@ -2539,6 +2539,50 @@ def main() -> int:
     parser_basket_validate.add_argument("--run-id", type=str)
     parser_basket_validate.add_argument("--latest", action="store_true")
 
+
+    # Phase 34 Commands
+    parser_runtime_info = subparsers.add_parser("runtime-info", help="Display runtime config info")
+
+    parser_runtime_lock = subparsers.add_parser("runtime-lock-status", help="Check runtime lock status")
+
+    parser_runtime_clear_stale_lock = subparsers.add_parser("runtime-clear-stale-lock", help="Clear stale runtime lock")
+
+    parser_runtime_stop_req = subparsers.add_parser("runtime-stop-request", help="Request a safe stop")
+    parser_runtime_stop_req.add_argument("--reason", type=str, help="Reason for stop")
+
+    parser_runtime_stop_clr = subparsers.add_parser("runtime-stop-clear", help="Clear a safe stop request")
+
+    parser_scan_dry_run = subparsers.add_parser("scan-dry-run", help="Execute a dry run of the market scan")
+    parser_scan_dry_run.add_argument("--symbols", type=str, help="Comma separated symbols")
+    parser_scan_dry_run.add_argument("--timeframes", type=str, help="Comma separated timeframes")
+    parser_scan_dry_run.add_argument("--max-symbols", type=int, help="Max symbols to process")
+
+    parser_scan_run = subparsers.add_parser("scan-run-once", help="Run a market scan pipeline once")
+    parser_scan_run.add_argument("--symbols", type=str, help="Comma separated symbols")
+    parser_scan_run.add_argument("--timeframes", type=str, help="Comma separated timeframes")
+    parser_scan_run.add_argument("--scope", type=str, help="Scope of the scan")
+    parser_scan_run.add_argument("--max-symbols", type=int, help="Max symbols to process")
+    parser_scan_run.add_argument("--refresh-data", action="store_true", help="Whether to force data refresh")
+    parser_scan_run.add_argument("--write", action="store_true", help="Write outputs")
+    parser_scan_run.add_argument("--dry-run", action="store_true", help="Execute as dry run")
+
+    parser_scan_summary = subparsers.add_parser("scan-summary", help="List scan runs summary")
+
+    parser_scan_latest = subparsers.add_parser("scan-latest", help="Show latest scan run details")
+
+    parser_scan_validate = subparsers.add_parser("scan-validate", help="Validate a scan run")
+    parser_scan_validate.add_argument("--run-id", type=str, help="Specific run id to validate")
+    parser_scan_validate.add_argument("--latest", action="store_true", help="Validate latest run")
+
+    parser_sched_plan = subparsers.add_parser("scheduled-scan-plan", help="Generate a scheduled scan plan")
+    parser_sched_plan.add_argument("--interval-minutes", type=int, help="Interval in minutes")
+    parser_sched_plan.add_argument("--max-runs-per-day", type=int, help="Max runs per day")
+    parser_sched_plan.add_argument("--scope", type=str, help="Scope of the scan")
+    parser_sched_plan.add_argument("--write", action="store_true", help="Write plan to file")
+
+    parser_sched_next = subparsers.add_parser("scheduled-scan-next", help="Calculate next run times")
+    parser_sched_next.add_argument("--count", type=int, default=5, help="Number of times to calculate")
+
     args = parser.parse_args()
 
 
@@ -5197,3 +5241,312 @@ def handle_basket_latest(context) -> int:
 def handle_basket_validate(context, run_id: str, latest: bool) -> int:
     print("Validation summary: Valid")
     return 0
+
+# Phase 34 commands
+def cmd_runtime_info(context, args) -> int:
+    try:
+        cfg = context.config.runtime
+        print(f"Runtime Configuration:")
+        print(f"  Enabled: {cfg.enabled}")
+        print(f"  Mode: {cfg.default_mode}")
+        print(f"  Lock Dir: {cfg.lock_dir}")
+        print(f"  Stop File: {cfg.stop_file}")
+        print(f"  Max Duration: {cfg.max_run_duration_seconds}s")
+        print("\nNote: This scan result is NOT investment advice. No live/paper/broker order routing is performed. No Telegram messages are sent in this phase.")
+        return 0
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
+
+def cmd_runtime_lock_status(context, args) -> int:
+    from usa_signal_bot.runtime.runtime_lock import RuntimeLockManager
+    from pathlib import Path
+    try:
+        lock_dir = Path(context.config.data.root_dir) / "runtime" / "locks"
+        mgr = RuntimeLockManager(lock_dir)
+        is_locked = mgr.is_locked()
+        print(f"Locked: {is_locked}")
+        if is_locked:
+            info = mgr.read_lock()
+            if info:
+                print(f"  Run ID: {info.run_id}")
+                print(f"  Acquired At: {info.acquired_at_utc}")
+                print(f"  Expires At: {info.expires_at_utc}")
+        return 0
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
+
+def cmd_runtime_clear_stale_lock(context, args) -> int:
+    from usa_signal_bot.runtime.runtime_lock import RuntimeLockManager
+    from pathlib import Path
+    try:
+        lock_dir = Path(context.config.data.root_dir) / "runtime" / "locks"
+        mgr = RuntimeLockManager(lock_dir)
+        cleared = mgr.clear_stale_lock()
+        if cleared:
+            print("Stale lock cleared.")
+        else:
+            print("No stale lock to clear.")
+        return 0
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
+
+def cmd_runtime_stop_request(context, args) -> int:
+    from usa_signal_bot.runtime.safe_stop import SafeStopManager
+    from pathlib import Path
+    try:
+        stop_file = Path(context.config.data.root_dir) / "runtime" / "stop.json"
+        mgr = SafeStopManager(stop_file)
+        reason = getattr(args, "reason", "Manual CLI request")
+        mgr.request_stop(reason=reason, requested_by="cli")
+        print(f"Safe stop requested. Reason: {reason}")
+        return 0
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
+
+def cmd_runtime_stop_clear(context, args) -> int:
+    from usa_signal_bot.runtime.safe_stop import SafeStopManager
+    from pathlib import Path
+    try:
+        stop_file = Path(context.config.data.root_dir) / "runtime" / "stop.json"
+        mgr = SafeStopManager(stop_file)
+        mgr.clear_stop()
+        print("Safe stop flag cleared.")
+        return 0
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
+
+def cmd_scan_dry_run(context, args) -> int:
+    from usa_signal_bot.runtime.scan_orchestrator import MarketScanOrchestrator
+    from usa_signal_bot.runtime.runtime_models import MarketScanRequest
+    from usa_signal_bot.core.enums import RuntimeMode, ScanScope, ScanOutputLevel
+    from usa_signal_bot.runtime.scan_reporting import market_scan_result_to_text
+    from pathlib import Path
+    try:
+        root = Path(context.config.data.root_dir)
+        orch = MarketScanOrchestrator(root)
+
+        symbols = getattr(args, "symbols", None)
+        if symbols:
+            symbols = [s.strip() for s in symbols.split(",") if s.strip()]
+
+        timeframes = getattr(args, "timeframes", "1d")
+        if timeframes:
+            timeframes = [t.strip() for t in timeframes.split(",") if t.strip()]
+
+        max_symbols = getattr(args, "max_symbols", None)
+        if max_symbols is not None:
+            max_symbols = int(max_symbols)
+
+        req = MarketScanRequest(
+            run_name="dry_run_cli",
+            mode=RuntimeMode.DRY_RUN,
+            scope=ScanScope.EXPLICIT_SYMBOLS if symbols else ScanScope.SMALL_TEST_SET,
+            symbols=symbols,
+            timeframes=timeframes,
+            max_symbols=max_symbols,
+            dry_run=True,
+            output_level=ScanOutputLevel.VERBOSE
+        )
+
+        result = orch.run_scan(req)
+        print(market_scan_result_to_text(result))
+        return 0 if str(result.status) in ["completed", "RuntimeRunStatus.COMPLETED"] else 1
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
+
+def cmd_scan_run_once(context, args) -> int:
+    from usa_signal_bot.runtime.scan_orchestrator import MarketScanOrchestrator
+    from usa_signal_bot.runtime.runtime_models import MarketScanRequest
+    from usa_signal_bot.core.enums import RuntimeMode, ScanScope
+    from usa_signal_bot.runtime.scan_reporting import market_scan_result_to_text
+    from pathlib import Path
+    try:
+        root = Path(context.config.data.root_dir)
+        orch = MarketScanOrchestrator(root)
+
+        symbols = getattr(args, "symbols", None)
+        if symbols:
+            symbols = [s.strip() for s in symbols.split(",") if s.strip()]
+
+        timeframes = getattr(args, "timeframes", "1d")
+        if timeframes:
+            timeframes = [t.strip() for t in timeframes.split(",") if t.strip()]
+
+        scope_str = getattr(args, "scope", "small_test_set")
+        scope = ScanScope(scope_str)
+
+        max_symbols = getattr(args, "max_symbols", None)
+        if max_symbols is not None:
+            max_symbols = int(max_symbols)
+
+        req = MarketScanRequest(
+            run_name="run_once_cli",
+            mode=RuntimeMode.MANUAL_ONCE,
+            scope=scope,
+            symbols=symbols,
+            timeframes=timeframes,
+            max_symbols=max_symbols,
+            refresh_data=getattr(args, "refresh_data", False),
+            write_outputs=getattr(args, "write", True),
+            dry_run=getattr(args, "dry_run", False)
+        )
+
+        result = orch.run_scan(req)
+        print(market_scan_result_to_text(result))
+        return 0 if str(result.status) in ["completed", "RuntimeRunStatus.COMPLETED", "partial_success", "RuntimeRunStatus.PARTIAL_SUCCESS"] else 1
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
+
+def cmd_scan_summary(context, args) -> int:
+    from usa_signal_bot.runtime.scan_store import list_scan_runs, read_market_scan_result_json, scan_store_dir
+    from pathlib import Path
+    try:
+        root = Path(context.config.data.root_dir)
+        runs = list_scan_runs(root)
+        if not runs:
+            print("No scan runs found.")
+            return 0
+
+        for run_dir in runs:
+            res_file = run_dir / "result.json"
+            if res_file.exists():
+                data = read_market_scan_result_json(res_file)
+                run_id = data.get("run_id", "unknown")
+                status = data.get("status", "unknown")
+                cands = data.get("candidate_count", 0)
+                print(f"Run: {run_id} | Status: {status} | Candidates: {cands}")
+            else:
+                print(f"Run: {run_dir.name} | Status: INCOMPLETE")
+        return 0
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
+
+def cmd_scan_latest(context, args) -> int:
+    from usa_signal_bot.runtime.scan_store import get_latest_scan_run_dir, read_market_scan_result_json
+    from usa_signal_bot.runtime.runtime_models import market_scan_result_to_dict
+    from pathlib import Path
+    import json
+    try:
+        root = Path(context.config.data.root_dir)
+        run_dir = get_latest_scan_run_dir(root)
+        if not run_dir:
+            print("No runs found.")
+            return 0
+
+        res_file = run_dir / "result.json"
+        if not res_file.exists():
+            print(f"Latest run {run_dir.name} is missing result.json")
+            return 0
+
+        data = read_market_scan_result_json(res_file)
+        print(json.dumps(data, indent=2))
+        return 0
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
+
+def cmd_scan_validate(context, args) -> int:
+    from usa_signal_bot.runtime.scan_store import get_latest_scan_run_dir, read_market_scan_result_json
+    from usa_signal_bot.runtime.runtime_validation import validate_market_scan_result, runtime_validation_report_to_text
+    from usa_signal_bot.runtime.runtime_models import MarketScanResult, MarketScanRequest, PipelineStepResult, ScheduledScanPlan
+    from usa_signal_bot.core.enums import RuntimeMode, ScanScope, RuntimeRunStatus
+    from pathlib import Path
+    try:
+        root = Path(context.config.data.root_dir)
+        run_id = getattr(args, "run_id", None)
+        latest = getattr(args, "latest", False)
+
+        run_dir = None
+        if latest:
+            run_dir = get_latest_scan_run_dir(root)
+        elif run_id:
+            run_dir = root / "runtime" / "scans" / run_id
+
+        if not run_dir or not run_dir.exists():
+            print("Run not found.")
+            return 1
+
+        res_file = run_dir / "result.json"
+        if not res_file.exists():
+            print("result.json not found in run dir.")
+            return 1
+
+        data = read_market_scan_result_json(res_file)
+
+        # Manual deserialization for validation checking
+        req_data = data.get("request", {})
+        request = MarketScanRequest(
+            run_name=req_data.get("run_name", "validate"),
+            mode=RuntimeMode.MANUAL_ONCE,
+            scope=ScanScope.SMALL_TEST_SET,
+            timeframes=req_data.get("timeframes", ["1d"]),
+            provider_name=req_data.get("provider_name", "yfinance"),
+        )
+        result = MarketScanResult(
+            run_id=data.get("run_id", "val_run"),
+            created_at_utc=data.get("created_at_utc", ""),
+            request=request,
+            status=RuntimeRunStatus.COMPLETED,
+            step_results=[]
+        )
+
+        report = validate_market_scan_result(result)
+        print(runtime_validation_report_to_text(report))
+        return 0 if report.valid else 1
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
+
+def cmd_scheduled_scan_plan(context, args) -> int:
+    from usa_signal_bot.runtime.scan_scheduler import build_default_scheduled_scan_plan, scheduled_scan_plan_to_text, write_scheduled_scan_plan_json
+    from pathlib import Path
+    try:
+        plan = build_default_scheduled_scan_plan()
+
+        iv = getattr(args, "interval_minutes", None)
+        if iv:
+            plan.interval_minutes = int(iv)
+
+        mr = getattr(args, "max_runs_per_day", None)
+        if mr:
+            plan.max_runs_per_day = int(mr)
+
+        sc = getattr(args, "scope", None)
+        if sc:
+            from usa_signal_bot.core.enums import ScanScope
+            plan.scan_request_template.scope = ScanScope(sc)
+
+        print(scheduled_scan_plan_to_text(plan))
+
+        if getattr(args, "write", False):
+            p = Path(context.config.data.root_dir) / "runtime" / "plan.json"
+            write_scheduled_scan_plan_json(p, plan)
+            print(f"Plan written to {p}")
+
+        print("\nNote: This tool does NOT install OS cron or background daemons.")
+        return 0
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
+
+def cmd_scheduled_scan_next(context, args) -> int:
+    from usa_signal_bot.runtime.scan_scheduler import build_default_scheduled_scan_plan, calculate_next_run_times
+    try:
+        plan = build_default_scheduled_scan_plan()
+        count = getattr(args, "count", 5)
+        times = calculate_next_run_times(plan, count=int(count))
+        print("Next expected run times (Simulation):")
+        for t in times:
+            print(f"  {t}")
+        return 0
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1

@@ -402,3 +402,59 @@ concentration_guards:
   reject_breaches: false
   cap_breaches: true
   write_concentration_reports: true
+
+runtime:
+  enabled: true
+  default_mode: "manual_once"
+  data_root: "data"
+  lock_dir: "data/runtime/locks"
+  stop_file: "data/runtime/stop.json"
+  stale_lock_after_seconds: 7200
+  max_run_duration_seconds: 3600
+  continue_on_optional_step_failure: true
+  fail_on_required_step_failure: true
+  write_runtime_events: true
+  write_scan_reports: true
+  warn_no_live_execution: true
+
+market_scan:
+  enabled: true
+  default_scope: "latest_eligible_universe"
+  default_timeframes:
+    - "1d"
+  default_composite_set: "core"
+  default_rule_strategy_set: "basic_rules"
+  max_symbols_per_scan: 100
+  refresh_data_default: false
+  write_outputs_default: true
+  dry_run_default: false
+  output_level: "normal"
+  small_test_symbols:
+    - "SPY"
+    - "QQQ"
+    - "AAPL"
+
+pipeline_steps:
+  enabled: true
+  preflight_required: true
+  universe_resolve_required: true
+  data_refresh_required: false
+  data_readiness_required: false
+  feature_pipeline_required: true
+  strategy_run_required: true
+  signal_ranking_required: true
+  candidate_selection_required: true
+  risk_evaluation_required: false
+  portfolio_construction_required: false
+  cleanup_required: false
+
+scheduled_scan:
+  enabled: true
+  plan_only: true
+  interval_minutes: 60
+  max_runs_per_day: 8
+  market_hours_only: false
+  timezone: "Europe/Istanbul"
+  allow_background_daemon: false
+  allow_os_cron_install: false
+  write_plan_file: true
