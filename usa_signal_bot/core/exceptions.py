@@ -494,3 +494,27 @@ class RiskStorageError(RiskEngineError):
 
 class RiskReportingError(RiskEngineError):
     pass
+
+class PortfolioConstructionError(USASignalBotError):
+    pass
+
+class PortfolioCandidateError(PortfolioConstructionError):
+    pass
+
+class AllocationMethodError(PortfolioConstructionError):
+    pass
+
+class RiskBudgetingError(PortfolioConstructionError):
+    pass
+
+class ConcentrationGuardError(PortfolioConstructionError):
+    pass
+
+class PortfolioValidationError(PortfolioConstructionError):
+    pass
+
+class PortfolioStorageError(PortfolioConstructionError):
+    pass
+
+class PortfolioReportingError(PortfolioConstructionError):
+    pass

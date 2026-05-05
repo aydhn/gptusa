@@ -729,3 +729,83 @@ def check_sensitivity_store_health(context: 'RuntimeContext') -> HealthCheckResu
         return HealthCheckResult("Sensitivity Store Health", True, "Store dir reachable", "Store")
     except Exception as e:
         return HealthCheckResult("Sensitivity Store Health", False, f"Store dir error: {str(e)}", "Store", {"error": str(e)})
+
+def check_portfolio_construction_config_health(context: 'RuntimeContext') -> HealthCheckResult:
+    try:
+        from usa_signal_bot.core.config_schema import validate_portfolio_construction_config, validate_allocation_limits_config, validate_concentration_guards_config
+
+        cfg = context.config
+        if cfg.portfolio_construction:
+            validate_portfolio_construction_config(cfg.portfolio_construction)
+        if cfg.allocation_limits:
+            validate_allocation_limits_config(cfg.allocation_limits)
+        if cfg.concentration_guards:
+            validate_concentration_guards_config(cfg.concentration_guards)
+
+        return HealthCheckResult("portfolio_config", HealthCheckStatus.PASSED, "Portfolio config is valid.")
+    except Exception as e:
+        return HealthCheckResult("portfolio_config", HealthCheckStatus.FAILED, f"Portfolio config invalid: {e}")
+
+def check_allocation_methods_health(context: 'RuntimeContext') -> HealthCheckResult:
+    try:
+        from usa_signal_bot.portfolio.allocation_methods import allocate_equal_weight, allocate_rank_weighted
+        from usa_signal_bot.portfolio.portfolio_models import AllocationRequest, PortfolioCandidate
+        from usa_signal_bot.core.enums import SignalAction, AllocationMethod, PortfolioCandidateStatus
+
+        candidates = [
+            PortfolioCandidate("1", "AAPL", "1d", SignalAction.BUY, 0, 0, status=PortfolioCandidateStatus.ELIGIBLE),
+            PortfolioCandidate("2", "MSFT", "1d", SignalAction.BUY, 0, 0, status=PortfolioCandidateStatus.ELIGIBLE)
+        ]
+
+        req = AllocationRequest("req", candidates, 100000, 100000, AllocationMethod.EQUAL_WEIGHT, 0.8, "")
+        allocs1 = allocate_equal_weight(req)
+
+        req.method = AllocationMethod.RANK_WEIGHTED
+        allocs2 = allocate_rank_weighted(req)
+
+        return HealthCheckResult("allocation_methods", HealthCheckStatus.PASSED, "Allocation methods working.")
+    except Exception as e:
+        return HealthCheckResult("allocation_methods", HealthCheckStatus.FAILED, f"Allocation methods failed: {e}")
+
+def check_risk_budgeting_health(context: 'RuntimeContext') -> HealthCheckResult:
+    try:
+        from usa_signal_bot.portfolio.risk_budgeting import build_risk_budget_report
+        build_risk_budget_report([], 100000)
+        return HealthCheckResult("risk_budgeting", HealthCheckStatus.PASSED, "Risk budget builder working.")
+    except Exception as e:
+        return HealthCheckResult("risk_budgeting", HealthCheckStatus.FAILED, f"Risk budget failed: {e}")
+
+def check_concentration_guards_health(context: 'RuntimeContext') -> HealthCheckResult:
+    try:
+        from usa_signal_bot.portfolio.concentration_guards import build_concentration_report
+        build_concentration_report([])
+        return HealthCheckResult("concentration_guards", HealthCheckStatus.PASSED, "Concentration report builder working.")
+    except Exception as e:
+        return HealthCheckResult("concentration_guards", HealthCheckStatus.FAILED, f"Concentration guards failed: {e}")
+
+def check_portfolio_engine_health(context: 'RuntimeContext') -> HealthCheckResult:
+    try:
+        from usa_signal_bot.portfolio.portfolio_engine import PortfolioConstructionEngine
+        from usa_signal_bot.portfolio.portfolio_models import AllocationRequest, PortfolioCandidate
+        from usa_signal_bot.core.enums import SignalAction, AllocationMethod, PortfolioCandidateStatus
+
+        candidates = [
+            PortfolioCandidate("1", "AAPL", "1d", SignalAction.BUY, 0, 0, status=PortfolioCandidateStatus.ELIGIBLE),
+            PortfolioCandidate("2", "MSFT", "1d", SignalAction.BUY, 0, 0, status=PortfolioCandidateStatus.ELIGIBLE)
+        ]
+        req = AllocationRequest("req", candidates, 100000, 100000, AllocationMethod.EQUAL_WEIGHT, 0.8, "")
+
+        engine = PortfolioConstructionEngine()
+        result = engine.construct_portfolio(req)
+
+        return HealthCheckResult("portfolio_engine", HealthCheckStatus.PASSED, "Portfolio engine working.")
+    except Exception as e:
+        return HealthCheckResult("portfolio_engine", HealthCheckStatus.FAILED, f"Portfolio engine failed: {e}")
+
+def check_portfolio_store_health(context: 'RuntimeContext') -> HealthCheckResult:
+    try:
+        from usa_signal_bot.portfolio.portfolio_store import portfolio_store_dir
+        portfolio_store_dir(context.data_root)
+        return HealthCheckResult("portfolio_store", HealthCheckStatus.PASSED, "Portfolio store dir writable.")
+    except Exception as e:
+        return HealthCheckResult("portfolio_store", HealthCheckStatus.FAILED, f"Portfolio store failed: {e}")

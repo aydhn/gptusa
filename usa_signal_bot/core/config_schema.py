@@ -4,10 +4,104 @@ from typing import List, Optional, Dict, Any
 from dataclasses import dataclass, field
 
 @dataclass
+class PortfolioConstructionConfig:
+    enabled: bool
+    default_method: str
+    available_methods: list[str]
+    max_total_allocation_pct: float
+    cash_buffer_pct: float
+    allow_fractional_quantity: bool
+    normalize_weights: bool
+    write_portfolio_reports: bool
+    warn_not_optimizer: bool
+    warn_not_investment_advice: bool
+
+@dataclass
+class AllocationLimitsConfig:
+    enabled: bool
+    max_candidate_weight: float
+    min_candidate_weight: float
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_total_candidates: int
+    reject_missing_price: bool
+
+@dataclass
+class RiskBudgetingConfig:
+    enabled: bool
+    max_total_budget_pct: float
+    max_symbol_budget_pct: float
+    max_strategy_budget_pct: float
+    max_timeframe_budget_pct: float
+    max_single_candidate_budget_pct: float
+    min_cash_buffer_pct: float
+    enforce_budget: bool
+    write_budget_reports: bool
+
+@dataclass
+class ConcentrationGuardsConfig:
+    enabled: bool
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_single_candidate_weight: float
+    reject_breaches: bool
+    cap_breaches: bool
+    write_concentration_reports: bool
+
+@dataclass
 class ProjectConfig:
     name: str = "USA Signal Bot"
     version: str = "0.2.0"
     timezone: str = "America/New_York"
+
+@dataclass
+class PortfolioConstructionConfig:
+    enabled: bool
+    default_method: str
+    available_methods: list[str]
+    max_total_allocation_pct: float
+    cash_buffer_pct: float
+    allow_fractional_quantity: bool
+    normalize_weights: bool
+    write_portfolio_reports: bool
+    warn_not_optimizer: bool
+    warn_not_investment_advice: bool
+
+@dataclass
+class AllocationLimitsConfig:
+    enabled: bool
+    max_candidate_weight: float
+    min_candidate_weight: float
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_total_candidates: int
+    reject_missing_price: bool
+
+@dataclass
+class RiskBudgetingConfig:
+    enabled: bool
+    max_total_budget_pct: float
+    max_symbol_budget_pct: float
+    max_strategy_budget_pct: float
+    max_timeframe_budget_pct: float
+    max_single_candidate_budget_pct: float
+    min_cash_buffer_pct: float
+    enforce_budget: bool
+    write_budget_reports: bool
+
+@dataclass
+class ConcentrationGuardsConfig:
+    enabled: bool
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_single_candidate_weight: float
+    reject_breaches: bool
+    cap_breaches: bool
+    write_concentration_reports: bool
 
 @dataclass
 class RuntimeConfig:
@@ -17,6 +111,53 @@ class RuntimeConfig:
     dashboard_enabled: bool = False
     dry_run: bool = True
     fail_fast: bool = True
+
+@dataclass
+class PortfolioConstructionConfig:
+    enabled: bool
+    default_method: str
+    available_methods: list[str]
+    max_total_allocation_pct: float
+    cash_buffer_pct: float
+    allow_fractional_quantity: bool
+    normalize_weights: bool
+    write_portfolio_reports: bool
+    warn_not_optimizer: bool
+    warn_not_investment_advice: bool
+
+@dataclass
+class AllocationLimitsConfig:
+    enabled: bool
+    max_candidate_weight: float
+    min_candidate_weight: float
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_total_candidates: int
+    reject_missing_price: bool
+
+@dataclass
+class RiskBudgetingConfig:
+    enabled: bool
+    max_total_budget_pct: float
+    max_symbol_budget_pct: float
+    max_strategy_budget_pct: float
+    max_timeframe_budget_pct: float
+    max_single_candidate_budget_pct: float
+    min_cash_buffer_pct: float
+    enforce_budget: bool
+    write_budget_reports: bool
+
+@dataclass
+class ConcentrationGuardsConfig:
+    enabled: bool
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_single_candidate_weight: float
+    reject_breaches: bool
+    cap_breaches: bool
+    write_concentration_reports: bool
 
 @dataclass
 class DataConfig:
@@ -30,6 +171,53 @@ class DataConfig:
     retry_attempts: int = 3
 
 @dataclass
+class PortfolioConstructionConfig:
+    enabled: bool
+    default_method: str
+    available_methods: list[str]
+    max_total_allocation_pct: float
+    cash_buffer_pct: float
+    allow_fractional_quantity: bool
+    normalize_weights: bool
+    write_portfolio_reports: bool
+    warn_not_optimizer: bool
+    warn_not_investment_advice: bool
+
+@dataclass
+class AllocationLimitsConfig:
+    enabled: bool
+    max_candidate_weight: float
+    min_candidate_weight: float
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_total_candidates: int
+    reject_missing_price: bool
+
+@dataclass
+class RiskBudgetingConfig:
+    enabled: bool
+    max_total_budget_pct: float
+    max_symbol_budget_pct: float
+    max_strategy_budget_pct: float
+    max_timeframe_budget_pct: float
+    max_single_candidate_budget_pct: float
+    min_cash_buffer_pct: float
+    enforce_budget: bool
+    write_budget_reports: bool
+
+@dataclass
+class ConcentrationGuardsConfig:
+    enabled: bool
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_single_candidate_weight: float
+    reject_breaches: bool
+    cap_breaches: bool
+    write_concentration_reports: bool
+
+@dataclass
 class LoggingConfig:
     level: str = "INFO"
     log_dir: str = "data/logs"
@@ -40,11 +228,105 @@ class LoggingConfig:
     backup_count: int = 5
 
 @dataclass
+class PortfolioConstructionConfig:
+    enabled: bool
+    default_method: str
+    available_methods: list[str]
+    max_total_allocation_pct: float
+    cash_buffer_pct: float
+    allow_fractional_quantity: bool
+    normalize_weights: bool
+    write_portfolio_reports: bool
+    warn_not_optimizer: bool
+    warn_not_investment_advice: bool
+
+@dataclass
+class AllocationLimitsConfig:
+    enabled: bool
+    max_candidate_weight: float
+    min_candidate_weight: float
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_total_candidates: int
+    reject_missing_price: bool
+
+@dataclass
+class RiskBudgetingConfig:
+    enabled: bool
+    max_total_budget_pct: float
+    max_symbol_budget_pct: float
+    max_strategy_budget_pct: float
+    max_timeframe_budget_pct: float
+    max_single_candidate_budget_pct: float
+    min_cash_buffer_pct: float
+    enforce_budget: bool
+    write_budget_reports: bool
+
+@dataclass
+class ConcentrationGuardsConfig:
+    enabled: bool
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_single_candidate_weight: float
+    reject_breaches: bool
+    cap_breaches: bool
+    write_concentration_reports: bool
+
+@dataclass
 class TelegramConfig:
     enabled: bool = False
     bot_token_env: str = "TELEGRAM_BOT_TOKEN"
     chat_id_env: str = "TELEGRAM_CHAT_ID"
     parse_mode: str = "HTML"
+
+@dataclass
+class PortfolioConstructionConfig:
+    enabled: bool
+    default_method: str
+    available_methods: list[str]
+    max_total_allocation_pct: float
+    cash_buffer_pct: float
+    allow_fractional_quantity: bool
+    normalize_weights: bool
+    write_portfolio_reports: bool
+    warn_not_optimizer: bool
+    warn_not_investment_advice: bool
+
+@dataclass
+class AllocationLimitsConfig:
+    enabled: bool
+    max_candidate_weight: float
+    min_candidate_weight: float
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_total_candidates: int
+    reject_missing_price: bool
+
+@dataclass
+class RiskBudgetingConfig:
+    enabled: bool
+    max_total_budget_pct: float
+    max_symbol_budget_pct: float
+    max_strategy_budget_pct: float
+    max_timeframe_budget_pct: float
+    max_single_candidate_budget_pct: float
+    min_cash_buffer_pct: float
+    enforce_budget: bool
+    write_budget_reports: bool
+
+@dataclass
+class ConcentrationGuardsConfig:
+    enabled: bool
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_single_candidate_weight: float
+    reject_breaches: bool
+    cap_breaches: bool
+    write_concentration_reports: bool
 
 @dataclass
 class UniverseConfig:
@@ -99,12 +381,106 @@ class UniverseConfig:
             raise ValueError("symbol_max_length must be greater than 1")
 
 @dataclass
+class PortfolioConstructionConfig:
+    enabled: bool
+    default_method: str
+    available_methods: list[str]
+    max_total_allocation_pct: float
+    cash_buffer_pct: float
+    allow_fractional_quantity: bool
+    normalize_weights: bool
+    write_portfolio_reports: bool
+    warn_not_optimizer: bool
+    warn_not_investment_advice: bool
+
+@dataclass
+class AllocationLimitsConfig:
+    enabled: bool
+    max_candidate_weight: float
+    min_candidate_weight: float
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_total_candidates: int
+    reject_missing_price: bool
+
+@dataclass
+class RiskBudgetingConfig:
+    enabled: bool
+    max_total_budget_pct: float
+    max_symbol_budget_pct: float
+    max_strategy_budget_pct: float
+    max_timeframe_budget_pct: float
+    max_single_candidate_budget_pct: float
+    min_cash_buffer_pct: float
+    enforce_budget: bool
+    write_budget_reports: bool
+
+@dataclass
+class ConcentrationGuardsConfig:
+    enabled: bool
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_single_candidate_weight: float
+    reject_breaches: bool
+    cap_breaches: bool
+    write_concentration_reports: bool
+
+@dataclass
 class PaperConfig:
     initial_cash: float = 100000.0
     currency: str = "USD"
     allow_short: bool = False
     commission_per_trade: float = 0.0
     slippage_bps: float = 5.0
+
+@dataclass
+class PortfolioConstructionConfig:
+    enabled: bool
+    default_method: str
+    available_methods: list[str]
+    max_total_allocation_pct: float
+    cash_buffer_pct: float
+    allow_fractional_quantity: bool
+    normalize_weights: bool
+    write_portfolio_reports: bool
+    warn_not_optimizer: bool
+    warn_not_investment_advice: bool
+
+@dataclass
+class AllocationLimitsConfig:
+    enabled: bool
+    max_candidate_weight: float
+    min_candidate_weight: float
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_total_candidates: int
+    reject_missing_price: bool
+
+@dataclass
+class RiskBudgetingConfig:
+    enabled: bool
+    max_total_budget_pct: float
+    max_symbol_budget_pct: float
+    max_strategy_budget_pct: float
+    max_timeframe_budget_pct: float
+    max_single_candidate_budget_pct: float
+    min_cash_buffer_pct: float
+    enforce_budget: bool
+    write_budget_reports: bool
+
+@dataclass
+class ConcentrationGuardsConfig:
+    enabled: bool
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_single_candidate_weight: float
+    reject_breaches: bool
+    cap_breaches: bool
+    write_concentration_reports: bool
 
 @dataclass
 class RiskConfig:
@@ -114,10 +490,104 @@ class RiskConfig:
     max_open_positions: int = 10
 
 @dataclass
+class PortfolioConstructionConfig:
+    enabled: bool
+    default_method: str
+    available_methods: list[str]
+    max_total_allocation_pct: float
+    cash_buffer_pct: float
+    allow_fractional_quantity: bool
+    normalize_weights: bool
+    write_portfolio_reports: bool
+    warn_not_optimizer: bool
+    warn_not_investment_advice: bool
+
+@dataclass
+class AllocationLimitsConfig:
+    enabled: bool
+    max_candidate_weight: float
+    min_candidate_weight: float
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_total_candidates: int
+    reject_missing_price: bool
+
+@dataclass
+class RiskBudgetingConfig:
+    enabled: bool
+    max_total_budget_pct: float
+    max_symbol_budget_pct: float
+    max_strategy_budget_pct: float
+    max_timeframe_budget_pct: float
+    max_single_candidate_budget_pct: float
+    min_cash_buffer_pct: float
+    enforce_budget: bool
+    write_budget_reports: bool
+
+@dataclass
+class ConcentrationGuardsConfig:
+    enabled: bool
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_single_candidate_weight: float
+    reject_breaches: bool
+    cap_breaches: bool
+    write_concentration_reports: bool
+
+@dataclass
 class BacktestConfig:
     default_initial_cash: float = 100000.0
     default_benchmark: str = "SPY"
     include_transaction_costs: bool = True
+
+@dataclass
+class PortfolioConstructionConfig:
+    enabled: bool
+    default_method: str
+    available_methods: list[str]
+    max_total_allocation_pct: float
+    cash_buffer_pct: float
+    allow_fractional_quantity: bool
+    normalize_weights: bool
+    write_portfolio_reports: bool
+    warn_not_optimizer: bool
+    warn_not_investment_advice: bool
+
+@dataclass
+class AllocationLimitsConfig:
+    enabled: bool
+    max_candidate_weight: float
+    min_candidate_weight: float
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_total_candidates: int
+    reject_missing_price: bool
+
+@dataclass
+class RiskBudgetingConfig:
+    enabled: bool
+    max_total_budget_pct: float
+    max_symbol_budget_pct: float
+    max_strategy_budget_pct: float
+    max_timeframe_budget_pct: float
+    max_single_candidate_budget_pct: float
+    min_cash_buffer_pct: float
+    enforce_budget: bool
+    write_budget_reports: bool
+
+@dataclass
+class ConcentrationGuardsConfig:
+    enabled: bool
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_single_candidate_weight: float
+    reject_breaches: bool
+    cap_breaches: bool
+    write_concentration_reports: bool
 
 @dataclass
 class OptimizationConfig:
@@ -126,9 +596,103 @@ class OptimizationConfig:
     walk_forward_enabled: bool = True
 
 @dataclass
+class PortfolioConstructionConfig:
+    enabled: bool
+    default_method: str
+    available_methods: list[str]
+    max_total_allocation_pct: float
+    cash_buffer_pct: float
+    allow_fractional_quantity: bool
+    normalize_weights: bool
+    write_portfolio_reports: bool
+    warn_not_optimizer: bool
+    warn_not_investment_advice: bool
+
+@dataclass
+class AllocationLimitsConfig:
+    enabled: bool
+    max_candidate_weight: float
+    min_candidate_weight: float
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_total_candidates: int
+    reject_missing_price: bool
+
+@dataclass
+class RiskBudgetingConfig:
+    enabled: bool
+    max_total_budget_pct: float
+    max_symbol_budget_pct: float
+    max_strategy_budget_pct: float
+    max_timeframe_budget_pct: float
+    max_single_candidate_budget_pct: float
+    min_cash_buffer_pct: float
+    enforce_budget: bool
+    write_budget_reports: bool
+
+@dataclass
+class ConcentrationGuardsConfig:
+    enabled: bool
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_single_candidate_weight: float
+    reject_breaches: bool
+    cap_breaches: bool
+    write_concentration_reports: bool
+
+@dataclass
 class RegimeConfig:
     enabled: bool = False
     default_market_proxy: str = "SPY"
+
+@dataclass
+class PortfolioConstructionConfig:
+    enabled: bool
+    default_method: str
+    available_methods: list[str]
+    max_total_allocation_pct: float
+    cash_buffer_pct: float
+    allow_fractional_quantity: bool
+    normalize_weights: bool
+    write_portfolio_reports: bool
+    warn_not_optimizer: bool
+    warn_not_investment_advice: bool
+
+@dataclass
+class AllocationLimitsConfig:
+    enabled: bool
+    max_candidate_weight: float
+    min_candidate_weight: float
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_total_candidates: int
+    reject_missing_price: bool
+
+@dataclass
+class RiskBudgetingConfig:
+    enabled: bool
+    max_total_budget_pct: float
+    max_symbol_budget_pct: float
+    max_strategy_budget_pct: float
+    max_timeframe_budget_pct: float
+    max_single_candidate_budget_pct: float
+    min_cash_buffer_pct: float
+    enforce_budget: bool
+    write_budget_reports: bool
+
+@dataclass
+class ConcentrationGuardsConfig:
+    enabled: bool
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_single_candidate_weight: float
+    reject_breaches: bool
+    cap_breaches: bool
+    write_concentration_reports: bool
 
 @dataclass
 class MLConfig:
@@ -136,6 +700,53 @@ class MLConfig:
     model_dir: str = "data/models"
     leakage_checks_enabled: bool = True
 
+
+@dataclass
+class PortfolioConstructionConfig:
+    enabled: bool
+    default_method: str
+    available_methods: list[str]
+    max_total_allocation_pct: float
+    cash_buffer_pct: float
+    allow_fractional_quantity: bool
+    normalize_weights: bool
+    write_portfolio_reports: bool
+    warn_not_optimizer: bool
+    warn_not_investment_advice: bool
+
+@dataclass
+class AllocationLimitsConfig:
+    enabled: bool
+    max_candidate_weight: float
+    min_candidate_weight: float
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_total_candidates: int
+    reject_missing_price: bool
+
+@dataclass
+class RiskBudgetingConfig:
+    enabled: bool
+    max_total_budget_pct: float
+    max_symbol_budget_pct: float
+    max_strategy_budget_pct: float
+    max_timeframe_budget_pct: float
+    max_single_candidate_budget_pct: float
+    min_cash_buffer_pct: float
+    enforce_budget: bool
+    write_budget_reports: bool
+
+@dataclass
+class ConcentrationGuardsConfig:
+    enabled: bool
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_single_candidate_weight: float
+    reject_breaches: bool
+    cap_breaches: bool
+    write_concentration_reports: bool
 
 @dataclass
 class StorageConfig:
@@ -147,6 +758,53 @@ class StorageConfig:
     default_json_indent: int = 2
     parquet_enabled: bool = False
 
+
+@dataclass
+class PortfolioConstructionConfig:
+    enabled: bool
+    default_method: str
+    available_methods: list[str]
+    max_total_allocation_pct: float
+    cash_buffer_pct: float
+    allow_fractional_quantity: bool
+    normalize_weights: bool
+    write_portfolio_reports: bool
+    warn_not_optimizer: bool
+    warn_not_investment_advice: bool
+
+@dataclass
+class AllocationLimitsConfig:
+    enabled: bool
+    max_candidate_weight: float
+    min_candidate_weight: float
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_total_candidates: int
+    reject_missing_price: bool
+
+@dataclass
+class RiskBudgetingConfig:
+    enabled: bool
+    max_total_budget_pct: float
+    max_symbol_budget_pct: float
+    max_strategy_budget_pct: float
+    max_timeframe_budget_pct: float
+    max_single_candidate_budget_pct: float
+    min_cash_buffer_pct: float
+    enforce_budget: bool
+    write_budget_reports: bool
+
+@dataclass
+class ConcentrationGuardsConfig:
+    enabled: bool
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_single_candidate_weight: float
+    reject_breaches: bool
+    cap_breaches: bool
+    write_concentration_reports: bool
 
 @dataclass
 class ProviderConfig:
@@ -167,6 +825,53 @@ class ProviderConfig:
 
 
 @dataclass
+class PortfolioConstructionConfig:
+    enabled: bool
+    default_method: str
+    available_methods: list[str]
+    max_total_allocation_pct: float
+    cash_buffer_pct: float
+    allow_fractional_quantity: bool
+    normalize_weights: bool
+    write_portfolio_reports: bool
+    warn_not_optimizer: bool
+    warn_not_investment_advice: bool
+
+@dataclass
+class AllocationLimitsConfig:
+    enabled: bool
+    max_candidate_weight: float
+    min_candidate_weight: float
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_total_candidates: int
+    reject_missing_price: bool
+
+@dataclass
+class RiskBudgetingConfig:
+    enabled: bool
+    max_total_budget_pct: float
+    max_symbol_budget_pct: float
+    max_strategy_budget_pct: float
+    max_timeframe_budget_pct: float
+    max_single_candidate_budget_pct: float
+    min_cash_buffer_pct: float
+    enforce_budget: bool
+    write_budget_reports: bool
+
+@dataclass
+class ConcentrationGuardsConfig:
+    enabled: bool
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_single_candidate_weight: float
+    reject_breaches: bool
+    cap_breaches: bool
+    write_concentration_reports: bool
+
+@dataclass
 class DataQualityConfig:
     enabled: bool = True
     allow_zero_volume: bool = True
@@ -183,6 +888,53 @@ class DataQualityConfig:
             raise ValueError("max_allowed_warning_ratio must be between 0 and 1")
         if not self.enabled:
             raise ValueError("data_quality.enabled must be True")
+
+@dataclass
+class PortfolioConstructionConfig:
+    enabled: bool
+    default_method: str
+    available_methods: list[str]
+    max_total_allocation_pct: float
+    cash_buffer_pct: float
+    allow_fractional_quantity: bool
+    normalize_weights: bool
+    write_portfolio_reports: bool
+    warn_not_optimizer: bool
+    warn_not_investment_advice: bool
+
+@dataclass
+class AllocationLimitsConfig:
+    enabled: bool
+    max_candidate_weight: float
+    min_candidate_weight: float
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_total_candidates: int
+    reject_missing_price: bool
+
+@dataclass
+class RiskBudgetingConfig:
+    enabled: bool
+    max_total_budget_pct: float
+    max_symbol_budget_pct: float
+    max_strategy_budget_pct: float
+    max_timeframe_budget_pct: float
+    max_single_candidate_budget_pct: float
+    min_cash_buffer_pct: float
+    enforce_budget: bool
+    write_budget_reports: bool
+
+@dataclass
+class ConcentrationGuardsConfig:
+    enabled: bool
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_single_candidate_weight: float
+    reject_breaches: bool
+    cap_breaches: bool
+    write_concentration_reports: bool
 
 @dataclass
 class CacheRefreshConfig:
@@ -206,6 +958,53 @@ class CacheRefreshConfig:
 
 
 @dataclass
+class PortfolioConstructionConfig:
+    enabled: bool
+    default_method: str
+    available_methods: list[str]
+    max_total_allocation_pct: float
+    cash_buffer_pct: float
+    allow_fractional_quantity: bool
+    normalize_weights: bool
+    write_portfolio_reports: bool
+    warn_not_optimizer: bool
+    warn_not_investment_advice: bool
+
+@dataclass
+class AllocationLimitsConfig:
+    enabled: bool
+    max_candidate_weight: float
+    min_candidate_weight: float
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_total_candidates: int
+    reject_missing_price: bool
+
+@dataclass
+class RiskBudgetingConfig:
+    enabled: bool
+    max_total_budget_pct: float
+    max_symbol_budget_pct: float
+    max_strategy_budget_pct: float
+    max_timeframe_budget_pct: float
+    max_single_candidate_budget_pct: float
+    min_cash_buffer_pct: float
+    enforce_budget: bool
+    write_budget_reports: bool
+
+@dataclass
+class ConcentrationGuardsConfig:
+    enabled: bool
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_single_candidate_weight: float
+    reject_breaches: bool
+    cap_breaches: bool
+    write_concentration_reports: bool
+
+@dataclass
 class MultiTimeframeConfig:
     enabled: bool = True
     default_timeframes: List[str] = field(default_factory=lambda: ["1d", "1h", "15m"])
@@ -224,6 +1023,53 @@ class MultiTimeframeConfig:
             raise ValueError("max_timeframes_per_run must be positive")
         if self.max_symbols_per_multitimeframe_run <= 0:
             raise ValueError("max_symbols_per_multitimeframe_run must be positive")
+
+@dataclass
+class PortfolioConstructionConfig:
+    enabled: bool
+    default_method: str
+    available_methods: list[str]
+    max_total_allocation_pct: float
+    cash_buffer_pct: float
+    allow_fractional_quantity: bool
+    normalize_weights: bool
+    write_portfolio_reports: bool
+    warn_not_optimizer: bool
+    warn_not_investment_advice: bool
+
+@dataclass
+class AllocationLimitsConfig:
+    enabled: bool
+    max_candidate_weight: float
+    min_candidate_weight: float
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_total_candidates: int
+    reject_missing_price: bool
+
+@dataclass
+class RiskBudgetingConfig:
+    enabled: bool
+    max_total_budget_pct: float
+    max_symbol_budget_pct: float
+    max_strategy_budget_pct: float
+    max_timeframe_budget_pct: float
+    max_single_candidate_budget_pct: float
+    min_cash_buffer_pct: float
+    enforce_budget: bool
+    write_budget_reports: bool
+
+@dataclass
+class ConcentrationGuardsConfig:
+    enabled: bool
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_single_candidate_weight: float
+    reject_breaches: bool
+    cap_breaches: bool
+    write_concentration_reports: bool
 
 @dataclass
 class DataReadinessConfig:
@@ -247,6 +1093,53 @@ class DataReadinessConfig:
             raise ValueError("max_warning_ratio must be between 0 and 1")
 
 @dataclass
+class PortfolioConstructionConfig:
+    enabled: bool
+    default_method: str
+    available_methods: list[str]
+    max_total_allocation_pct: float
+    cash_buffer_pct: float
+    allow_fractional_quantity: bool
+    normalize_weights: bool
+    write_portfolio_reports: bool
+    warn_not_optimizer: bool
+    warn_not_investment_advice: bool
+
+@dataclass
+class AllocationLimitsConfig:
+    enabled: bool
+    max_candidate_weight: float
+    min_candidate_weight: float
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_total_candidates: int
+    reject_missing_price: bool
+
+@dataclass
+class RiskBudgetingConfig:
+    enabled: bool
+    max_total_budget_pct: float
+    max_symbol_budget_pct: float
+    max_strategy_budget_pct: float
+    max_timeframe_budget_pct: float
+    max_single_candidate_budget_pct: float
+    min_cash_buffer_pct: float
+    enforce_budget: bool
+    write_budget_reports: bool
+
+@dataclass
+class ConcentrationGuardsConfig:
+    enabled: bool
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_single_candidate_weight: float
+    reject_breaches: bool
+    cap_breaches: bool
+    write_concentration_reports: bool
+
+@dataclass
 class ActiveUniverseConfig:
     enabled: bool = True
     prefer_active_snapshot: bool = True
@@ -255,6 +1148,53 @@ class ActiveUniverseConfig:
     max_symbols_per_run: int = 200
     default_asset_type_filter: Optional[str] = None
     write_resolution_report: bool = True
+
+@dataclass
+class PortfolioConstructionConfig:
+    enabled: bool
+    default_method: str
+    available_methods: list[str]
+    max_total_allocation_pct: float
+    cash_buffer_pct: float
+    allow_fractional_quantity: bool
+    normalize_weights: bool
+    write_portfolio_reports: bool
+    warn_not_optimizer: bool
+    warn_not_investment_advice: bool
+
+@dataclass
+class AllocationLimitsConfig:
+    enabled: bool
+    max_candidate_weight: float
+    min_candidate_weight: float
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_total_candidates: int
+    reject_missing_price: bool
+
+@dataclass
+class RiskBudgetingConfig:
+    enabled: bool
+    max_total_budget_pct: float
+    max_symbol_budget_pct: float
+    max_strategy_budget_pct: float
+    max_timeframe_budget_pct: float
+    max_single_candidate_budget_pct: float
+    min_cash_buffer_pct: float
+    enforce_budget: bool
+    write_budget_reports: bool
+
+@dataclass
+class ConcentrationGuardsConfig:
+    enabled: bool
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_single_candidate_weight: float
+    reject_breaches: bool
+    cap_breaches: bool
+    write_concentration_reports: bool
 
 @dataclass
 class UniverseReadinessGateConfig:
@@ -268,12 +1208,106 @@ class UniverseReadinessGateConfig:
     write_eligible_outputs: bool = True
 
 @dataclass
+class PortfolioConstructionConfig:
+    enabled: bool
+    default_method: str
+    available_methods: list[str]
+    max_total_allocation_pct: float
+    cash_buffer_pct: float
+    allow_fractional_quantity: bool
+    normalize_weights: bool
+    write_portfolio_reports: bool
+    warn_not_optimizer: bool
+    warn_not_investment_advice: bool
+
+@dataclass
+class AllocationLimitsConfig:
+    enabled: bool
+    max_candidate_weight: float
+    min_candidate_weight: float
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_total_candidates: int
+    reject_missing_price: bool
+
+@dataclass
+class RiskBudgetingConfig:
+    enabled: bool
+    max_total_budget_pct: float
+    max_symbol_budget_pct: float
+    max_strategy_budget_pct: float
+    max_timeframe_budget_pct: float
+    max_single_candidate_budget_pct: float
+    min_cash_buffer_pct: float
+    enforce_budget: bool
+    write_budget_reports: bool
+
+@dataclass
+class ConcentrationGuardsConfig:
+    enabled: bool
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_single_candidate_weight: float
+    reject_breaches: bool
+    cap_breaches: bool
+    write_concentration_reports: bool
+
+@dataclass
 class UniverseRunsConfig:
     enabled: bool = True
     runs_dir: str = "data/universe/runs"
     readiness_dir: str = "data/universe/readiness"
     keep_last_n_runs: int = 50
 
+
+@dataclass
+class PortfolioConstructionConfig:
+    enabled: bool
+    default_method: str
+    available_methods: list[str]
+    max_total_allocation_pct: float
+    cash_buffer_pct: float
+    allow_fractional_quantity: bool
+    normalize_weights: bool
+    write_portfolio_reports: bool
+    warn_not_optimizer: bool
+    warn_not_investment_advice: bool
+
+@dataclass
+class AllocationLimitsConfig:
+    enabled: bool
+    max_candidate_weight: float
+    min_candidate_weight: float
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_total_candidates: int
+    reject_missing_price: bool
+
+@dataclass
+class RiskBudgetingConfig:
+    enabled: bool
+    max_total_budget_pct: float
+    max_symbol_budget_pct: float
+    max_strategy_budget_pct: float
+    max_timeframe_budget_pct: float
+    max_single_candidate_budget_pct: float
+    min_cash_buffer_pct: float
+    enforce_budget: bool
+    write_budget_reports: bool
+
+@dataclass
+class ConcentrationGuardsConfig:
+    enabled: bool
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_single_candidate_weight: float
+    reject_breaches: bool
+    cap_breaches: bool
+    write_concentration_reports: bool
 
 @dataclass
 class TrendFeatureConfig:
@@ -303,6 +1337,53 @@ class TrendFeatureConfig:
         if self.default_macd_signal <= 0:
             raise ValueError("MACD signal must be positive")
 
+
+@dataclass
+class PortfolioConstructionConfig:
+    enabled: bool
+    default_method: str
+    available_methods: list[str]
+    max_total_allocation_pct: float
+    cash_buffer_pct: float
+    allow_fractional_quantity: bool
+    normalize_weights: bool
+    write_portfolio_reports: bool
+    warn_not_optimizer: bool
+    warn_not_investment_advice: bool
+
+@dataclass
+class AllocationLimitsConfig:
+    enabled: bool
+    max_candidate_weight: float
+    min_candidate_weight: float
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_total_candidates: int
+    reject_missing_price: bool
+
+@dataclass
+class RiskBudgetingConfig:
+    enabled: bool
+    max_total_budget_pct: float
+    max_symbol_budget_pct: float
+    max_strategy_budget_pct: float
+    max_timeframe_budget_pct: float
+    max_single_candidate_budget_pct: float
+    min_cash_buffer_pct: float
+    enforce_budget: bool
+    write_budget_reports: bool
+
+@dataclass
+class ConcentrationGuardsConfig:
+    enabled: bool
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_single_candidate_weight: float
+    reject_breaches: bool
+    cap_breaches: bool
+    write_concentration_reports: bool
 
 @dataclass
 class MomentumFeatureConfig:
@@ -351,6 +1432,53 @@ class MomentumFeatureConfig:
 
 
 @dataclass
+class PortfolioConstructionConfig:
+    enabled: bool
+    default_method: str
+    available_methods: list[str]
+    max_total_allocation_pct: float
+    cash_buffer_pct: float
+    allow_fractional_quantity: bool
+    normalize_weights: bool
+    write_portfolio_reports: bool
+    warn_not_optimizer: bool
+    warn_not_investment_advice: bool
+
+@dataclass
+class AllocationLimitsConfig:
+    enabled: bool
+    max_candidate_weight: float
+    min_candidate_weight: float
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_total_candidates: int
+    reject_missing_price: bool
+
+@dataclass
+class RiskBudgetingConfig:
+    enabled: bool
+    max_total_budget_pct: float
+    max_symbol_budget_pct: float
+    max_strategy_budget_pct: float
+    max_timeframe_budget_pct: float
+    max_single_candidate_budget_pct: float
+    min_cash_buffer_pct: float
+    enforce_budget: bool
+    write_budget_reports: bool
+
+@dataclass
+class ConcentrationGuardsConfig:
+    enabled: bool
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_single_candidate_weight: float
+    reject_breaches: bool
+    cap_breaches: bool
+    write_concentration_reports: bool
+
+@dataclass
 class VolatilityFeatureConfig:
     enabled: bool = True
     default_indicator_set: str = "basic_volatility"
@@ -374,6 +1502,53 @@ class VolatilityFeatureConfig:
     allow_partial_volatility_features: bool = True
     fail_on_negative_volatility: bool = True
 
+
+@dataclass
+class PortfolioConstructionConfig:
+    enabled: bool
+    default_method: str
+    available_methods: list[str]
+    max_total_allocation_pct: float
+    cash_buffer_pct: float
+    allow_fractional_quantity: bool
+    normalize_weights: bool
+    write_portfolio_reports: bool
+    warn_not_optimizer: bool
+    warn_not_investment_advice: bool
+
+@dataclass
+class AllocationLimitsConfig:
+    enabled: bool
+    max_candidate_weight: float
+    min_candidate_weight: float
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_total_candidates: int
+    reject_missing_price: bool
+
+@dataclass
+class RiskBudgetingConfig:
+    enabled: bool
+    max_total_budget_pct: float
+    max_symbol_budget_pct: float
+    max_strategy_budget_pct: float
+    max_timeframe_budget_pct: float
+    max_single_candidate_budget_pct: float
+    min_cash_buffer_pct: float
+    enforce_budget: bool
+    write_budget_reports: bool
+
+@dataclass
+class ConcentrationGuardsConfig:
+    enabled: bool
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_single_candidate_weight: float
+    reject_breaches: bool
+    cap_breaches: bool
+    write_concentration_reports: bool
 
 @dataclass
 class StrategiesConfig:
@@ -407,6 +1582,53 @@ class StrategiesConfig:
             raise ValueError("max_confidence_allowed_without_backtest must be between 0.0 and 1.0")
 
 @dataclass
+class PortfolioConstructionConfig:
+    enabled: bool
+    default_method: str
+    available_methods: list[str]
+    max_total_allocation_pct: float
+    cash_buffer_pct: float
+    allow_fractional_quantity: bool
+    normalize_weights: bool
+    write_portfolio_reports: bool
+    warn_not_optimizer: bool
+    warn_not_investment_advice: bool
+
+@dataclass
+class AllocationLimitsConfig:
+    enabled: bool
+    max_candidate_weight: float
+    min_candidate_weight: float
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_total_candidates: int
+    reject_missing_price: bool
+
+@dataclass
+class RiskBudgetingConfig:
+    enabled: bool
+    max_total_budget_pct: float
+    max_symbol_budget_pct: float
+    max_strategy_budget_pct: float
+    max_timeframe_budget_pct: float
+    max_single_candidate_budget_pct: float
+    min_cash_buffer_pct: float
+    enforce_budget: bool
+    write_budget_reports: bool
+
+@dataclass
+class ConcentrationGuardsConfig:
+    enabled: bool
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_single_candidate_weight: float
+    reject_breaches: bool
+    cap_breaches: bool
+    write_concentration_reports: bool
+
+@dataclass
 class SignalsConfig:
     enabled: bool = True
     store_dir: str = "data/signals"
@@ -429,6 +1651,53 @@ class SignalsConfig:
 
 
 @dataclass
+class PortfolioConstructionConfig:
+    enabled: bool
+    default_method: str
+    available_methods: list[str]
+    max_total_allocation_pct: float
+    cash_buffer_pct: float
+    allow_fractional_quantity: bool
+    normalize_weights: bool
+    write_portfolio_reports: bool
+    warn_not_optimizer: bool
+    warn_not_investment_advice: bool
+
+@dataclass
+class AllocationLimitsConfig:
+    enabled: bool
+    max_candidate_weight: float
+    min_candidate_weight: float
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_total_candidates: int
+    reject_missing_price: bool
+
+@dataclass
+class RiskBudgetingConfig:
+    enabled: bool
+    max_total_budget_pct: float
+    max_symbol_budget_pct: float
+    max_strategy_budget_pct: float
+    max_timeframe_budget_pct: float
+    max_single_candidate_budget_pct: float
+    min_cash_buffer_pct: float
+    enforce_budget: bool
+    write_budget_reports: bool
+
+@dataclass
+class ConcentrationGuardsConfig:
+    enabled: bool
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_single_candidate_weight: float
+    reject_breaches: bool
+    cap_breaches: bool
+    write_concentration_reports: bool
+
+@dataclass
 class SignalScoringConfigSchema:
     enabled: bool = True
     min_score: float = 0.0
@@ -443,6 +1712,53 @@ class SignalScoringConfigSchema:
     min_score_for_review: float = 40.0
 
 @dataclass
+class PortfolioConstructionConfig:
+    enabled: bool
+    default_method: str
+    available_methods: list[str]
+    max_total_allocation_pct: float
+    cash_buffer_pct: float
+    allow_fractional_quantity: bool
+    normalize_weights: bool
+    write_portfolio_reports: bool
+    warn_not_optimizer: bool
+    warn_not_investment_advice: bool
+
+@dataclass
+class AllocationLimitsConfig:
+    enabled: bool
+    max_candidate_weight: float
+    min_candidate_weight: float
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_total_candidates: int
+    reject_missing_price: bool
+
+@dataclass
+class RiskBudgetingConfig:
+    enabled: bool
+    max_total_budget_pct: float
+    max_symbol_budget_pct: float
+    max_strategy_budget_pct: float
+    max_timeframe_budget_pct: float
+    max_single_candidate_budget_pct: float
+    min_cash_buffer_pct: float
+    enforce_budget: bool
+    write_budget_reports: bool
+
+@dataclass
+class ConcentrationGuardsConfig:
+    enabled: bool
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_single_candidate_weight: float
+    reject_breaches: bool
+    cap_breaches: bool
+    write_concentration_reports: bool
+
+@dataclass
 class SignalQualityConfig:
     enabled: bool = True
     min_confidence_for_review: float = 0.25
@@ -455,6 +1771,53 @@ class SignalQualityConfig:
     allow_empty_signal_list: bool = True
 
 @dataclass
+class PortfolioConstructionConfig:
+    enabled: bool
+    default_method: str
+    available_methods: list[str]
+    max_total_allocation_pct: float
+    cash_buffer_pct: float
+    allow_fractional_quantity: bool
+    normalize_weights: bool
+    write_portfolio_reports: bool
+    warn_not_optimizer: bool
+    warn_not_investment_advice: bool
+
+@dataclass
+class AllocationLimitsConfig:
+    enabled: bool
+    max_candidate_weight: float
+    min_candidate_weight: float
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_total_candidates: int
+    reject_missing_price: bool
+
+@dataclass
+class RiskBudgetingConfig:
+    enabled: bool
+    max_total_budget_pct: float
+    max_symbol_budget_pct: float
+    max_strategy_budget_pct: float
+    max_timeframe_budget_pct: float
+    max_single_candidate_budget_pct: float
+    min_cash_buffer_pct: float
+    enforce_budget: bool
+    write_budget_reports: bool
+
+@dataclass
+class ConcentrationGuardsConfig:
+    enabled: bool
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_single_candidate_weight: float
+    reject_breaches: bool
+    cap_breaches: bool
+    write_concentration_reports: bool
+
+@dataclass
 class ConfluenceConfig:
     enabled: bool = True
     default_aggregation_mode: str = "by_symbol_timeframe"
@@ -465,6 +1828,53 @@ class ConfluenceConfig:
     weak_threshold: float = 25.0
     write_confluence_reports: bool = True
 
+
+@dataclass
+class PortfolioConstructionConfig:
+    enabled: bool
+    default_method: str
+    available_methods: list[str]
+    max_total_allocation_pct: float
+    cash_buffer_pct: float
+    allow_fractional_quantity: bool
+    normalize_weights: bool
+    write_portfolio_reports: bool
+    warn_not_optimizer: bool
+    warn_not_investment_advice: bool
+
+@dataclass
+class AllocationLimitsConfig:
+    enabled: bool
+    max_candidate_weight: float
+    min_candidate_weight: float
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_total_candidates: int
+    reject_missing_price: bool
+
+@dataclass
+class RiskBudgetingConfig:
+    enabled: bool
+    max_total_budget_pct: float
+    max_symbol_budget_pct: float
+    max_strategy_budget_pct: float
+    max_timeframe_budget_pct: float
+    max_single_candidate_budget_pct: float
+    min_cash_buffer_pct: float
+    enforce_budget: bool
+    write_budget_reports: bool
+
+@dataclass
+class ConcentrationGuardsConfig:
+    enabled: bool
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_single_candidate_weight: float
+    reject_breaches: bool
+    cap_breaches: bool
+    write_concentration_reports: bool
 
 @dataclass
 class SignalRankingConfigSchema:
@@ -480,6 +1890,53 @@ class SignalRankingConfigSchema:
     action_priority_weight: float = 10.0
     max_rank_score_without_backtest: float = 75.0
     default_min_rank_score_for_candidates: float = 45.0
+
+@dataclass
+class PortfolioConstructionConfig:
+    enabled: bool
+    default_method: str
+    available_methods: list[str]
+    max_total_allocation_pct: float
+    cash_buffer_pct: float
+    allow_fractional_quantity: bool
+    normalize_weights: bool
+    write_portfolio_reports: bool
+    warn_not_optimizer: bool
+    warn_not_investment_advice: bool
+
+@dataclass
+class AllocationLimitsConfig:
+    enabled: bool
+    max_candidate_weight: float
+    min_candidate_weight: float
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_total_candidates: int
+    reject_missing_price: bool
+
+@dataclass
+class RiskBudgetingConfig:
+    enabled: bool
+    max_total_budget_pct: float
+    max_symbol_budget_pct: float
+    max_strategy_budget_pct: float
+    max_timeframe_budget_pct: float
+    max_single_candidate_budget_pct: float
+    min_cash_buffer_pct: float
+    enforce_budget: bool
+    write_budget_reports: bool
+
+@dataclass
+class ConcentrationGuardsConfig:
+    enabled: bool
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_single_candidate_weight: float
+    reject_breaches: bool
+    cap_breaches: bool
+    write_concentration_reports: bool
 
 @dataclass
 class CandidateSelectionConfigSchema:
@@ -498,6 +1955,53 @@ class CandidateSelectionConfigSchema:
     write_selected_candidates: bool = True
 
 @dataclass
+class PortfolioConstructionConfig:
+    enabled: bool
+    default_method: str
+    available_methods: list[str]
+    max_total_allocation_pct: float
+    cash_buffer_pct: float
+    allow_fractional_quantity: bool
+    normalize_weights: bool
+    write_portfolio_reports: bool
+    warn_not_optimizer: bool
+    warn_not_investment_advice: bool
+
+@dataclass
+class AllocationLimitsConfig:
+    enabled: bool
+    max_candidate_weight: float
+    min_candidate_weight: float
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_total_candidates: int
+    reject_missing_price: bool
+
+@dataclass
+class RiskBudgetingConfig:
+    enabled: bool
+    max_total_budget_pct: float
+    max_symbol_budget_pct: float
+    max_strategy_budget_pct: float
+    max_timeframe_budget_pct: float
+    max_single_candidate_budget_pct: float
+    min_cash_buffer_pct: float
+    enforce_budget: bool
+    write_budget_reports: bool
+
+@dataclass
+class ConcentrationGuardsConfig:
+    enabled: bool
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_single_candidate_weight: float
+    reject_breaches: bool
+    cap_breaches: bool
+    write_concentration_reports: bool
+
+@dataclass
 class StrategyPortfolioConfigSchema:
     enabled: bool = True
     default_mode: str = "research_pool"
@@ -511,6 +2015,53 @@ class StrategyPortfolioConfigSchema:
     write_portfolio_reports: bool = True
 
 
+
+@dataclass
+class PortfolioConstructionConfig:
+    enabled: bool
+    default_method: str
+    available_methods: list[str]
+    max_total_allocation_pct: float
+    cash_buffer_pct: float
+    allow_fractional_quantity: bool
+    normalize_weights: bool
+    write_portfolio_reports: bool
+    warn_not_optimizer: bool
+    warn_not_investment_advice: bool
+
+@dataclass
+class AllocationLimitsConfig:
+    enabled: bool
+    max_candidate_weight: float
+    min_candidate_weight: float
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_total_candidates: int
+    reject_missing_price: bool
+
+@dataclass
+class RiskBudgetingConfig:
+    enabled: bool
+    max_total_budget_pct: float
+    max_symbol_budget_pct: float
+    max_strategy_budget_pct: float
+    max_timeframe_budget_pct: float
+    max_single_candidate_budget_pct: float
+    min_cash_buffer_pct: float
+    enforce_budget: bool
+    write_budget_reports: bool
+
+@dataclass
+class ConcentrationGuardsConfig:
+    enabled: bool
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_single_candidate_weight: float
+    reject_breaches: bool
+    cap_breaches: bool
+    write_concentration_reports: bool
 
 @dataclass
 class BacktestingConfig:
@@ -533,6 +2084,53 @@ class BacktestingConfig:
     warn_on_backtest_limitations: bool = True
 
 @dataclass
+class PortfolioConstructionConfig:
+    enabled: bool
+    default_method: str
+    available_methods: list[str]
+    max_total_allocation_pct: float
+    cash_buffer_pct: float
+    allow_fractional_quantity: bool
+    normalize_weights: bool
+    write_portfolio_reports: bool
+    warn_not_optimizer: bool
+    warn_not_investment_advice: bool
+
+@dataclass
+class AllocationLimitsConfig:
+    enabled: bool
+    max_candidate_weight: float
+    min_candidate_weight: float
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_total_candidates: int
+    reject_missing_price: bool
+
+@dataclass
+class RiskBudgetingConfig:
+    enabled: bool
+    max_total_budget_pct: float
+    max_symbol_budget_pct: float
+    max_strategy_budget_pct: float
+    max_timeframe_budget_pct: float
+    max_single_candidate_budget_pct: float
+    min_cash_buffer_pct: float
+    enforce_budget: bool
+    write_budget_reports: bool
+
+@dataclass
+class ConcentrationGuardsConfig:
+    enabled: bool
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_single_candidate_weight: float
+    reject_breaches: bool
+    cap_breaches: bool
+    write_concentration_reports: bool
+
+@dataclass
 class HistoricalReplayConfig:
     enabled: bool = True
     require_cached_market_data: bool = True
@@ -543,6 +2141,100 @@ class HistoricalReplayConfig:
     max_events_per_run: int = 100000
 
 @dataclass
+class PortfolioConstructionConfig:
+    enabled: bool
+    default_method: str
+    available_methods: list[str]
+    max_total_allocation_pct: float
+    cash_buffer_pct: float
+    allow_fractional_quantity: bool
+    normalize_weights: bool
+    write_portfolio_reports: bool
+    warn_not_optimizer: bool
+    warn_not_investment_advice: bool
+
+@dataclass
+class AllocationLimitsConfig:
+    enabled: bool
+    max_candidate_weight: float
+    min_candidate_weight: float
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_total_candidates: int
+    reject_missing_price: bool
+
+@dataclass
+class RiskBudgetingConfig:
+    enabled: bool
+    max_total_budget_pct: float
+    max_symbol_budget_pct: float
+    max_strategy_budget_pct: float
+    max_timeframe_budget_pct: float
+    max_single_candidate_budget_pct: float
+    min_cash_buffer_pct: float
+    enforce_budget: bool
+    write_budget_reports: bool
+
+@dataclass
+class ConcentrationGuardsConfig:
+    enabled: bool
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_single_candidate_weight: float
+    reject_breaches: bool
+    cap_breaches: bool
+    write_concentration_reports: bool
+
+@dataclass
+@dataclass
+class PortfolioConstructionConfig:
+    enabled: bool
+    default_method: str
+    available_methods: list[str]
+    max_total_allocation_pct: float
+    cash_buffer_pct: float
+    allow_fractional_quantity: bool
+    normalize_weights: bool
+    write_portfolio_reports: bool
+    warn_not_optimizer: bool
+    warn_not_investment_advice: bool
+
+@dataclass
+class AllocationLimitsConfig:
+    enabled: bool
+    max_candidate_weight: float
+    min_candidate_weight: float
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_total_candidates: int
+    reject_missing_price: bool
+
+@dataclass
+class RiskBudgetingConfig:
+    enabled: bool
+    max_total_budget_pct: float
+    max_symbol_budget_pct: float
+    max_strategy_budget_pct: float
+    max_timeframe_budget_pct: float
+    max_single_candidate_budget_pct: float
+    min_cash_buffer_pct: float
+    enforce_budget: bool
+    write_budget_reports: bool
+
+@dataclass
+class ConcentrationGuardsConfig:
+    enabled: bool
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_single_candidate_weight: float
+    reject_breaches: bool
+    cap_breaches: bool
+    write_concentration_reports: bool
+
 @dataclass
 class TransactionCostsConfig:
     enabled: bool = True
@@ -561,6 +2253,53 @@ class TransactionCostsConfig:
             raise ValueError("fee values cannot be negative")
         if self.max_fee is not None and self.max_fee < self.min_fee:
             raise ValueError("max_fee must be greater than or equal to min_fee")
+
+@dataclass
+class PortfolioConstructionConfig:
+    enabled: bool
+    default_method: str
+    available_methods: list[str]
+    max_total_allocation_pct: float
+    cash_buffer_pct: float
+    allow_fractional_quantity: bool
+    normalize_weights: bool
+    write_portfolio_reports: bool
+    warn_not_optimizer: bool
+    warn_not_investment_advice: bool
+
+@dataclass
+class AllocationLimitsConfig:
+    enabled: bool
+    max_candidate_weight: float
+    min_candidate_weight: float
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_total_candidates: int
+    reject_missing_price: bool
+
+@dataclass
+class RiskBudgetingConfig:
+    enabled: bool
+    max_total_budget_pct: float
+    max_symbol_budget_pct: float
+    max_strategy_budget_pct: float
+    max_timeframe_budget_pct: float
+    max_single_candidate_budget_pct: float
+    min_cash_buffer_pct: float
+    enforce_budget: bool
+    write_budget_reports: bool
+
+@dataclass
+class ConcentrationGuardsConfig:
+    enabled: bool
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_single_candidate_weight: float
+    reject_breaches: bool
+    cap_breaches: bool
+    write_concentration_reports: bool
 
 @dataclass
 class SlippageConfigSchema:
@@ -587,6 +2326,53 @@ class SlippageConfigSchema:
             raise ValueError("max_slippage_bps must be positive")
 
 @dataclass
+class PortfolioConstructionConfig:
+    enabled: bool
+    default_method: str
+    available_methods: list[str]
+    max_total_allocation_pct: float
+    cash_buffer_pct: float
+    allow_fractional_quantity: bool
+    normalize_weights: bool
+    write_portfolio_reports: bool
+    warn_not_optimizer: bool
+    warn_not_investment_advice: bool
+
+@dataclass
+class AllocationLimitsConfig:
+    enabled: bool
+    max_candidate_weight: float
+    min_candidate_weight: float
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_total_candidates: int
+    reject_missing_price: bool
+
+@dataclass
+class RiskBudgetingConfig:
+    enabled: bool
+    max_total_budget_pct: float
+    max_symbol_budget_pct: float
+    max_strategy_budget_pct: float
+    max_timeframe_budget_pct: float
+    max_single_candidate_budget_pct: float
+    min_cash_buffer_pct: float
+    enforce_budget: bool
+    write_budget_reports: bool
+
+@dataclass
+class ConcentrationGuardsConfig:
+    enabled: bool
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_single_candidate_weight: float
+    reject_breaches: bool
+    cap_breaches: bool
+    write_concentration_reports: bool
+
+@dataclass
 class TradeLedgerConfig:
     enabled: bool = True
     build_trade_ledger: bool = True
@@ -600,6 +2386,53 @@ class TradeLedgerConfig:
             raise ValueError("build_trade_ledger must be true")
         if not self.fifo_pairing:
             raise ValueError("fifo_pairing must be true")
+
+@dataclass
+class PortfolioConstructionConfig:
+    enabled: bool
+    default_method: str
+    available_methods: list[str]
+    max_total_allocation_pct: float
+    cash_buffer_pct: float
+    allow_fractional_quantity: bool
+    normalize_weights: bool
+    write_portfolio_reports: bool
+    warn_not_optimizer: bool
+    warn_not_investment_advice: bool
+
+@dataclass
+class AllocationLimitsConfig:
+    enabled: bool
+    max_candidate_weight: float
+    min_candidate_weight: float
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_total_candidates: int
+    reject_missing_price: bool
+
+@dataclass
+class RiskBudgetingConfig:
+    enabled: bool
+    max_total_budget_pct: float
+    max_symbol_budget_pct: float
+    max_strategy_budget_pct: float
+    max_timeframe_budget_pct: float
+    max_single_candidate_budget_pct: float
+    min_cash_buffer_pct: float
+    enforce_budget: bool
+    write_budget_reports: bool
+
+@dataclass
+class ConcentrationGuardsConfig:
+    enabled: bool
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_single_candidate_weight: float
+    reject_breaches: bool
+    cap_breaches: bool
+    write_concentration_reports: bool
 
 @dataclass
 class AdvancedBacktestMetricsConfig:
@@ -616,6 +2449,53 @@ class AdvancedBacktestMetricsConfig:
     def __post_init__(self):
         if self.periods_per_year <= 0:
             raise ValueError("periods_per_year must be positive")
+
+@dataclass
+class PortfolioConstructionConfig:
+    enabled: bool
+    default_method: str
+    available_methods: list[str]
+    max_total_allocation_pct: float
+    cash_buffer_pct: float
+    allow_fractional_quantity: bool
+    normalize_weights: bool
+    write_portfolio_reports: bool
+    warn_not_optimizer: bool
+    warn_not_investment_advice: bool
+
+@dataclass
+class AllocationLimitsConfig:
+    enabled: bool
+    max_candidate_weight: float
+    min_candidate_weight: float
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_total_candidates: int
+    reject_missing_price: bool
+
+@dataclass
+class RiskBudgetingConfig:
+    enabled: bool
+    max_total_budget_pct: float
+    max_symbol_budget_pct: float
+    max_strategy_budget_pct: float
+    max_timeframe_budget_pct: float
+    max_single_candidate_budget_pct: float
+    min_cash_buffer_pct: float
+    enforce_budget: bool
+    write_budget_reports: bool
+
+@dataclass
+class ConcentrationGuardsConfig:
+    enabled: bool
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_single_candidate_weight: float
+    reject_breaches: bool
+    cap_breaches: bool
+    write_concentration_reports: bool
 
 @dataclass
 class WalkForwardConfigSchema:
@@ -636,6 +2516,53 @@ class WalkForwardConfigSchema:
     warn_no_optimization_performed: bool = True
 
 @dataclass
+class PortfolioConstructionConfig:
+    enabled: bool
+    default_method: str
+    available_methods: list[str]
+    max_total_allocation_pct: float
+    cash_buffer_pct: float
+    allow_fractional_quantity: bool
+    normalize_weights: bool
+    write_portfolio_reports: bool
+    warn_not_optimizer: bool
+    warn_not_investment_advice: bool
+
+@dataclass
+class AllocationLimitsConfig:
+    enabled: bool
+    max_candidate_weight: float
+    min_candidate_weight: float
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_total_candidates: int
+    reject_missing_price: bool
+
+@dataclass
+class RiskBudgetingConfig:
+    enabled: bool
+    max_total_budget_pct: float
+    max_symbol_budget_pct: float
+    max_strategy_budget_pct: float
+    max_timeframe_budget_pct: float
+    max_single_candidate_budget_pct: float
+    min_cash_buffer_pct: float
+    enforce_budget: bool
+    write_budget_reports: bool
+
+@dataclass
+class ConcentrationGuardsConfig:
+    enabled: bool
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_single_candidate_weight: float
+    reject_breaches: bool
+    cap_breaches: bool
+    write_concentration_reports: bool
+
+@dataclass
 class OutOfSampleEvaluationConfig:
     enabled: bool = True
     min_completed_windows: int = 2
@@ -646,6 +2573,53 @@ class OutOfSampleEvaluationConfig:
     warn_if_insufficient_windows: bool = True
 
 
+
+@dataclass
+class PortfolioConstructionConfig:
+    enabled: bool
+    default_method: str
+    available_methods: list[str]
+    max_total_allocation_pct: float
+    cash_buffer_pct: float
+    allow_fractional_quantity: bool
+    normalize_weights: bool
+    write_portfolio_reports: bool
+    warn_not_optimizer: bool
+    warn_not_investment_advice: bool
+
+@dataclass
+class AllocationLimitsConfig:
+    enabled: bool
+    max_candidate_weight: float
+    min_candidate_weight: float
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_total_candidates: int
+    reject_missing_price: bool
+
+@dataclass
+class RiskBudgetingConfig:
+    enabled: bool
+    max_total_budget_pct: float
+    max_symbol_budget_pct: float
+    max_strategy_budget_pct: float
+    max_timeframe_budget_pct: float
+    max_single_candidate_budget_pct: float
+    min_cash_buffer_pct: float
+    enforce_budget: bool
+    write_budget_reports: bool
+
+@dataclass
+class ConcentrationGuardsConfig:
+    enabled: bool
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_single_candidate_weight: float
+    reject_breaches: bool
+    cap_breaches: bool
+    write_concentration_reports: bool
 
 @dataclass
 class ParameterSensitivityConfigSchema:
@@ -664,6 +2638,53 @@ class ParameterSensitivityConfigSchema:
     warn_not_optimizer: bool = True
 
 @dataclass
+class PortfolioConstructionConfig:
+    enabled: bool
+    default_method: str
+    available_methods: list[str]
+    max_total_allocation_pct: float
+    cash_buffer_pct: float
+    allow_fractional_quantity: bool
+    normalize_weights: bool
+    write_portfolio_reports: bool
+    warn_not_optimizer: bool
+    warn_not_investment_advice: bool
+
+@dataclass
+class AllocationLimitsConfig:
+    enabled: bool
+    max_candidate_weight: float
+    min_candidate_weight: float
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_total_candidates: int
+    reject_missing_price: bool
+
+@dataclass
+class RiskBudgetingConfig:
+    enabled: bool
+    max_total_budget_pct: float
+    max_symbol_budget_pct: float
+    max_strategy_budget_pct: float
+    max_timeframe_budget_pct: float
+    max_single_candidate_budget_pct: float
+    min_cash_buffer_pct: float
+    enforce_budget: bool
+    write_budget_reports: bool
+
+@dataclass
+class ConcentrationGuardsConfig:
+    enabled: bool
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_single_candidate_weight: float
+    reject_breaches: bool
+    cap_breaches: bool
+    write_concentration_reports: bool
+
+@dataclass
 class RobustnessGridConfig:
     enabled: bool = True
     default_grid_type: str = "SINGLE_PARAMETER"
@@ -676,6 +2697,53 @@ class RobustnessGridConfig:
     min_robust_region_size: int = 2
 
 @dataclass
+class PortfolioConstructionConfig:
+    enabled: bool
+    default_method: str
+    available_methods: list[str]
+    max_total_allocation_pct: float
+    cash_buffer_pct: float
+    allow_fractional_quantity: bool
+    normalize_weights: bool
+    write_portfolio_reports: bool
+    warn_not_optimizer: bool
+    warn_not_investment_advice: bool
+
+@dataclass
+class AllocationLimitsConfig:
+    enabled: bool
+    max_candidate_weight: float
+    min_candidate_weight: float
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_total_candidates: int
+    reject_missing_price: bool
+
+@dataclass
+class RiskBudgetingConfig:
+    enabled: bool
+    max_total_budget_pct: float
+    max_symbol_budget_pct: float
+    max_strategy_budget_pct: float
+    max_timeframe_budget_pct: float
+    max_single_candidate_budget_pct: float
+    min_cash_buffer_pct: float
+    enforce_budget: bool
+    write_budget_reports: bool
+
+@dataclass
+class ConcentrationGuardsConfig:
+    enabled: bool
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_single_candidate_weight: float
+    reject_breaches: bool
+    cap_breaches: bool
+    write_concentration_reports: bool
+
+@dataclass
 class StabilityMapConfig:
     enabled: bool = True
     local_stability_neighbors: int = 2
@@ -685,7 +2753,58 @@ class StabilityMapConfig:
     write_stability_map: bool = True
 
 @dataclass
+class PortfolioConstructionConfig:
+    enabled: bool
+    default_method: str
+    available_methods: list[str]
+    max_total_allocation_pct: float
+    cash_buffer_pct: float
+    allow_fractional_quantity: bool
+    normalize_weights: bool
+    write_portfolio_reports: bool
+    warn_not_optimizer: bool
+    warn_not_investment_advice: bool
+
+@dataclass
+class AllocationLimitsConfig:
+    enabled: bool
+    max_candidate_weight: float
+    min_candidate_weight: float
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_total_candidates: int
+    reject_missing_price: bool
+
+@dataclass
+class RiskBudgetingConfig:
+    enabled: bool
+    max_total_budget_pct: float
+    max_symbol_budget_pct: float
+    max_strategy_budget_pct: float
+    max_timeframe_budget_pct: float
+    max_single_candidate_budget_pct: float
+    min_cash_buffer_pct: float
+    enforce_budget: bool
+    write_budget_reports: bool
+
+@dataclass
+class ConcentrationGuardsConfig:
+    enabled: bool
+    max_symbol_weight: float
+    max_strategy_weight: float
+    max_timeframe_weight: float
+    max_single_candidate_weight: float
+    reject_breaches: bool
+    cap_breaches: bool
+    write_concentration_reports: bool
+
+@dataclass
 class AppConfig:
+    portfolio_construction: 'PortfolioConstructionConfig' = None
+    allocation_limits: 'AllocationLimitsConfig' = None
+    risk_budgeting: 'RiskBudgetingConfig' = None
+    concentration_guards: 'ConcentrationGuardsConfig' = None
     parameter_sensitivity: ParameterSensitivityConfigSchema = field(default_factory=ParameterSensitivityConfigSchema)
     robustness_grid: RobustnessGridConfig = field(default_factory=RobustnessGridConfig)
     stability_map: StabilityMapConfig = field(default_factory=StabilityMapConfig)
