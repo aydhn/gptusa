@@ -469,3 +469,28 @@ class SensitivityStorageError(ParameterSensitivityError):
 
 class NonOptimizerGuardError(ParameterSensitivityError):
     pass
+
+
+class RiskEngineError(USASignalBotError):
+    pass
+
+class RiskLimitError(RiskEngineError):
+    pass
+
+class PositionSizingError(RiskEngineError):
+    pass
+
+class ExposureGuardError(RiskEngineError):
+    pass
+
+class CandidateRiskError(RiskEngineError):
+    pass
+
+class RiskValidationError(RiskEngineError):
+    pass
+
+class RiskStorageError(RiskEngineError):
+    pass
+
+class RiskReportingError(RiskEngineError):
+    pass
