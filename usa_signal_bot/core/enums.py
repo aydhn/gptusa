@@ -1084,3 +1084,78 @@ class BasketMetricStatus(str, Enum):
     WARNING = "warning"
     INVALID = "invalid"
     EMPTY = "empty"
+
+class RuntimeMode(str, Enum):
+    MANUAL_ONCE = "manual_once"
+    DRY_RUN = "dry_run"
+    SCHEDULE_PLAN_ONLY = "schedule_plan_only"
+    LOCAL_SCAN_LOOP = "local_scan_loop"
+    SAFE_TEST = "safe_test"
+
+class RuntimeRunStatus(str, Enum):
+    NOT_STARTED = "not_started"
+    RUNNING = "running"
+    COMPLETED = "completed"
+    PARTIAL_SUCCESS = "partial_success"
+    FAILED = "failed"
+    SKIPPED = "skipped"
+    STOPPED = "stopped"
+    LOCKED = "locked"
+    EMPTY = "empty"
+
+class PipelineStepName(str, Enum):
+    PREFLIGHT = "preflight"
+    UNIVERSE_RESOLVE = "universe_resolve"
+    DATA_REFRESH = "data_refresh"
+    DATA_READINESS = "data_readiness"
+    FEATURE_PIPELINE = "feature_pipeline"
+    STRATEGY_RUN = "strategy_run"
+    SIGNAL_SCORING = "signal_scoring"
+    SIGNAL_RANKING = "signal_ranking"
+    CANDIDATE_SELECTION = "candidate_selection"
+    RISK_EVALUATION = "risk_evaluation"
+    PORTFOLIO_CONSTRUCTION = "portfolio_construction"
+    SCAN_REPORT = "scan_report"
+    CLEANUP = "cleanup"
+
+class PipelineStepStatus(str, Enum):
+    NOT_STARTED = "not_started"
+    RUNNING = "running"
+    COMPLETED = "completed"
+    FAILED = "failed"
+    SKIPPED = "skipped"
+    PARTIAL_SUCCESS = "partial_success"
+    STOPPED = "stopped"
+
+class RuntimeEventType(str, Enum):
+    RUN_STARTED = "run_started"
+    RUN_COMPLETED = "run_completed"
+    RUN_FAILED = "run_failed"
+    RUN_STOPPED = "run_stopped"
+    STEP_STARTED = "step_started"
+    STEP_COMPLETED = "step_completed"
+    STEP_FAILED = "step_failed"
+    STEP_SKIPPED = "step_skipped"
+    LOCK_ACQUIRED = "lock_acquired"
+    LOCK_RELEASED = "lock_released"
+    SAFE_STOP_REQUESTED = "safe_stop_requested"
+    WARNING = "warning"
+    ERROR = "error"
+
+class ScanScope(str, Enum):
+    EXPLICIT_SYMBOLS = "explicit_symbols"
+    LATEST_ELIGIBLE_UNIVERSE = "latest_eligible_universe"
+    ACTIVE_UNIVERSE = "active_universe"
+    SMALL_TEST_SET = "small_test_set"
+
+class ScanOutputLevel(str, Enum):
+    MINIMAL = "minimal"
+    NORMAL = "normal"
+    VERBOSE = "verbose"
+    DEBUG = "debug"
+
+class RetryPolicy(str, Enum):
+    NONE = "none"
+    STEP_ONCE = "step_once"
+    STEP_TWICE = "step_twice"
+    SAFE_LIMITED = "safe_limited"

@@ -912,3 +912,90 @@ def check_portfolio_store_health(context: 'RuntimeContext') -> HealthCheckResult
         return HealthCheckResult("portfolio_store", HealthCheckStatus.PASSED, "Portfolio store dir writable.")
     except Exception as e:
         return HealthCheckResult("portfolio_store", HealthCheckStatus.FAILED, f"Portfolio store failed: {e}")
+
+def check_runtime_config_health(context: 'RuntimeContext') -> HealthCheckResult:
+    result = HealthCheckResult(component="runtime_config", status="unknown")
+    try:
+        from usa_signal_bot.core.config_schema import AppConfig
+        if not hasattr(context.config, "runtime"):
+            return HealthCheckResult(component="runtime_config", status="warning", message="No runtime config found")
+        if context.config.runtime.enabled:
+            result.status = "pass"
+            result.message = "Runtime configuration is loaded."
+        else:
+            result.status = "warning"
+            result.message = "Runtime is disabled."
+    except Exception as e:
+        result.status = "fail"
+        result.message = str(e)
+    return result
+
+def check_runtime_lock_health(context: 'RuntimeContext') -> HealthCheckResult:
+    result = HealthCheckResult(component="runtime_lock", status="unknown")
+    try:
+        from usa_signal_bot.runtime.runtime_lock import RuntimeLockManager
+        from pathlib import Path
+        lock_dir = Path(context.config.data.root_dir) / "runtime" / "locks"
+        mgr = RuntimeLockManager(lock_dir)
+        is_locked = mgr.is_locked()
+        result.status = "pass"
+        result.message = f"Lock manager operational. Currently locked: {is_locked}"
+    except Exception as e:
+        result.status = "fail"
+        result.message = str(e)
+    return result
+
+def check_safe_stop_health(context: 'RuntimeContext') -> HealthCheckResult:
+    result = HealthCheckResult(component="safe_stop", status="unknown")
+    try:
+        from usa_signal_bot.runtime.safe_stop import SafeStopManager
+        from pathlib import Path
+        stop_file = Path(context.config.data.root_dir) / "runtime" / "stop.json"
+        mgr = SafeStopManager(stop_file)
+        is_stop = mgr.is_stop_requested()
+        result.status = "pass"
+        result.message = f"Safe stop manager operational. Stop requested: {is_stop}"
+    except Exception as e:
+        result.status = "fail"
+        result.message = str(e)
+    return result
+
+def check_market_scan_orchestrator_health(context: 'RuntimeContext') -> HealthCheckResult:
+    result = HealthCheckResult(component="market_scan_orchestrator", status="unknown")
+    try:
+        from usa_signal_bot.runtime.scan_orchestrator import MarketScanOrchestrator
+        from pathlib import Path
+        root = Path(context.config.data.root_dir)
+        _ = MarketScanOrchestrator(root)
+        result.status = "pass"
+        result.message = "MarketScanOrchestrator instantiated."
+    except Exception as e:
+        result.status = "fail"
+        result.message = str(e)
+    return result
+
+def check_scheduled_scan_plan_health(context: 'RuntimeContext') -> HealthCheckResult:
+    result = HealthCheckResult(component="scheduled_scan_plan", status="unknown")
+    try:
+        from usa_signal_bot.runtime.scan_scheduler import build_default_scheduled_scan_plan
+        plan = build_default_scheduled_scan_plan()
+        result.status = "pass"
+        result.message = f"Default plan generated. ID: {plan.plan_id}"
+    except Exception as e:
+        result.status = "fail"
+        result.message = str(e)
+    return result
+
+def check_scan_store_health(context: 'RuntimeContext') -> HealthCheckResult:
+    result = HealthCheckResult(component="scan_store", status="unknown")
+    try:
+        from usa_signal_bot.runtime.scan_store import scan_store_dir, list_scan_runs
+        from pathlib import Path
+        d = scan_store_dir(Path(context.config.data.root_dir))
+        runs = list_scan_runs(Path(context.config.data.root_dir))
+        result.status = "pass"
+        result.message = f"Scan store dir: {d}. Runs: {len(runs)}"
+    except Exception as e:
+        result.status = "fail"
+        result.message = str(e)
+    return result

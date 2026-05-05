@@ -2897,3 +2897,59 @@ class AppConfig:
     signal_scoring: SignalScoringConfigSchema = field(default_factory=SignalScoringConfigSchema)
     signal_quality: SignalQualityConfig = field(default_factory=SignalQualityConfig)
     confluence: ConfluenceConfig = field(default_factory=ConfluenceConfig)
+
+@dataclass
+class RuntimeConfig:
+    enabled: bool = True
+    default_mode: str = "manual_once"
+    data_root: str = "data"
+    lock_dir: str = "data/runtime/locks"
+    stop_file: str = "data/runtime/stop.json"
+    stale_lock_after_seconds: int = 7200
+    max_run_duration_seconds: int = 3600
+    continue_on_optional_step_failure: bool = True
+    fail_on_required_step_failure: bool = True
+    write_runtime_events: bool = True
+    write_scan_reports: bool = True
+    warn_no_live_execution: bool = True
+
+@dataclass
+class MarketScanConfig:
+    enabled: bool = True
+    default_scope: str = "latest_eligible_universe"
+    default_timeframes: List[str] = field(default_factory=lambda: ["1d"])
+    default_composite_set: str = "core"
+    default_rule_strategy_set: str = "basic_rules"
+    max_symbols_per_scan: int = 100
+    refresh_data_default: bool = False
+    write_outputs_default: bool = True
+    dry_run_default: bool = False
+    output_level: str = "normal"
+    small_test_symbols: List[str] = field(default_factory=lambda: ["SPY", "QQQ", "AAPL"])
+
+@dataclass
+class PipelineStepsConfig:
+    enabled: bool = True
+    preflight_required: bool = True
+    universe_resolve_required: bool = True
+    data_refresh_required: bool = False
+    data_readiness_required: bool = False
+    feature_pipeline_required: bool = True
+    strategy_run_required: bool = True
+    signal_ranking_required: bool = True
+    candidate_selection_required: bool = True
+    risk_evaluation_required: bool = False
+    portfolio_construction_required: bool = False
+    cleanup_required: bool = False
+
+@dataclass
+class ScheduledScanConfig:
+    enabled: bool = True
+    plan_only: bool = True
+    interval_minutes: int = 60
+    max_runs_per_day: int = 8
+    market_hours_only: bool = False
+    timezone: str = "Europe/Istanbul"
+    allow_background_daemon: bool = False
+    allow_os_cron_install: bool = False
+    write_plan_file: bool = True

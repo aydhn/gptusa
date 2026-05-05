@@ -543,3 +543,30 @@ class BasketStorageError(USASignalBotError):
 
 class BasketReportingError(USASignalBotError):
     pass
+
+class RuntimeOrchestrationError(USASignalBotError):
+    pass
+
+class RuntimeLockError(RuntimeOrchestrationError):
+    pass
+
+class SafeStopError(RuntimeOrchestrationError):
+    pass
+
+class PipelineStepError(RuntimeOrchestrationError):
+    pass
+
+class MarketScanError(RuntimeOrchestrationError):
+    pass
+
+class ScheduledScanError(RuntimeOrchestrationError):
+    pass
+
+class RuntimeValidationError(RuntimeOrchestrationError):
+    pass
+
+class RuntimeStorageError(RuntimeOrchestrationError):
+    pass
+
+class RuntimeReportingError(RuntimeOrchestrationError):
+    pass
