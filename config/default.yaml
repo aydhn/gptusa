@@ -352,3 +352,53 @@ stability_map:
   fragile_zone_max_stability_score: 35.0
   overfit_risk_high_range_ratio: 2.0
   write_stability_map: true
+
+portfolio_construction:
+  enabled: true
+  default_method: "notional_from_risk_decision"
+  available_methods:
+    - "equal_weight"
+    - "rank_weighted"
+    - "risk_score_weighted"
+    - "volatility_adjusted"
+    - "notional_from_risk_decision"
+    - "hybrid_baseline"
+    - "zero_allocation"
+  max_total_allocation_pct: 0.80
+  cash_buffer_pct: 0.05
+  allow_fractional_quantity: true
+  normalize_weights: true
+  write_portfolio_reports: true
+  warn_not_optimizer: true
+  warn_not_investment_advice: true
+
+allocation_limits:
+  enabled: true
+  max_candidate_weight: 0.10
+  min_candidate_weight: 0.0
+  max_symbol_weight: 0.15
+  max_strategy_weight: 0.30
+  max_timeframe_weight: 0.50
+  max_total_candidates: 20
+  reject_missing_price: true
+
+risk_budgeting:
+  enabled: true
+  max_total_budget_pct: 0.80
+  max_symbol_budget_pct: 0.15
+  max_strategy_budget_pct: 0.30
+  max_timeframe_budget_pct: 0.50
+  max_single_candidate_budget_pct: 0.10
+  min_cash_buffer_pct: 0.05
+  enforce_budget: true
+  write_budget_reports: true
+
+concentration_guards:
+  enabled: true
+  max_symbol_weight: 0.15
+  max_strategy_weight: 0.30
+  max_timeframe_weight: 0.50
+  max_single_candidate_weight: 0.10
+  reject_breaches: false
+  cap_breaches: true
+  write_concentration_reports: true

@@ -2460,6 +2460,39 @@ def main() -> int:
     p_rob_val.add_argument("--run-id", type=str, help="Run ID to validate")
     p_rob_val.add_argument("--latest", action="store_true", help="Validate latest run")
 
+
+    # Portfolio Commands
+    portfolio_info_parser = subparsers.add_parser("portfolio-info", help="Show portfolio construction configuration and limits.")
+
+    alloc_preview_parser = subparsers.add_parser("allocation-preview", help="Generate a preview of an allocation with fake candidates.")
+    alloc_preview_parser.add_argument("--method", type=str, required=True, help="Allocation method.")
+    alloc_preview_parser.add_argument("--equity", type=float, default=100000.0, help="Portfolio equity.")
+    alloc_preview_parser.add_argument("--cash", type=float, default=100000.0, help="Available cash.")
+    alloc_preview_parser.add_argument("--symbols", type=str, default="", help="Comma-separated symbols.")
+
+    port_build_risk_parser = subparsers.add_parser("portfolio-build-from-risk", help="Build a portfolio basket from risk decisions.")
+    port_build_risk_parser.add_argument("--risk-run-id", type=str, help="Risk run ID to build from.")
+    port_build_risk_parser.add_argument("--latest-risk", action="store_true", help="Use the latest risk run.")
+    port_build_risk_parser.add_argument("--equity", type=float, default=100000.0, help="Portfolio equity.")
+    port_build_risk_parser.add_argument("--cash", type=float, default=100000.0, help="Available cash.")
+    port_build_risk_parser.add_argument("--method", type=str, help="Allocation method.")
+    port_build_risk_parser.add_argument("--write", action="store_true", help="Write portfolio run files.")
+
+    port_build_cand_parser = subparsers.add_parser("portfolio-build-from-candidates", help="Build a portfolio basket from selected candidates.")
+    port_build_cand_parser.add_argument("--file", type=str, required=True, help="Candidates file path.")
+    port_build_cand_parser.add_argument("--equity", type=float, default=100000.0, help="Portfolio equity.")
+    port_build_cand_parser.add_argument("--cash", type=float, default=100000.0, help="Available cash.")
+    port_build_cand_parser.add_argument("--method", type=str, help="Allocation method.")
+    port_build_cand_parser.add_argument("--write", action="store_true", help="Write portfolio run files.")
+
+    port_summary_parser = subparsers.add_parser("portfolio-summary", help="Summary of portfolio runs.")
+
+    port_latest_parser = subparsers.add_parser("portfolio-latest", help="Show latest portfolio run.")
+
+    port_valid_parser = subparsers.add_parser("portfolio-validate", help="Validate portfolio construction result.")
+    port_valid_parser.add_argument("--latest", action="store_true", help="Validate latest run.")
+    port_valid_parser.add_argument("--run-id", type=str, help="Validate specific run ID.")
+
     args = parser.parse_args()
 
 

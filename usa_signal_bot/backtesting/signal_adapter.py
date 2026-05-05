@@ -127,3 +127,27 @@ def build_exit_order_for_position(
         quantity=position.quantity,
         reason=reason
     )
+
+def allocation_to_backtest_order_quantity(signal: 'StrategySignal', allocation: 'AllocationResult', fallback_quantity: float) -> float:
+    from usa_signal_bot.core.enums import AllocationStatus
+    if allocation is None:
+        return fallback_quantity
+    if allocation.status in [AllocationStatus.ALLOCATED, AllocationStatus.CAPPED, AllocationStatus.REDUCED]:
+        return allocation.target_quantity
+    if allocation.status in [AllocationStatus.REJECTED, AllocationStatus.ZERO, AllocationStatus.ERROR]:
+        return 0.0
+    return fallback_quantity
+
+def signal_to_order_intent_with_allocation(signal: 'StrategySignal', bar: 'OHLCVBar', config: 'SignalToOrderConfig', allocation: 'AllocationResult' = None) -> 'BacktestOrderIntent':
+    from usa_signal_bot.core.enums import BacktestOrderSide
+    intent = signal_to_order_intent(signal, bar, config)
+    if not intent:
+        return None
+
+    if allocation:
+        qty = allocation_to_backtest_order_quantity(signal, allocation, intent.quantity)
+        if qty <= 0:
+            return None
+        intent.quantity = qty
+
+    return intent

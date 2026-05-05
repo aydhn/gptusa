@@ -339,3 +339,33 @@ def test_cli_sensitivity_validate_no_latest(monkeypatch, capsys):
         assert e.code == 0
     out, _ = capsys.readouterr()
     assert "No run found to validate." in out
+
+def test_portfolio_info():
+    import subprocess
+    import sys
+    result = subprocess.run([sys.executable, "-m", "usa_signal_bot", "portfolio-info"], capture_output=True, text=True)
+    assert result.returncode == 0
+
+def test_allocation_preview():
+    import subprocess
+    import sys
+    result = subprocess.run([sys.executable, "-m", "usa_signal_bot", "allocation-preview", "--method", "equal_weight"], capture_output=True, text=True)
+    assert result.returncode == 0
+
+def test_portfolio_summary():
+    import subprocess
+    import sys
+    result = subprocess.run([sys.executable, "-m", "usa_signal_bot", "portfolio-summary"], capture_output=True, text=True)
+    assert result.returncode == 0
+
+def test_portfolio_latest():
+    import subprocess
+    import sys
+    result = subprocess.run([sys.executable, "-m", "usa_signal_bot", "portfolio-latest"], capture_output=True, text=True)
+    assert result.returncode == 0
+
+def test_portfolio_validate():
+    import subprocess
+    import sys
+    result = subprocess.run([sys.executable, "-m", "usa_signal_bot", "portfolio-validate", "--latest"], capture_output=True, text=True)
+    assert result.returncode == 0 # Or 1 depending on whether it fails gracefully vs error code

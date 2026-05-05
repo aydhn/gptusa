@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional, List
 
 from usa_signal_bot.risk.risk_models import (
     RiskDecision,
@@ -104,3 +104,34 @@ def risk_store_summary(data_root: Path) -> dict[str, Any]:
         "total_runs": len(runs),
         "latest_run": runs[0].name if runs else None
     }
+
+def find_latest_risk_decisions_file(data_root: Path) -> Optional[Path]:
+    runs = list_risk_runs(data_root)
+    if not runs:
+        return None
+    latest_run_dir = runs[0]
+    decisions_file = latest_run_dir / "decisions.jsonl"
+    if decisions_file.exists():
+        return decisions_file
+    return None
+
+def find_risk_run_decisions_file(data_root: Path, run_id: str) -> Optional[Path]:
+    store_dir = risk_store_dir(data_root)
+    run_dir = store_dir / run_id
+    decisions_file = run_dir / "decisions.jsonl"
+    if decisions_file.exists():
+        return decisions_file
+    return None
+
+def load_risk_decisions_from_jsonl(path: Path) -> List[dict]:
+    from usa_signal_bot.core.exceptions import RiskStorageError
+    import json
+    if not path.exists():
+        raise RiskStorageError(f"Decisions file not found: {path}")
+    data = []
+    with open(path, "r", encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if line:
+                data.append(json.loads(line))
+    return data
