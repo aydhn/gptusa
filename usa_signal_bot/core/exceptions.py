@@ -518,3 +518,28 @@ class PortfolioStorageError(PortfolioConstructionError):
 
 class PortfolioReportingError(PortfolioConstructionError):
     pass
+
+
+class BasketReplayError(USASignalBotError):
+    pass
+
+class BasketSimulationError(USASignalBotError):
+    pass
+
+class AllocationReplayError(USASignalBotError):
+    pass
+
+class AllocationDriftError(USASignalBotError):
+    pass
+
+class BasketMetricError(USASignalBotError):
+    pass
+
+class BasketValidationError(USASignalBotError):
+    pass
+
+class BasketStorageError(USASignalBotError):
+    pass
+
+class BasketReportingError(USASignalBotError):
+    pass

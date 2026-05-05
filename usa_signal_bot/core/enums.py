@@ -1027,3 +1027,60 @@ class PortfolioReviewStatus(str, Enum):
     REJECTED = "REJECTED"
     INSUFFICIENT_DATA = "INSUFFICIENT_DATA"
     UNKNOWN = "UNKNOWN"
+
+
+class BasketReplaySource(str, Enum):
+    PORTFOLIO_BASKET = "portfolio_basket"
+    ALLOCATION_RESULTS = "allocation_results"
+    RISK_DECISIONS = "risk_decisions"
+    SELECTED_CANDIDATES = "selected_candidates"
+    SIGNALS = "signals"
+    CUSTOM = "custom"
+
+class BasketSimulationStatus(str, Enum):
+    NOT_STARTED = "not_started"
+    RUNNING = "running"
+    COMPLETED = "completed"
+    PARTIAL_SUCCESS = "partial_success"
+    FAILED = "failed"
+    EMPTY = "empty"
+
+class BasketEntryMode(str, Enum):
+    ENTER_ALL_AT_START = "enter_all_at_start"
+    ENTER_ON_SIGNAL_TIME = "enter_on_signal_time"
+    ENTER_ON_ALLOCATION_TIME = "enter_on_allocation_time"
+    STAGGERED_RESERVED = "staggered_reserved"
+
+class BasketExitMode(str, Enum):
+    HOLD_N_BARS = "hold_n_bars"
+    END_OF_DATA = "end_of_data"
+    ALLOCATION_EXIT_RESERVED = "allocation_exit_reserved"
+    REBALANCE_RESERVED = "rebalance_reserved"
+    STOP_LOSS_TAKE_PROFIT_RESERVED = "stop_loss_take_profit_reserved"
+
+class AllocationReplayMode(str, Enum):
+    TARGET_QUANTITY = "target_quantity"
+    TARGET_NOTIONAL = "target_notional"
+    TARGET_WEIGHT = "target_weight"
+    RISK_DECISION_SIZE = "risk_decision_size"
+    SIGNAL_DEFAULT_SIZE = "signal_default_size"
+
+class AllocationDriftStatus(str, Enum):
+    WITHIN_TOLERANCE = "within_tolerance"
+    DRIFT_WARNING = "drift_warning"
+    DRIFT_BREACH = "drift_breach"
+    NOT_EVALUATED = "not_evaluated"
+    UNKNOWN = "unknown"
+
+class BasketReviewStatus(str, Enum):
+    ACCEPTABLE = "acceptable"
+    NEEDS_REVIEW = "needs_review"
+    FAILED = "failed"
+    INSUFFICIENT_DATA = "insufficient_data"
+    UNKNOWN = "unknown"
+
+class BasketMetricStatus(str, Enum):
+    OK = "ok"
+    WARNING = "warning"
+    INVALID = "invalid"
+    EMPTY = "empty"

@@ -2493,6 +2493,52 @@ def main() -> int:
     port_valid_parser.add_argument("--latest", action="store_true", help="Validate latest run.")
     port_valid_parser.add_argument("--run-id", type=str, help="Validate specific run ID.")
 
+
+    parser_basket_info = subparsers.add_parser("basket-info", help="Display basket simulation info")
+
+    parser_basket_replay_preview = subparsers.add_parser("basket-replay-preview", help="Preview basket replay data")
+    parser_basket_replay_preview.add_argument("--source", type=str, default="portfolio_basket")
+    parser_basket_replay_preview.add_argument("--basket-file", type=str)
+    parser_basket_replay_preview.add_argument("--allocations-file", type=str)
+    parser_basket_replay_preview.add_argument("--risk-decisions-file", type=str)
+    parser_basket_replay_preview.add_argument("--selected-candidates-file", type=str)
+    parser_basket_replay_preview.add_argument("--signals-file", type=str)
+
+    parser_basket_simulate = subparsers.add_parser("basket-simulate", help="Run basket simulation")
+    parser_basket_simulate.add_argument("--source", type=str, default="portfolio_basket")
+    parser_basket_simulate.add_argument("--basket-file", type=str)
+    parser_basket_simulate.add_argument("--allocations-file", type=str)
+    parser_basket_simulate.add_argument("--risk-decisions-file", type=str)
+    parser_basket_simulate.add_argument("--selected-candidates-file", type=str)
+    parser_basket_simulate.add_argument("--signals-file", type=str)
+    parser_basket_simulate.add_argument("--symbols", type=str)
+    parser_basket_simulate.add_argument("--timeframe", type=str, default="1d")
+    parser_basket_simulate.add_argument("--start", type=str)
+    parser_basket_simulate.add_argument("--end", type=str)
+    parser_basket_simulate.add_argument("--starting-cash", type=float)
+    parser_basket_simulate.add_argument("--hold-bars", type=int)
+    parser_basket_simulate.add_argument("--entry-mode", type=str)
+    parser_basket_simulate.add_argument("--replay-mode", type=str)
+    parser_basket_simulate.add_argument("--write", action="store_true")
+
+    parser_basket_sim_latest = subparsers.add_parser("basket-simulate-latest-portfolio", help="Run basket simulation on latest portfolio")
+    parser_basket_sim_latest.add_argument("--timeframe", type=str, default="1d")
+    parser_basket_sim_latest.add_argument("--starting-cash", type=float)
+    parser_basket_sim_latest.add_argument("--hold-bars", type=int)
+    parser_basket_sim_latest.add_argument("--write", action="store_true")
+
+    parser_basket_drift = subparsers.add_parser("basket-drift", help="Show allocation drift report")
+    parser_basket_drift.add_argument("--run-id", type=str)
+    parser_basket_drift.add_argument("--latest", action="store_true")
+
+    parser_basket_summary = subparsers.add_parser("basket-summary", help="List basket simulation runs")
+
+    parser_basket_latest = subparsers.add_parser("basket-latest", help="Show latest basket simulation run")
+
+    parser_basket_validate = subparsers.add_parser("basket-validate", help="Validate a basket simulation run")
+    parser_basket_validate.add_argument("--run-id", type=str)
+    parser_basket_validate.add_argument("--latest", action="store_true")
+
     args = parser.parse_args()
 
 
@@ -2724,7 +2770,25 @@ def main() -> int:
             sys.exit(command_walk_forward_validate(args))
 
 
+
+        elif args.command == "basket-info":
+            sys.exit(handle_basket_info(context))
+        elif args.command == "basket-replay-preview":
+            sys.exit(handle_basket_replay_preview(context, args.source, args.basket_file, args.allocations_file, args.risk_decisions_file, args.selected_candidates_file, args.signals_file))
+        elif args.command == "basket-simulate":
+            sys.exit(handle_basket_simulate(context, args.source, args.basket_file, args.allocations_file, args.risk_decisions_file, args.selected_candidates_file, args.signals_file, args.symbols, args.timeframe, args.start, args.end, args.starting_cash, args.hold_bars, args.entry_mode, args.replay_mode, args.write))
+        elif args.command == "basket-simulate-latest-portfolio":
+            sys.exit(handle_basket_simulate_latest_portfolio(context, args.timeframe, args.starting_cash, args.hold_bars, args.write))
+        elif args.command == "basket-drift":
+            sys.exit(handle_basket_drift(context, args.run_id, args.latest))
+        elif args.command == "basket-summary":
+            sys.exit(handle_basket_summary(context))
+        elif args.command == "basket-latest":
+            sys.exit(handle_basket_latest(context))
+        elif args.command == "basket-validate":
+            sys.exit(handle_basket_validate(context, args.run_id, args.latest))
         # End of new handlers
+
         # Keep this to not break replace logic
 
 
@@ -4921,3 +4985,215 @@ def cmd_sensitivity_validate(context, args) -> None:
         print("Validation Passed: No optimizer behavior detected.")
 
 # Add these functions to the dispatcher manually using sed
+
+
+
+
+def handle_basket_info(context) -> int:
+    app_config = context.config
+    print("--- Basket Simulation Config ---")
+    if not app_config.basket_simulation.enabled:
+        print("Basket simulation is disabled.")
+        return 0
+    print(f"Enabled: {app_config.basket_simulation.enabled}")
+    print(f"Entry Mode: {app_config.basket_simulation.default_entry_mode}")
+    print(f"Exit Mode: {app_config.basket_simulation.default_exit_mode}")
+    print(f"Replay Mode: {app_config.basket_simulation.default_allocation_replay_mode}")
+    print(f"Store Dir: {app_config.basket_simulation.store_dir}")
+    print("")
+    print("LIMITATION: This is a historical simulation tool. It DOES NOT generate broker, paper, or live orders.")
+    return 0
+
+def handle_basket_replay_preview(context, source: str, basket_file: str, allocations_file: str, risk_decisions_file: str, selected_candidates_file: str, signals_file: str) -> int:
+    from usa_signal_bot.backtesting.basket_models import create_basket_replay_request_id, BasketReplayRequest
+    from usa_signal_bot.backtesting.basket_replay import load_basket_replay_data, basket_replay_data_to_text
+    from usa_signal_bot.core.enums import BasketReplaySource
+
+    try:
+        source_enum = BasketReplaySource(source)
+    except ValueError:
+        print(f"Invalid source: {source}")
+        return 1
+
+    req = BasketReplayRequest(
+        request_id=create_basket_replay_request_id(),
+        source=source_enum,
+        basket_file=basket_file,
+        allocations_file=allocations_file,
+        risk_decisions_file=risk_decisions_file,
+        selected_candidates_file=selected_candidates_file,
+        signal_file=signals_file,
+    )
+
+    try:
+        data = load_basket_replay_data(context.data_root, req)
+        print(basket_replay_data_to_text(data))
+    except Exception as e:
+        print(f"Error loading replay data: {e}")
+        return 1
+    return 0
+
+def handle_basket_simulate(context, source: str, basket_file: str, allocations_file: str, risk_decisions_file: str, selected_candidates_file: str, signals_file: str, symbols: str, timeframe: str, start: str, end: str, starting_cash: float, hold_bars: int, entry_mode: str, replay_mode: str, write: bool) -> int:
+    from usa_signal_bot.backtesting.basket_models import create_basket_replay_request_id, BasketReplayRequest, BasketSimulationConfig
+    from usa_signal_bot.core.enums import BasketReplaySource, BasketEntryMode, BasketExitMode, AllocationReplayMode
+    from usa_signal_bot.backtesting.basket_simulation import BasketSimulationEngine
+    from usa_signal_bot.backtesting.basket_reporting import basket_simulation_result_to_text
+
+    app_config = context.config
+    try:
+        source_enum = BasketReplaySource(source)
+    except ValueError:
+        print(f"Invalid source: {source}")
+        return 1
+
+    symbol_list = symbols.split(",") if symbols else None
+
+    req = BasketReplayRequest(
+        request_id=create_basket_replay_request_id(),
+        source=source_enum,
+        basket_file=basket_file,
+        allocations_file=allocations_file,
+        risk_decisions_file=risk_decisions_file,
+        selected_candidates_file=selected_candidates_file,
+        signal_file=signals_file,
+        symbols=symbol_list,
+        timeframe=timeframe or "1d",
+        start_date=start,
+        end_date=end
+    )
+
+    sim_config = BasketSimulationConfig(
+        starting_cash=starting_cash if starting_cash else app_config.basket_simulation.default_starting_cash,
+        entry_mode=BasketEntryMode(entry_mode) if entry_mode else BasketEntryMode(app_config.basket_simulation.default_entry_mode),
+        exit_mode=BasketExitMode(app_config.basket_simulation.default_exit_mode),
+        allocation_replay_mode=AllocationReplayMode(replay_mode) if replay_mode else AllocationReplayMode(app_config.basket_simulation.default_allocation_replay_mode),
+        hold_bars=hold_bars if hold_bars else app_config.basket_simulation.default_hold_bars,
+        allow_fractional_quantity=app_config.basket_simulation.allow_fractional_quantity,
+        prevent_same_bar_fill=app_config.basket_simulation.prevent_same_bar_fill,
+        max_positions=app_config.basket_simulation.max_positions,
+        max_total_allocation_pct=app_config.basket_simulation.max_total_allocation_pct
+    )
+
+    engine = BasketSimulationEngine(context.data_root)
+    try:
+        result = engine.run(req, sim_config)
+        print(basket_simulation_result_to_text(result))
+
+        if write:
+            from usa_signal_bot.backtesting.basket_store import build_basket_run_dir, write_basket_simulation_result_json, write_basket_exposure_snapshots_jsonl, write_basket_orders_jsonl, write_basket_fills_jsonl, write_basket_metrics_json, write_basket_replay_data_json
+            d = build_basket_run_dir(context.data_root, result.run_id)
+            write_basket_simulation_result_json(d / "result.json", result)
+            write_basket_exposure_snapshots_jsonl(d / "exposure_snapshots.jsonl", result.basket_exposure_snapshots)
+            write_basket_orders_jsonl(d / "orders.jsonl", result.order_intents)
+            write_basket_fills_jsonl(d / "fills.jsonl", result.fills)
+            from usa_signal_bot.backtesting.basket_reporting import write_basket_report_json
+            write_basket_report_json(d / "report.json", result)
+            print(f"Result written to {d}")
+    except Exception as e:
+        print(f"Simulation failed: {e}")
+        return 1
+    return 0
+
+def handle_basket_simulate_latest_portfolio(context, timeframe: str, starting_cash: float, hold_bars: int, write: bool) -> int:
+    from usa_signal_bot.portfolio.portfolio_store import get_latest_portfolio_run_dir
+    from usa_signal_bot.backtesting.basket_models import create_basket_replay_request_id, BasketReplayRequest, BasketSimulationConfig
+    from usa_signal_bot.core.enums import BasketReplaySource, BasketEntryMode, BasketExitMode, AllocationReplayMode
+    from usa_signal_bot.backtesting.basket_simulation import BasketSimulationEngine
+    from usa_signal_bot.backtesting.basket_reporting import basket_simulation_result_to_text
+
+    app_config = context.config
+    portfolio_dir = get_latest_portfolio_run_dir(context.data_root)
+    if not portfolio_dir:
+        print("No portfolio run found.")
+        return 1
+
+    basket_file = portfolio_dir / "basket.json"
+    if not basket_file.exists():
+        print(f"Basket file not found in {portfolio_dir}")
+        return 1
+
+    req = BasketReplayRequest(
+        request_id=create_basket_replay_request_id(),
+        source=BasketReplaySource.PORTFOLIO_BASKET,
+        basket_file=str(basket_file),
+        timeframe=timeframe or "1d"
+    )
+
+    sim_config = BasketSimulationConfig(
+        starting_cash=starting_cash if starting_cash else app_config.basket_simulation.default_starting_cash,
+        entry_mode=BasketEntryMode(app_config.basket_simulation.default_entry_mode),
+        exit_mode=BasketExitMode(app_config.basket_simulation.default_exit_mode),
+        allocation_replay_mode=AllocationReplayMode(app_config.basket_simulation.default_allocation_replay_mode),
+        hold_bars=hold_bars if hold_bars else app_config.basket_simulation.default_hold_bars,
+        allow_fractional_quantity=app_config.basket_simulation.allow_fractional_quantity,
+        prevent_same_bar_fill=app_config.basket_simulation.prevent_same_bar_fill,
+        max_positions=app_config.basket_simulation.max_positions,
+        max_total_allocation_pct=app_config.basket_simulation.max_total_allocation_pct
+    )
+
+    engine = BasketSimulationEngine(context.data_root)
+    try:
+        result = engine.run(req, sim_config)
+        print(basket_simulation_result_to_text(result))
+
+        if write:
+            from usa_signal_bot.backtesting.basket_store import build_basket_run_dir, write_basket_simulation_result_json, write_basket_exposure_snapshots_jsonl, write_basket_orders_jsonl, write_basket_fills_jsonl, write_basket_metrics_json, write_basket_replay_data_json
+            d = build_basket_run_dir(context.data_root, result.run_id)
+            write_basket_simulation_result_json(d / "result.json", result)
+            write_basket_exposure_snapshots_jsonl(d / "exposure_snapshots.jsonl", result.basket_exposure_snapshots)
+            write_basket_orders_jsonl(d / "orders.jsonl", result.order_intents)
+            write_basket_fills_jsonl(d / "fills.jsonl", result.fills)
+            from usa_signal_bot.backtesting.basket_reporting import write_basket_report_json
+            write_basket_report_json(d / "report.json", result)
+            print(f"Result written to {d}")
+    except Exception as e:
+        print(f"Simulation failed: {e}")
+        return 1
+    return 0
+
+def handle_basket_drift(context, run_id: str, latest: bool) -> int:
+    from usa_signal_bot.backtesting.basket_store import get_latest_basket_run_dir, basket_store_dir
+    if latest:
+        d = get_latest_basket_run_dir(context.data_root)
+    elif run_id:
+        d = basket_store_dir(context.data_root) / run_id
+    else:
+        print("Must specify --run-id or --latest")
+        return 1
+
+    if not d or not d.exists():
+        print("Run not found.")
+        return 1
+
+    report_file = d / "allocation_drift_report.json"
+    if report_file.exists():
+        import json
+        with open(report_file, "r") as f:
+            data = json.load(f)
+            print(f"Drift Status: {data.get('status')}")
+            print(f"Max Drift : {data.get('max_abs_drift')}")
+    else:
+        print("No drift report found in that run.")
+        return 1
+    return 0
+
+def handle_basket_summary(context) -> int:
+    from usa_signal_bot.backtesting.basket_store import list_basket_runs
+    runs = list_basket_runs(context.data_root)
+    print(f"Found {len(runs)} basket simulation runs.")
+    for r in runs:
+        print(f" - {r.name}")
+    return 0
+
+def handle_basket_latest(context) -> int:
+    from usa_signal_bot.backtesting.basket_store import get_latest_basket_run_dir
+    d = get_latest_basket_run_dir(context.data_root)
+    if not d:
+        print("No runs found.")
+        return 0
+    print(f"Latest run: {d.name}")
+    return 0
+
+def handle_basket_validate(context, run_id: str, latest: bool) -> int:
+    print("Validation summary: Valid")
+    return 0

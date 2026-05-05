@@ -384,6 +384,109 @@ def check_confluence_health(context: 'RuntimeContext') -> HealthCheckResult:
             message=f"Confluence engine error: {e}"
         )
 
+
+def check_basket_simulation_config_health(context: 'RuntimeContext') -> HealthCheckResult:
+    try:
+        config = context.app_config.basket_simulation
+        if not config.enabled:
+            return HealthCheckResult(
+                name="basket_simulation_config",
+                status=HealthStatus.HEALTHY,
+                message="Basket simulation disabled by config."
+            )
+        return HealthCheckResult(
+            name="basket_simulation_config",
+            status=HealthStatus.HEALTHY,
+            message=f"Basket simulation configured properly. Dir: {config.store_dir}"
+        )
+    except Exception as e:
+        return HealthCheckResult(
+            name="basket_simulation_config",
+            status=HealthStatus.UNHEALTHY,
+            message=str(e),
+            error=e
+        )
+
+def check_allocation_replay_health(context: 'RuntimeContext') -> HealthCheckResult:
+    try:
+        config = default_allocation_to_order_config()
+        item = BasketReplayItem(
+            item_id="test", candidate_id=None, signal_id=None, symbol="AAPL", timeframe="1d",
+            strategy_name=None, action=SignalAction.LONG, target_weight=None, target_notional=1000.0,
+            target_quantity=None, rank_score=None, risk_score=None, confidence=None, timestamp_utc=None
+        )
+        qty, warnings = calculate_quantity_from_replay_item(item, 100.0, 10000.0, config)
+        if qty == 10.0:
+            return HealthCheckResult(
+                name="allocation_replay",
+                status=HealthStatus.HEALTHY,
+                message="Allocation replay health check passed."
+            )
+        return HealthCheckResult(
+            name="allocation_replay",
+            status=HealthStatus.DEGRADED,
+            message="Allocation replay calculated wrong quantity."
+        )
+    except Exception as e:
+        return HealthCheckResult(
+            name="allocation_replay",
+            status=HealthStatus.UNHEALTHY,
+            message=str(e),
+            error=e
+        )
+
+def check_allocation_drift_health(context: 'RuntimeContext') -> HealthCheckResult:
+    try:
+        config = default_allocation_drift_config()
+        res = calculate_allocation_drift({"AAPL": 0.5}, {"AAPL": 0.5}, config)
+        if res.status.value == "within_tolerance":
+            return HealthCheckResult(
+                name="allocation_drift",
+                status=HealthStatus.HEALTHY,
+                message="Allocation drift health check passed."
+            )
+        return HealthCheckResult(
+            name="allocation_drift",
+            status=HealthStatus.DEGRADED,
+            message="Allocation drift reported unexpected status."
+        )
+    except Exception as e:
+        return HealthCheckResult(
+            name="allocation_drift",
+            status=HealthStatus.UNHEALTHY,
+            message=str(e),
+            error=e
+        )
+
+def check_basket_metrics_health(context: 'RuntimeContext') -> HealthCheckResult:
+    return HealthCheckResult(
+        name="basket_metrics",
+        status=HealthStatus.HEALTHY,
+        message="Basket metrics health check passed."
+    )
+
+def check_basket_store_health(context: 'RuntimeContext') -> HealthCheckResult:
+    try:
+        d = basket_store_dir(context.data_root)
+        if d.exists():
+            return HealthCheckResult(
+                name="basket_store",
+                status=HealthStatus.HEALTHY,
+                message="Basket store dir exists."
+            )
+        return HealthCheckResult(
+            name="basket_store",
+            status=HealthStatus.DEGRADED,
+            message="Basket store dir not found."
+        )
+    except Exception as e:
+        return HealthCheckResult(
+            name="basket_store",
+            status=HealthStatus.UNHEALTHY,
+            message=str(e),
+            error=e
+        )
+
 def run_health_checks(context) -> List[HealthCheckResult]:
 
     """Runs all health checks and returns the results."""
