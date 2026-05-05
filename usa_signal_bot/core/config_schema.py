@@ -648,7 +648,47 @@ class OutOfSampleEvaluationConfig:
 
 
 @dataclass
+class ParameterSensitivityConfigSchema:
+    enabled: bool = True
+    max_cells: int = 100
+    hard_max_cells: int = 1000
+    continue_on_cell_error: bool = True
+    run_backtest: bool = True
+    include_benchmark: bool = False
+    include_monte_carlo: bool = False
+    include_walk_forward: bool = False
+    primary_metric: str = "RETURN_PCT"
+    stability_metric: str = "STABILITY_SCORE"
+    min_completed_cells: int = 5
+    write_sensitivity_reports: bool = True
+    warn_not_optimizer: bool = True
+
+@dataclass
+class RobustnessGridConfig:
+    enabled: bool = True
+    default_grid_type: str = "SINGLE_PARAMETER"
+    max_single_parameter_values: int = 20
+    max_two_parameter_cells: int = 100
+    max_multi_parameter_cells: int = 250
+    local_neighborhood_radius: int = 2
+    detect_robust_regions: bool = True
+    detect_fragile_regions: bool = True
+    min_robust_region_size: int = 2
+
+@dataclass
+class StabilityMapConfig:
+    enabled: bool = True
+    local_stability_neighbors: int = 2
+    robust_zone_min_stability_score: float = 65.0
+    fragile_zone_max_stability_score: float = 35.0
+    overfit_risk_high_range_ratio: float = 2.0
+    write_stability_map: bool = True
+
+@dataclass
 class AppConfig:
+    parameter_sensitivity: ParameterSensitivityConfigSchema = field(default_factory=ParameterSensitivityConfigSchema)
+    robustness_grid: RobustnessGridConfig = field(default_factory=RobustnessGridConfig)
+    stability_map: StabilityMapConfig = field(default_factory=StabilityMapConfig)
     transaction_costs: TransactionCostsConfig = field(default_factory=TransactionCostsConfig)
     slippage: SlippageConfigSchema = field(default_factory=SlippageConfigSchema)
     trade_ledger: TradeLedgerConfig = field(default_factory=TradeLedgerConfig)

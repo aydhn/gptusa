@@ -445,3 +445,27 @@ class WalkForwardStorageError(WalkForwardError):
 class OutOfSampleEvaluationError(WalkForwardError):
     """Raised when there is an issue with Out-of-Sample evaluation."""
     pass
+
+class ParameterSensitivityError(USASignalBotError):
+    pass
+
+class ParameterGridError(ParameterSensitivityError):
+    pass
+
+class SensitivityRunnerError(ParameterSensitivityError):
+    pass
+
+class StabilityMapError(ParameterSensitivityError):
+    pass
+
+class SensitivityMetricError(ParameterSensitivityError):
+    pass
+
+class SensitivityValidationError(ParameterSensitivityError):
+    pass
+
+class SensitivityStorageError(ParameterSensitivityError):
+    pass
+
+class NonOptimizerGuardError(ParameterSensitivityError):
+    pass
