@@ -2800,7 +2800,54 @@ class ConcentrationGuardsConfig:
     write_concentration_reports: bool
 
 @dataclass
+
+@dataclass
+class BasketSimulationConfigSchema:
+    enabled: bool = True
+    store_dir: str = "data/backtests/baskets"
+    default_starting_cash: float = 100000.0
+    default_entry_mode: str = "enter_all_at_start"
+    default_exit_mode: str = "hold_n_bars"
+    default_allocation_replay_mode: str = "target_notional"
+    default_hold_bars: int = 5
+    prevent_same_bar_fill: bool = True
+    allow_fractional_quantity: bool = True
+    max_positions: int = 20
+    max_total_allocation_pct: float = 0.80
+    enable_transaction_costs: bool = True
+    enable_slippage: bool = True
+    enable_benchmark_comparison: bool = False
+    benchmark_set_name: str = "default"
+    write_basket_reports: bool = True
+    warn_not_live_execution: bool = True
+
+@dataclass
+class AllocationReplayConfig:
+    enabled: bool = True
+    default_quantity: float = 1.0
+    default_notional: float = 5000.0
+    min_notional: float = 0.0
+    max_notional: float = 10000.0
+    allow_short: bool = False
+    order_type: str = "next_open"
+    reject_missing_price: bool = True
+    reject_zero_quantity: bool = True
+
+@dataclass
+class AllocationDriftConfigSchema:
+    enabled: bool = True
+    drift_warning_threshold: float = 0.03
+    drift_breach_threshold: float = 0.05
+    evaluate_by_symbol: bool = True
+    evaluate_total_weight: bool = True
+    write_drift_reports: bool = True
+
+
+@dataclass
 class AppConfig:
+    basket_simulation: BasketSimulationConfigSchema = None
+    allocation_replay: AllocationReplayConfig = None
+    allocation_drift: AllocationDriftConfigSchema = None
     portfolio_construction: 'PortfolioConstructionConfig' = None
     allocation_limits: 'AllocationLimitsConfig' = None
     risk_budgeting: 'RiskBudgetingConfig' = None

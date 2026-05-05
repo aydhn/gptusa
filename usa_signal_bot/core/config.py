@@ -5,7 +5,10 @@ from pathlib import Path
 from dataclasses import asdict
 from typing import Optional
 
+
 from usa_signal_bot.core.config_schema import AppConfig
+from usa_signal_bot.core.config_schema import BasketSimulationConfigSchema, AllocationReplayConfig, AllocationDriftConfigSchema
+
 from usa_signal_bot.core.exceptions import ConfigError
 from usa_signal_bot.utils.dict_utils import deep_merge_dicts
 from usa_signal_bot.core import paths
@@ -190,6 +193,22 @@ def load_app_config(config_dir: Optional[Path] = None) -> AppConfig:
 
 
         validate_config(config)
+
+        if "basket_simulation" in merged_cfg_dict:
+            config.basket_simulation = BasketSimulationConfigSchema(**merged_cfg_dict["basket_simulation"])
+        else:
+            config.basket_simulation = BasketSimulationConfigSchema()
+
+        if "allocation_replay" in merged_cfg_dict:
+            config.allocation_replay = AllocationReplayConfig(**merged_cfg_dict["allocation_replay"])
+        else:
+            config.allocation_replay = AllocationReplayConfig()
+
+        if "allocation_drift" in merged_cfg_dict:
+            config.allocation_drift = AllocationDriftConfigSchema(**merged_cfg_dict["allocation_drift"])
+        else:
+            config.allocation_drift = AllocationDriftConfigSchema()
+
         return config
 
     except Exception as e:
