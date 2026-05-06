@@ -182,6 +182,23 @@ def load_app_config(config_dir: Optional[Path] = None) -> AppConfig:
             for k, v in merged_cfg_dict["active_universe"].items():
                 setattr(config.active_universe, k, v)
 
+
+        if "alert_policy" in merged_cfg_dict:
+            for k, v in merged_cfg_dict["alert_policy"].items():
+                setattr(config.alert_policy, k, v)
+
+        if "alert_thresholds" in merged_cfg_dict:
+            for k, v in merged_cfg_dict["alert_thresholds"].items():
+                setattr(config.alert_thresholds, k, v)
+
+        if "severity_routing" in merged_cfg_dict:
+            for k, v in merged_cfg_dict["severity_routing"].items():
+                setattr(config.severity_routing, k, v)
+
+        if "alert_cooldown" in merged_cfg_dict:
+            for k, v in merged_cfg_dict["alert_cooldown"].items():
+                setattr(config.alert_cooldown, k, v)
+
         if "universe_readiness_gate" in merged_cfg_dict:
             for k, v in merged_cfg_dict["universe_readiness_gate"].items():
                 setattr(config.universe_readiness_gate, k, v)

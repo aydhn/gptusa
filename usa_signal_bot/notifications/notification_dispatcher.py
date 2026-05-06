@@ -181,3 +181,11 @@ class NotificationDispatcher:
             res.status = NotificationDispatchStatus.DRY_RUN_ONLY
 
         return res
+
+
+    def enqueue_alert_messages(self, messages: List[NotificationMessage]):
+        return self.enqueue_many(messages)
+
+    def dispatch_alert_evaluation(self, result: 'AlertEvaluationResult') -> NotificationDispatchResult:
+        self.enqueue_alert_messages(result.messages)
+        return self.dispatch_all()

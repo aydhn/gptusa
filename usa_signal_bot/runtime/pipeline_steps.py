@@ -165,12 +165,31 @@ class PipelineStepRunner:
 
     def run_notification(self, context: Dict[str, Any]) -> PipelineStepResult:
         res = PipelineStepResult(step_name=PipelineStepName.NOTIFICATION, status=PipelineStepStatus.COMPLETED)
-        request: MarketScanRequest = context.get("request")
-        if request.mode == RuntimeMode.DRY_RUN:
+        request = context.get("request")
+        if not getattr(request, "notify", False):
             res.status = PipelineStepStatus.SKIPPED
-            res.summary["reason"] = "Dry run skips active notification"
+            res.summary["reason"] = "Notify is False"
             return res
+
+        import datetime
+        from usa_signal_bot.runtime.runtime_models import MarketScanResult
+        from usa_signal_bot.core.enums import RuntimeRunStatus
+        from usa_signal_bot.notifications.notification_adapters import build_policy_driven_scan_notifications
+        from usa_signal_bot.notifications.alert_policy import default_alert_policies
+        from usa_signal_bot.notifications.alert_evaluator import AlertEvaluator
+
+        scan_res = MarketScanResult(
+            run_id=context.get("run_id", "dummy"),
+            created_at_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
+            request=request,
+            status=RuntimeRunStatus.COMPLETED,
+        )
+
+        evaluator = AlertEvaluator(policies=default_alert_policies())
+        eval_res, msgs = build_policy_driven_scan_notifications(scan_res, evaluator=evaluator)
+
         res.summary["notifications_sent"] = 0
+        res.summary["alert_evaluations"] = eval_res.triggered_count
         return res
 
     def run_cleanup(self, context: Dict[str, Any]) -> PipelineStepResult:

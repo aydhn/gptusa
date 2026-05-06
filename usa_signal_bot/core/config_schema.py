@@ -276,13 +276,6 @@ class ConcentrationGuardsConfig:
     write_concentration_reports: bool
 
 @dataclass
-class TelegramConfig:
-    enabled: bool = False
-    bot_token_env: str = "TELEGRAM_BOT_TOKEN"
-    chat_id_env: str = "TELEGRAM_CHAT_ID"
-    parse_mode: str = "HTML"
-
-@dataclass
 class PortfolioConstructionConfig:
     enabled: bool
     default_method: str
