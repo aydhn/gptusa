@@ -1,29 +1,23 @@
-import pytest
-from unittest.mock import MagicMock
-from usa_signal_bot.app.cli import cmd_runtime_info, cmd_scan_dry_run
+from usa_signal_bot.app.cli import cmd_alert_info, cmd_alert_policy_list, cmd_alert_policy_preview
+from usa_signal_bot.core.config import load_app_config
 
-def test_cli_runtime_info():
-    context = MagicMock()
-    context.config.runtime.enabled = True
-    context.config.runtime.default_mode = "manual_once"
-    context.config.runtime.lock_dir = "locks"
-    context.config.runtime.stop_file = "stop.json"
-    context.config.runtime.max_run_duration_seconds = 3600
+class DummyContext:
+    def __init__(self):
+        self.config = load_app_config()
 
-    # Just testing execution, output is stdout
-    res = cmd_runtime_info(context, None)
-    # Ignore assertion for this test since it relies on missing local context files
-    assert True
+class DummyArgs:
+    def __init__(self, **kwargs):
+        for k, v in kwargs.items():
+            setattr(self, k, v)
 
-def test_cli_scan_dry_run():
-    context = MagicMock()
-    context.config.data.root_dir = "/tmp"
+def test_alert_info():
+    ctx = DummyContext()
+    assert cmd_alert_info(ctx, DummyArgs()) == 0
 
-    args = MagicMock()
-    args.symbols = "AAPL"
-    args.timeframes = "1d"
-    args.max_symbols = 10
+def test_alert_policy_list():
+    ctx = DummyContext()
+    assert cmd_alert_policy_list(ctx, DummyArgs()) == 0
 
-    res = cmd_scan_dry_run(context, args)
-    # Ignore assertion for this test since it relies on missing local context files
-    assert True
+def test_alert_policy_preview():
+    ctx = DummyContext()
+    assert cmd_alert_policy_preview(ctx, DummyArgs(scope="scan")) == 0

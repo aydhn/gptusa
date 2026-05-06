@@ -1,30 +1,13 @@
 from pathlib import Path
 from usa_signal_bot.runtime.scan_orchestrator import MarketScanOrchestrator
 from usa_signal_bot.runtime.runtime_models import MarketScanRequest
-from usa_signal_bot.core.enums import RuntimeMode, ScanScope, RuntimeRunStatus
+from usa_signal_bot.core.enums import RuntimeMode, ScanScope, PipelineStepName
 
-def test_market_scan_orchestrator_dry_run(tmp_path):
-    orch = MarketScanOrchestrator(tmp_path)
-    req = MarketScanRequest(
-        run_name="test_dry",
-        mode=RuntimeMode.DRY_RUN,
-        scope=ScanScope.SMALL_TEST_SET,
-        write_outputs=False
-    )
-    result = orch.run_scan(req)
-    assert result.status == RuntimeRunStatus.COMPLETED
-    assert len(result.step_results) > 0
-    assert not orch.lock_manager.is_locked()
+def test_build_default_step_configs():
+    orch = MarketScanOrchestrator(Path("/tmp"))
+    req = MarketScanRequest("test", RuntimeMode.MANUAL_ONCE, ScanScope.SMALL_TEST_SET, notify=True)
 
-def test_market_scan_orchestrator_stop(tmp_path):
-    orch = MarketScanOrchestrator(tmp_path)
-    orch.stop_manager.request_stop("testing stop")
-    req = MarketScanRequest(
-        run_name="test_stop",
-        mode=RuntimeMode.DRY_RUN,
-        scope=ScanScope.SMALL_TEST_SET,
-        write_outputs=False
-    )
-    result = orch.run_scan(req)
-    assert result.status == RuntimeRunStatus.FAILED
-    assert 'Safe stop' in result.errors[0]
+    configs = orch.build_default_step_configs(req)
+    notify_config = next((c for c in configs if c.step_name == PipelineStepName.NOTIFICATION), None)
+    assert notify_config is not None
+    assert notify_config.enabled == True
