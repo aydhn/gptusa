@@ -570,3 +570,36 @@ class RuntimeStorageError(RuntimeOrchestrationError):
 
 class RuntimeReportingError(RuntimeOrchestrationError):
     pass
+
+class NotificationError(USASignalBotError):
+    pass
+
+class NotificationTemplateError(NotificationError):
+    pass
+
+class NotificationQueueError(NotificationError):
+    pass
+
+class NotificationDispatchError(NotificationError):
+    pass
+
+class NotificationRateLimitError(NotificationError):
+    pass
+
+class NotificationDedupError(NotificationError):
+    pass
+
+class TelegramConfigError(NotificationError):
+    pass
+
+class TelegramSendError(NotificationError):
+    pass
+
+class NotificationValidationError(NotificationError):
+    pass
+
+class NotificationStorageError(NotificationError):
+    pass
+
+class NotificationReportingError(NotificationError):
+    pass

@@ -11,6 +11,8 @@ class PipelineStepRunner:
         self.data_root = data_root
 
     def run_step(self, step_config: PipelineStepConfig, context: Dict[str, Any]) -> PipelineStepResult:
+        if step_config.step_name == PipelineStepName.NOTIFICATION:
+            return self.run_notification(context)
         start_time = time.time()
         start_utc = datetime.datetime.now(datetime.timezone.utc).isoformat()
 
@@ -159,6 +161,16 @@ class PipelineStepRunner:
     def run_scan_report(self, context: Dict[str, Any]) -> PipelineStepResult:
         res = PipelineStepResult(step_name=PipelineStepName.SCAN_REPORT, status=PipelineStepStatus.COMPLETED)
         res.summary["report_generated"] = True
+        return res
+
+    def run_notification(self, context: Dict[str, Any]) -> PipelineStepResult:
+        res = PipelineStepResult(step_name=PipelineStepName.NOTIFICATION, status=PipelineStepStatus.COMPLETED)
+        request: MarketScanRequest = context.get("request")
+        if request.mode == RuntimeMode.DRY_RUN:
+            res.status = PipelineStepStatus.SKIPPED
+            res.summary["reason"] = "Dry run skips active notification"
+            return res
+        res.summary["notifications_sent"] = 0
         return res
 
     def run_cleanup(self, context: Dict[str, Any]) -> PipelineStepResult:
