@@ -131,3 +131,12 @@ def paper_store_summary(data_root: Path) -> Dict[str, Any]:
         "total_accounts": account_count,
         "latest_run": runs[0].name if runs else None
     }
+
+def read_paper_equity_snapshots_jsonl(path: Path) -> List[Dict[str, Any]]:
+    return _read_jsonl(path)
+
+def read_paper_trades_jsonl(path: Path) -> List[Dict[str, Any]]:
+    return _read_jsonl(path)
+
+def read_paper_positions_jsonl(path: Path) -> List[Dict[str, Any]]:
+    return _read_jsonl(path)
