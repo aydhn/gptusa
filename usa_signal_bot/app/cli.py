@@ -2000,6 +2000,410 @@ def command_robustness_validate(args) -> int:
         return 1
 
 
+
+
+def cmd_paper_info(context, args) -> int:
+    from usa_signal_bot.paper.paper_reporting import paper_engine_config_to_text, paper_limitations_text
+    from usa_signal_bot.paper.paper_engine import PaperEngineConfig
+    from usa_signal_bot.core.enums import PaperExecutionMode
+
+    cfg = context.config.paper_trading
+    mode_str = getattr(cfg, "default_execution_mode", "dry_run").upper()
+    try:
+        mode = PaperExecutionMode(mode_str)
+    except Exception:
+        mode = PaperExecutionMode.DRY_RUN
+
+    engine_cfg = PaperEngineConfig(
+        execution_mode=mode,
+        starting_cash=cfg.starting_cash,
+        fee_bps=context.config.paper_fills.fee_bps,
+        slippage_bps=context.config.paper_fills.slippage_bps,
+        allow_fractional_quantity=cfg.allow_fractional_quantity,
+        allow_short=cfg.allow_short,
+        max_positions=cfg.max_positions,
+        max_order_notional=cfg.max_order_notional,
+        max_total_exposure_pct=cfg.max_total_exposure_pct,
+        reject_duplicate_symbol_position=cfg.reject_duplicate_symbol_position,
+        write_outputs=cfg.write_paper_reports
+    )
+
+    print(paper_engine_config_to_text(engine_cfg))
+    print("\nConstraints verified:")
+    print(f"- broker_integration_enabled: {cfg.broker_integration_enabled}")
+    print(f"- live_order_enabled: {cfg.live_order_enabled}")
+    print(f"- demo_order_enabled: {cfg.demo_order_enabled}")
+    print("\n" + paper_limitations_text())
+
+    return 0
+
+def cmd_paper_account_create(context, args) -> int:
+    from usa_signal_bot.paper.virtual_account import create_virtual_account, virtual_account_to_text
+    from usa_signal_bot.paper.paper_store import write_virtual_account_json, build_paper_account_dir
+    from pathlib import Path
+
+    name = getattr(args, "name", "local_paper")
+    cash = getattr(args, "starting_cash", context.config.paper_trading.starting_cash)
+
+    acct = create_virtual_account(name, cash)
+    print("Created new virtual account:")
+    print(virtual_account_to_text(acct))
+
+    if getattr(args, "write", False):
+        data_root = Path(context.config.data.root_dir)
+        acct_dir = build_paper_account_dir(data_root, acct.account_id)
+        write_virtual_account_json(acct_dir / "account.json", acct)
+        print(f"\nSaved to {acct_dir}")
+
+    return 0
+
+def cmd_paper_account_status(context, args) -> int:
+    from usa_signal_bot.paper.virtual_account import virtual_account_to_text
+    from usa_signal_bot.paper.paper_store import paper_store_dir
+    from pathlib import Path
+    import json
+    from usa_signal_bot.paper.paper_models import VirtualAccount
+
+    data_root = Path(context.config.data.root_dir)
+    accts_dir = paper_store_dir(data_root) / "accounts"
+
+    if getattr(args, "latest", False) and accts_dir.exists():
+        dirs = [d for d in accts_dir.iterdir() if d.is_dir()]
+        if dirs:
+            latest = sorted(dirs, key=lambda x: x.stat().st_mtime)[-1]
+            p = latest / "account.json"
+            if p.exists():
+                with open(p, "r") as f:
+                    data = json.load(f)
+                    acct = VirtualAccount(**{k:v for k,v in data.items() if k in VirtualAccount.__dataclass_fields__})
+                    print(virtual_account_to_text(acct))
+                    return 0
+
+    print("No account found. Use paper-account-create first.")
+    return 0
+
+def cmd_paper_order_preview(context, args) -> int:
+    from usa_signal_bot.paper.paper_orders import create_paper_order_intent
+    from usa_signal_bot.paper.paper_reporting import paper_order_intent_to_text, paper_limitations_text
+    from usa_signal_bot.core.enums import PaperOrderSide, PaperOrderType
+
+    symbol = getattr(args, "symbol", "AAPL")
+    side_str = getattr(args, "side", "buy").upper()
+    try:
+        side = PaperOrderSide(side_str)
+    except ValueError:
+        print(f"Invalid side: {side_str}")
+        return 1
+
+    qty = getattr(args, "quantity", 1.0)
+    tf = getattr(args, "timeframe", "1d")
+
+    intent = create_paper_order_intent(
+        symbol=symbol,
+        timeframe=tf,
+        side=side,
+        quantity=qty,
+        order_type=PaperOrderType.NEXT_OPEN
+    )
+
+    print("--- PAPER ORDER INTENT PREVIEW ---")
+    print(paper_order_intent_to_text(intent))
+    print("\n" + paper_limitations_text())
+
+    return 0
+
+def cmd_paper_summary(context, args) -> int:
+    from usa_signal_bot.paper.paper_store import paper_store_summary
+    from pathlib import Path
+
+    summary = paper_store_summary(Path(context.config.data.root_dir))
+    print("--- PAPER TRADING STORE SUMMARY ---")
+    print(f"Total Virtual Accounts: {summary['total_accounts']}")
+    print(f"Total Engine Runs: {summary['total_runs']}")
+    if summary['latest_run']:
+        print(f"Latest Run ID: {summary['latest_run']}")
+
+    return 0
+
+def cmd_paper_latest(context, args) -> int:
+    from usa_signal_bot.paper.paper_store import get_latest_paper_run_dir, read_paper_engine_run_result_json
+    from pathlib import Path
+    import json
+
+    run_dir = get_latest_paper_run_dir(Path(context.config.data.root_dir))
+    if not run_dir:
+        print("No paper runs found.")
+        return 0
+
+    p = run_dir / "result.json"
+    if p.exists():
+        data = read_paper_engine_run_result_json(p)
+
+        print("===============================================")
+        print(f"PAPER ENGINE RUN: {data.get('run_id')}")
+        print(f"Status: {data.get('status')}")
+        print("===============================================\n")
+
+        acct = data.get("account", {})
+        print(f"Account Equity: ${acct.get('equity', 0):,.2f} | Cash: ${acct.get('cash', 0):,.2f}")
+
+        print(f"\nOrders Processed: {len(data.get('orders', []))}")
+        print(f"Fills Simulated: {len(data.get('fills', []))}")
+        print(f"Open Positions: {len([p for p in data.get('positions', []) if p.get('quantity', 0) > 0])}")
+
+        print("\nNote: Use 'cat' on the jsonl files in this run directory for details.")
+    else:
+        print(f"Run found but missing result.json: {run_dir.name}")
+
+    return 0
+
+def cmd_paper_run_from_risk(context, args) -> int:
+    from usa_signal_bot.paper.paper_adapters import load_paper_order_intents_from_risk_decisions_file
+    from usa_signal_bot.paper.paper_engine import PaperTradingEngine, PaperEngineConfig
+    from usa_signal_bot.paper.paper_reporting import paper_engine_run_result_to_text
+    from usa_signal_bot.core.enums import PaperExecutionMode
+    from usa_signal_bot.risk.risk_store import get_latest_risk_run_dir
+    from pathlib import Path
+
+    data_root = Path(context.config.data.root_dir)
+    run_id = getattr(args, "risk_run_id", None)
+    latest = getattr(args, "latest_risk", False)
+
+    if latest:
+        run_dir = get_latest_risk_run_dir(data_root)
+    elif run_id:
+        run_dir = data_root / "risk" / "runs" / run_id
+    else:
+        print("Must specify --risk-run-id or --latest-risk")
+        return 1
+
+    if not run_dir or not run_dir.exists():
+        print("Risk run not found.")
+        return 0
+
+    p = run_dir / "decisions.jsonl"
+    if not p.exists():
+        print("decisions.jsonl not found in risk run dir.")
+        return 0
+
+    intents = load_paper_order_intents_from_risk_decisions_file(p)
+    if not intents:
+        print("No valid order intents generated from risk decisions.")
+        return 0
+
+    print(f"Loaded {len(intents)} intents from risk decisions.")
+
+    cfg = context.config.paper_trading
+    mode_str = getattr(args, "execution_mode", "dry_run").upper()
+    try:
+        mode = PaperExecutionMode(mode_str)
+    except Exception:
+        mode = PaperExecutionMode.DRY_RUN
+
+    engine_cfg = PaperEngineConfig(
+        execution_mode=mode,
+        starting_cash=getattr(args, "starting_cash", cfg.starting_cash),
+        fee_bps=context.config.paper_fills.fee_bps,
+        slippage_bps=context.config.paper_fills.slippage_bps,
+        allow_fractional_quantity=cfg.allow_fractional_quantity,
+        allow_short=cfg.allow_short,
+        max_positions=cfg.max_positions,
+        max_order_notional=cfg.max_order_notional,
+        max_total_exposure_pct=cfg.max_total_exposure_pct,
+        reject_duplicate_symbol_position=cfg.reject_duplicate_symbol_position,
+        write_outputs=getattr(args, "write", False)
+    )
+
+    engine = PaperTradingEngine(data_root, config=engine_cfg)
+    result = engine.run_order_intents(intents)
+
+    print("\n" + paper_engine_run_result_to_text(result))
+
+    if engine_cfg.write_outputs:
+        print(f"\nWritten to {data_root}/paper/runs/{result.run_id}")
+
+    return 0
+
+def cmd_paper_run_from_portfolio(context, args) -> int:
+    from usa_signal_bot.paper.paper_adapters import load_paper_order_intents_from_allocations_file
+    from usa_signal_bot.paper.paper_engine import PaperTradingEngine, PaperEngineConfig
+    from usa_signal_bot.paper.paper_reporting import paper_engine_run_result_to_text
+    from usa_signal_bot.core.enums import PaperExecutionMode
+    from usa_signal_bot.portfolio.portfolio_store import get_latest_portfolio_run_dir
+    from pathlib import Path
+
+    data_root = Path(context.config.data.root_dir)
+    run_id = getattr(args, "portfolio_run_id", None)
+    latest = getattr(args, "latest_portfolio", False)
+
+    if latest:
+        run_dir = get_latest_portfolio_run_dir(data_root)
+    elif run_id:
+        run_dir = data_root / "portfolio" / "runs" / run_id
+    else:
+        print("Must specify --portfolio-run-id or --latest-portfolio")
+        return 1
+
+    if not run_dir or not run_dir.exists():
+        print("Portfolio run not found.")
+        return 0
+
+    p = run_dir / "allocations.jsonl"
+    if not p.exists():
+        print("allocations.jsonl not found in portfolio run dir.")
+        return 0
+
+    intents = load_paper_order_intents_from_allocations_file(p)
+    if not intents:
+        print("No valid order intents generated from portfolio allocations.")
+        return 0
+
+    print(f"Loaded {len(intents)} intents from portfolio allocations.")
+
+    cfg = context.config.paper_trading
+    mode_str = getattr(args, "execution_mode", "dry_run").upper()
+    try:
+        mode = PaperExecutionMode(mode_str)
+    except Exception:
+        mode = PaperExecutionMode.DRY_RUN
+
+    engine_cfg = PaperEngineConfig(
+        execution_mode=mode,
+        starting_cash=getattr(args, "starting_cash", cfg.starting_cash),
+        fee_bps=context.config.paper_fills.fee_bps,
+        slippage_bps=context.config.paper_fills.slippage_bps,
+        allow_fractional_quantity=cfg.allow_fractional_quantity,
+        allow_short=cfg.allow_short,
+        max_positions=cfg.max_positions,
+        max_order_notional=cfg.max_order_notional,
+        max_total_exposure_pct=cfg.max_total_exposure_pct,
+        reject_duplicate_symbol_position=cfg.reject_duplicate_symbol_position,
+        write_outputs=getattr(args, "write", False)
+    )
+
+    engine = PaperTradingEngine(data_root, config=engine_cfg)
+    result = engine.run_order_intents(intents)
+
+    print("\n" + paper_engine_run_result_to_text(result))
+
+    if engine_cfg.write_outputs:
+        print(f"\nWritten to {data_root}/paper/runs/{result.run_id}")
+
+    return 0
+
+def cmd_paper_run_from_candidates(context, args) -> int:
+    from usa_signal_bot.paper.paper_adapters import load_paper_order_intents_from_selected_candidates_file
+    from usa_signal_bot.paper.paper_engine import PaperTradingEngine, PaperEngineConfig
+    from usa_signal_bot.paper.paper_reporting import paper_engine_run_result_to_text
+    from usa_signal_bot.core.enums import PaperExecutionMode
+    from pathlib import Path
+
+    data_root = Path(context.config.data.root_dir)
+    file_path_str = getattr(args, "file", None)
+
+    if not file_path_str:
+        print("Must specify --file path/to/selected_candidates.jsonl")
+        return 1
+
+    p = Path(file_path_str)
+    if not p.exists():
+        print("File not found.")
+        return 0
+
+    intents = load_paper_order_intents_from_selected_candidates_file(p)
+    if not intents:
+        print("No valid order intents generated from candidates.")
+        return 0
+
+    default_qty = getattr(args, "default_quantity", None)
+    if default_qty:
+        for i in intents:
+            i.quantity = default_qty
+            i.notional = None
+
+    print(f"Loaded {len(intents)} intents from candidates.")
+
+    cfg = context.config.paper_trading
+    mode_str = getattr(args, "execution_mode", "dry_run").upper()
+    try:
+        mode = PaperExecutionMode(mode_str)
+    except Exception:
+        mode = PaperExecutionMode.DRY_RUN
+
+    engine_cfg = PaperEngineConfig(
+        execution_mode=mode,
+        starting_cash=getattr(args, "starting_cash", cfg.starting_cash),
+        fee_bps=context.config.paper_fills.fee_bps,
+        slippage_bps=context.config.paper_fills.slippage_bps,
+        allow_fractional_quantity=cfg.allow_fractional_quantity,
+        allow_short=cfg.allow_short,
+        max_positions=cfg.max_positions,
+        max_order_notional=cfg.max_order_notional,
+        max_total_exposure_pct=cfg.max_total_exposure_pct,
+        reject_duplicate_symbol_position=cfg.reject_duplicate_symbol_position,
+        write_outputs=getattr(args, "write", False)
+    )
+
+    engine = PaperTradingEngine(data_root, config=engine_cfg)
+    result = engine.run_order_intents(intents)
+
+    print("\n" + paper_engine_run_result_to_text(result))
+
+    if engine_cfg.write_outputs:
+        print(f"\nWritten to {data_root}/paper/runs/{result.run_id}")
+
+    return 0
+
+def cmd_paper_validate(context, args) -> int:
+    from usa_signal_bot.paper.paper_store import get_latest_paper_run_dir, read_paper_engine_run_result_json
+    from usa_signal_bot.paper.paper_validation import validate_no_broker_execution_in_paper, validate_no_live_order_language_in_paper
+    from usa_signal_bot.paper.paper_models import PaperEngineRunResult, VirtualAccount
+    from pathlib import Path
+
+    data_root = Path(context.config.data.root_dir)
+    run_id = getattr(args, "run_id", None)
+    latest = getattr(args, "latest", False)
+
+    if latest:
+        run_dir = get_latest_paper_run_dir(data_root)
+    elif run_id:
+        run_dir = data_root / "paper" / "runs" / run_id
+    else:
+        print("Must specify --run-id or --latest")
+        return 1
+
+    if not run_dir or not run_dir.exists():
+        print("Paper run not found.")
+        return 0
+
+    p = run_dir / "result.json"
+    if not p.exists():
+        print("result.json not found in run dir.")
+        return 0
+
+    data = read_paper_engine_run_result_json(p)
+
+    class DummyRes:
+        pass
+    dummy = DummyRes()
+    dummy.__dict__ = data
+
+    broker_rep = validate_no_broker_execution_in_paper(dummy)
+    lang_rep = validate_no_live_order_language_in_paper(dummy)
+
+    print("--- PAPER VALIDATION ---")
+    print(f"Broker Exec Leak Check: {'PASSED' if broker_rep.valid else 'FAILED'}")
+    if not broker_rep.valid:
+        for err in broker_rep.errors:
+            print(f"  ! {err}")
+
+    print(f"Live Language Check: {'PASSED' if lang_rep.valid else 'FAILED'}")
+    if not lang_rep.valid:
+        for err in lang_rep.errors:
+            print(f"  ! {err}")
+
+    return 0 if (broker_rep.valid and lang_rep.valid) else 1
+
 def main() -> int:
 
     """Main CLI entrypoint."""
