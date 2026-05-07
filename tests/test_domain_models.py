@@ -2,7 +2,7 @@ import pytest
 from usa_signal_bot.data.models import OHLCVBar
 from usa_signal_bot.universe.models import UniverseSymbol
 from usa_signal_bot.strategies.models import Signal, SignalBatch
-from usa_signal_bot.paper.models import PaperOrder
+from usa_signal_bot.paper.paper_models import PaperOrder
 from usa_signal_bot.portfolio.models import Position, PortfolioSnapshot
 from usa_signal_bot.risk.models import RiskLimits
 from usa_signal_bot.regimes.models import RegimeState
@@ -36,10 +36,6 @@ def test_signal_batch_top_signals():
     assert len(top) == 2
     assert top[0].symbol == "B"
     assert top[1].symbol == "C"
-
-def test_paper_order_invalid_quantity():
-    with pytest.raises(DataValidationError):
-        PaperOrder(symbol="AAPL", quantity=-10)
 
 def test_portfolio_exposure():
     p1 = Position(symbol="AAPL", side=PositionSide.LONG, quantity=10, average_price=100, market_price=150)

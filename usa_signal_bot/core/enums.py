@@ -1114,8 +1114,11 @@ class PipelineStepName(str, Enum):
     SIGNAL_RANKING = "signal_ranking"
     CANDIDATE_SELECTION = "candidate_selection"
     RISK_EVALUATION = "risk_evaluation"
+
     PORTFOLIO_CONSTRUCTION = "portfolio_construction"
+    PAPER_TRADING = "paper_trading"
     SCAN_REPORT = "scan_report"
+
     CLEANUP = "cleanup"
     NOTIFICATION = "notification"
 
@@ -1292,3 +1295,99 @@ class AlertPolicyScope(str, Enum):
     RUNTIME = "RUNTIME"
     HEALTH = "HEALTH"
     GLOBAL = "GLOBAL"
+
+class PaperAccountStatus(str, Enum):
+    ACTIVE = "ACTIVE"
+    PAUSED = "PAUSED"
+    CLOSED = "CLOSED"
+    ERROR = "ERROR"
+    UNKNOWN = "UNKNOWN"
+
+class PaperOrderSide(str, Enum):
+    BUY = "BUY"
+    SELL = "SELL"
+    HOLD = "HOLD"
+
+class PaperOrderType(str, Enum):
+    MARKET = "MARKET"
+    NEXT_OPEN = "NEXT_OPEN"
+    NEXT_CLOSE = "NEXT_CLOSE"
+    LIMIT_RESERVED = "LIMIT_RESERVED"
+    STOP_RESERVED = "STOP_RESERVED"
+
+class PaperOrderStatus(str, Enum):
+    CREATED = "CREATED"
+    VALIDATED = "VALIDATED"
+    ACCEPTED = "ACCEPTED"
+    QUEUED = "QUEUED"
+    FILLED = "FILLED"
+    PARTIALLY_FILLED = "PARTIALLY_FILLED"
+    REJECTED = "REJECTED"
+    CANCELLED = "CANCELLED"
+    EXPIRED = "EXPIRED"
+    SKIPPED = "SKIPPED"
+    ERROR = "ERROR"
+
+class PaperFillStatus(str, Enum):
+    FILLED = "FILLED"
+    PARTIAL = "PARTIAL"
+    REJECTED = "REJECTED"
+    SKIPPED = "SKIPPED"
+    ERROR = "ERROR"
+
+class PaperPositionSide(str, Enum):
+    LONG = "LONG"
+    FLAT = "FLAT"
+    SHORT_RESERVED = "SHORT_RESERVED"
+
+class PaperCashLedgerEntryType(str, Enum):
+    STARTING_CASH = "STARTING_CASH"
+    BUY_DEBIT = "BUY_DEBIT"
+    SELL_CREDIT = "SELL_CREDIT"
+    FEE_DEBIT = "FEE_DEBIT"
+    ADJUSTMENT = "ADJUSTMENT"
+    REALIZED_PNL = "REALIZED_PNL"
+    RESERVED = "RESERVED"
+
+class PaperTradeStatus(str, Enum):
+    OPEN = "OPEN"
+    CLOSED = "CLOSED"
+    PARTIAL = "PARTIAL"
+    CANCELLED = "CANCELLED"
+    ERROR = "ERROR"
+
+class PaperEngineStatus(str, Enum):
+    NOT_STARTED = "NOT_STARTED"
+    RUNNING = "RUNNING"
+    COMPLETED = "COMPLETED"
+    PARTIAL_SUCCESS = "PARTIAL_SUCCESS"
+    FAILED = "FAILED"
+    EMPTY = "EMPTY"
+
+class PaperOrderSource(str, Enum):
+    RISK_DECISION = "RISK_DECISION"
+    PORTFOLIO_ALLOCATION = "PORTFOLIO_ALLOCATION"
+    SELECTED_CANDIDATE = "SELECTED_CANDIDATE"
+    SIGNAL = "SIGNAL"
+    MANUAL_RESEARCH = "MANUAL_RESEARCH"
+    CUSTOM = "CUSTOM"
+
+class PaperExecutionMode(str, Enum):
+    LOCAL_SIMULATED = "LOCAL_SIMULATED"
+    DRY_RUN = "DRY_RUN"
+    VALIDATE_ONLY = "VALIDATE_ONLY"
+
+class PaperRejectReason(str, Enum):
+    INSUFFICIENT_CASH = "INSUFFICIENT_CASH"
+    INVALID_PRICE = "INVALID_PRICE"
+    INVALID_QUANTITY = "INVALID_QUANTITY"
+    SHORT_NOT_ALLOWED = "SHORT_NOT_ALLOWED"
+    DUPLICATE_POSITION = "DUPLICATE_POSITION"
+    MAX_POSITIONS_EXCEEDED = "MAX_POSITIONS_EXCEEDED"
+    MARKET_DATA_MISSING = "MARKET_DATA_MISSING"
+    RISK_REJECTED = "RISK_REJECTED"
+    ALLOCATION_REJECTED = "ALLOCATION_REJECTED"
+    ORDER_EXPIRED = "ORDER_EXPIRED"
+    ACCOUNT_PAUSED = "ACCOUNT_PAUSED"
+    VALIDATION_FAILED = "VALIDATION_FAILED"
+    UNKNOWN = "UNKNOWN"

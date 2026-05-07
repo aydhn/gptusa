@@ -195,3 +195,103 @@ class PipelineStepRunner:
     def run_cleanup(self, context: Dict[str, Any]) -> PipelineStepResult:
         res = PipelineStepResult(step_name=PipelineStepName.CLEANUP, status=PipelineStepStatus.COMPLETED)
         return res
+
+
+def run_paper_trading(context: Dict[str, Any]) -> PipelineStepResult:
+    from usa_signal_bot.core.enums import PipelineStepName, PipelineStepStatus, PaperExecutionMode
+    import time
+
+    req = context.get("request")
+
+    if not req or not getattr(req, "paper_enabled", False):
+        return PipelineStepResult(
+            step_name=PipelineStepName.PAPER_TRADING,
+            status=PipelineStepStatus.SKIPPED,
+            summary={"reason": "Paper trading disabled in request or config"}
+        )
+
+    start_time = time.time()
+
+    from usa_signal_bot.paper.paper_adapters import (
+        paper_order_intent_from_allocation_result,
+        paper_order_intent_from_risk_decision
+    )
+    from usa_signal_bot.paper.paper_engine import PaperTradingEngine, PaperEngineConfig
+
+    intents = []
+
+    allocations = context.get("allocations", [])
+    if allocations:
+        for alloc in allocations:
+            intent = paper_order_intent_from_allocation_result(alloc)
+            if intent:
+                intents.append(intent)
+    elif context.get("risk_decisions"):
+        for rd in context.get("risk_decisions", []):
+            intent = paper_order_intent_from_risk_decision(rd)
+            if intent:
+                intents.append(intent)
+
+    if not intents:
+        return PipelineStepResult(
+            step_name=PipelineStepName.PAPER_TRADING,
+            status=PipelineStepStatus.SKIPPED,
+            duration_seconds=time.time() - start_time,
+            summary={"reason": "No valid order intents generated"}
+        )
+
+    try:
+        from pathlib import Path
+        data_root = Path(context.get("config").data.root_dir)
+
+        mode_str = getattr(req, "paper_execution_mode", "dry_run")
+        try:
+            mode = PaperExecutionMode(mode_str.upper())
+        except ValueError:
+            mode = PaperExecutionMode.DRY_RUN
+
+        cfg = PaperEngineConfig(
+            execution_mode=mode,
+            starting_cash=context.get("config").paper_trading.starting_cash,
+            fee_bps=context.get("config").paper_fills.fee_bps,
+            slippage_bps=context.get("config").paper_fills.slippage_bps,
+            allow_fractional_quantity=context.get("config").paper_trading.allow_fractional_quantity,
+            allow_short=context.get("config").paper_trading.allow_short,
+            max_positions=context.get("config").paper_trading.max_positions,
+            max_order_notional=context.get("config").paper_trading.max_order_notional,
+            max_total_exposure_pct=context.get("config").paper_trading.max_total_exposure_pct,
+            reject_duplicate_symbol_position=context.get("config").paper_trading.reject_duplicate_symbol_position,
+            write_outputs=context.get("config").paper_runtime.write_runtime_paper_outputs
+        )
+
+        engine = PaperTradingEngine(data_root, config=cfg)
+        result = engine.run_order_intents(intents)
+
+        context["paper_result"] = result
+
+        summary = {
+            "execution_mode": mode.value if hasattr(mode, 'value') else mode,
+            "orders": len(result.orders),
+            "fills": len(result.fills),
+            "final_equity": result.equity_snapshots[-1].equity if result.equity_snapshots else cfg.starting_cash,
+            "warnings": len(result.warnings),
+            "errors": len(result.errors)
+        }
+
+        return PipelineStepResult(
+            step_name=PipelineStepName.PAPER_TRADING,
+            status=PipelineStepStatus.COMPLETED if not result.errors else PipelineStepStatus.PARTIAL_SUCCESS,
+            duration_seconds=time.time() - start_time,
+            summary=summary,
+            output_paths=result.output_paths,
+            warnings=result.warnings,
+            errors=result.errors
+        )
+    except Exception as e:
+        import traceback
+        return PipelineStepResult(
+            step_name=PipelineStepName.PAPER_TRADING,
+            status=PipelineStepStatus.FAILED,
+            duration_seconds=time.time() - start_time,
+            errors=[f"Paper trading error: {str(e)}", traceback.format_exc()]
+        )

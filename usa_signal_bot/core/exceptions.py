@@ -603,3 +603,39 @@ class NotificationStorageError(NotificationError):
 
 class NotificationReportingError(NotificationError):
     pass
+
+class PaperTradingError(Exception):
+    pass
+
+class VirtualAccountError(PaperTradingError):
+    pass
+
+class PaperOrderError(PaperTradingError):
+    pass
+
+class PaperOrderLifecycleError(PaperTradingError):
+    pass
+
+class PaperFillError(PaperTradingError):
+    pass
+
+class PaperPositionError(PaperTradingError):
+    pass
+
+class CashLedgerError(PaperTradingError):
+    pass
+
+class PaperJournalError(PaperTradingError):
+    pass
+
+class PaperPriceResolverError(PaperTradingError):
+    pass
+
+class PaperValidationError(PaperTradingError):
+    pass
+
+class PaperStorageError(PaperTradingError):
+    pass
+
+class PaperReportingError(PaperTradingError):
+    pass
