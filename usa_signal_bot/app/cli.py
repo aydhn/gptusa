@@ -2517,6 +2517,279 @@ def handle_quality_notification_dispatch_dry_run(context) -> int:
     print("Dispatched dry-run quality notification.")
     return 0
 
+
+def add_release_commands(subparsers):
+    p_info = subparsers.add_parser("release-info", help="Show release config and safety constraints")
+    p_info.set_defaults(func=cmd_release_info)
+
+    p_build = subparsers.add_parser("release-build-local", help="Build local release bundle")
+    p_build.add_argument("--name", type=str, default="", help="Release name")
+    p_build.add_argument("--output-dir", type=str, default="", help="Output directory")
+    p_build.add_argument("--include-tests", action="store_true", help="Include test files")
+    p_build.add_argument("--include-reports", action="store_true", help="Include report files")
+    p_build.add_argument("--include-data-cache", action="store_true", help="Include data cache (default False)")
+    p_build.add_argument("--write", action="store_true", help="Write to disk")
+    p_build.set_defaults(func=cmd_release_build_local)
+
+    p_validate = subparsers.add_parser("release-validate", help="Validate a release bundle")
+    p_validate.add_argument("--latest", action="store_true", help="Validate latest release")
+    p_validate.add_argument("--bundle", type=str, default="", help="Path to release bundle zip")
+    p_validate.set_defaults(func=cmd_release_validate)
+
+    p_summary = subparsers.add_parser("release-summary", help="List all release builds")
+    p_summary.set_defaults(func=cmd_release_summary)
+
+    p_latest = subparsers.add_parser("release-latest", help="Show details of the latest release build")
+    p_latest.set_defaults(func=cmd_release_latest)
+
+    p_changelog = subparsers.add_parser("changelog-generate", help="Generate changelog from phase summaries")
+    p_changelog.add_argument("--write", action="store_true", help="Write changelog to disk")
+    p_changelog.set_defaults(func=cmd_changelog_generate)
+
+    p_runbook = subparsers.add_parser("runbook-generate", help="Generate operator runbook markdown")
+    p_runbook.add_argument("--write", action="store_true", help="Write runbook to disk")
+    p_runbook.set_defaults(func=cmd_runbook_generate)
+
+    p_m_info = subparsers.add_parser("maintenance-info", help="Show maintenance plan summary")
+    p_m_info.set_defaults(func=cmd_maintenance_info)
+
+    p_m_check = subparsers.add_parser("maintenance-check", help="Run maintenance checks")
+    p_m_check.add_argument("--frequency", type=str, required=True, choices=["daily", "weekly", "monthly", "pre_release", "on_demand"], help="Maintenance frequency")
+    p_m_check.add_argument("--write", action="store_true", help="Write check report to disk")
+    p_m_check.set_defaults(func=cmd_maintenance_check)
+
+    p_bk_create = subparsers.add_parser("backup-create", help="Create a local backup zip")
+    p_bk_create.add_argument("--scope", type=str, default="reports_only", choices=["config_only", "reports_only", "data_cache_light", "full_local_state", "release_artifacts"], help="Backup scope")
+    p_bk_create.add_argument("--output-dir", type=str, default="", help="Output directory")
+    p_bk_create.add_argument("--include-data-cache", action="store_true", help="Include data cache")
+    p_bk_create.set_defaults(func=cmd_backup_create)
+
+    p_bk_val = subparsers.add_parser("backup-validate", help="Validate a backup zip")
+    p_bk_val.add_argument("--backup", type=str, required=True, help="Path to backup zip")
+    p_bk_val.set_defaults(func=cmd_backup_validate)
+
+    p_restore = subparsers.add_parser("restore-dry-run", help="Dry-run restore of a backup")
+    p_restore.add_argument("--backup", type=str, required=True, help="Path to backup zip")
+    p_restore.add_argument("--target-dir", type=str, required=True, help="Target directory for dry-run")
+    p_restore.set_defaults(func=cmd_restore_dry_run)
+
+    p_prof_list = subparsers.add_parser("config-profile-list", help="List default config profiles")
+    p_prof_list.set_defaults(func=cmd_config_profile_list)
+
+    p_prof_write = subparsers.add_parser("config-profile-write-defaults", help="Write default config profiles to disk")
+    p_prof_write.set_defaults(func=cmd_config_profile_write_defaults)
+
+    p_prof_val = subparsers.add_parser("config-profile-validate", help="Validate config profiles")
+    p_prof_val.add_argument("--profile", type=str, default="", help="Path to a specific config profile")
+    p_prof_val.add_argument("--all", action="store_true", help="Validate all config profiles in the profiles dir")
+    p_prof_val.set_defaults(func=cmd_config_profile_validate)
+
+    p_precheck = subparsers.add_parser("upgrade-precheck", help="Run local upgrade precheck")
+    p_precheck.add_argument("--write", action="store_true", help="Write precheck report to disk")
+    p_precheck.set_defaults(func=cmd_upgrade_precheck)
+
+def cmd_release_info(args, config, context) -> int:
+    print("--- Release Info ---")
+    print(f"Release Name: {config.release.release_name}")
+    print(f"Include Secrets: {config.release.include_secrets}")
+    print(f"Broker/Live/Demo Execution: NO")
+    return 0
+
+def cmd_release_build_local(args, config, context) -> int:
+    from usa_signal_bot.release.local_packager import LocalReleasePackager
+    from usa_signal_bot.release.release_models import ReleaseBuildRequest
+    from pathlib import Path
+    print("Building local release bundle...")
+    packager = LocalReleasePackager(project_root=Path("."), data_root=Path(config.runtime.data_root))
+    request = ReleaseBuildRequest(
+        request_id="test",
+        release_name=args.name or config.release.release_name,
+        output_dir=args.output_dir or config.release.output_dir,
+        include_tests=args.include_tests,
+        include_reports=args.include_reports,
+        include_data_cache=args.include_data_cache,
+        include_secrets=False
+    )
+    result = packager.build(request)
+    print(f"Status: {result.status.value}")
+    if result.errors:
+        for err in result.errors:
+            print(f"Error: {err}")
+        return 1
+    if args.write and result.bundle_path:
+        from usa_signal_bot.release.release_store import write_release_build_result_json
+        write_release_build_result_json(Path(result.bundle_path).parent / "result.json", result)
+        print(f"Written release build to {result.bundle_path}")
+    return 0
+
+def cmd_release_validate(args, config, context) -> int:
+    from usa_signal_bot.release.release_validation import validate_release_bundle_file
+    from pathlib import Path
+    bundle_path = args.bundle
+    if args.latest:
+        from usa_signal_bot.release.release_store import get_latest_release_build_dir
+        latest_dir = get_latest_release_build_dir(Path(config.runtime.data_root))
+        if not latest_dir:
+            print("No release builds found.")
+            return 0
+        bundle_path = str(latest_dir / f"{config.release.release_name}.zip")
+
+    if not bundle_path:
+        print("Provide --bundle or --latest")
+        return 1
+
+    print(f"Validating bundle: {bundle_path}")
+    if not Path(bundle_path).exists():
+        print(f"Bundle not found: {bundle_path}")
+        return 1
+
+    report = validate_release_bundle_file(Path(bundle_path))
+    print(f"Valid: {report.valid}")
+    if not report.valid:
+        for err in report.errors:
+            print(f"Error: {err}")
+        return 1
+    return 0
+
+def cmd_release_summary(args, config, context) -> int:
+    from usa_signal_bot.release.release_store import release_store_summary
+    from pathlib import Path
+    import json
+    summary = release_store_summary(Path(config.runtime.data_root))
+    print(json.dumps(summary, indent=2))
+    return 0
+
+def cmd_release_latest(args, config, context) -> int:
+    from usa_signal_bot.release.release_store import get_latest_release_build_dir, read_release_build_result_json
+    from pathlib import Path
+    import json
+    latest_dir = get_latest_release_build_dir(Path(config.runtime.data_root))
+    if not latest_dir:
+        print("No release builds found.")
+        return 0
+    try:
+        result = read_release_build_result_json(latest_dir / "result.json")
+        print(json.dumps(result, indent=2))
+    except Exception as e:
+        print(f"Could not read latest result: {e}")
+        return 1
+    return 0
+
+def cmd_changelog_generate(args, config, context) -> int:
+    from usa_signal_bot.release.changelog import generate_changelog_from_docs, changelog_entries_to_markdown, write_changelog_markdown
+    from pathlib import Path
+    entries = generate_changelog_from_docs(Path("."))
+    md = changelog_entries_to_markdown(entries)
+    if args.write:
+        write_changelog_markdown(Path("CHANGELOG.md"), entries)
+        print("Wrote CHANGELOG.md")
+    else:
+        print(md)
+    return 0
+
+def cmd_runbook_generate(args, config, context) -> int:
+    from usa_signal_bot.release.runbook_generator import generate_operator_runbook, runbook_to_markdown, write_runbook_markdown
+    from pathlib import Path
+    runbook = generate_operator_runbook(Path("."))
+    md = runbook_to_markdown(runbook)
+    if args.write:
+        write_runbook_markdown(Path("OPERATOR_RUNBOOK.md"), runbook)
+        print("Wrote OPERATOR_RUNBOOK.md")
+    else:
+        print(md)
+    return 0
+
+def cmd_maintenance_info(args, config, context) -> int:
+    from usa_signal_bot.release.maintenance_tasks import default_maintenance_plan, maintenance_plan_to_markdown
+    plan = default_maintenance_plan()
+    print(maintenance_plan_to_markdown(plan))
+    return 0
+
+def cmd_maintenance_check(args, config, context) -> int:
+    from usa_signal_bot.release.maintenance_tasks import run_maintenance_check, maintenance_run_result_to_text
+    from usa_signal_bot.core.enums import MaintenanceFrequency
+    from pathlib import Path
+    freq = MaintenanceFrequency(args.frequency.upper())
+    result = run_maintenance_check(freq, Path("."), Path(config.runtime.data_root))
+    print(maintenance_run_result_to_text(result))
+    if args.write:
+        from usa_signal_bot.release.release_store import write_maintenance_run_result_json, maintenance_store_dir
+        store_dir = maintenance_store_dir(Path(config.runtime.data_root))
+        write_maintenance_run_result_json(store_dir / f"{result.run_id}.json", result)
+    return 0 if result.failed_count == 0 else 1
+
+def cmd_backup_create(args, config, context) -> int:
+    from usa_signal_bot.release.backup_restore import create_backup_request, build_backup, backup_result_to_text
+    from usa_signal_bot.core.enums import BackupScope
+    from pathlib import Path
+    request = create_backup_request(BackupScope(args.scope.upper()), args.output_dir or config.backup.output_dir)
+    request.include_data_cache = args.include_data_cache
+    result = build_backup(Path("."), Path(config.runtime.data_root), request)
+    print(backup_result_to_text(result))
+    return 0 if not result.errors else 1
+
+def cmd_backup_validate(args, config, context) -> int:
+    from usa_signal_bot.release.backup_restore import validate_backup, backup_result_to_text
+    from pathlib import Path
+    if not Path(args.backup).exists():
+        print(f"Backup file not found: {args.backup}")
+        return 1
+    result = validate_backup(Path(args.backup))
+    print(backup_result_to_text(result))
+    return 0 if not result.errors else 1
+
+def cmd_restore_dry_run(args, config, context) -> int:
+    from usa_signal_bot.release.backup_restore import restore_dry_run, restore_dry_run_result_to_text
+    from pathlib import Path
+    if not Path(args.backup).exists():
+        print(f"Backup file not found: {args.backup}")
+        return 1
+    result = restore_dry_run(Path(args.backup), Path(args.target_dir))
+    print(restore_dry_run_result_to_text(result))
+    return 0 if not result.errors else 1
+
+def cmd_config_profile_list(args, config, context) -> int:
+    from usa_signal_bot.release.config_profiles import default_config_profiles, config_profiles_to_text
+    from pathlib import Path
+    profiles = default_config_profiles(Path("."))
+    print(config_profiles_to_text(profiles))
+    return 0
+
+def cmd_config_profile_write_defaults(args, config, context) -> int:
+    from usa_signal_bot.release.config_profiles import write_default_config_profiles
+    from pathlib import Path
+    paths = write_default_config_profiles(Path("."))
+    for p in paths:
+        print(f"Wrote profile: {p}")
+    return 0
+
+def cmd_config_profile_validate(args, config, context) -> int:
+    from usa_signal_bot.release.config_profiles import validate_config_profile, validate_all_config_profiles, config_profile_validation_results_to_text, ConfigProfile
+    from usa_signal_bot.core.enums import ConfigProfileType
+    from pathlib import Path
+    if args.all:
+        results = validate_all_config_profiles(Path("."))
+        print(config_profile_validation_results_to_text(results))
+        return 0 if all(r.status.value == "PASSED" for r in results) else 1
+    elif args.profile:
+        prof = ConfigProfile("manual", "manual", ConfigProfileType.CUSTOM, "manual", args.profile, [])
+        res = validate_config_profile(prof)
+        print(config_profile_validation_results_to_text([res]))
+        return 0 if res.status.value == "PASSED" else 1
+    else:
+        print("Provide --profile or --all")
+        return 1
+
+def cmd_upgrade_precheck(args, config, context) -> int:
+    from usa_signal_bot.release.upgrade_precheck import run_upgrade_precheck, upgrade_precheck_result_to_text
+    from pathlib import Path
+    result = run_upgrade_precheck(Path("."), Path(config.runtime.data_root))
+    print(upgrade_precheck_result_to_text(result))
+    if args.write:
+        from usa_signal_bot.release.release_store import write_upgrade_precheck_result_json, maintenance_store_dir
+        write_upgrade_precheck_result_json(maintenance_store_dir(Path(config.runtime.data_root)) / "precheck.json", result)
+    return 0 if not result.errors else 1
+
 def main() -> int:
 
     """Main CLI entrypoint."""
@@ -3173,6 +3446,7 @@ def main() -> int:
     subparsers.add_parser("quality-notification-preview", help="Preview Quality Notifications")
     subparsers.add_parser("quality-notification-dispatch-dry-run", help="Dispatch dry-run Quality Notifications")
 
+    add_release_commands(subparsers)
     args = parser.parse_args()
 
 

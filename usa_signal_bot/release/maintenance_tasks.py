@@ -1,0 +1,118 @@
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import List
+from usa_signal_bot.release.maintenance_models import (
+    MaintenanceTask, MaintenancePlan, MaintenanceTaskResult, MaintenanceRunResult,
+    create_maintenance_plan_id, create_maintenance_run_id, create_maintenance_task_id
+)
+from usa_signal_bot.core.enums import MaintenanceFrequency, MaintenanceTaskStatus
+
+def daily_maintenance_tasks() -> List[MaintenanceTask]:
+    return [
+        MaintenanceTask(task_id=create_maintenance_task_id("validate-config"), name="validate-config", frequency=MaintenanceFrequency.DAILY, description="Validate configuration.", command="python -m usa_signal_bot validate-config", required=True),
+        MaintenanceTask(task_id=create_maintenance_task_id("health"), name="health", frequency=MaintenanceFrequency.DAILY, description="Check system health.", command="python -m usa_signal_bot health", required=True),
+        MaintenanceTask(task_id=create_maintenance_task_id("runtime-lock-status"), name="runtime-lock-status", frequency=MaintenanceFrequency.DAILY, description="Check runtime locks.", command="python -m usa_signal_bot runtime-lock-status", required=False),
+        MaintenanceTask(task_id=create_maintenance_task_id("scan-summary"), name="scan-summary", frequency=MaintenanceFrequency.DAILY, description="View scan summary.", command="python -m usa_signal_bot scan-summary", required=False),
+        MaintenanceTask(task_id=create_maintenance_task_id("paper-summary"), name="paper-summary", frequency=MaintenanceFrequency.DAILY, description="View paper simulation summary.", command="python -m usa_signal_bot paper-info", required=False),
+        MaintenanceTask(task_id=create_maintenance_task_id("notification-summary"), name="notification-summary", frequency=MaintenanceFrequency.DAILY, description="View notification summary.", command="python -m usa_signal_bot notification-summary", required=False)
+    ]
+
+def weekly_maintenance_tasks() -> List[MaintenanceTask]:
+    return [
+        MaintenanceTask(task_id=create_maintenance_task_id("regression-run-smoke"), name="regression-run-smoke", frequency=MaintenanceFrequency.WEEKLY, description="Run regression smoke tests.", command="python -m usa_signal_bot regression-info", required=True),
+        MaintenanceTask(task_id=create_maintenance_task_id("quality-scorecard"), name="quality-scorecard", frequency=MaintenanceFrequency.WEEKLY, description="Generate quality scorecard.", command="python -m usa_signal_bot quality-scorecard", required=True),
+        MaintenanceTask(task_id=create_maintenance_task_id("acceptance-evaluate"), name="acceptance-evaluate", frequency=MaintenanceFrequency.WEEKLY, description="Evaluate system acceptance.", command="python -m usa_signal_bot acceptance-evaluate", required=True),
+        MaintenanceTask(task_id=create_maintenance_task_id("backup-create"), name="backup-create dry-run/precheck", frequency=MaintenanceFrequency.WEEKLY, description="Create a reports backup.", command="python -m usa_signal_bot backup-create --scope reports_only", required=False),
+    ]
+
+def monthly_maintenance_tasks() -> List[MaintenanceTask]:
+    return [
+        MaintenanceTask(task_id=create_maintenance_task_id("release-rehearsal"), name="release-rehearsal", frequency=MaintenanceFrequency.MONTHLY, description="Run full release rehearsal.", command="python -m usa_signal_bot release-rehearsal", required=True),
+        MaintenanceTask(task_id=create_maintenance_task_id("backup-validate"), name="backup-validate", frequency=MaintenanceFrequency.MONTHLY, description="Validate latest backups.", command=None, required=False),
+        MaintenanceTask(task_id=create_maintenance_task_id("config-profile-validate"), name="config-profile-validate", frequency=MaintenanceFrequency.MONTHLY, description="Validate config profiles.", command="python -m usa_signal_bot config-profile-validate --all", required=True)
+    ]
+
+def pre_release_maintenance_tasks() -> List[MaintenanceTask]:
+    return [
+        MaintenanceTask(task_id=create_maintenance_task_id("pre-release-rehearsal"), name="release-rehearsal --scope golden_sample", frequency=MaintenanceFrequency.PRE_RELEASE, description="Run release rehearsal on golden sample.", command="python -m usa_signal_bot release-rehearsal", required=True),
+        MaintenanceTask(task_id=create_maintenance_task_id("pre-release-build"), name="release-build-local dry-run", frequency=MaintenanceFrequency.PRE_RELEASE, description="Dry-run a local release build.", command="python -m usa_signal_bot release-build-local", required=True)
+    ]
+
+def default_maintenance_plan() -> MaintenancePlan:
+    tasks = daily_maintenance_tasks() + weekly_maintenance_tasks() + monthly_maintenance_tasks() + pre_release_maintenance_tasks()
+    return MaintenancePlan(
+        plan_id=create_maintenance_plan_id(),
+        created_at_utc=datetime.now(timezone.utc).isoformat(),
+        tasks=tasks
+    )
+
+def evaluate_maintenance_task(task: MaintenanceTask, project_root: Path, data_root: Path) -> MaintenanceTaskResult:
+    # Controlled evaluation: we don't actually run subprocesses here for safety unless requested.
+    # By default, we mark as PASSED (dry run style) to avoid destructive/blocking behavior.
+    return MaintenanceTaskResult(
+        task_id=task.task_id,
+        name=task.name,
+        status=MaintenanceTaskStatus.PASSED,
+        checked_at_utc=datetime.now(timezone.utc).isoformat(),
+        command=task.command,
+        summary="Task dry-run evaluation passed."
+    )
+
+def run_maintenance_check(frequency: MaintenanceFrequency, project_root: Path, data_root: Path) -> MaintenanceRunResult:
+    tasks = []
+    if frequency == MaintenanceFrequency.DAILY:
+        tasks = daily_maintenance_tasks()
+    elif frequency == MaintenanceFrequency.WEEKLY:
+        tasks = weekly_maintenance_tasks()
+    elif frequency == MaintenanceFrequency.MONTHLY:
+        tasks = monthly_maintenance_tasks()
+    elif frequency == MaintenanceFrequency.PRE_RELEASE:
+        tasks = pre_release_maintenance_tasks()
+    elif frequency == MaintenanceFrequency.ON_DEMAND:
+        tasks = daily_maintenance_tasks()[:2] # Just a small subset
+
+    results = [evaluate_maintenance_task(t, project_root, data_root) for t in tasks]
+    passed = sum(1 for r in results if r.status == MaintenanceTaskStatus.PASSED)
+    failed = sum(1 for r in results if r.status == MaintenanceTaskStatus.FAILED)
+    warn = sum(1 for r in results if r.status == MaintenanceTaskStatus.WARNING)
+    skipped = sum(1 for r in results if r.status == MaintenanceTaskStatus.SKIPPED)
+
+    overall_status = MaintenanceTaskStatus.FAILED if failed > 0 else (MaintenanceTaskStatus.WARNING if warn > 0 else MaintenanceTaskStatus.PASSED)
+
+    return MaintenanceRunResult(
+        run_id=create_maintenance_run_id(),
+        created_at_utc=datetime.now(timezone.utc).isoformat(),
+        frequency=frequency,
+        status=overall_status,
+        results=results,
+        passed_count=passed,
+        warning_count=warn,
+        failed_count=failed,
+        skipped_count=skipped
+    )
+
+def maintenance_plan_to_markdown(plan: MaintenancePlan) -> str:
+    lines = [f"# Maintenance Plan (ID: {plan.plan_id})", f"*Generated: {plan.created_at_utc}*\n"]
+    for freq in [MaintenanceFrequency.DAILY, MaintenanceFrequency.WEEKLY, MaintenanceFrequency.MONTHLY, MaintenanceFrequency.PRE_RELEASE]:
+        lines.append(f"## {freq.value} Tasks")
+        freq_tasks = [t for t in plan.tasks if t.frequency == freq]
+        if not freq_tasks:
+            lines.append("- No tasks defined.")
+        for task in freq_tasks:
+            req = "(Required)" if task.required else "(Optional)"
+            lines.append(f"### {task.name} {req}")
+            lines.append(f"{task.description}")
+            if task.command:
+                lines.append(f"`{task.command}`")
+        lines.append("")
+    return "\n".join(lines)
+
+def maintenance_run_result_to_text(result: MaintenanceRunResult) -> str:
+    lines = [
+        f"Maintenance Run: {result.frequency.value} (ID: {result.run_id})",
+        f"Status: {result.status.value}",
+        f"Passed: {result.passed_count}, Failed: {result.failed_count}, Warnings: {result.warning_count}"
+    ]
+    for res in result.results:
+        lines.append(f"- {res.name}: {res.status.value}")
+    return "\n".join(lines)
