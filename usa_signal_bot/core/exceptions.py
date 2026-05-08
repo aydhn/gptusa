@@ -741,3 +741,34 @@ class QualityReportingError(USASignalBotError):
 class ArtifactCollectionError(USASignalBotError):
     """Raised when an artifact collection operation fails."""
     pass
+
+
+class RegressionError(USASignalBotError):
+    pass
+
+class GoldenFixtureError(RegressionError):
+    pass
+
+class GoldenDatasetError(RegressionError):
+    pass
+
+class GoldenSnapshotError(RegressionError):
+    pass
+
+class RegressionHarnessError(RegressionError):
+    pass
+
+class RegressionDriftError(RegressionError):
+    pass
+
+class ReleaseRehearsalError(RegressionError):
+    pass
+
+class RegressionStorageError(RegressionError):
+    pass
+
+class RegressionValidationError(RegressionError):
+    pass
+
+class RegressionReportingError(RegressionError):
+    pass
