@@ -210,3 +210,21 @@ def build_policy_driven_scan_notifications(scan_result: MarketScanResult, evalua
     evaluator = evaluator or AlertEvaluator()
     ctx = alert_context_from_scan_result(scan_result)
     return evaluator.evaluate_and_build_messages(ctx)
+
+def notifications_from_comparison_result(result: 'ComparisonRunResult') -> List['NotificationMessage']:
+    from usa_signal_bot.notifications.notification_templates import format_comparison_report_message
+    return [format_comparison_report_message(result)]
+
+def notifications_from_execution_gap(result: 'ComparisonRunResult') -> List['NotificationMessage']:
+    from usa_signal_bot.notifications.notification_templates import format_execution_gap_warning_message
+    from usa_signal_bot.core.enums import ExecutionRealismBucket
+    if result.execution_gap.execution_realism_bucket in [ExecutionRealismBucket.LARGE_GAP, ExecutionRealismBucket.SEVERE_GAP]:
+        return [format_execution_gap_warning_message(result)]
+    return []
+
+def notifications_from_signal_drift(metrics: 'SignalDriftMetrics') -> List['NotificationMessage']:
+    from usa_signal_bot.notifications.notification_templates import format_signal_drift_warning_message
+    from usa_signal_bot.core.enums import SignalDriftStatus
+    if metrics.drift_status in [SignalDriftStatus.HIGH_DRIFT, SignalDriftStatus.SEVERE_DRIFT]:
+        return [format_signal_drift_warning_message(metrics)]
+    return []

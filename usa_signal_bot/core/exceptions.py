@@ -669,3 +669,39 @@ class PaperAnalyticsValidationError(PaperAnalyticsError):
 
 class PaperAnalyticsReportingError(PaperAnalyticsError):
     pass
+
+class ComparisonError(USASignalBotError):
+    pass
+
+class ResultLoaderError(ComparisonError):
+    pass
+
+class TradeMatchingError(ComparisonError):
+    pass
+
+class OrderFillMatchingError(ComparisonError):
+    pass
+
+class PerformanceGapError(ComparisonError):
+    pass
+
+class ExposureGapError(ComparisonError):
+    pass
+
+class TimingGapError(ComparisonError):
+    pass
+
+class SignalDriftError(ComparisonError):
+    pass
+
+class ExecutionRealismError(ComparisonError):
+    pass
+
+class ComparisonStorageError(ComparisonError):
+    pass
+
+class ComparisonValidationError(ComparisonError):
+    pass
+
+class ComparisonReportingError(ComparisonError):
+    pass
