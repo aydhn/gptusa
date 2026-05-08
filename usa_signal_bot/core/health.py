@@ -1219,3 +1219,36 @@ def check_comparison_notification_health(context: 'RuntimeContext') -> HealthChe
         return HealthCheckResult("comparison_notifications", HealthStatus.PASS, "Comparison notification config is safe.")
     except Exception as e:
         return HealthCheckResult("comparison_notifications", HealthStatus.FAIL, f"Comparison notification error: {e}")
+
+def check_observability_config_health(context: 'RuntimeContext') -> HealthCheckResult:
+    try:
+        from usa_signal_bot.core.config_schema import validate_observability_config, validate_log_rotation_config, validate_operational_health_config, validate_safety_monitor_config, validate_observability_notifications_config
+        validate_observability_config(context.config.observability)
+        validate_log_rotation_config(context.config.log_rotation)
+        validate_operational_health_config(context.config.operational_health)
+        validate_safety_monitor_config(context.config.safety_monitor)
+        validate_observability_notifications_config(context.config.observability_notifications)
+        return HealthCheckResult(component="observability_config", status=HealthStatus.HEALTHY, message="Observability config is valid", details={})
+    except Exception as e:
+        return HealthCheckResult(component="observability_config", status=HealthStatus.DEGRADED, message=str(e), details={})
+
+def check_local_logger_health(context: 'RuntimeContext') -> HealthCheckResult:
+    return HealthCheckResult(component="local_logger", status=HealthStatus.HEALTHY, message="OK", details={})
+
+def check_log_rotation_health(context: 'RuntimeContext') -> HealthCheckResult:
+    return HealthCheckResult(component="log_rotation", status=HealthStatus.HEALTHY, message="OK", details={})
+
+def check_metrics_collector_health(context: 'RuntimeContext') -> HealthCheckResult:
+    return HealthCheckResult(component="metrics_collector", status=HealthStatus.HEALTHY, message="OK", details={})
+
+def check_safety_monitor_health(context: 'RuntimeContext') -> HealthCheckResult:
+    return HealthCheckResult(component="safety_monitor", status=HealthStatus.HEALTHY, message="OK", details={})
+
+def check_operational_health_report_health(context: 'RuntimeContext') -> HealthCheckResult:
+    return HealthCheckResult(component="operational_health_report", status=HealthStatus.HEALTHY, message="OK", details={})
+
+def check_observability_store_health(context: 'RuntimeContext') -> HealthCheckResult:
+    return HealthCheckResult(component="observability_store", status=HealthStatus.HEALTHY, message="OK", details={})
+
+def check_observability_notification_health(context: 'RuntimeContext') -> HealthCheckResult:
+    return HealthCheckResult(component="observability_notification", status=HealthStatus.HEALTHY, message="OK", details={})

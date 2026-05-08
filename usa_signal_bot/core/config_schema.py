@@ -3187,8 +3187,87 @@ def validate_config_profiles_config(config: ConfigProfilesConfig) -> None:
     if not config.require_no_dashboard:
         raise ValueError("require_no_dashboard must be True")
 
+
+@dataclass
+class ObservabilityConfig:
+    enabled: bool = True
+    store_dir: str = "data/observability"
+    logs_dir: str = "data/observability/logs"
+    metrics_dir: str = "data/observability/metrics"
+    reports_dir: str = "data/observability/reports"
+    write_jsonl_events: bool = True
+    write_text_log: bool = True
+    sanitize_payloads: bool = True
+    external_telemetry_enabled: bool = False
+    dashboard_enabled: bool = False
+    warn_local_only: bool = True
+    warn_not_investment_advice: bool = True
+    warn_no_broker_execution: bool = True
+
+@dataclass
+class LogRotationConfigSchema:
+    enabled: bool = True
+    max_file_size_bytes: int = 5242880
+    max_rotated_files: int = 5
+    compress_rotated: bool = False
+    dry_run_default: bool = False
+    write_rotation_reports: bool = True
+
+@dataclass
+class OperationalMetricsConfig:
+    enabled: bool = True
+    collect_runtime_metrics: bool = True
+    collect_scan_metrics: bool = True
+    collect_backtest_metrics: bool = True
+    collect_paper_metrics: bool = True
+    collect_comparison_metrics: bool = True
+    collect_quality_metrics: bool = True
+    collect_regression_metrics: bool = True
+    collect_release_metrics: bool = True
+    collect_notification_metrics: bool = True
+    collect_disk_usage: bool = True
+    write_metric_snapshots: bool = True
+
+@dataclass
+class OperationalHealthConfig:
+    enabled: bool = True
+    disk_warning_threshold_pct: float = 80.0
+    disk_critical_threshold_pct: float = 90.0
+    error_warning_threshold_24h: int = 5
+    error_critical_threshold_24h: int = 20
+    stale_artifact_warning_hours: int = 72
+    write_health_reports: bool = True
+
+@dataclass
+class SafetyMonitorConfig:
+    enabled: bool = True
+    require_broker_flags_disabled: bool = True
+    require_live_demo_flags_disabled: bool = True
+    require_telegram_real_send_disabled: bool = True
+    require_dashboard_disabled: bool = True
+    require_external_telemetry_disabled: bool = True
+    block_on_safety_violation: bool = True
+
+@dataclass
+class ObservabilityNotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    notify_operational_health: bool = True
+    notify_log_rotation: bool = True
+    notify_safety_warning: bool = True
+    default_channel: str = "dry_run"
+    warn_no_real_send_default: bool = True
+
 @dataclass
 class AppConfig:
+
+    observability: ObservabilityConfig = field(default_factory=ObservabilityConfig)
+    log_rotation: LogRotationConfigSchema = field(default_factory=LogRotationConfigSchema)
+    operational_metrics: OperationalMetricsConfig = field(default_factory=OperationalMetricsConfig)
+    operational_health: OperationalHealthConfig = field(default_factory=OperationalHealthConfig)
+    safety_monitor: SafetyMonitorConfig = field(default_factory=SafetyMonitorConfig)
+    observability_notifications: ObservabilityNotificationsConfig = field(default_factory=ObservabilityNotificationsConfig)
+
 
     comparison: ComparisonConfig = field(default_factory=ComparisonConfig)
     release: ReleaseConfig = field(default_factory=ReleaseConfig)
@@ -3317,3 +3396,50 @@ class ScheduledScanConfig:
     allow_background_daemon: bool = False
     allow_os_cron_install: bool = False
     write_plan_file: bool = True
+
+def validate_observability_config(config: ObservabilityConfig) -> None:
+    if config.external_telemetry_enabled:
+        raise ValueError("external_telemetry_enabled must be False")
+    if config.dashboard_enabled:
+        raise ValueError("dashboard_enabled must be False")
+    if not config.warn_local_only:
+        raise ValueError("warn_local_only must be True")
+    if not config.warn_not_investment_advice:
+        raise ValueError("warn_not_investment_advice must be True")
+    if not config.warn_no_broker_execution:
+        raise ValueError("warn_no_broker_execution must be True")
+
+def validate_log_rotation_config(config: LogRotationConfigSchema) -> None:
+    if config.max_file_size_bytes <= 0:
+        raise ValueError("max_file_size_bytes must be positive")
+    if config.max_rotated_files <= 0:
+        raise ValueError("max_rotated_files must be positive")
+
+def validate_operational_health_config(config: OperationalHealthConfig) -> None:
+    if config.disk_warning_threshold_pct < 0 or config.disk_warning_threshold_pct > 100:
+        raise ValueError("disk_warning_threshold_pct must be between 0 and 100")
+    if config.disk_critical_threshold_pct < 0 or config.disk_critical_threshold_pct > 100:
+        raise ValueError("disk_critical_threshold_pct must be between 0 and 100")
+    if config.disk_warning_threshold_pct >= config.disk_critical_threshold_pct:
+        raise ValueError("disk_warning_threshold_pct must be less than disk_critical_threshold_pct")
+    if config.error_warning_threshold_24h < 0:
+        raise ValueError("error_warning_threshold_24h cannot be negative")
+    if config.error_critical_threshold_24h < 0:
+        raise ValueError("error_critical_threshold_24h cannot be negative")
+
+def validate_safety_monitor_config(config: SafetyMonitorConfig) -> None:
+    if not config.require_broker_flags_disabled:
+        raise ValueError("require_broker_flags_disabled must be True")
+    if not config.require_live_demo_flags_disabled:
+        raise ValueError("require_live_demo_flags_disabled must be True")
+    if not config.require_telegram_real_send_disabled:
+        raise ValueError("require_telegram_real_send_disabled must be True")
+    if not config.require_dashboard_disabled:
+        raise ValueError("require_dashboard_disabled must be True")
+    if not config.require_external_telemetry_disabled:
+        raise ValueError("require_external_telemetry_disabled must be True")
+
+def validate_observability_notifications_config(config: ObservabilityNotificationsConfig) -> None:
+    # dry_run default can be verified in usage, but enforcing it's valid:
+    if not config.dry_run and not config.warn_no_real_send_default:
+        raise ValueError("If dry_run is false, warn_no_real_send_default must be True.")

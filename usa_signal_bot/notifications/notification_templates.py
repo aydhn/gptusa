@@ -329,3 +329,36 @@ def notifications_from_system_acceptance_result(result: SystemAcceptanceResult) 
         format_readiness_gate_message(result.gate_result),
         format_acceptance_report_message(result)
     ]
+
+def format_operational_health_report_message(report: 'OperationalHealthReport') -> NotificationMessage:
+    from usa_signal_bot.core.enums import NotificationType, NotificationChannel, NotificationPriority
+    title = f"[🏥 HEALTH] Operational Status: {report.status.value}"
+    body = [
+        f"Safety: {report.safety_status.value} | Disk: {report.disk_status.value}",
+        f"Errors: {report.error_count} | Critical: {report.critical_count}"
+    ]
+    if report.required_actions:
+        body.append("\nRequired Actions:")
+        for a in report.required_actions: body.append(f"- {a}")
+
+    body.append("\nNote: Local observability only. Not live execution approval.")
+    return NotificationMessage("msg_" + title[:5], NotificationType.OPERATIONAL_HEALTH_REPORT, NotificationChannel.DRY_RUN, NotificationPriority.HIGH if report.status.value in ["WARNING", "CRITICAL", "FAILED"] else NotificationPriority.NORMAL, title, "\n".join(body), "now")
+
+def format_observability_warning_message(title: str, warnings: list[str], metadata: dict = None) -> NotificationMessage:
+    from usa_signal_bot.core.enums import NotificationType, NotificationChannel, NotificationPriority
+    body = ["Observability Warning:", ""]
+    for w in warnings: body.append(f"- {w}")
+    return NotificationMessage("msg_" + title[:5], NotificationType.OBSERVABILITY_WARNING, NotificationChannel.DRY_RUN, NotificationPriority.HIGH, title, "\n".join(body), "now")
+
+def format_log_rotation_report_message(result: 'LogRotationResult') -> NotificationMessage:
+    from usa_signal_bot.core.enums import NotificationType, NotificationChannel, NotificationPriority
+    title = f"[🔄 LOG ROTATION] Status: {result.status.value}"
+    body = [
+        f"Original Path: {result.original_path}",
+        f"Rotated Path: {result.rotated_path or 'N/A'}",
+        f"Original Size: {result.original_size_bytes or 0} bytes"
+    ]
+    return NotificationMessage("msg_" + title[:5], NotificationType.LOG_ROTATION_REPORT, NotificationChannel.DRY_RUN, NotificationPriority.LOW, title, "\n".join(body), "now")
+
+def notifications_from_operational_health_report(report: 'OperationalHealthReport') -> list[NotificationMessage]:
+    return [format_operational_health_report_message(report)]
