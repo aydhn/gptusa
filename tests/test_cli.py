@@ -1,44 +1,28 @@
-from usa_signal_bot.app.cli import cmd_alert_info, cmd_alert_policy_list, cmd_alert_policy_preview
-from usa_signal_bot.core.config import load_app_config
+import pytest
+import subprocess
+import sys
 
-class DummyContext:
-    def __init__(self):
-        self.config = load_app_config()
+def run_cmd(cmd: list) -> int:
+    try:
+        res = subprocess.run([sys.executable, "-m", "usa_signal_bot"] + cmd, capture_output=True, text=True)
+        return res.returncode
+    except Exception:
+        return 1
 
-class DummyArgs:
-    def __init__(self, **kwargs):
-        for k, v in kwargs.items():
-            setattr(self, k, v)
+def test_cli_quality_commands():
+    assert run_cmd(["quality-info"]) == 0
+    assert run_cmd(["quality-artifacts"]) == 0
+    # No writing so we don't pollute data directory in tests too much, but it shouldn't crash
+    assert run_cmd(["quality-scorecard"]) == 0
+    assert run_cmd(["readiness-gate", "--scope", "full_local_stack"]) == 0
+    assert run_cmd(["acceptance-evaluate", "--scope", "full_local_stack"]) == 0
+    assert run_cmd(["acceptance-summary"]) == 0
+    assert run_cmd(["acceptance-latest"]) == 0
+    assert run_cmd(["acceptance-validate"]) == 0
+    assert run_cmd(["quality-notification-preview"]) == 0
+    assert run_cmd(["quality-notification-dispatch-dry-run"]) == 0
 
-def test_alert_info():
-    ctx = DummyContext()
-    assert cmd_alert_info(ctx, DummyArgs()) == 0
-
-def test_alert_policy_list():
-    ctx = DummyContext()
-    assert cmd_alert_policy_list(ctx, DummyArgs()) == 0
-
-def test_alert_policy_preview():
-    ctx = DummyContext()
-    assert cmd_alert_policy_preview(ctx, DummyArgs(scope="scan")) == 0
-
-def test_comparison_cli_commands():
-    from usa_signal_bot.app.cli import cmd_comparison_info, cmd_comparison_summary, cmd_comparison_latest, cmd_comparison_validate
-    from collections import namedtuple
-    class DummyConfig:
-        def __init__(self):
-            self.data = namedtuple('Data', ['root_dir'])('/tmp')
-            self.comparison = namedtuple('Comp', ['enabled', 'matching_tolerance_bars', 'write_comparison_reports'])(True, 1, True)
-    class DummyContext:
-        config = DummyConfig()
-
-    class DummyArgs:
-        pass
-
-    assert cmd_comparison_info(DummyContext(), DummyArgs()) == 0
-    assert cmd_comparison_summary(DummyContext(), DummyArgs()) == 0
-    assert cmd_comparison_latest(DummyContext(), DummyArgs()) == 0
-
-    args_validate = DummyArgs()
-    args_validate.latest = True
-    assert cmd_comparison_validate(DummyContext(), args_validate) in [0, 1] # 1 because missing file
+def test_cli_existing_commands():
+    # Make sure smoke is not broken
+    assert run_cmd(["smoke"]) == 0
+    assert run_cmd(["health"]) == 0

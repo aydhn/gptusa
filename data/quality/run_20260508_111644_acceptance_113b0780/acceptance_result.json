@@ -1,0 +1,422 @@
+{
+  "acceptance_id": "acceptance_113b0780",
+  "created_at_utc": "2026-05-08T11:16:44.393949+00:00",
+  "scope": "full_local_stack",
+  "decision": "not_accepted",
+  "scorecard": {
+    "scorecard_id": "scorecard_c9f839e7",
+    "created_at_utc": "2026-05-08T11:16:44.393728+00:00",
+    "report_type": "scorecard",
+    "overall_score": 79.33333333333333,
+    "overall_status": "fail",
+    "dimensions": [
+      {
+        "dimension": "data",
+        "score": 100.0,
+        "weight": 0.1,
+        "status": "pass",
+        "issue_count": 0,
+        "critical_count": 0,
+        "warning_count": 0,
+        "summary": "Data Quality Score: 100.0",
+        "issues": [],
+        "metadata": {}
+      },
+      {
+        "dimension": "feature",
+        "score": 66.66666666666667,
+        "weight": 0.08,
+        "status": "warn",
+        "issue_count": 1,
+        "critical_count": 0,
+        "warning_count": 1,
+        "summary": "Feature Quality Score: 66.7",
+        "issues": [
+          {
+            "issue_id": "q_issue_d334ee6b",
+            "dimension": "feature",
+            "severity": "moderate",
+            "status": "warn",
+            "title": "Missing Feature Outputs",
+            "message": "No recent scan directory found, cannot verify features.",
+            "field": null,
+            "evidence": {}
+          }
+        ],
+        "metadata": {}
+      },
+      {
+        "dimension": "signal",
+        "score": 75.0,
+        "weight": 0.1,
+        "status": "fail",
+        "issue_count": 1,
+        "critical_count": 1,
+        "warning_count": 0,
+        "summary": "Signal Quality Score: 75.0",
+        "issues": [
+          {
+            "issue_id": "q_issue_fdb84de9",
+            "dimension": "signal",
+            "severity": "critical",
+            "status": "fail",
+            "title": "Missing Signals",
+            "message": "No scan directory found.",
+            "field": null,
+            "evidence": {}
+          }
+        ],
+        "metadata": {}
+      },
+      {
+        "dimension": "backtest",
+        "score": 100.0,
+        "weight": 0.12,
+        "status": "pass",
+        "issue_count": 0,
+        "critical_count": 0,
+        "warning_count": 0,
+        "summary": "Backtest Quality Score: 100.0",
+        "issues": [],
+        "metadata": {}
+      },
+      {
+        "dimension": "robustness",
+        "score": 100.0,
+        "weight": 0.1,
+        "status": "pass",
+        "issue_count": 0,
+        "critical_count": 0,
+        "warning_count": 0,
+        "summary": "Robustness Quality Score: 100.0",
+        "issues": [],
+        "metadata": {}
+      },
+      {
+        "dimension": "risk",
+        "score": 62.5,
+        "weight": 0.18,
+        "status": "warn",
+        "issue_count": 2,
+        "critical_count": 0,
+        "warning_count": 2,
+        "summary": "Risk/Portfolio Quality Score: 62.5",
+        "issues": [
+          {
+            "issue_id": "q_issue_79f0a1d8",
+            "dimension": "risk",
+            "severity": "moderate",
+            "status": "warn",
+            "title": "Missing Risk",
+            "message": "No risk directory found.",
+            "field": null,
+            "evidence": {}
+          },
+          {
+            "issue_id": "q_issue_0e40827f",
+            "dimension": "risk",
+            "severity": "moderate",
+            "status": "warn",
+            "title": "All Rejected / All Approved",
+            "message": "Risk decisions unbalanced.",
+            "field": null,
+            "evidence": {}
+          }
+        ],
+        "metadata": {}
+      },
+      {
+        "dimension": "paper",
+        "score": 62.5,
+        "weight": 0.1,
+        "status": "warn",
+        "issue_count": 2,
+        "critical_count": 0,
+        "warning_count": 2,
+        "summary": "Paper Quality Score: 62.5",
+        "issues": [
+          {
+            "issue_id": "q_issue_49f0178c",
+            "dimension": "paper",
+            "severity": "moderate",
+            "status": "warn",
+            "title": "Missing Paper Run",
+            "message": "No paper run directory found.",
+            "field": null,
+            "evidence": {}
+          },
+          {
+            "issue_id": "q_issue_576a293e",
+            "dimension": "paper",
+            "severity": "moderate",
+            "status": "warn",
+            "title": "Missing Account Health",
+            "message": "Cannot verify account health.",
+            "field": null,
+            "evidence": {}
+          }
+        ],
+        "metadata": {}
+      },
+      {
+        "dimension": "comparison",
+        "score": 62.5,
+        "weight": 0.1,
+        "status": "warn",
+        "issue_count": 2,
+        "critical_count": 0,
+        "warning_count": 2,
+        "summary": "Comparison Quality Score: 62.5",
+        "issues": [
+          {
+            "issue_id": "q_issue_ee844e3e",
+            "dimension": "comparison",
+            "severity": "moderate",
+            "status": "warn",
+            "title": "Missing Comparison",
+            "message": "No comparison run directory found.",
+            "field": null,
+            "evidence": {}
+          },
+          {
+            "issue_id": "q_issue_74b134f0",
+            "dimension": "comparison",
+            "severity": "moderate",
+            "status": "warn",
+            "title": "Execution Realism Gap",
+            "message": "Cannot verify execution realism gap.",
+            "field": null,
+            "evidence": {}
+          }
+        ],
+        "metadata": {}
+      },
+      {
+        "dimension": "runtime",
+        "score": 87.5,
+        "weight": 0.1,
+        "status": "warn",
+        "issue_count": 1,
+        "critical_count": 0,
+        "warning_count": 1,
+        "summary": "Runtime Safety Score: 87.5",
+        "issues": [
+          {
+            "issue_id": "q_issue_4c7e90d2",
+            "dimension": "runtime",
+            "severity": "moderate",
+            "status": "warn",
+            "title": "Scan Runtime Missing",
+            "message": "No scan run found to evaluate safety.",
+            "field": null,
+            "evidence": {}
+          }
+        ],
+        "metadata": {}
+      },
+      {
+        "dimension": "documentation",
+        "score": 100.0,
+        "weight": 0.02,
+        "status": "pass",
+        "issue_count": 0,
+        "critical_count": 0,
+        "warning_count": 0,
+        "summary": "Documentation/Testing Score: 100.0",
+        "issues": [],
+        "metadata": {}
+      }
+    ],
+    "issues": [
+      {
+        "issue_id": "q_issue_d334ee6b",
+        "dimension": "feature",
+        "severity": "moderate",
+        "status": "warn",
+        "title": "Missing Feature Outputs",
+        "message": "No recent scan directory found, cannot verify features.",
+        "field": null,
+        "evidence": {}
+      },
+      {
+        "issue_id": "q_issue_fdb84de9",
+        "dimension": "signal",
+        "severity": "critical",
+        "status": "fail",
+        "title": "Missing Signals",
+        "message": "No scan directory found.",
+        "field": null,
+        "evidence": {}
+      },
+      {
+        "issue_id": "q_issue_79f0a1d8",
+        "dimension": "risk",
+        "severity": "moderate",
+        "status": "warn",
+        "title": "Missing Risk",
+        "message": "No risk directory found.",
+        "field": null,
+        "evidence": {}
+      },
+      {
+        "issue_id": "q_issue_0e40827f",
+        "dimension": "risk",
+        "severity": "moderate",
+        "status": "warn",
+        "title": "All Rejected / All Approved",
+        "message": "Risk decisions unbalanced.",
+        "field": null,
+        "evidence": {}
+      },
+      {
+        "issue_id": "q_issue_49f0178c",
+        "dimension": "paper",
+        "severity": "moderate",
+        "status": "warn",
+        "title": "Missing Paper Run",
+        "message": "No paper run directory found.",
+        "field": null,
+        "evidence": {}
+      },
+      {
+        "issue_id": "q_issue_576a293e",
+        "dimension": "paper",
+        "severity": "moderate",
+        "status": "warn",
+        "title": "Missing Account Health",
+        "message": "Cannot verify account health.",
+        "field": null,
+        "evidence": {}
+      },
+      {
+        "issue_id": "q_issue_ee844e3e",
+        "dimension": "comparison",
+        "severity": "moderate",
+        "status": "warn",
+        "title": "Missing Comparison",
+        "message": "No comparison run directory found.",
+        "field": null,
+        "evidence": {}
+      },
+      {
+        "issue_id": "q_issue_74b134f0",
+        "dimension": "comparison",
+        "severity": "moderate",
+        "status": "warn",
+        "title": "Execution Realism Gap",
+        "message": "Cannot verify execution realism gap.",
+        "field": null,
+        "evidence": {}
+      },
+      {
+        "issue_id": "q_issue_4c7e90d2",
+        "dimension": "runtime",
+        "severity": "moderate",
+        "status": "warn",
+        "title": "Scan Runtime Missing",
+        "message": "No scan run found to evaluate safety.",
+        "field": null,
+        "evidence": {}
+      }
+    ],
+    "warnings": [],
+    "errors": [],
+    "metadata": {}
+  },
+  "gate_result": {
+    "gate_id": "gate_d4207f2c",
+    "created_at_utc": "2026-05-08T11:16:44.393906+00:00",
+    "scope": "full_local_stack",
+    "status": "failed",
+    "rule_results": [
+      {
+        "rule_id": "r_overall_score",
+        "name": "Overall Score >= 70",
+        "dimension": "overall",
+        "status": "passed",
+        "observed_value": 79.33333333333333,
+        "message": "Rule 'Overall Score >= 70' evaluated to True. Value: 79.33333333333333, Threshold: 70.0",
+        "severity": "high",
+        "evidence": {}
+      },
+      {
+        "rule_id": "r_no_critical_issues",
+        "name": "No Critical Issues",
+        "dimension": "overall",
+        "status": "failed",
+        "observed_value": 1,
+        "message": "Rule 'No Critical Issues' evaluated to False. Value: 1, Threshold: 0",
+        "severity": "high",
+        "evidence": {}
+      },
+      {
+        "rule_id": "r_data_score",
+        "name": "Data Score >= 50",
+        "dimension": "data",
+        "status": "passed",
+        "observed_value": 100.0,
+        "message": "Rule 'Data Score >= 50' evaluated to True. Value: 100.0, Threshold: 50.0",
+        "severity": "high",
+        "evidence": {}
+      },
+      {
+        "rule_id": "r_backtest_score",
+        "name": "Backtest Score >= 50",
+        "dimension": "backtest",
+        "status": "passed",
+        "observed_value": 100.0,
+        "message": "Rule 'Backtest Score >= 50' evaluated to True. Value: 100.0, Threshold: 50.0",
+        "severity": "high",
+        "evidence": {}
+      },
+      {
+        "rule_id": "r_risk_score",
+        "name": "Risk Score >= 50",
+        "dimension": "risk",
+        "status": "passed",
+        "observed_value": 62.5,
+        "message": "Rule 'Risk Score >= 50' evaluated to True. Value: 62.5, Threshold: 50.0",
+        "severity": "high",
+        "evidence": {}
+      },
+      {
+        "rule_id": "r_paper_score",
+        "name": "Paper Score >= 40",
+        "dimension": "paper",
+        "status": "passed",
+        "observed_value": 62.5,
+        "message": "Rule 'Paper Score >= 40' evaluated to True. Value: 62.5, Threshold: 40.0",
+        "severity": "high",
+        "evidence": {}
+      },
+      {
+        "rule_id": "r_comparison_score",
+        "name": "Comparison Score >= 40",
+        "dimension": "comparison",
+        "status": "passed",
+        "observed_value": 62.5,
+        "message": "Rule 'Comparison Score >= 40' evaluated to True. Value: 62.5, Threshold: 40.0",
+        "severity": "high",
+        "evidence": {}
+      }
+    ],
+    "passed_count": 6,
+    "warning_count": 0,
+    "failed_count": 1,
+    "blocked_count": 0,
+    "warnings": [],
+    "errors": [
+      "Rule 'No Critical Issues' evaluated to False. Value: 1, Threshold: 0"
+    ]
+  },
+  "acceptance_summary": "System evaluated to NOT_ACCEPTED. Score: 79.33333333333333",
+  "required_actions": [
+    "Resolve gate failure: Rule 'No Critical Issues' evaluated to False. Value: 1, Threshold: 0"
+  ],
+  "optional_actions": [],
+  "output_paths": {},
+  "warnings": [],
+  "errors": [
+    "Rule 'No Critical Issues' evaluated to False. Value: 1, Threshold: 0"
+  ]
+}

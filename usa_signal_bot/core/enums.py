@@ -1543,3 +1543,86 @@ class ComparisonReportType(str, Enum):
     EXECUTION_REALISM = "EXECUTION_REALISM"
     FULL_COMPARISON = "FULL_COMPARISON"
     CUSTOM = "CUSTOM"
+
+class QualityDimension(str, Enum):
+    DATA = "data"
+    FEATURE = "feature"
+    SIGNAL = "signal"
+    STRATEGY = "strategy"
+    BACKTEST = "backtest"
+    ROBUSTNESS = "robustness"
+    RISK = "risk"
+    PORTFOLIO = "portfolio"
+    PAPER = "paper"
+    COMPARISON = "comparison"
+    RUNTIME = "runtime"
+    NOTIFICATION = "notification"
+    DOCUMENTATION = "documentation"
+    TESTING = "testing"
+    SAFETY = "safety"
+    OVERALL = "overall"
+
+class QualityStatus(str, Enum):
+    PASS = "pass"
+    WARN = "warn"
+    FAIL = "fail"
+    SKIPPED = "skipped"
+    INSUFFICIENT_DATA = "insufficient_data"
+    UNKNOWN = "unknown"
+
+class QualitySeverity(str, Enum):
+    INFO = "info"
+    LOW = "low"
+    MODERATE = "moderate"
+    HIGH = "high"
+    CRITICAL = "critical"
+
+class ReadinessGateStatus(str, Enum):
+    PASSED = "passed"
+    WARNING = "warning"
+    FAILED = "failed"
+    BLOCKED = "blocked"
+    SKIPPED = "skipped"
+    INSUFFICIENT_DATA = "insufficient_data"
+    UNKNOWN = "unknown"
+
+class AcceptanceDecision(str, Enum):
+    ACCEPTED_FOR_LOCAL_RESEARCH = "accepted_for_local_research"
+    ACCEPTED_WITH_WARNINGS = "accepted_with_warnings"
+    NOT_ACCEPTED = "not_accepted"
+    BLOCKED = "blocked"
+    INSUFFICIENT_DATA = "insufficient_data"
+    UNKNOWN = "unknown"
+
+class AcceptanceScope(str, Enum):
+    LOCAL_RESEARCH = "local_research"
+    LOCAL_PAPER_SIMULATION = "local_paper_simulation"
+    BACKTEST_RESEARCH = "backtest_research"
+    RUNTIME_SCAN = "runtime_scan"
+    NOTIFICATION_DRY_RUN = "notification_dry_run"
+    FULL_LOCAL_STACK = "full_local_stack"
+
+class GateRuleOperator(str, Enum):
+    GT = "gt"
+    GTE = "gte"
+    LT = "lt"
+    LTE = "lte"
+    EQ = "eq"
+    NEQ = "neq"
+    BETWEEN = "between"
+    EXISTS = "exists"
+    IS_TRUE = "is_true"
+    IS_FALSE = "is_false"
+
+class ArtifactFreshnessStatus(str, Enum):
+    FRESH = "fresh"
+    STALE = "stale"
+    MISSING = "missing"
+    NOT_EVALUATED = "not_evaluated"
+    UNKNOWN = "unknown"
+
+class QualityReportType(str, Enum):
+    SCORECARD = "scorecard"
+    READINESS_GATE = "readiness_gate"
+    ACCEPTANCE = "acceptance"
+    FULL_QUALITY_REVIEW = "full_quality_review"

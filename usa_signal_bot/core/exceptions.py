@@ -705,3 +705,39 @@ class ComparisonValidationError(ComparisonError):
 
 class ComparisonReportingError(ComparisonError):
     pass
+
+class QualityScorecardError(USASignalBotError):
+    """Raised when a quality scorecard operation fails."""
+    pass
+
+class QualityEvaluatorError(USASignalBotError):
+    """Raised when a quality evaluator fails."""
+    pass
+
+class GateRuleError(USASignalBotError):
+    """Raised when a gate rule evaluation fails."""
+    pass
+
+class ReadinessGateError(USASignalBotError):
+    """Raised when a readiness gate evaluation fails."""
+    pass
+
+class AcceptanceEvaluatorError(USASignalBotError):
+    """Raised when an acceptance evaluation fails."""
+    pass
+
+class QualityStorageError(USASignalBotError):
+    """Raised when a quality storage operation fails."""
+    pass
+
+class QualityValidationError(USASignalBotError):
+    """Raised when a quality validation fails."""
+    pass
+
+class QualityReportingError(USASignalBotError):
+    """Raised when a quality reporting operation fails."""
+    pass
+
+class ArtifactCollectionError(USASignalBotError):
+    """Raised when an artifact collection operation fails."""
+    pass

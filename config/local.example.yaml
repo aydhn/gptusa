@@ -330,3 +330,58 @@ stability_map:
   fragile_zone_max_stability_score: 35.0
   overfit_risk_high_range_ratio: 2.0
   write_stability_map: true
+
+quality_scorecard:
+  enabled: true
+  overall_pass_score: 75.0
+  overall_warn_score: 60.0
+  fail_on_critical_issue: true
+  insufficient_data_threshold: 0.40
+  write_scorecard_reports: true
+  warn_not_investment_advice: true
+  warn_not_live_approval: true
+
+quality_weights:
+  data: 0.10
+  feature: 0.08
+  signal: 0.10
+  backtest: 0.12
+  robustness: 0.10
+  risk: 0.10
+  portfolio: 0.08
+  paper: 0.10
+  comparison: 0.10
+  runtime: 0.07
+  notification: 0.03
+  documentation: 0.02
+
+readiness_gate:
+  enabled: true
+  scope: "full_local_stack"
+  min_overall_score: 70.0
+  min_data_score: 50.0
+  min_backtest_score: 50.0
+  min_risk_score: 50.0
+  min_runtime_score: 60.0
+  require_no_critical_safety_issue: true
+  require_broker_flags_disabled: true
+  require_telegram_real_send_disabled: true
+  write_gate_reports: true
+
+system_acceptance:
+  enabled: true
+  default_scope: "full_local_stack"
+  accept_with_warnings_allowed: true
+  block_on_live_or_broker_flags: true
+  block_on_investment_advice_language: true
+  write_acceptance_reports: true
+  warn_local_research_only: true
+
+quality_notifications:
+  enabled: true
+  dry_run: true
+  notify_scorecard: true
+  notify_gate_result: true
+  notify_acceptance_result: true
+  default_channel: "dry_run"
+  warn_no_real_send_default: true

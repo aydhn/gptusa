@@ -8,6 +8,14 @@ from usa_signal_bot.runtime.runtime_models import MarketScanResult
 from usa_signal_bot.portfolio.portfolio_models import PortfolioCandidate, AllocationResult
 from usa_signal_bot.risk.risk_models import RiskDecision
 
+from usa_signal_bot.quality.quality_models import ResearchQualityScorecard, ProductionReadinessGateResult, SystemAcceptanceResult
+from usa_signal_bot.quality.quality_reporting import (
+    research_quality_scorecard_to_text,
+    production_readiness_gate_result_to_text,
+    system_acceptance_result_to_text
+)
+
+
 def append_disclaimer(text: str, config: Optional[NotificationConfig] = None) -> str:
     if not config or not config.include_disclaimer:
         return text
@@ -278,3 +286,46 @@ def format_signal_drift_warning_message(metrics: 'SignalDriftMetrics') -> 'Notif
         body=text,
         created_at_utc=datetime.now(timezone.utc).isoformat()
     )
+
+
+def format_quality_scorecard_message(scorecard: ResearchQualityScorecard) -> NotificationMessage:
+    text = research_quality_scorecard_to_text(scorecard)
+    return NotificationMessage(
+        message_id=create_notification_message_id(),
+        type=NotificationType.QUALITY_SCORECARD,
+        priority=NotificationPriority.NORMAL,
+        title="Research Quality Scorecard",
+        text=text,
+        metadata={"scorecard_id": scorecard.scorecard_id}
+    )
+
+def format_readiness_gate_message(gate_result: ProductionReadinessGateResult) -> NotificationMessage:
+    text = production_readiness_gate_result_to_text(gate_result)
+    priority = NotificationPriority.HIGH if gate_result.status.name in ["FAILED", "BLOCKED"] else NotificationPriority.NORMAL
+    return NotificationMessage(
+        message_id=create_notification_message_id(),
+        type=NotificationType.READINESS_GATE_REPORT,
+        priority=priority,
+        title="Production Readiness Gate Report",
+        text=text,
+        metadata={"gate_id": gate_result.gate_id}
+    )
+
+def format_acceptance_report_message(result: SystemAcceptanceResult) -> NotificationMessage:
+    text = system_acceptance_result_to_text(result)
+    priority = NotificationPriority.HIGH if result.decision.name in ["NOT_ACCEPTED", "BLOCKED"] else NotificationPriority.NORMAL
+    return NotificationMessage(
+        message_id=create_notification_message_id(),
+        type=NotificationType.ACCEPTANCE_REPORT,
+        priority=priority,
+        title="System Acceptance Evaluator Report",
+        text=text,
+        metadata={"acceptance_id": result.acceptance_id}
+    )
+
+def notifications_from_system_acceptance_result(result: SystemAcceptanceResult) -> List[NotificationMessage]:
+    return [
+        format_quality_scorecard_message(result.scorecard),
+        format_readiness_gate_message(result.gate_result),
+        format_acceptance_report_message(result)
+    ]
