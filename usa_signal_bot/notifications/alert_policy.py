@@ -19,6 +19,82 @@ def default_alert_policies() -> List[AlertPolicy]:
     policies.extend(portfolio_alert_policies())
     policies.extend(runtime_alert_policies())
     policies.extend(health_alert_policies())
+
+
+
+
+    policies.append(AlertPolicy(
+        policy_id="execution_gap_warning",
+        name="Execution Gap Warning",
+        scope=AlertPolicyScope.COMPARISON,
+        alert_type=AlertType.EXECUTION_GAP_WARNING,
+        enabled=True,
+        severity=AlertSeverity.HIGH,
+        min_severity_to_route=AlertSeverity.WARNING,
+        conditions=[
+            AlertCondition(
+                name="execution_realism_bucket",
+                field_path="execution_realism_bucket",
+                operator=AlertConditionOperator.IN,
+                threshold=["LARGE_GAP", "SEVERE_GAP"]
+            )
+        ],
+        route_target=AlertRouteTarget.DRY_RUN,
+        notification_type=NotificationType.EXECUTION_GAP_WARNING,
+        priority=NotificationPriority.HIGH,
+        cooldown_seconds=3600,
+        suppress_duplicates=True,
+        max_alerts_per_run=10
+    ))
+
+    policies.append(AlertPolicy(
+        policy_id="signal_drift_warning",
+        name="Signal Drift Warning",
+        scope=AlertPolicyScope.COMPARISON,
+        alert_type=AlertType.SIGNAL_DRIFT_WARNING,
+        enabled=True,
+        severity=AlertSeverity.HIGH,
+        min_severity_to_route=AlertSeverity.WARNING,
+        conditions=[
+            AlertCondition(
+                name="drift_status",
+                field_path="drift_status",
+                operator=AlertConditionOperator.IN,
+                threshold=["HIGH_DRIFT", "SEVERE_DRIFT"]
+            )
+        ],
+        route_target=AlertRouteTarget.DRY_RUN,
+        notification_type=NotificationType.SIGNAL_DRIFT_WARNING,
+        priority=NotificationPriority.HIGH,
+        cooldown_seconds=3600,
+        suppress_duplicates=True,
+        max_alerts_per_run=10
+    ))
+
+    policies.append(AlertPolicy(
+        policy_id="paper_backtest_divergence",
+        name="Paper Backtest Divergence",
+        scope=AlertPolicyScope.COMPARISON,
+        alert_type=AlertType.PAPER_BACKTEST_DIVERGENCE,
+        enabled=True,
+        severity=AlertSeverity.WARNING,
+        min_severity_to_route=AlertSeverity.WARNING,
+        conditions=[
+            AlertCondition(
+                name="overall_gap_severity",
+                field_path="overall_gap_severity",
+                operator=AlertConditionOperator.IN,
+                threshold=["HIGH", "CRITICAL"]
+            )
+        ],
+        route_target=AlertRouteTarget.DRY_RUN,
+        notification_type=NotificationType.COMPARISON_REPORT,
+        priority=NotificationPriority.NORMAL,
+        cooldown_seconds=7200,
+        suppress_duplicates=True,
+        max_alerts_per_run=10
+    ))
+
     return policies
 
 def scan_alert_policies() -> List[AlertPolicy]:

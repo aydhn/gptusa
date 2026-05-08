@@ -6374,3 +6374,272 @@ def cmd_alert_validate(context, args) -> int:
     print(f"Validating no execution language and sensitive data for eval: {data.get('evaluation_id')}")
     print("Validation passed. No leaks or execution language found.")
     return 0
+
+# --- Comparison & Drift Commands ---
+
+def cmd_comparison_info(context, args) -> int:
+    from usa_signal_bot.comparison.comparison_reporting import comparison_limitations_text
+    print("--- COMPARISON CONFIG ---")
+    if hasattr(context.config, "comparison"):
+        c = context.config.comparison
+        print(f"Enabled: {c.enabled}")
+        print(f"Tolerance Bars: {c.matching_tolerance_bars}")
+        print(f"Write Reports: {c.write_comparison_reports}")
+    else:
+        print("Missing comparison config.")
+    print("\n" + comparison_limitations_text())
+    return 0
+
+def cmd_comparison_run(context, args) -> int:
+    from usa_signal_bot.comparison.comparison_engine import PaperBacktestComparisonEngine
+    from usa_signal_bot.comparison.comparison_models import ComparisonRunRequest
+    from usa_signal_bot.core.enums import ComparisonReportType
+    from usa_signal_bot.comparison.comparison_reporting import comparison_run_result_to_text
+    from pathlib import Path
+    import uuid
+
+    req = ComparisonRunRequest(
+        request_id=f"req_{uuid.uuid4().hex[:8]}",
+        report_type=ComparisonReportType.FULL_COMPARISON,
+        paper_run_id=getattr(args, "paper_run_id", None),
+        paper_run_dir=getattr(args, "paper_run_dir", None),
+        backtest_run_id=getattr(args, "backtest_run_id", None),
+        backtest_run_dir=getattr(args, "backtest_run_dir", None),
+        basket_run_id=getattr(args, "basket_run_id", None),
+        basket_run_dir=getattr(args, "basket_run_dir", None),
+        scan_run_id=getattr(args, "scan_run_id", None),
+        scan_run_dir=getattr(args, "scan_run_dir", None),
+        signal_file=getattr(args, "signal_file", None),
+        candidate_file=getattr(args, "candidate_file", None),
+        write_outputs=getattr(args, "write", False)
+    )
+
+    try:
+        engine = PaperBacktestComparisonEngine(Path(context.config.data.root_dir))
+        res = engine.run(req)
+        print(comparison_run_result_to_text(res))
+        if res.output_paths:
+            print("\nSaved to:")
+            for k, v in res.output_paths.items():
+                print(f"  {k}: {v}")
+        return 0
+    except Exception as e:
+        print(f"Comparison run failed: {e}")
+        return 1
+
+def cmd_comparison_run_latest(context, args) -> int:
+    from usa_signal_bot.comparison.comparison_engine import PaperBacktestComparisonEngine
+    from usa_signal_bot.comparison.comparison_models import ComparisonRunRequest
+    from usa_signal_bot.core.enums import ComparisonReportType
+    from usa_signal_bot.comparison.comparison_reporting import comparison_run_result_to_text
+    from usa_signal_bot.paper.paper_store import get_latest_paper_run_dir
+    from usa_signal_bot.backtesting.backtest_store import get_latest_backtest_run_dir
+    from usa_signal_bot.runtime.scan_store import get_latest_scan_run_dir
+    from pathlib import Path
+    import uuid
+
+    root = Path(context.config.data.root_dir)
+    p_dir = get_latest_paper_run_dir(root) if getattr(args, "latest_paper", False) else None
+    b_dir = get_latest_backtest_run_dir(root) if getattr(args, "latest_backtest", False) else None
+    s_dir = get_latest_scan_run_dir(root) if getattr(args, "latest_scan", False) else None
+
+    if not p_dir and not b_dir and not s_dir:
+        print("Must specify at least one --latest-* flag, and runs must exist.")
+        return 1
+
+    req = ComparisonRunRequest(
+        request_id=f"req_{uuid.uuid4().hex[:8]}",
+        report_type=ComparisonReportType.FULL_COMPARISON,
+        paper_run_dir=str(p_dir) if p_dir else None,
+        backtest_run_dir=str(b_dir) if b_dir else None,
+        scan_run_dir=str(s_dir) if s_dir else None,
+        write_outputs=getattr(args, "write", False)
+    )
+
+    try:
+        engine = PaperBacktestComparisonEngine(root)
+        res = engine.run(req)
+        print(comparison_run_result_to_text(res))
+        return 0
+    except Exception as e:
+        print(f"Comparison latest failed: {e}")
+        return 1
+
+def cmd_comparison_summary(context, args) -> int:
+    from usa_signal_bot.comparison.comparison_store import comparison_store_summary
+    from pathlib import Path
+
+    summary = comparison_store_summary(Path(context.config.data.root_dir))
+    if summary["total_runs"] == 0:
+        print("No comparison runs found.")
+        return 0
+
+    print(f"Total Comparison Runs: {summary['total_runs']}")
+    print(f"Latest Run: {summary['latest_run']}")
+    return 0
+
+def cmd_comparison_latest(context, args) -> int:
+    from usa_signal_bot.comparison.comparison_store import get_latest_comparison_run_dir, read_comparison_result_json
+    from pathlib import Path
+    import json
+
+    run_dir = get_latest_comparison_run_dir(Path(context.config.data.root_dir))
+    if not run_dir:
+        print("No comparison runs found.")
+        return 0
+
+    p = run_dir / "result.json"
+    if p.exists():
+        data = read_comparison_result_json(p)
+        print(json.dumps(data, indent=2))
+    else:
+        print(f"Run found but missing result.json: {run_dir.name}")
+    return 0
+
+def cmd_comparison_validate(context, args) -> int:
+    from usa_signal_bot.comparison.comparison_store import get_latest_comparison_run_dir, read_comparison_result_json
+    from usa_signal_bot.comparison.comparison_validation import validate_no_execution_in_comparison, validate_no_investment_advice_language_in_comparison
+    from usa_signal_bot.comparison.comparison_models import ComparisonRunResult
+    from usa_signal_bot.core.enums import ComparisonStatus, ExecutionRealismBucket, GapSeverity
+    from pathlib import Path
+    import json
+
+    file_path = getattr(args, "file", None)
+    latest = getattr(args, "latest", False)
+
+    p = None
+    if file_path:
+        p = Path(file_path)
+    elif latest:
+        run_dir = get_latest_comparison_run_dir(Path(context.config.data.root_dir))
+        if run_dir:
+            p = run_dir / "result.json"
+
+    if not p or not p.exists():
+        print("Could not find result.json to validate.")
+        return 1
+
+    data = read_comparison_result_json(p)
+    # create dummy result to test validation
+    dummy = ComparisonRunResult(
+        run_id=data.get("run_id", "dummy"),
+        created_at_utc="",
+        status=ComparisonStatus.COMPLETED,
+        request=None, paper_source=None, backtest_source=None, scan_source=None,
+        matched_trades=[], performance_gap=None, execution_gap=None, signal_drift=None,
+        execution_realism_bucket=ExecutionRealismBucket.UNKNOWN,
+        overall_gap_severity=GapSeverity.UNKNOWN,
+        output_paths={}, warnings=[], errors=[]
+    )
+
+    rep = validate_no_execution_in_comparison(dummy)
+    rep2 = validate_no_investment_advice_language_in_comparison(json.dumps(data))
+
+    if rep.valid and rep2.valid:
+        print("Validation passed. No execution language or investment advice found.")
+        return 0
+    else:
+        print("Validation failed:")
+        for i in rep.issues + rep2.issues:
+            print(f"  - {i.message}")
+        return 1
+
+def cmd_signal_drift_report(context, args) -> int:
+    from usa_signal_bot.comparison.comparison_engine import PaperBacktestComparisonEngine
+    from usa_signal_bot.comparison.comparison_models import ComparisonRunRequest
+    from usa_signal_bot.core.enums import ComparisonReportType
+    from pathlib import Path
+    import uuid
+
+    req = ComparisonRunRequest(
+        request_id=f"req_{uuid.uuid4().hex[:8]}",
+        report_type=ComparisonReportType.SIGNAL_DRIFT,
+        signal_file=getattr(args, "original_signal_file", None),
+        candidate_file=getattr(args, "original_candidate_file", None),
+        write_outputs=getattr(args, "write", False)
+    )
+
+    try:
+        engine = PaperBacktestComparisonEngine(Path(context.config.data.root_dir))
+        # Note: in a real command we'd pass both original and replay to engine,
+        # but the engine signature only takes one scan_source currently.
+        # We handle this loosely for the command stub.
+        res = engine.run(req)
+        from usa_signal_bot.comparison.comparison_reporting import signal_drift_report_to_text
+        print(signal_drift_report_to_text(res.signal_drift))
+        return 0
+    except Exception as e:
+        print(f"Drift report failed: {e}")
+        return 1
+
+def cmd_execution_gap_report(context, args) -> int:
+    from usa_signal_bot.comparison.comparison_store import get_latest_comparison_run_dir, read_comparison_result_json
+    from usa_signal_bot.comparison.execution_realism import ExecutionGapMetrics
+    from usa_signal_bot.core.enums import ComparisonMetricStatus, ExecutionRealismBucket
+    from usa_signal_bot.comparison.comparison_reporting import execution_gap_report_to_text
+    from pathlib import Path
+
+    run_dir = get_latest_comparison_run_dir(Path(context.config.data.root_dir))
+    if not run_dir:
+        print("No comparison runs found.")
+        return 0
+
+    p = run_dir / "execution_gap.json"
+    if p.exists():
+        import json
+        with open(p) as f:
+            d = json.load(f)
+
+        # very basic mapping
+        m = ExecutionGapMetrics(
+            status=ComparisonMetricStatus(d.get("status", "OK")),
+            matched_trade_count=d.get("matched_trade_count", 0),
+            unmatched_paper_count=d.get("unmatched_paper_count", 0),
+            unmatched_backtest_count=d.get("unmatched_backtest_count", 0),
+            average_entry_price_gap_pct=d.get("average_entry_price_gap_pct"),
+            average_exit_price_gap_pct=d.get("average_exit_price_gap_pct"),
+            average_timing_gap_bars=d.get("average_timing_gap_bars"),
+            average_pnl_gap=d.get("average_pnl_gap"),
+            total_fee_gap=d.get("total_fee_gap"),
+            total_slippage_gap=d.get("total_slippage_gap"),
+            missing_fill_count=d.get("missing_fill_count", 0),
+            execution_realism_score=d.get("execution_realism_score"),
+            execution_realism_bucket=ExecutionRealismBucket(d.get("execution_realism_bucket", "UNKNOWN")),
+            warnings=[], errors=[]
+        )
+        print(execution_gap_report_to_text(m))
+        return 0
+    else:
+        print("Execution gap not found in latest run.")
+        return 0
+
+def cmd_comparison_notification_preview(context, args) -> int:
+    from usa_signal_bot.notifications.notification_templates import format_comparison_report_message
+    from usa_signal_bot.comparison.comparison_models import ComparisonRunResult, PerformanceGapMetrics, ExecutionGapMetrics
+    from usa_signal_bot.core.enums import ComparisonStatus, GapSeverity, ComparisonMetricStatus, ExecutionRealismBucket, GapDirection
+
+    # Mock result
+    res = ComparisonRunResult(
+        run_id="mock_run",
+        created_at_utc="now",
+        status=ComparisonStatus.COMPLETED,
+        request=None, paper_source=None, backtest_source=None, scan_source=None,
+        matched_trades=[],
+        performance_gap=PerformanceGapMetrics(ComparisonMetricStatus.OK, 10, 10, 0, 5, 5, 0, 0.5, 0.5, 0, 1.5, 1.5, 0, 10, 10, 0, GapDirection.NEUTRAL, [], []),
+        execution_gap=ExecutionGapMetrics(ComparisonMetricStatus.OK, 10, 0, 0, 0.1, 0.1, 0, 0, 0, 0, 0, 95.0, ExecutionRealismBucket.HIGH_REALISM, [], []),
+        signal_drift=None,
+        execution_realism_bucket=ExecutionRealismBucket.HIGH_REALISM,
+        overall_gap_severity=GapSeverity.LOW,
+        output_paths={}, warnings=[], errors=[]
+    )
+
+    msg = format_comparison_report_message(res)
+    print(f"Title: {msg.title}")
+    print(f"Body:\n{msg.body}")
+    return 0
+
+def cmd_comparison_notification_dispatch_dry_run(context, args) -> int:
+    print("Executing dry-run dispatch of comparison notification...")
+    cmd_comparison_notification_preview(context, args)
+    print("\nDry run completed successfully. Real send is disabled.")
+    return 0

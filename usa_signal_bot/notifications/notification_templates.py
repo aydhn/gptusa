@@ -225,3 +225,56 @@ def format_health_summary_message(summary: Dict[str, Any]) -> NotificationMessag
         body += "All checks passed successfully.\n"
 
     return _create_base_message(NotificationType.HEALTH_SUMMARY, title, body)
+
+def format_comparison_report_message(result: 'ComparisonRunResult') -> 'NotificationMessage':
+    from usa_signal_bot.notifications.notification_models import NotificationMessage
+    from usa_signal_bot.core.enums import NotificationType, NotificationPriority, NotificationChannel
+    from usa_signal_bot.comparison.comparison_reporting import comparison_run_result_to_text
+
+    text = comparison_run_result_to_text(result, limit=10)
+
+    priority = NotificationPriority.NORMAL
+    if result.overall_gap_severity.value in ["HIGH", "CRITICAL"]:
+        priority = NotificationPriority.HIGH
+
+    return NotificationMessage(
+        message_id='test1', notification_type=NotificationType.COMPARISON_REPORT, channel=NotificationChannel.DRY_RUN,
+        priority=priority,
+        title=f"Comparison Report: {result.overall_gap_severity.value} Gap",
+        body=text,
+        created_at_utc=result.created_at_utc
+    )
+
+def format_execution_gap_warning_message(result: 'ComparisonRunResult') -> 'NotificationMessage':
+    from usa_signal_bot.notifications.notification_models import NotificationMessage
+    from usa_signal_bot.core.enums import NotificationType, NotificationPriority, NotificationChannel
+    from usa_signal_bot.comparison.comparison_reporting import execution_gap_report_to_text, comparison_limitations_text
+
+    text = f"Execution Realism Bucket: {result.execution_gap.execution_realism_bucket.value}\n\n"
+    text += execution_gap_report_to_text(result.execution_gap)
+    text += "\n\n" + comparison_limitations_text()
+
+    return NotificationMessage(
+        message_id='test2', notification_type=NotificationType.EXECUTION_GAP_WARNING, channel=NotificationChannel.DRY_RUN,
+        priority=NotificationPriority.HIGH,
+        title="Execution Gap Warning",
+        body=text,
+        created_at_utc=result.created_at_utc
+    )
+
+def format_signal_drift_warning_message(metrics: 'SignalDriftMetrics') -> 'NotificationMessage':
+    from usa_signal_bot.notifications.notification_models import NotificationMessage
+    from usa_signal_bot.core.enums import NotificationType, NotificationPriority, NotificationChannel
+    from usa_signal_bot.comparison.comparison_reporting import signal_drift_report_to_text, comparison_limitations_text
+    from datetime import datetime, timezone
+
+    text = signal_drift_report_to_text(metrics)
+    text += "\n\n" + comparison_limitations_text()
+
+    return NotificationMessage(
+        message_id='test3', notification_type=NotificationType.SIGNAL_DRIFT_WARNING, channel=NotificationChannel.DRY_RUN,
+        priority=NotificationPriority.HIGH,
+        title=f"Signal Drift Warning: {metrics.drift_status.value}",
+        body=text,
+        created_at_utc=datetime.now(timezone.utc).isoformat()
+    )

@@ -1090,3 +1090,80 @@ def check_notification_store_health(context: 'RuntimeContext') -> HealthCheckRes
         result.status = "fail"
         result.message = str(e)
     return result
+
+def check_comparison_config_health(context: 'RuntimeContext') -> HealthCheckResult:
+    if not hasattr(context.config, "comparison"):
+        return HealthCheckResult(
+            name="comparison_config",
+            status=HealthStatus.WARNING,
+            message="Comparison config missing.",
+            details={"enabled": False}
+        )
+    return HealthCheckResult(
+        name="comparison_config",
+        status=HealthStatus.PASS,
+        message="Comparison config is valid.",
+        details={"enabled": context.config.comparison.enabled}
+    )
+
+def check_trade_matching_health(context: 'RuntimeContext') -> HealthCheckResult:
+    try:
+        from usa_signal_bot.comparison.trade_matching import match_paper_and_backtest_trades
+        fake_p = [{"symbol": "AAPL", "entry_price": 100}]
+        fake_b = [{"symbol": "AAPL", "entry_price": 101}]
+        res = match_paper_and_backtest_trades(fake_p, fake_b)
+        if len(res) > 0:
+            return HealthCheckResult("trade_matching", HealthStatus.PASS, "Trade matching engine initialized.")
+        return HealthCheckResult("trade_matching", HealthStatus.WARNING, "Trade matching returned empty on fake data.")
+    except Exception as e:
+        return HealthCheckResult("trade_matching", HealthStatus.FAIL, f"Error in trade matching: {e}")
+
+def check_performance_gap_health(context: 'RuntimeContext') -> HealthCheckResult:
+    try:
+        from usa_signal_bot.comparison.performance_gap import calculate_performance_gap_metrics
+        from usa_signal_bot.core.enums import ComparisonMetricStatus
+        res = calculate_performance_gap_metrics({"performance": {"total_return": 10}}, {"performance": {"total_return": 8}})
+        if res.status == ComparisonMetricStatus.OK:
+            return HealthCheckResult("performance_gap", HealthStatus.PASS, "Performance gap calculation ok.")
+        return HealthCheckResult("performance_gap", HealthStatus.WARNING, "Performance gap status not OK.")
+    except Exception as e:
+        return HealthCheckResult("performance_gap", HealthStatus.FAIL, f"Error in performance gap: {e}")
+
+def check_execution_realism_health(context: 'RuntimeContext') -> HealthCheckResult:
+    try:
+        from usa_signal_bot.comparison.execution_realism import calculate_execution_gap_metrics
+        res = calculate_execution_gap_metrics([])
+        if res.status:
+            return HealthCheckResult("execution_realism", HealthStatus.PASS, "Execution realism calculation ok.")
+        return HealthCheckResult("execution_realism", HealthStatus.WARNING, "Execution realism status null.")
+    except Exception as e:
+        return HealthCheckResult("execution_realism", HealthStatus.FAIL, f"Error in execution realism: {e}")
+
+def check_signal_drift_health(context: 'RuntimeContext') -> HealthCheckResult:
+    try:
+        from usa_signal_bot.comparison.signal_drift import calculate_signal_drift_metrics
+        res = calculate_signal_drift_metrics([])
+        if res.status:
+            return HealthCheckResult("signal_drift", HealthStatus.PASS, "Signal drift calculation ok.")
+        return HealthCheckResult("signal_drift", HealthStatus.WARNING, "Signal drift status null.")
+    except Exception as e:
+        return HealthCheckResult("signal_drift", HealthStatus.FAIL, f"Error in signal drift: {e}")
+
+def check_comparison_store_health(context: 'RuntimeContext') -> HealthCheckResult:
+    try:
+        from usa_signal_bot.comparison.comparison_store import comparison_store_dir
+        from pathlib import Path
+        d = comparison_store_dir(Path(context.config.data.root_dir))
+        return HealthCheckResult("comparison_store", HealthStatus.PASS, f"Comparison store ready at {d}")
+    except Exception as e:
+        return HealthCheckResult("comparison_store", HealthStatus.FAIL, f"Comparison store error: {e}")
+
+def check_comparison_notification_health(context: 'RuntimeContext') -> HealthCheckResult:
+    try:
+        if not hasattr(context.config, "comparison_notifications"):
+            return HealthCheckResult("comparison_notifications", HealthStatus.WARNING, "comparison_notifications config missing.")
+        if not context.config.comparison_notifications.dry_run:
+            return HealthCheckResult("comparison_notifications", HealthStatus.FAIL, "Real send must be disabled by default for comparison.")
+        return HealthCheckResult("comparison_notifications", HealthStatus.PASS, "Comparison notification config is safe.")
+    except Exception as e:
+        return HealthCheckResult("comparison_notifications", HealthStatus.FAIL, f"Comparison notification error: {e}")

@@ -495,3 +495,51 @@ notification_templates:
   max_candidates_in_message: 10
   max_risk_decisions_in_message: 10
   max_allocations_in_message: 10
+
+comparison:
+  enabled: true
+  store_dir: "data/comparison"
+  default_report_type: "full_comparison"
+  matching_tolerance_bars: 1
+  price_gap_warning_pct: 1.0
+  timing_gap_warning_bars: 1
+  min_matched_trades_for_realism_score: 3
+  write_comparison_reports: true
+  warn_not_execution_validation: true
+  warn_not_investment_advice: true
+
+performance_gap:
+  enabled: true
+  return_gap_warning_pct: 5.0
+  drawdown_gap_warning_pct: 5.0
+  win_rate_gap_warning: 0.10
+  profit_factor_gap_warning: 0.50
+  trade_count_gap_warning: 3
+
+execution_gap:
+  enabled: true
+  price_gap_warning_pct: 1.0
+  price_gap_critical_pct: 5.0
+  timing_gap_warning_bars: 1
+  timing_gap_critical_bars: 5
+  pnl_gap_warning: 100.0
+  unmatched_trade_warning_ratio: 0.25
+  realism_score_warning_threshold: 60.0
+
+signal_drift:
+  enabled: true
+  score_gap_warning: 10.0
+  confidence_gap_warning: 0.10
+  rank_gap_warning: 10.0
+  feature_gap_warning: 0.20
+  changed_action_is_high_drift: true
+  write_signal_drift_reports: true
+
+comparison_notifications:
+  enabled: true
+  dry_run: true
+  notify_comparison_report: true
+  notify_execution_gap_warning: true
+  notify_signal_drift_warning: true
+  default_channel: "dry_run"
+  warn_no_real_send_default: true

@@ -2908,7 +2908,103 @@ def validate_notification_templates_config(config: NotificationTemplatesConfig) 
 
 
 @dataclass
+
+@dataclass
+class ComparisonConfig:
+    enabled: bool = True
+    store_dir: str = "data/comparison"
+    default_report_type: str = "full_comparison"
+    matching_tolerance_bars: int = 1
+    price_gap_warning_pct: float = 1.0
+    timing_gap_warning_bars: int = 1
+    min_matched_trades_for_realism_score: int = 3
+    write_comparison_reports: bool = True
+    warn_not_execution_validation: bool = True
+    warn_not_investment_advice: bool = True
+
+@dataclass
+class PerformanceGapConfig:
+    enabled: bool = True
+    return_gap_warning_pct: float = 5.0
+    drawdown_gap_warning_pct: float = 5.0
+    win_rate_gap_warning: float = 0.10
+    profit_factor_gap_warning: float = 0.50
+    trade_count_gap_warning: int = 3
+
+@dataclass
+class ExecutionGapConfig:
+    enabled: bool = True
+    price_gap_warning_pct: float = 1.0
+    price_gap_critical_pct: float = 5.0
+    timing_gap_warning_bars: int = 1
+    timing_gap_critical_bars: int = 5
+    pnl_gap_warning: float = 100.0
+    unmatched_trade_warning_ratio: float = 0.25
+    realism_score_warning_threshold: float = 60.0
+
+@dataclass
+class SignalDriftConfig:
+    enabled: bool = True
+    score_gap_warning: float = 10.0
+    confidence_gap_warning: float = 0.10
+    rank_gap_warning: float = 10.0
+    feature_gap_warning: float = 0.20
+    changed_action_is_high_drift: bool = True
+    write_signal_drift_reports: bool = True
+
+@dataclass
+class ComparisonNotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    notify_comparison_report: bool = True
+    notify_execution_gap_warning: bool = True
+    notify_signal_drift_warning: bool = True
+    default_channel: str = "dry_run"
+    warn_no_real_send_default: bool = True
+
+def validate_comparison_config(config: ComparisonConfig) -> None:
+    if config.matching_tolerance_bars < 0:
+        raise ValueError("matching_tolerance_bars cannot be negative")
+    if config.price_gap_warning_pct < 0:
+        raise ValueError("price_gap_warning_pct cannot be negative")
+    if config.timing_gap_warning_bars < 0:
+        raise ValueError("timing_gap_warning_bars cannot be negative")
+    if config.min_matched_trades_for_realism_score <= 0:
+        raise ValueError("min_matched_trades_for_realism_score must be positive")
+    if not config.warn_not_execution_validation:
+        raise ValueError("warn_not_execution_validation must be True")
+    if not config.warn_not_investment_advice:
+        raise ValueError("warn_not_investment_advice must be True")
+
+def validate_performance_gap_config(config: PerformanceGapConfig) -> None:
+    if not (0 <= config.win_rate_gap_warning <= 1):
+        raise ValueError("win_rate_gap_warning must be between 0 and 1")
+
+def validate_execution_gap_config(config: ExecutionGapConfig) -> None:
+    if not (0 <= config.unmatched_trade_warning_ratio <= 1):
+        raise ValueError("unmatched_trade_warning_ratio must be between 0 and 1")
+    if not (0 <= config.realism_score_warning_threshold <= 100):
+        raise ValueError("realism_score_warning_threshold must be between 0 and 100")
+
+def validate_signal_drift_config(config: SignalDriftConfig) -> None:
+    if not (0 <= config.confidence_gap_warning <= 1):
+        raise ValueError("confidence_gap_warning must be between 0 and 1")
+    if not (0 <= config.feature_gap_warning <= 1):
+        raise ValueError("feature_gap_warning must be between 0 and 1")
+
+def validate_comparison_notifications_config(config: ComparisonNotificationsConfig) -> None:
+    if not config.warn_no_real_send_default:
+        raise ValueError("warn_no_real_send_default must be True")
+
+
+@dataclass
 class AppConfig:
+
+    comparison: ComparisonConfig = field(default_factory=ComparisonConfig)
+    performance_gap: PerformanceGapConfig = field(default_factory=PerformanceGapConfig)
+    execution_gap: ExecutionGapConfig = field(default_factory=ExecutionGapConfig)
+    signal_drift: SignalDriftConfig = field(default_factory=SignalDriftConfig)
+    comparison_notifications: ComparisonNotificationsConfig = field(default_factory=ComparisonNotificationsConfig)
     notifications: NotificationsConfig = field(default_factory=NotificationsConfig)
     telegram: TelegramConfig = field(default_factory=TelegramConfig)
     notification_templates: NotificationTemplatesConfig = field(default_factory=NotificationTemplatesConfig)
