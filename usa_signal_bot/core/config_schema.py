@@ -3059,10 +3059,146 @@ class QualityNotificationsConfig:
     default_channel: str = "dry_run"
     warn_no_real_send_default: bool = True
 
+
+@dataclass
+class ReleaseConfig:
+    enabled: bool = True
+    release_name: str = "usa_signal_bot_local"
+    output_dir: str = "data/release/builds"
+    include_docs: bool = True
+    include_tests: bool = True
+    include_reports: bool = True
+    include_data_cache: bool = False
+    include_backups: bool = False
+    include_secrets: bool = False
+    validate_after_build: bool = True
+    write_release_reports: bool = True
+    warn_not_live_approval: bool = True
+    warn_not_investment_advice: bool = True
+
+@dataclass
+class ReleaseArtifactsConfig:
+    enabled: bool = True
+    include_source: bool = True
+    include_config_examples: bool = True
+    include_docs: bool = True
+    include_tests: bool = True
+    include_requirements: bool = True
+    include_latest_regression_report: bool = True
+    include_latest_quality_report: bool = True
+    exclude_git: bool = True
+    exclude_pycache: bool = True
+    exclude_env_files: bool = True
+    exclude_secret_like_paths: bool = True
+
+@dataclass
+class OperatorRunbookConfig:
+    enabled: bool = True
+    write_runbook: bool = True
+    include_command_reference: bool = True
+    include_safety_limitations: bool = True
+    include_troubleshooting: bool = True
+    warn_not_investment_advice: bool = True
+    warn_no_broker_execution: bool = True
+
+@dataclass
+class MaintenanceConfig:
+    enabled: bool = True
+    daily_enabled: bool = True
+    weekly_enabled: bool = True
+    monthly_enabled: bool = True
+    pre_release_enabled: bool = True
+    execute_commands: bool = False
+    command_timeout_seconds: int = 60
+    write_maintenance_reports: bool = True
+
+@dataclass
+class BackupConfig:
+    enabled: bool = True
+    output_dir: str = "data/release/backups"
+    default_scope: str = "reports_only"
+    include_configs: bool = True
+    include_reports: bool = True
+    include_data_cache: bool = False
+    include_secrets: bool = False
+    validate_after_backup: bool = True
+    restore_dry_run_only: bool = True
+
+@dataclass
+class ConfigProfilesConfig:
+    enabled: bool = True
+    write_default_profiles: bool = True
+    profiles_dir: str = "config/profiles"
+    require_broker_flags_false: bool = True
+    require_telegram_real_send_false: bool = True
+    require_no_dashboard: bool = True
+
+@dataclass
+class UpgradePrecheckConfig:
+    enabled: bool = True
+    check_python_version: bool = True
+    check_requirements: bool = True
+    check_config_files: bool = True
+    check_data_directories: bool = True
+    check_secret_like_files: bool = True
+    check_regression_smoke: bool = True
+    write_precheck_reports: bool = True
+
+def validate_release_config(config: ReleaseConfig) -> None:
+    if not config.release_name:
+        raise ValueError("release_name must not be empty")
+    if not config.output_dir:
+        raise ValueError("output_dir must not be empty")
+    if config.include_secrets:
+        raise ValueError("include_secrets must be False")
+    if not config.warn_not_live_approval:
+        raise ValueError("warn_not_live_approval must be True")
+    if not config.warn_not_investment_advice:
+        raise ValueError("warn_not_investment_advice must be True")
+
+def validate_release_artifacts_config(config: ReleaseArtifactsConfig) -> None:
+    if not config.exclude_secret_like_paths:
+        raise ValueError("exclude_secret_like_paths must be True")
+
+def validate_operator_runbook_config(config: OperatorRunbookConfig) -> None:
+    if not config.warn_no_broker_execution:
+        raise ValueError("warn_no_broker_execution must be True")
+
+def validate_maintenance_config(config: MaintenanceConfig) -> None:
+    if config.execute_commands is not False:
+        raise ValueError("execute_commands must be False by default")
+    if config.command_timeout_seconds <= 0:
+        raise ValueError("command_timeout_seconds must be positive")
+
+def validate_backup_config(config: BackupConfig) -> None:
+    if config.include_secrets:
+        raise ValueError("include_secrets must be False")
+    if not config.restore_dry_run_only:
+        raise ValueError("restore_dry_run_only must be True")
+    from usa_signal_bot.core.enums import BackupScope
+    if config.default_scope.upper() not in [s.value for s in BackupScope]:
+        raise ValueError(f"default_scope must be a valid BackupScope, got {config.default_scope}")
+
+def validate_config_profiles_config(config: ConfigProfilesConfig) -> None:
+    if not config.require_broker_flags_false:
+        raise ValueError("require_broker_flags_false must be True")
+    if not config.require_telegram_real_send_false:
+        raise ValueError("require_telegram_real_send_false must be True")
+    if not config.require_no_dashboard:
+        raise ValueError("require_no_dashboard must be True")
+
 @dataclass
 class AppConfig:
 
     comparison: ComparisonConfig = field(default_factory=ComparisonConfig)
+    release: ReleaseConfig = field(default_factory=ReleaseConfig)
+    release_artifacts: ReleaseArtifactsConfig = field(default_factory=ReleaseArtifactsConfig)
+    operator_runbook: OperatorRunbookConfig = field(default_factory=OperatorRunbookConfig)
+    maintenance: MaintenanceConfig = field(default_factory=MaintenanceConfig)
+    backup: BackupConfig = field(default_factory=BackupConfig)
+    config_profiles: ConfigProfilesConfig = field(default_factory=ConfigProfilesConfig)
+    upgrade_precheck: UpgradePrecheckConfig = field(default_factory=UpgradePrecheckConfig)
+
     performance_gap: PerformanceGapConfig = field(default_factory=PerformanceGapConfig)
     execution_gap: ExecutionGapConfig = field(default_factory=ExecutionGapConfig)
     signal_drift: SignalDriftConfig = field(default_factory=SignalDriftConfig)

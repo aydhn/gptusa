@@ -772,3 +772,45 @@ class RegressionValidationError(RegressionError):
 
 class RegressionReportingError(RegressionError):
     pass
+
+class ReleaseError(USASignalBotError):
+    pass
+
+class VersioningError(ReleaseError):
+    pass
+
+class ChangelogError(ReleaseError):
+    pass
+
+class ReleaseManifestError(ReleaseError):
+    pass
+
+class ArtifactCollectorError(ReleaseError):
+    pass
+
+class LocalPackagerError(ReleaseError):
+    pass
+
+class RunbookGeneratorError(ReleaseError):
+    pass
+
+class MaintenanceWorkflowError(ReleaseError):
+    pass
+
+class BackupRestoreError(ReleaseError):
+    pass
+
+class ConfigProfileError(ReleaseError):
+    pass
+
+class UpgradePrecheckError(ReleaseError):
+    pass
+
+class ReleaseStorageError(ReleaseError):
+    pass
+
+class ReleaseValidationError(ReleaseError):
+    pass
+
+class ReleaseReportingError(ReleaseError):
+    pass
