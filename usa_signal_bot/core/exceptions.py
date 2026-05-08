@@ -639,3 +639,33 @@ class PaperStorageError(PaperTradingError):
 
 class PaperReportingError(PaperTradingError):
     pass
+
+class PaperAnalyticsError(USASignalBotError):
+    pass
+
+class PaperEquityAnalyticsError(PaperAnalyticsError):
+    pass
+
+class PaperDrawdownMonitorError(PaperAnalyticsError):
+    pass
+
+class PaperTradeAnalyticsError(PaperAnalyticsError):
+    pass
+
+class PaperExposureAnalyticsError(PaperAnalyticsError):
+    pass
+
+class PaperRiskReportError(PaperAnalyticsError):
+    pass
+
+class PaperRollingMetricsError(PaperAnalyticsError):
+    pass
+
+class PaperAnalyticsStorageError(PaperAnalyticsError):
+    pass
+
+class PaperAnalyticsValidationError(PaperAnalyticsError):
+    pass
+
+class PaperAnalyticsReportingError(PaperAnalyticsError):
+    pass
