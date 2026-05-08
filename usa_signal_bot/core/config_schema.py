@@ -2997,6 +2997,68 @@ def validate_comparison_notifications_config(config: ComparisonNotificationsConf
         raise ValueError("warn_no_real_send_default must be True")
 
 
+
+
+@dataclass
+class QualityScorecardConfig:
+    enabled: bool = True
+    overall_pass_score: float = 75.0
+    overall_warn_score: float = 60.0
+    fail_on_critical_issue: bool = True
+    insufficient_data_threshold: float = 0.40
+    write_scorecard_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_not_live_approval: bool = True
+
+@dataclass
+class QualityWeightsConfig:
+    data: float = 0.10
+    feature: float = 0.08
+    signal: float = 0.10
+    backtest: float = 0.12
+    robustness: float = 0.10
+    risk: float = 0.10
+    portfolio: float = 0.08
+    paper: float = 0.10
+    comparison: float = 0.10
+    runtime: float = 0.07
+    notification: float = 0.03
+    documentation: float = 0.02
+
+@dataclass
+class ReadinessGateConfig:
+    enabled: bool = True
+    scope: str = "full_local_stack"
+    min_overall_score: float = 70.0
+    min_data_score: float = 50.0
+    min_backtest_score: float = 50.0
+    min_risk_score: float = 50.0
+    min_runtime_score: float = 60.0
+    require_no_critical_safety_issue: bool = True
+    require_broker_flags_disabled: bool = True
+    require_telegram_real_send_disabled: bool = True
+    write_gate_reports: bool = True
+
+@dataclass
+class SystemAcceptanceConfig:
+    enabled: bool = True
+    default_scope: str = "full_local_stack"
+    accept_with_warnings_allowed: bool = True
+    block_on_live_or_broker_flags: bool = True
+    block_on_investment_advice_language: bool = True
+    write_acceptance_reports: bool = True
+    warn_local_research_only: bool = True
+
+@dataclass
+class QualityNotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    notify_scorecard: bool = True
+    notify_gate_result: bool = True
+    notify_acceptance_result: bool = True
+    default_channel: str = "dry_run"
+    warn_no_real_send_default: bool = True
+
 @dataclass
 class AppConfig:
 
