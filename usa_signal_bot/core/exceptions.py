@@ -814,3 +814,33 @@ class ReleaseValidationError(ReleaseError):
 
 class ReleaseReportingError(ReleaseError):
     pass
+
+class ObservabilityError(USASignalBotError):
+    pass
+
+class LocalLoggerError(ObservabilityError):
+    pass
+
+class LogRotationError(ObservabilityError):
+    pass
+
+class MetricsCollectorError(ObservabilityError):
+    pass
+
+class OperationalHealthError(ObservabilityError):
+    pass
+
+class SafetyMonitorError(ObservabilityError):
+    pass
+
+class DiskUsageError(ObservabilityError):
+    pass
+
+class ObservabilityStorageError(ObservabilityError):
+    pass
+
+class ObservabilityValidationError(ObservabilityError):
+    pass
+
+class ObservabilityReportingError(ObservabilityError):
+    pass
