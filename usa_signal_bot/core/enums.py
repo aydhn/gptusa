@@ -1117,6 +1117,7 @@ class PipelineStepName(str, Enum):
 
     PORTFOLIO_CONSTRUCTION = "portfolio_construction"
     PAPER_TRADING = "paper_trading"
+    PAPER_ANALYTICS = "paper_analytics"
     SCAN_REPORT = "scan_report"
 
     CLEANUP = "cleanup"
@@ -1181,6 +1182,9 @@ class NotificationType(str, Enum):
     RUNTIME_ERROR = "RUNTIME_ERROR"
     HEALTH_SUMMARY = "HEALTH_SUMMARY"
     CUSTOM = "CUSTOM"
+    PAPER_PERFORMANCE_REPORT = "PAPER_PERFORMANCE_REPORT"
+    PAPER_RISK_REPORT = "PAPER_RISK_REPORT"
+    PAPER_DRAWDOWN_WARNING = "PAPER_DRAWDOWN_WARNING"
 
 class NotificationPriority(str, Enum):
     LOW = "LOW"
@@ -1237,6 +1241,9 @@ class AlertType(str, Enum):
     HEALTH_WARNING = "HEALTH_WARNING"
     HEALTH_ERROR = "HEALTH_ERROR"
     CUSTOM = "CUSTOM"
+    PAPER_DRAWDOWN_WARNING = "PAPER_DRAWDOWN_WARNING"
+    PAPER_RISK_LIMIT_BREACH = "PAPER_RISK_LIMIT_BREACH"
+    PAPER_PERFORMANCE_DETERIORATION = "PAPER_PERFORMANCE_DETERIORATION"
 
 class AlertSeverity(str, Enum):
     INFO = "INFO"
@@ -1391,3 +1398,65 @@ class PaperRejectReason(str, Enum):
     ACCOUNT_PAUSED = "ACCOUNT_PAUSED"
     VALIDATION_FAILED = "VALIDATION_FAILED"
     UNKNOWN = "UNKNOWN"
+
+
+class PaperAnalyticsStatus(str, Enum):
+    CREATED = "CREATED"
+    COMPLETED = "COMPLETED"
+    WARNING = "WARNING"
+    FAILED = "FAILED"
+    EMPTY = "EMPTY"
+
+class PaperMetricStatus(str, Enum):
+    OK = "OK"
+    WARNING = "WARNING"
+    INVALID = "INVALID"
+    EMPTY = "EMPTY"
+    INSUFFICIENT_DATA = "INSUFFICIENT_DATA"
+
+class PaperRiskLevel(str, Enum):
+    LOW = "LOW"
+    MODERATE = "MODERATE"
+    HIGH = "HIGH"
+    CRITICAL = "CRITICAL"
+    UNKNOWN = "UNKNOWN"
+
+class PaperDrawdownStatus(str, Enum):
+    NORMAL = "NORMAL"
+    WARNING = "WARNING"
+    BREACH = "BREACH"
+    CRITICAL = "CRITICAL"
+    INSUFFICIENT_DATA = "INSUFFICIENT_DATA"
+    UNKNOWN = "UNKNOWN"
+
+class PaperRiskLimitStatus(str, Enum):
+    WITHIN_LIMIT = "WITHIN_LIMIT"
+    WARNING = "WARNING"
+    BREACHED = "BREACHED"
+    CRITICAL = "CRITICAL"
+    NOT_EVALUATED = "NOT_EVALUATED"
+
+class PaperPerformanceBucket(str, Enum):
+    STRONG = "STRONG"
+    ACCEPTABLE = "ACCEPTABLE"
+    WEAK = "WEAK"
+    POOR = "POOR"
+    INSUFFICIENT_DATA = "INSUFFICIENT_DATA"
+    UNKNOWN = "UNKNOWN"
+
+class PaperTrendDirection(str, Enum):
+    IMPROVING = "IMPROVING"
+    STABLE = "STABLE"
+    DETERIORATING = "DETERIORATING"
+    MIXED = "MIXED"
+    INSUFFICIENT_DATA = "INSUFFICIENT_DATA"
+    UNKNOWN = "UNKNOWN"
+
+class PaperAnalyticsReportType(str, Enum):
+    PERFORMANCE = "PERFORMANCE"
+    RISK = "RISK"
+    DRAWDOWN = "DRAWDOWN"
+    EXPOSURE = "EXPOSURE"
+    TRADE_ANALYTICS = "TRADE_ANALYTICS"
+    ROLLING_METRICS = "ROLLING_METRICS"
+    FULL_SUMMARY = "FULL_SUMMARY"
