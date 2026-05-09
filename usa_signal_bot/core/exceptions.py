@@ -844,3 +844,18 @@ class ObservabilityValidationError(ObservabilityError):
 
 class ObservabilityReportingError(ObservabilityError):
     pass
+
+
+class IncidentError(USASignalBotError): pass
+class IncidentClassifierError(IncidentError): pass
+class IncidentAdapterError(IncidentError): pass
+class IncidentReportError(IncidentError): pass
+class RecoveryPlannerError(USASignalBotError): pass
+class RecoveryActionError(RecoveryPlannerError): pass
+class RollbackSourceError(USASignalBotError): pass
+class RollbackPrecheckError(RollbackSourceError): pass
+class RollbackExecutorError(RollbackSourceError): pass
+class IncidentAuditError(IncidentError): pass
+class IncidentStorageError(IncidentError): pass
+class IncidentValidationError(IncidentError): pass
+class IncidentReportingError(IncidentError): pass

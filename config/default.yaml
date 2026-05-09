@@ -1,77 +1,59 @@
-# We just add a basic YAML file, but let's assume it has everything needed for the project.
-release:
+incident_response:
   enabled: true
-  release_name: "usa_signal_bot_local"
-  output_dir: "data/release/builds"
-  include_docs: true
-  include_tests: true
-  include_reports: true
-  include_data_cache: false
-  include_backups: false
-  include_secrets: false
-  validate_after_build: true
-  write_release_reports: true
-  warn_not_live_approval: true
-  warn_not_investment_advice: true
-
-release_artifacts:
-  enabled: true
-  include_source: true
-  include_config_examples: true
-  include_docs: true
-  include_tests: true
-  include_requirements: true
-  include_latest_regression_report: true
-  include_latest_quality_report: true
-  exclude_git: true
-  exclude_pycache: true
-  exclude_env_files: true
-  exclude_secret_like_paths: true
-
-operator_runbook:
-  enabled: true
-  write_runbook: true
-  include_command_reference: true
-  include_safety_limitations: true
-  include_troubleshooting: true
+  store_dir: "data/incident"
+  auto_collect_from_latest_artifacts: true
+  minimum_severity_to_report: "medium"
+  write_incident_reports: true
+  redact_sensitive_data: true
+  warn_local_only: true
   warn_not_investment_advice: true
   warn_no_broker_execution: true
 
-maintenance:
+recovery:
   enabled: true
-  daily_enabled: true
-  weekly_enabled: true
-  monthly_enabled: true
-  pre_release_enabled: true
-  execute_commands: false
-  command_timeout_seconds: 60
-  write_maintenance_reports: true
+  dry_run_default: true
+  execute_commands_default: false
+  allow_destructive_actions: false
+  require_manual_review_for_critical: true
+  write_recovery_plans: true
+  write_recovery_results: true
+  block_on_safety_violation: true
 
-backup:
+rollback:
   enabled: true
-  output_dir: "data/release/backups"
-  default_scope: "reports_only"
-  include_configs: true
-  include_reports: true
-  include_data_cache: false
-  include_secrets: false
-  validate_after_backup: true
-  restore_dry_run_only: true
+  dry_run_default: true
+  execute_enabled: false
+  allow_overwrite_default: false
+  require_force: true
+  protect_source_code: true
+  protect_config: true
+  protect_docs: true
+  protect_tests: true
+  protect_secrets: true
+  inspect_zip_only_by_default: true
+  write_rollback_plans: true
+  write_rollback_results: true
+  write_rollback_prechecks: true
 
-config_profiles:
+rollback_sources:
   enabled: true
-  write_default_profiles: true
-  profiles_dir: "config/profiles"
-  require_broker_flags_false: true
-  require_telegram_real_send_false: true
-  require_no_dashboard: true
+  include_release_bundles: true
+  include_backup_archives: true
+  include_config_profiles: true
+  include_regression_baselines: true
+  prefer_latest_valid_source: true
 
-upgrade_precheck:
+incident_audit:
   enabled: true
-  check_python_version: true
-  check_requirements: true
-  check_config_files: true
-  check_data_directories: true
-  check_secret_like_files: true
-  check_regression_smoke: true
-  write_precheck_reports: true
+  audit_path: "data/incident/audit/incident_audit.jsonl"
+  redact_sensitive_paths: true
+  append_only: true
+
+incident_notifications:
+  enabled: true
+  dry_run: true
+  notify_incident_report: true
+  notify_recovery_plan: true
+  notify_rollback_dry_run: true
+  default_channel: "dry_run"
+  warn_no_real_send_default: true

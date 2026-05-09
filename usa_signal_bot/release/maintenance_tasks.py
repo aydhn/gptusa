@@ -116,3 +116,18 @@ def maintenance_run_result_to_text(result: MaintenanceRunResult) -> str:
     for res in result.results:
         lines.append(f"- {res.name}: {res.status.value}")
     return "\n".join(lines)
+
+def task_incident_review():
+    pass
+
+def task_recovery_plan_dry_run():
+    pass
+
+def task_rollback_precheck():
+    pass
+
+def task_rollback_dry_run():
+    pass
+
+def task_incident_audit_summary():
+    pass

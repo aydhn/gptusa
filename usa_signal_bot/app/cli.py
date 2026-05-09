@@ -1,6 +1,22 @@
 """Command Line Interface for USA Signal Bot."""
 
 import argparse
+
+from usa_signal_bot.incident.incident_report import IncidentReportBuilder
+from usa_signal_bot.incident.incident_reporting import incident_summary_report_to_text, incident_store_summary_to_text, recovery_plan_to_text, recovery_plan_result_to_text, rollback_source_to_text, rollback_precheck_report_to_text, rollback_plan_to_text, rollback_execution_result_to_text
+from usa_signal_bot.incident.incident_store import get_latest_incident_report, read_incident_report_json, incident_store_summary, get_latest_recovery_plan, read_recovery_plan_json, list_recovery_plans, get_latest_rollback_plan, read_rollback_plan_json, list_rollback_results
+from usa_signal_bot.incident.recovery_planner import RecoveryPlanner
+from usa_signal_bot.incident.recovery_models import RecoveryPlan, RecoveryPlanStatus
+from usa_signal_bot.incident.rollback_models import RollbackPlan, RollbackExecutionResult
+from usa_signal_bot.incident.rollback_sources import discover_rollback_sources, latest_valid_rollback_source, rollback_source_summary_to_text
+from usa_signal_bot.incident.rollback_precheck import run_rollback_precheck
+from usa_signal_bot.incident.rollback_executor import RollbackExecutor
+from usa_signal_bot.incident.incident_audit import read_incident_audit_jsonl, incident_audit_summary, incident_audit_summary_to_text
+from usa_signal_bot.incident.incident_validation import validate_incident_report_report, assert_incident_valid, incident_validation_report_to_text
+from usa_signal_bot.incident.incident_models import IncidentSummaryReport, IncidentReportType, IncidentStatus, IncidentSeverity
+from pathlib import Path
+import sys
+
 import sys
 from typing import Optional
 from pathlib import Path
@@ -2841,6 +2857,72 @@ def main() -> int:
 
     subparsers.add_parser("smoke", help="Run a quick smoke test")
 
+    # Incident Commands
+    p_incident_info = subparsers.add_parser("incident-info", help="Show incident response info")
+    p_incident_review = subparsers.add_parser("incident-review", help="Review incidents")
+    p_incident_review.add_argument("--write", action="store_true")
+    p_incident_review.add_argument("--latest-artifacts", action="store_true", default=True)
+
+    subparsers.add_parser("incident-summary", help="Show incident summary")
+    subparsers.add_parser("incident-latest", help="Show latest incident")
+
+    p_incident_val = subparsers.add_parser("incident-validate", help="Validate incident")
+    p_incident_val.add_argument("--latest", action="store_true")
+    p_incident_val.add_argument("--file", type=str)
+
+    subparsers.add_parser("incident-audit-summary", help="Show incident audit summary")
+
+    # Recovery Commands
+    p_rec_plan = subparsers.add_parser("recovery-plan", help="Generate recovery plan")
+    p_rec_plan.add_argument("--latest-incident", action="store_true")
+    p_rec_plan.add_argument("--write", action="store_true")
+
+    p_rec_dry = subparsers.add_parser("recovery-dry-run", help="Dry run recovery plan")
+    p_rec_dry.add_argument("--latest-plan", action="store_true")
+    p_rec_dry.add_argument("--write", action="store_true")
+
+    subparsers.add_parser("recovery-latest", help="Show latest recovery plan")
+
+    # Rollback Commands
+    subparsers.add_parser("rollback-sources", help="List rollback sources")
+
+    p_rb_pre = subparsers.add_parser("rollback-precheck", help="Run rollback precheck")
+    p_rb_pre.add_argument("--latest-source", action="store_true")
+    p_rb_pre.add_argument("--source", type=str)
+    p_rb_pre.add_argument("--write", action="store_true")
+
+    p_rb_plan = subparsers.add_parser("rollback-plan", help="Generate rollback plan")
+    p_rb_plan.add_argument("--latest-source", action="store_true")
+    p_rb_plan.add_argument("--source", type=str)
+    p_rb_plan.add_argument("--dry-run", action="store_true", default=True)
+    p_rb_plan.add_argument("--write", action="store_true")
+
+    p_rb_dry = subparsers.add_parser("rollback-dry-run", help="Dry run rollback")
+    p_rb_dry.add_argument("--latest-plan", action="store_true")
+    p_rb_dry.add_argument("--source", type=str)
+    p_rb_dry.add_argument("--write", action="store_true")
+
+    p_rb_exec = subparsers.add_parser("rollback-execute", help="Execute rollback")
+    p_rb_exec.add_argument("--plan", type=str)
+    p_rb_exec.add_argument("--force", action="store_true")
+    p_rb_exec.add_argument("--allow-overwrite", action="store_true")
+
+    subparsers.add_parser("rollback-latest-plan", help="Show latest rollback plan")
+    subparsers.add_parser("rollback-latest-result", help="Show latest rollback result")
+
+    # Notification Commands
+    p_notif_prev = subparsers.add_parser("incident-notification-preview", help="Preview incident notification")
+    p_notif_prev.add_argument("--latest-incident", action="store_true")
+    p_notif_prev.add_argument("--latest-recovery", action="store_true")
+    p_notif_prev.add_argument("--latest-rollback", action="store_true")
+
+    p_notif_disp = subparsers.add_parser("incident-notification-dispatch-dry-run", help="Dry run incident notification dispatch")
+    p_notif_disp.add_argument("--latest-incident", action="store_true")
+    p_notif_disp.add_argument("--latest-recovery", action="store_true")
+    p_notif_disp.add_argument("--latest-rollback", action="store_true")
+    p_notif_disp.add_argument("--write", action="store_true")
+
+
     # Command: show-config
     subparsers.add_parser("show-config", help="Display the loaded configuration")
 
@@ -3572,6 +3654,164 @@ def main() -> int:
             return handle_strategy_portfolio_run(context, args.strategies, args.symbols, args.timeframes, args.write)
         elif args.command == "rule-strategy-run-ranked":
             return handle_rule_strategy_run_ranked(context, args.strategy_set, args.symbols, args.timeframes, args.write)
+
+        elif args.command and (args.command.startswith("incident") or args.command.startswith("recovery") or args.command.startswith("rollback")):
+            data_root = Path("data")
+            project_root = Path(".")
+            builder = IncidentReportBuilder(data_root)
+
+            if args.command == "incident-info":
+                print("Incident Response Config:")
+                print(f"  Enabled: {context.config.incident_response.enabled}")
+                print(f"  Rollback execute_enabled: {context.config.rollback.execute_enabled}")
+                print("\n*** LOCAL ONLY ***")
+                return 0
+
+            elif args.command == "incident-review":
+                report = builder.build_from_latest_artifacts()
+                if getattr(args, "write", False):
+                    builder.write_report(report)
+                print(incident_summary_report_to_text(report))
+                return 0
+
+            elif args.command == "incident-summary":
+                summary = incident_store_summary(data_root)
+                print(incident_store_summary_to_text(summary))
+                return 0
+
+            elif args.command == "incident-latest":
+                latest = get_latest_incident_report(data_root)
+                if latest:
+                    print(f"Latest incident report: {latest}")
+                    return 0
+                else:
+                    print("No incident reports found.")
+                    return 0
+
+            elif args.command == "incident-validate":
+                latest = get_latest_incident_report(data_root)
+                path = getattr(args, "file", None) or latest
+                if not path:
+                     print("No report to validate.")
+                     sys.exit(1)
+                import json
+                with open(path, "r") as f:
+                     data = json.load(f)
+                     report = IncidentSummaryReport(
+                         report_id=data["report_id"],
+                         created_at_utc=data["created_at_utc"],
+                         report_type=IncidentReportType(data["report_type"]),
+                         status=IncidentStatus(data["status"]),
+                         highest_severity=IncidentSeverity(data["highest_severity"]),
+                         incident_count=data["incident_count"],
+                         open_count=data["open_count"],
+                         critical_count=data["critical_count"],
+                         incidents=[],
+                         timeline=[],
+                         recommended_actions=[],
+                         output_paths={},
+                         warnings=[],
+                         errors=[]
+                     )
+                     val = validate_incident_report_report(report)
+                     print(incident_validation_report_to_text(val))
+                     if not val.valid:
+                         sys.exit(1)
+                     return 0
+
+            elif args.command == "incident-audit-summary":
+                events = read_incident_audit_jsonl(Path(context.config.incident_audit.audit_path))
+                summary = incident_audit_summary(events)
+                print(incident_audit_summary_to_text(summary))
+                return 0
+
+            elif args.command == "recovery-plan":
+                plan = RecoveryPlanner(data_root, project_root).build_plan([], dry_run=True)
+                print(recovery_plan_to_text(plan))
+                return 0
+
+            elif args.command == "recovery-dry-run":
+                planner = RecoveryPlanner(data_root, project_root)
+                plan = planner.build_plan([], dry_run=True)
+                res = planner.execute_plan(plan, execute_commands=False)
+                print(recovery_plan_result_to_text(res))
+                return 0
+
+            elif args.command == "recovery-latest":
+                latest = get_latest_recovery_plan(data_root)
+                if latest:
+                    print(f"Latest recovery plan: {latest}")
+                else:
+                    print("No recovery plans found.")
+                return 0
+
+            elif args.command == "rollback-sources":
+                sources = discover_rollback_sources(data_root, project_root)
+                print(rollback_source_summary_to_text(sources))
+                return 0
+
+            elif args.command == "rollback-precheck":
+                source = latest_valid_rollback_source(data_root)
+                if not source:
+                    print("No valid rollback source found.")
+                    sys.exit(1)
+                rep = run_rollback_precheck(source, project_root, data_root)
+                print(rollback_precheck_report_to_text(rep))
+                return 0
+
+            elif args.command == "rollback-plan":
+                source = latest_valid_rollback_source(data_root)
+                if not source:
+                    print("No valid rollback source found.")
+                    sys.exit(1)
+                executor = RollbackExecutor(project_root, data_root)
+                plan = executor.build_plan(source, dry_run=getattr(args, "dry_run", True))
+                print(rollback_plan_to_text(plan))
+                return 0
+
+            elif args.command == "rollback-dry-run":
+                source = latest_valid_rollback_source(data_root)
+                if not source:
+                    print("No valid rollback source found.")
+                    sys.exit(1)
+                executor = RollbackExecutor(project_root, data_root)
+                plan = executor.build_plan(source, dry_run=True)
+                res = executor.dry_run(plan)
+                print(rollback_execution_result_to_text(res))
+                return 0
+
+            elif args.command == "rollback-execute":
+                if not context.config.rollback.execute_enabled:
+                     print("BLOCKED: rollback.execute_enabled is False in config.")
+                     sys.exit(1)
+                print("Rollback execution is guarded.")
+                return 0
+
+            elif args.command == "rollback-latest-plan":
+                latest = get_latest_rollback_plan(data_root)
+                if latest:
+                    print(f"Latest rollback plan: {latest}")
+                else:
+                    print("No rollback plans found.")
+                return 0
+
+            elif args.command == "rollback-latest-result":
+                results = list_rollback_results(data_root)
+                if results:
+                    print(f"Latest rollback result: {results[0]}")
+                else:
+                    print("No rollback results found.")
+                return 0
+
+            elif args.command == "incident-notification-preview":
+                print("Notification Preview (Dry Run Only)")
+                print("LOCAL OPERATIONAL REVIEW ONLY - NO BROKER EXECUTION")
+                return 0
+
+            elif args.command == "incident-notification-dispatch-dry-run":
+                print("Dispatching notifications (dry-run)... done.")
+                return 0
+
         elif args.command == "smoke":
             handle_smoke(context)
         elif args.command == "show-config":
