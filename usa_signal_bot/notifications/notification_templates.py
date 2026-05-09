@@ -362,3 +362,12 @@ def format_log_rotation_report_message(result: 'LogRotationResult') -> Notificat
 
 def notifications_from_operational_health_report(report: 'OperationalHealthReport') -> list[NotificationMessage]:
     return [format_operational_health_report_message(report)]
+
+def format_incident_report_message(report):
+    return f"Incident Report: {report.status.name}"
+
+def format_recovery_plan_report_message(plan):
+    return f"Recovery Plan: {plan.status.name}"
+
+def format_rollback_dry_run_report_message(result):
+    return f"Rollback Result: {result.status.name}"

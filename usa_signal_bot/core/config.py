@@ -209,6 +209,26 @@ def load_app_config(config_dir: Optional[Path] = None) -> AppConfig:
 
 
 
+
+        if "incident_response" in merged_cfg_dict:
+            for k, v in merged_cfg_dict["incident_response"].items():
+                setattr(config.incident_response, k, v)
+        if "recovery" in merged_cfg_dict:
+            for k, v in merged_cfg_dict["recovery"].items():
+                setattr(config.recovery, k, v)
+        if "rollback" in merged_cfg_dict:
+            for k, v in merged_cfg_dict["rollback"].items():
+                setattr(config.rollback, k, v)
+        if "rollback_sources" in merged_cfg_dict:
+            for k, v in merged_cfg_dict["rollback_sources"].items():
+                setattr(config.rollback_sources, k, v)
+        if "incident_audit" in merged_cfg_dict:
+            for k, v in merged_cfg_dict["incident_audit"].items():
+                setattr(config.incident_audit, k, v)
+        if "incident_notifications" in merged_cfg_dict:
+            for k, v in merged_cfg_dict["incident_notifications"].items():
+                setattr(config.incident_notifications, k, v)
+
         validate_config(config)
 
         if "basket_simulation" in merged_cfg_dict:

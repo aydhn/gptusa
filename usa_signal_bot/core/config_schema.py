@@ -3258,8 +3258,83 @@ class ObservabilityNotificationsConfig:
     default_channel: str = "dry_run"
     warn_no_real_send_default: bool = True
 
+
+
+@dataclass
+class IncidentResponseConfig:
+    enabled: bool = True
+    store_dir: str = "data/incident"
+    auto_collect_from_latest_artifacts: bool = True
+    minimum_severity_to_report: str = "medium"
+    write_incident_reports: bool = True
+    redact_sensitive_data: bool = True
+    warn_local_only: bool = True
+    warn_not_investment_advice: bool = True
+    warn_no_broker_execution: bool = True
+
+@dataclass
+class RecoveryConfig:
+    enabled: bool = True
+    dry_run_default: bool = True
+    execute_commands_default: bool = False
+    allow_destructive_actions: bool = False
+    require_manual_review_for_critical: bool = True
+    write_recovery_plans: bool = True
+    write_recovery_results: bool = True
+    block_on_safety_violation: bool = True
+
+@dataclass
+class RollbackConfig:
+    enabled: bool = True
+    dry_run_default: bool = True
+    execute_enabled: bool = False
+    allow_overwrite_default: bool = False
+    require_force: bool = True
+    protect_source_code: bool = True
+    protect_config: bool = True
+    protect_docs: bool = True
+    protect_tests: bool = True
+    protect_secrets: bool = True
+    inspect_zip_only_by_default: bool = True
+    write_rollback_plans: bool = True
+    write_rollback_results: bool = True
+    write_rollback_prechecks: bool = True
+
+@dataclass
+class RollbackSourcesConfig:
+    enabled: bool = True
+    include_release_bundles: bool = True
+    include_backup_archives: bool = True
+    include_config_profiles: bool = True
+    include_regression_baselines: bool = True
+    prefer_latest_valid_source: bool = True
+
+@dataclass
+class IncidentAuditConfig:
+    enabled: bool = True
+    audit_path: str = "data/incident/audit/incident_audit.jsonl"
+    redact_sensitive_paths: bool = True
+    append_only: bool = True
+
+@dataclass
+class IncidentNotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    notify_incident_report: bool = True
+    notify_recovery_plan: bool = True
+    notify_rollback_dry_run: bool = True
+    default_channel: str = "dry_run"
+    warn_no_real_send_default: bool = True
+
 @dataclass
 class AppConfig:
+    incident_response: IncidentResponseConfig = field(default_factory=IncidentResponseConfig)
+    recovery: RecoveryConfig = field(default_factory=RecoveryConfig)
+    rollback: RollbackConfig = field(default_factory=RollbackConfig)
+    rollback_sources: RollbackSourcesConfig = field(default_factory=RollbackSourcesConfig)
+    incident_audit: IncidentAuditConfig = field(default_factory=IncidentAuditConfig)
+    incident_notifications: IncidentNotificationsConfig = field(default_factory=IncidentNotificationsConfig)
+
 
     observability: ObservabilityConfig = field(default_factory=ObservabilityConfig)
     log_rotation: LogRotationConfigSchema = field(default_factory=LogRotationConfigSchema)

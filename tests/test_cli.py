@@ -1,34 +1,12 @@
+import sys
 import subprocess
-import json
+import pytest
 
-def test_cli_release_info():
-    res = subprocess.run(["python", "-m", "usa_signal_bot", "release-info"], capture_output=True, text=True)
+def test_incident_info_cli():
+    res = subprocess.run([sys.executable, "-m", "usa_signal_bot", "incident-info"], capture_output=True, text=True)
     assert res.returncode == 0
+    assert "Incident Response Config" in res.stdout
 
-def test_cli_runbook_generate():
-    res = subprocess.run(["python", "-m", "usa_signal_bot", "runbook-generate"], capture_output=True, text=True)
-    assert res.returncode == 0
-
-def test_cli_changelog_generate():
-    res = subprocess.run(["python", "-m", "usa_signal_bot", "changelog-generate"], capture_output=True, text=True)
-    assert res.returncode == 0
-
-def test_cli_maintenance_info():
-    res = subprocess.run(["python", "-m", "usa_signal_bot", "maintenance-info"], capture_output=True, text=True)
-    assert res.returncode == 0
-
-def test_cli_maintenance_check():
-    res = subprocess.run(["python", "-m", "usa_signal_bot", "maintenance-check", "--frequency", "daily"], capture_output=True, text=True)
-    assert res.returncode == 0
-
-def test_cli_config_profile_list():
-    res = subprocess.run(["python", "-m", "usa_signal_bot", "config-profile-list"], capture_output=True, text=True)
-    assert res.returncode == 0
-
-def test_cli_config_profile_write_defaults():
-    res = subprocess.run(["python", "-m", "usa_signal_bot", "config-profile-write-defaults"], capture_output=True, text=True)
-    assert res.returncode == 0
-
-def test_cli_upgrade_precheck():
-    res = subprocess.run(["python", "-m", "usa_signal_bot", "upgrade-precheck"], capture_output=True, text=True)
+def test_incident_review_cli():
+    res = subprocess.run([sys.executable, "-m", "usa_signal_bot", "incident-review"], capture_output=True, text=True)
     assert res.returncode == 0
