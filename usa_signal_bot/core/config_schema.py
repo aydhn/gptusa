@@ -3455,6 +3455,79 @@ def validate_scheduler_notifications_config(config: SchedulerNotificationsConfig
         raise ValueError("scheduler_notifications.dry_run must be True")
 
 @dataclass
+@dataclass
+class TaskQueueConfig:
+    enabled: bool = True
+    store_dir: str = "data/taskqueue"
+    dry_run_default: bool = True
+    real_worker_enabled: bool = False
+    daemon_enabled: bool = False
+    execute_commands: bool = False
+    allow_destructive_tasks: bool = False
+    write_taskqueue_reports: bool = True
+    warn_local_simulation_only: bool = True
+    warn_not_investment_advice: bool = True
+    warn_no_broker_execution: bool = True
+
+@dataclass
+class TaskPriorityConfig:
+    enabled: bool = True
+    incident_priority_boost: float = 30.0
+    safety_priority_boost: float = 25.0
+    regression_priority_boost: float = 10.0
+    cleanup_priority_boost_on_quota_warning: float = 15.0
+    workload_penalty_enabled: bool = True
+
+@dataclass
+class WorkloadBudgetConfig:
+    enabled: bool = True
+    profile: str = "average_local_pc"
+    max_cpu_pct: float = 85.0
+    max_gpu_pct: float = 70.0
+    max_ram_mb: float = 8192.0
+    max_disk_mb: float = 2048.0
+    max_network_mb_per_run: float = 1024.0
+    max_duration_seconds: float = 7200.0
+    max_parallel_tasks: int = 1
+    block_on_budget_exceeded: bool = True
+
+@dataclass
+class RunWindowsConfig:
+    enabled: bool = True
+    enforce_windows: bool = False
+    warn_outside_window: bool = True
+    local_timezone: str = "Europe/Istanbul"
+    heavy_research_start_hour: int = 22
+    heavy_research_end_hour: int = 7
+
+@dataclass
+class TaskConflictsConfig:
+    enabled: bool = True
+    block_destructive_tasks: bool = True
+    block_duplicate_tasks: bool = False
+    block_lock_scope_conflicts: bool = True
+    block_resource_budget_conflicts: bool = True
+    warn_dependency_conflicts: bool = True
+
+@dataclass
+class QueueExecutorConfig:
+    enabled: bool = True
+    dry_run_only: bool = True
+    execute_commands: bool = False
+    safe_allowlist_only: bool = True
+    write_queue_run_results: bool = True
+
+@dataclass
+class TaskQueueNotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    notify_taskqueue_report: bool = True
+    notify_workload_budget_warning: bool = True
+    notify_priority_plan_report: bool = True
+    default_channel: str = "dry_run"
+    warn_no_real_send_default: bool = True
+
+@dataclass
 class AppConfig:
     scheduler: SchedulerConfig = field(default_factory=SchedulerConfig)
     run_locks: RunLocksConfig = field(default_factory=RunLocksConfig)
@@ -3527,6 +3600,13 @@ class AppConfig:
     trade_ledger: TradeLedgerConfig = field(default_factory=TradeLedgerConfig)
     advanced_backtest_metrics: AdvancedBacktestMetricsConfig = field(default_factory=AdvancedBacktestMetricsConfig)
 
+    taskqueue: TaskQueueConfig = field(default_factory=TaskQueueConfig)
+    task_priority: TaskPriorityConfig = field(default_factory=TaskPriorityConfig)
+    workload_budget: WorkloadBudgetConfig = field(default_factory=WorkloadBudgetConfig)
+    run_windows: RunWindowsConfig = field(default_factory=RunWindowsConfig)
+    task_conflicts: TaskConflictsConfig = field(default_factory=TaskConflictsConfig)
+    queue_executor: QueueExecutorConfig = field(default_factory=QueueExecutorConfig)
+    taskqueue_notifications: TaskQueueNotificationsConfig = field(default_factory=TaskQueueNotificationsConfig)
     project: ProjectConfig = field(default_factory=ProjectConfig)
     runtime: RuntimeConfig = field(default_factory=RuntimeConfig)
     data: DataConfig = field(default_factory=DataConfig)

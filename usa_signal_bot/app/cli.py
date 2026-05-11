@@ -1,3 +1,243 @@
+
+def handle_taskqueue_info(context) -> int:
+    cfg = context.config.taskqueue
+    print("Task Queue Configuration")
+    print("=" * 40)
+    print(f"Enabled: {cfg.enabled}")
+    print(f"Store Dir: {cfg.store_dir}")
+    print(f"Dry Run Default: {cfg.dry_run_default}")
+    print(f"Real Worker Enabled: {cfg.real_worker_enabled}")
+    print(f"Daemon Enabled: {cfg.daemon_enabled}")
+    print(f"Execute Commands: {cfg.execute_commands}")
+    print(f"Allow Destructive Tasks: {cfg.allow_destructive_tasks}")
+    print("\n⚠️ WARNING: This is a local simulation only. No real daemon exists.")
+    return 0
+
+def handle_task_catalog(context) -> int:
+    from usa_signal_bot.taskqueue.task_catalog import default_local_tasks, local_tasks_to_text
+    print(local_tasks_to_text(default_local_tasks(dry_run=context.config.taskqueue.dry_run_default)))
+    return 0
+
+def handle_taskqueue_plan(context, task_types: str = "", dry_run: bool = True, write: bool = False) -> int:
+    from usa_signal_bot.taskqueue.task_catalog import default_local_tasks, task_for_type
+    from usa_signal_bot.core.enums import LocalTaskType
+    from usa_signal_bot.taskqueue.priority_scoring import score_tasks, sort_tasks_by_priority
+    from usa_signal_bot.taskqueue.workload_budget import default_workload_budget, evaluate_workload_budget
+    from usa_signal_bot.taskqueue.conflict_detector import detect_task_conflicts
+    from usa_signal_bot.taskqueue.batch_builder import split_tasks_into_batches
+    from usa_signal_bot.taskqueue.task_models import TaskQueuePlan, create_task_queue_plan_id
+    from usa_signal_bot.core.enums import TaskQueueStatus
+    from datetime import datetime, timezone
+
+    tasks = []
+    if task_types:
+        for tt_str in task_types.split(","):
+            tt_str = tt_str.strip()
+            if not tt_str: continue
+            try:
+                tt = LocalTaskType(tt_str.upper())
+                tasks.append(task_for_type(tt, dry_run=dry_run))
+            except ValueError:
+                print(f"Error: Unknown task type {tt_str}")
+                return 1
+    else:
+        tasks = default_local_tasks(dry_run=dry_run)
+
+    budget = default_workload_budget()
+    scores = score_tasks(tasks, budget=budget)
+    sorted_tasks = sort_tasks_by_priority(tasks, scores)
+    eval_budget = evaluate_workload_budget(sorted_tasks, budget)
+    conflicts = detect_task_conflicts(sorted_tasks, budget)
+    batches = split_tasks_into_batches(sorted_tasks, budget)
+
+    plan = TaskQueuePlan(
+        plan_id=create_task_queue_plan_id(),
+        created_at_utc=datetime.now(timezone.utc).isoformat(),
+        status=TaskQueueStatus.PLANNED,
+        dry_run=dry_run,
+        tasks=sorted_tasks,
+        priority_scores=scores,
+        budget_evaluation=eval_budget,
+        conflicts=conflicts,
+        planned_batches=[b.batch_id for b in batches],
+        warnings=eval_budget.warnings,
+        errors=eval_budget.errors
+    )
+
+    from usa_signal_bot.taskqueue.taskqueue_reporting import task_queue_plan_to_text
+    print(task_queue_plan_to_text(plan))
+
+    if write:
+        from usa_signal_bot.taskqueue.taskqueue_store import write_task_queue_plan_json
+        write_task_queue_plan_json(context.data_dir / "taskqueue" / "plans" / f"{plan.plan_id}.json", plan)
+        print(f"\nPlan saved.")
+    return 0
+
+def handle_taskqueue_run_dry(context, latest_plan: bool = False, plan_path: str = "", write: bool = False) -> int:
+    from usa_signal_bot.taskqueue.queue_executor import TaskQueueDryRunExecutor
+    from usa_signal_bot.taskqueue.taskqueue_store import get_latest_task_queue_plan, read_task_queue_plan_json
+    from usa_signal_bot.taskqueue.task_models import TaskQueuePlan
+    from pathlib import Path
+
+    plan_file = None
+    if latest_plan:
+        plan_file = get_latest_task_queue_plan(context.data_dir)
+        if not plan_file:
+            print("Error: No existing plan found.")
+            return 1
+    elif plan_path:
+        plan_file = Path(plan_path)
+        if not plan_file.exists():
+            print(f"Error: Plan file not found: {plan_path}")
+            return 1
+
+    if not plan_file:
+        print("Error: Must specify --latest-plan or --plan")
+        return 1
+
+    try:
+        data = read_task_queue_plan_json(plan_file)
+        from usa_signal_bot.taskqueue.task_catalog import task_for_type
+        from usa_signal_bot.core.enums import LocalTaskType
+        tasks = []
+        for tdict in data.get("tasks", []):
+            try:
+                tasks.append(task_for_type(LocalTaskType(tdict["task_type"])))
+            except:
+                pass
+
+        from usa_signal_bot.taskqueue.task_models import create_task_queue_plan_id
+        from usa_signal_bot.core.enums import TaskQueueStatus
+        from datetime import datetime, timezone
+        plan = TaskQueuePlan(
+            plan_id=data.get("plan_id", create_task_queue_plan_id()),
+            created_at_utc=data.get("created_at_utc", datetime.now(timezone.utc).isoformat()),
+            status=TaskQueueStatus(data.get("status", "PLANNED")),
+            dry_run=data.get("dry_run", True),
+            tasks=tasks,
+            priority_scores=[],
+            budget_evaluation=None,
+            conflicts=[],
+            planned_batches=[],
+            warnings=[],
+            errors=[]
+        )
+
+        executor = TaskQueueDryRunExecutor(context.data_dir)
+        result = executor.execute_plan(plan)
+
+        from usa_signal_bot.taskqueue.taskqueue_reporting import task_queue_run_result_to_text
+        print(task_queue_run_result_to_text(result))
+
+        if write:
+            executor.write_result(result)
+            print("\nRun result saved.")
+        return 0
+    except Exception as e:
+        print(f"Error running dry plan: {e}")
+        return 1
+
+def handle_taskqueue_summary(context) -> int:
+    from usa_signal_bot.taskqueue.taskqueue_store import taskqueue_store_summary
+    from usa_signal_bot.taskqueue.taskqueue_reporting import taskqueue_store_summary_to_text
+    summary = taskqueue_store_summary(context.data_dir)
+    print(taskqueue_store_summary_to_text(summary))
+    return 0
+
+def handle_taskqueue_latest_plan(context) -> int:
+    from usa_signal_bot.taskqueue.taskqueue_store import get_latest_task_queue_plan
+    p = get_latest_task_queue_plan(context.data_dir)
+    if not p:
+        print("No task queue plans found.")
+        return 0
+    with open(p, "r") as f:
+        print(f.read())
+    return 0
+
+def handle_taskqueue_latest_run(context) -> int:
+    from usa_signal_bot.taskqueue.taskqueue_store import get_latest_task_queue_run
+    r = get_latest_task_queue_run(context.data_dir)
+    if not r:
+        print("No task queue runs found.")
+        return 0
+    with open(r, "r") as f:
+        print(f.read())
+    return 0
+
+def handle_taskqueue_validate(context, latest_plan: bool = False, latest_run: bool = False, file_path: str = "") -> int:
+    print("Validation logic mock for local CLI")
+    return 0
+
+def handle_priority_plan(context, task_types: str = "") -> int:
+    from usa_signal_bot.taskqueue.task_catalog import default_local_tasks
+    from usa_signal_bot.taskqueue.priority_scoring import score_tasks, priority_scores_to_text
+    tasks = default_local_tasks()
+    scores = score_tasks(tasks)
+    print(priority_scores_to_text(scores))
+    return 0
+
+def handle_workload_budget(context) -> int:
+    from usa_signal_bot.taskqueue.workload_budget import default_workload_budget, workload_budget_to_text
+    b = default_workload_budget()
+    print(workload_budget_to_text(b))
+    return 0
+
+def handle_workload_estimate(context, task_types: str = "") -> int:
+    from usa_signal_bot.taskqueue.task_catalog import default_local_tasks
+    from usa_signal_bot.taskqueue.resource_estimator import estimate_tasks_resources, resource_estimates_to_text
+    tasks = default_local_tasks()
+    est = estimate_tasks_resources(tasks)
+    print(resource_estimates_to_text(est))
+    return 0
+
+def handle_workload_conflicts(context, task_types: str = "") -> int:
+    from usa_signal_bot.taskqueue.task_catalog import default_local_tasks
+    from usa_signal_bot.taskqueue.conflict_detector import detect_task_conflicts, conflicts_to_text
+    tasks = default_local_tasks()
+    conflicts = detect_task_conflicts(tasks)
+    if not conflicts:
+        print("No conflicts detected.")
+        return 0
+    print(conflicts_to_text(conflicts))
+    return 0
+
+def handle_run_windows(context) -> int:
+    from usa_signal_bot.taskqueue.run_window_planner import default_run_windows, run_windows_to_text
+    windows = default_run_windows()
+    print(run_windows_to_text(windows))
+    return 0
+
+def handle_safe_batch_plan(context, task_types: str = "", max_tasks: int = 0) -> int:
+    from usa_signal_bot.taskqueue.task_catalog import default_local_tasks
+    from usa_signal_bot.taskqueue.batch_builder import build_safe_task_batch, task_batch_to_text
+    tasks = default_local_tasks()
+    m_tasks = max_tasks if max_tasks > 0 else None
+    batch = build_safe_task_batch(tasks, max_tasks=m_tasks)
+    print(task_batch_to_text(batch))
+    return 0
+
+def handle_workload_audit_summary(context) -> int:
+    from usa_signal_bot.taskqueue.taskqueue_store import workload_audit_dir
+    from usa_signal_bot.taskqueue.workload_audit import read_workload_audit_jsonl, workload_audit_summary, workload_audit_summary_to_text
+    path = workload_audit_dir(context.data_dir) / "workload_audit.jsonl"
+    if not path.exists():
+        print("No workload audit log found.")
+        return 0
+    evs = read_workload_audit_jsonl(path)
+    summary = workload_audit_summary(evs)
+    print(workload_audit_summary_to_text(summary))
+    return 0
+
+def handle_taskqueue_notification_preview(context, latest_plan: bool = False, latest_run: bool = False) -> int:
+    print("Task Queue Notification Preview:")
+    print("Subject: Task Queue Report")
+    print("Body:\n📊 Task Queue Workload Report (Local Review)\n... dry run content ...")
+    return 0
+
+def handle_taskqueue_notification_dispatch_dry_run(context, latest_plan: bool = False, latest_run: bool = False, write: bool = False) -> int:
+    print("Dry run dispatch complete. Telegram send skipped.")
+    return 0
+
 """Command Line Interface for USA Signal Bot."""
 
 import argparse
@@ -2812,6 +3052,44 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="USA Signal Bot CLI")
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
 
+
+    # Task Queue Commands
+    parser_tq_info = subparsers.add_parser("taskqueue-info", help="Show task queue config")
+    parser_tq_cat = subparsers.add_parser("task-catalog", help="Show default local tasks")
+    parser_tq_plan = subparsers.add_parser("taskqueue-plan", help="Create a task queue plan")
+    parser_tq_plan.add_argument("--task-type", type=str, default="")
+    parser_tq_plan.add_argument("--dry-run", action="store_true", default=True)
+    parser_tq_plan.add_argument("--write", action="store_true")
+    parser_tq_run = subparsers.add_parser("taskqueue-run-dry", help="Simulate a task queue run")
+    parser_tq_run.add_argument("--latest-plan", action="store_true")
+    parser_tq_run.add_argument("--plan", type=str, default="")
+    parser_tq_run.add_argument("--write", action="store_true")
+    parser_tq_sum = subparsers.add_parser("taskqueue-summary", help="Show store summary")
+    parser_tq_lp = subparsers.add_parser("taskqueue-latest-plan", help="Show latest plan")
+    parser_tq_lr = subparsers.add_parser("taskqueue-latest-run", help="Show latest run")
+    parser_tq_val = subparsers.add_parser("taskqueue-validate", help="Validate a plan/run")
+    parser_tq_val.add_argument("--latest-plan", action="store_true")
+    parser_tq_val.add_argument("--latest-run", action="store_true")
+    parser_tq_val.add_argument("--file", type=str, default="")
+    parser_tq_pplan = subparsers.add_parser("priority-plan", help="Show priority scoring plan")
+    parser_tq_pplan.add_argument("--task-type", type=str, default="")
+    parser_tq_wb = subparsers.add_parser("workload-budget", help="Show workload budget profile")
+    parser_tq_we = subparsers.add_parser("workload-estimate", help="Show workload estimates")
+    parser_tq_we.add_argument("--task-type", type=str, default="")
+    parser_tq_wc = subparsers.add_parser("workload-conflicts", help="Show workload conflicts")
+    parser_tq_wc.add_argument("--task-type", type=str, default="")
+    parser_rw = subparsers.add_parser("run-windows", help="Show run windows")
+    parser_sbp = subparsers.add_parser("safe-batch-plan", help="Build safe run batch")
+    parser_sbp.add_argument("--task-type", type=str, default="")
+    parser_sbp.add_argument("--max-tasks", type=int, default=0)
+    parser_was = subparsers.add_parser("workload-audit-summary", help="Show audit summary")
+    parser_tqnp = subparsers.add_parser("taskqueue-notification-preview", help="Preview notification")
+    parser_tqnp.add_argument("--latest-plan", action="store_true")
+    parser_tqnp.add_argument("--latest-run", action="store_true")
+    parser_tqnd = subparsers.add_parser("taskqueue-notification-dispatch-dry-run", help="Dry run notification dispatch")
+    parser_tqnd.add_argument("--latest-plan", action="store_true")
+    parser_tqnd.add_argument("--latest-run", action="store_true")
+    parser_tqnd.add_argument("--write", action="store_true")
     parser_scheduler_info = subparsers.add_parser("scheduler-info", help="Show scheduler config and limitations")
     parser_scheduler_plan = subparsers.add_parser("scheduler-plan", help="Generate a scheduler plan (dry-run only)")
     parser_scheduler_plan.add_argument("--write", action="store_true", help="Write plan to disk")
@@ -3864,6 +4142,41 @@ def main() -> int:
                 print("Dispatching notifications (dry-run)... done.")
                 return 0
 
+
+        elif args.command == "taskqueue-info":
+            return handle_taskqueue_info(context)
+        elif args.command == "task-catalog":
+            return handle_task_catalog(context)
+        elif args.command == "taskqueue-plan":
+            return handle_taskqueue_plan(context, getattr(args, 'task_type', ''), getattr(args, 'dry_run', True), getattr(args, 'write', False))
+        elif args.command == "taskqueue-run-dry":
+            return handle_taskqueue_run_dry(context, getattr(args, 'latest_plan', False), getattr(args, 'plan', ''), getattr(args, 'write', False))
+        elif args.command == "taskqueue-summary":
+            return handle_taskqueue_summary(context)
+        elif args.command == "taskqueue-latest-plan":
+            return handle_taskqueue_latest_plan(context)
+        elif args.command == "taskqueue-latest-run":
+            return handle_taskqueue_latest_run(context)
+        elif args.command == "taskqueue-validate":
+            return handle_taskqueue_validate(context, getattr(args, 'latest_plan', False), getattr(args, 'latest_run', False), getattr(args, 'file', ''))
+        elif args.command == "priority-plan":
+            return handle_priority_plan(context, getattr(args, 'task_type', ''))
+        elif args.command == "workload-budget":
+            return handle_workload_budget(context)
+        elif args.command == "workload-estimate":
+            return handle_workload_estimate(context, getattr(args, 'task_type', ''))
+        elif args.command == "workload-conflicts":
+            return handle_workload_conflicts(context, getattr(args, 'task_type', ''))
+        elif args.command == "run-windows":
+            return handle_run_windows(context)
+        elif args.command == "safe-batch-plan":
+            return handle_safe_batch_plan(context, getattr(args, 'task_type', ''), getattr(args, 'max_tasks', 0))
+        elif args.command == "workload-audit-summary":
+            return handle_workload_audit_summary(context)
+        elif args.command == "taskqueue-notification-preview":
+            return handle_taskqueue_notification_preview(context, getattr(args, 'latest_plan', False), getattr(args, 'latest_run', False))
+        elif args.command == "taskqueue-notification-dispatch-dry-run":
+            return handle_taskqueue_notification_dispatch_dry_run(context, getattr(args, 'latest_plan', False), getattr(args, 'latest_run', False), getattr(args, 'write', False))
         elif args.command == "smoke":
             handle_smoke(context)
         elif args.command == "show-config":

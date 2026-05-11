@@ -225,6 +225,27 @@ def load_app_config(config_dir: Optional[Path] = None) -> AppConfig:
         if "incident_audit" in merged_cfg_dict:
             for k, v in merged_cfg_dict["incident_audit"].items():
                 setattr(config.incident_audit, k, v)
+        if "taskqueue" in merged_cfg_dict:
+            for k, v in merged_cfg_dict["taskqueue"].items():
+                setattr(config.taskqueue, k, v)
+        if "task_priority" in merged_cfg_dict:
+            for k, v in merged_cfg_dict["task_priority"].items():
+                setattr(config.task_priority, k, v)
+        if "workload_budget" in merged_cfg_dict:
+            for k, v in merged_cfg_dict["workload_budget"].items():
+                setattr(config.workload_budget, k, v)
+        if "run_windows" in merged_cfg_dict:
+            for k, v in merged_cfg_dict["run_windows"].items():
+                setattr(config.run_windows, k, v)
+        if "task_conflicts" in merged_cfg_dict:
+            for k, v in merged_cfg_dict["task_conflicts"].items():
+                setattr(config.task_conflicts, k, v)
+        if "queue_executor" in merged_cfg_dict:
+            for k, v in merged_cfg_dict["queue_executor"].items():
+                setattr(config.queue_executor, k, v)
+        if "taskqueue_notifications" in merged_cfg_dict:
+            for k, v in merged_cfg_dict["taskqueue_notifications"].items():
+                setattr(config.taskqueue_notifications, k, v)
         if "incident_notifications" in merged_cfg_dict:
             for k, v in merged_cfg_dict["incident_notifications"].items():
                 setattr(config.incident_notifications, k, v)
