@@ -907,3 +907,43 @@ class SchedulerValidationError(SchedulerError):
 
 class SchedulerReportingError(SchedulerError):
     pass
+
+
+class ProfilingError(USASignalBotError):
+    pass
+
+class ResourceTimerError(ProfilingError):
+    pass
+
+class MemoryProfilingError(ProfilingError):
+    pass
+
+class ArtifactGrowthError(ProfilingError):
+    pass
+
+class RunMetricsLoaderError(ProfilingError):
+    pass
+
+class ResourceProfileCollectorError(ProfilingError):
+    pass
+
+class BudgetCalibrationError(ProfilingError):
+    pass
+
+class ThrottlingPolicyError(ProfilingError):
+    pass
+
+class ThrottlingEngineError(ProfilingError):
+    pass
+
+class ProfilingStorageError(ProfilingError):
+    pass
+
+class ProfilingValidationError(ProfilingError):
+    pass
+
+class ProfilingReportingError(ProfilingError):
+    pass
+
+class ProfilingAuditError(ProfilingError):
+    pass
