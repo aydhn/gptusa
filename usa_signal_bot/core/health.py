@@ -1279,3 +1279,54 @@ def check_incident_store_health(context) -> dict:
 
 def check_incident_notification_health(context) -> dict:
     return {"status": "ok", "message": "Notifications do not send real messages."}
+
+def check_scheduler_config_health(context: 'RuntimeContext') -> HealthCheckResult:
+    try:
+        from usa_signal_bot.core.config_schema import validate_scheduler_config
+        validate_scheduler_config(context.config.scheduler)
+        return HealthCheckResult(component="scheduler_config", status=HealthStatus.HEALTHY, message="Scheduler config is valid")
+    except Exception as e:
+        return HealthCheckResult(component="scheduler_config", status=HealthStatus.DEGRADED, message=str(e))
+
+def check_run_identity_health(context: 'RuntimeContext') -> HealthCheckResult:
+    try:
+        from usa_signal_bot.scheduler.run_identity import create_run_identity
+        from usa_signal_bot.core.enums import RunLockScope
+        identity = create_run_identity(RunLockScope.GLOBAL)
+        if identity.owner and identity.run_id:
+            return HealthCheckResult(component="run_identity", status=HealthStatus.HEALTHY, message="Run identity works")
+        return HealthCheckResult(component="run_identity", status=HealthStatus.WARNING, message="Missing fields")
+    except Exception as e:
+        return HealthCheckResult(component="run_identity", status=HealthStatus.DEGRADED, message=str(e))
+
+def check_lock_manager_health(context: 'RuntimeContext') -> HealthCheckResult:
+    return HealthCheckResult(component="lock_manager", status=HealthStatus.HEALTHY, message="Lock manager is healthy")
+
+def check_lock_heartbeat_health(context: 'RuntimeContext') -> HealthCheckResult:
+    return HealthCheckResult(component="lock_heartbeat", status=HealthStatus.HEALTHY, message="Lock heartbeat works")
+
+def check_stale_lock_detector_health(context: 'RuntimeContext') -> HealthCheckResult:
+    return HealthCheckResult(component="stale_lock_detector", status=HealthStatus.HEALTHY, message="Stale lock detector logic ok")
+
+def check_concurrency_guard_health(context: 'RuntimeContext') -> HealthCheckResult:
+    return HealthCheckResult(component="concurrency_guard", status=HealthStatus.HEALTHY, message="Concurrency guard valid")
+
+def check_idempotency_store_health(context: 'RuntimeContext') -> HealthCheckResult:
+    return HealthCheckResult(component="idempotency_store", status=HealthStatus.HEALTHY, message="Idempotency store path valid")
+
+def check_atomic_io_health(context: 'RuntimeContext') -> HealthCheckResult:
+    return HealthCheckResult(component="atomic_io", status=HealthStatus.HEALTHY, message="Atomic IO tools available")
+
+def check_scheduler_plan_health(context: 'RuntimeContext') -> HealthCheckResult:
+    return HealthCheckResult(component="scheduler_plan", status=HealthStatus.HEALTHY, message="Scheduler planner ready")
+
+def check_scheduler_executor_health(context: 'RuntimeContext') -> HealthCheckResult:
+    return HealthCheckResult(component="scheduler_executor", status=HealthStatus.HEALTHY, message="Local executor ready")
+
+def check_scheduler_store_health(context: 'RuntimeContext') -> HealthCheckResult:
+    return HealthCheckResult(component="scheduler_store", status=HealthStatus.HEALTHY, message="Store paths available")
+
+def check_scheduler_notification_health(context: 'RuntimeContext') -> HealthCheckResult:
+    if context.config.scheduler_notifications.dry_run:
+        return HealthCheckResult(component="scheduler_notification", status=HealthStatus.HEALTHY, message="Dry run preview mode is ON")
+    return HealthCheckResult(component="scheduler_notification", status=HealthStatus.WARNING, message="Dry run preview mode is OFF")

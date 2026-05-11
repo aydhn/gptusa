@@ -859,3 +859,51 @@ class IncidentAuditError(IncidentError): pass
 class IncidentStorageError(IncidentError): pass
 class IncidentValidationError(IncidentError): pass
 class IncidentReportingError(IncidentError): pass
+
+class SchedulerError(USASignalBotError):
+    pass
+
+class RunIdentityError(SchedulerError):
+    pass
+
+class RunLockError(SchedulerError):
+    pass
+
+class LockHeartbeatError(SchedulerError):
+    pass
+
+class StaleLockError(SchedulerError):
+    pass
+
+class ConcurrencyPolicyError(SchedulerError):
+    pass
+
+class ConcurrencyGuardError(SchedulerError):
+    pass
+
+class DuplicateRunGuardError(SchedulerError):
+    pass
+
+class IdempotencyError(SchedulerError):
+    pass
+
+class AtomicIOError(SchedulerError):
+    pass
+
+class SchedulerPlanError(SchedulerError):
+    pass
+
+class SchedulerExecutorError(SchedulerError):
+    pass
+
+class LockAuditError(SchedulerError):
+    pass
+
+class SchedulerStorageError(SchedulerError):
+    pass
+
+class SchedulerValidationError(SchedulerError):
+    pass
+
+class SchedulerReportingError(SchedulerError):
+    pass

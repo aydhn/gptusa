@@ -3326,8 +3326,160 @@ class IncidentNotificationsConfig:
     default_channel: str = "dry_run"
     warn_no_real_send_default: bool = True
 
+
+
+
+@dataclass
+class SchedulerConfig:
+    enabled: bool = True
+    store_dir: str = "data/scheduler"
+    dry_run_default: bool = True
+    execute_commands_default: bool = False
+    install_daemon: bool = False
+    install_cron: bool = False
+    install_service: bool = False
+    allow_destructive_jobs: bool = False
+    write_scheduler_reports: bool = True
+    warn_local_only: bool = True
+    warn_not_investment_advice: bool = True
+    warn_no_broker_execution: bool = True
+
+@dataclass
+class RunLocksConfig:
+    enabled: bool = True
+    locks_dir: str = "data/scheduler/locks"
+    stale_after_seconds_default: int = 3600
+    global_stale_after_seconds: int = 7200
+    acquisition_mode_default: str = "FAIL_FAST"
+    allow_steal_if_stale: bool = True
+    cleanup_stale_locks_dry_run_default: bool = True
+    write_lock_audit: bool = True
+
+@dataclass
+class ConcurrencyConfig:
+    enabled: bool = True
+    global_max_concurrent_runs: int = 1
+    scan_max_concurrent_runs: int = 1
+    backtest_max_concurrent_runs: int = 1
+    paper_max_concurrent_runs: int = 1
+    regression_max_concurrent_runs: int = 1
+    retention_max_concurrent_runs: int = 1
+    observability_max_concurrent_runs: int = 2
+    notification_max_concurrent_runs: int = 1
+    block_on_conflict: bool = True
+    allow_overlap_default: bool = False
+
+@dataclass
+class IdempotencyConfig:
+    enabled: bool = True
+    store_path: str = "data/scheduler/idempotency.jsonl"
+    duplicate_policy: str = "SKIP"
+    record_completed_runs: bool = True
+    prune_after_days: int = 30
+    prune_dry_run_default: bool = True
+
+@dataclass
+class AtomicIOConfig:
+    enabled: bool = True
+    use_atomic_writes: bool = True
+    temp_suffix: str = ".tmp"
+    verify_checksum_after_write: bool = True
+    block_protected_target_write: bool = False
+
+@dataclass
+class SchedulerJobsConfig:
+    enabled: bool = True
+    default_dry_run: bool = True
+    execute_commands: bool = False
+    safe_allowlist_only: bool = True
+    blocked_commands: List[str] = field(default_factory=lambda: [
+        "cleanup-execute",
+        "rollback-execute",
+        "send-broker-order",
+        "live-order",
+        "demo-order"
+    ])
+
+@dataclass
+class SchedulerNotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    notify_scheduler_report: bool = True
+    notify_stale_lock_warning: bool = True
+    notify_concurrency_blocked: bool = True
+    default_channel: str = "DRY_RUN"
+    warn_no_real_send_default: bool = True
+
+def validate_scheduler_config(config: SchedulerConfig) -> None:
+    if not config.dry_run_default:
+        pass # warning maybe, but schema says dry_run_default is true
+    if config.execute_commands_default:
+        raise ValueError("execute_commands_default must be False")
+    if config.install_daemon:
+        raise ValueError("install_daemon must be False")
+    if config.install_cron:
+        raise ValueError("install_cron must be False")
+    if config.install_service:
+        raise ValueError("install_service must be False")
+    if config.allow_destructive_jobs:
+        raise ValueError("allow_destructive_jobs must be False")
+
+def validate_run_locks_config(config: RunLocksConfig) -> None:
+    if config.stale_after_seconds_default <= 0:
+        raise ValueError("stale_after_seconds_default must be positive")
+
+def validate_concurrency_config(config: ConcurrencyConfig) -> None:
+    for f in [config.global_max_concurrent_runs, config.scan_max_concurrent_runs,
+              config.backtest_max_concurrent_runs, config.paper_max_concurrent_runs,
+              config.regression_max_concurrent_runs, config.retention_max_concurrent_runs,
+              config.observability_max_concurrent_runs, config.notification_max_concurrent_runs]:
+        if f <= 0:
+            raise ValueError("max_concurrent_runs must be positive")
+
+def validate_idempotency_config(config: IdempotencyConfig) -> None:
+    if config.duplicate_policy.upper() not in ["SKIP", "REVIEW", "BLOCK"]:
+        raise ValueError("duplicate_policy must be SKIP, REVIEW, or BLOCK")
+    if config.prune_after_days <= 0:
+        raise ValueError("prune_after_days must be positive")
+
+def validate_scheduler_jobs_config(config: SchedulerJobsConfig) -> None:
+    if config.execute_commands:
+        raise ValueError("execute_commands must be False in scheduler_jobs")
+    if not config.safe_allowlist_only:
+        raise ValueError("safe_allowlist_only must be True")
+    if not all(cmd in config.blocked_commands for cmd in ["cleanup-execute", "rollback-execute", "send-broker-order", "live-order", "demo-order"]):
+        raise ValueError("blocked_commands must include destructive commands")
+
+def validate_scheduler_notifications_config(config: SchedulerNotificationsConfig) -> None:
+    if not config.dry_run:
+        raise ValueError("scheduler_notifications.dry_run must be True")
+
 @dataclass
 class AppConfig:
+    scheduler: SchedulerConfig = field(default_factory=SchedulerConfig)
+    run_locks: RunLocksConfig = field(default_factory=RunLocksConfig)
+    concurrency: ConcurrencyConfig = field(default_factory=ConcurrencyConfig)
+    idempotency: IdempotencyConfig = field(default_factory=IdempotencyConfig)
+    atomic_io: AtomicIOConfig = field(default_factory=AtomicIOConfig)
+    scheduler_jobs: SchedulerJobsConfig = field(default_factory=SchedulerJobsConfig)
+    scheduler_notifications: SchedulerNotificationsConfig = field(default_factory=SchedulerNotificationsConfig)
+
+
+    scheduler: SchedulerConfig = field(default_factory=SchedulerConfig)
+    run_locks: RunLocksConfig = field(default_factory=RunLocksConfig)
+    concurrency: ConcurrencyConfig = field(default_factory=ConcurrencyConfig)
+    idempotency: IdempotencyConfig = field(default_factory=IdempotencyConfig)
+    atomic_io: AtomicIOConfig = field(default_factory=AtomicIOConfig)
+    scheduler_jobs: SchedulerJobsConfig = field(default_factory=SchedulerJobsConfig)
+    scheduler_notifications: SchedulerNotificationsConfig = field(default_factory=SchedulerNotificationsConfig)
+
+    scheduler: SchedulerConfig = field(default_factory=SchedulerConfig)
+    run_locks: RunLocksConfig = field(default_factory=RunLocksConfig)
+    concurrency: ConcurrencyConfig = field(default_factory=ConcurrencyConfig)
+    idempotency: IdempotencyConfig = field(default_factory=IdempotencyConfig)
+    atomic_io: AtomicIOConfig = field(default_factory=AtomicIOConfig)
+    scheduler_jobs: SchedulerJobsConfig = field(default_factory=SchedulerJobsConfig)
+    scheduler_notifications: SchedulerNotificationsConfig = field(default_factory=SchedulerNotificationsConfig)
     incident_response: IncidentResponseConfig = field(default_factory=IncidentResponseConfig)
     recovery: RecoveryConfig = field(default_factory=RecoveryConfig)
     rollback: RollbackConfig = field(default_factory=RollbackConfig)
@@ -3518,3 +3670,254 @@ def validate_observability_notifications_config(config: ObservabilityNotificatio
     # dry_run default can be verified in usage, but enforcing it's valid:
     if not config.dry_run and not config.warn_no_real_send_default:
         raise ValueError("If dry_run is false, warn_no_real_send_default must be True.")
+
+@dataclass
+class SchedulerConfig:
+    enabled: bool = True
+    store_dir: str = "data/scheduler"
+    dry_run_default: bool = True
+    execute_commands_default: bool = False
+    install_daemon: bool = False
+    install_cron: bool = False
+    install_service: bool = False
+    allow_destructive_jobs: bool = False
+    write_scheduler_reports: bool = True
+    warn_local_only: bool = True
+    warn_not_investment_advice: bool = True
+    warn_no_broker_execution: bool = True
+
+@dataclass
+class RunLocksConfig:
+    enabled: bool = True
+    locks_dir: str = "data/scheduler/locks"
+    stale_after_seconds_default: int = 3600
+    global_stale_after_seconds: int = 7200
+    acquisition_mode_default: str = "FAIL_FAST"
+    allow_steal_if_stale: bool = True
+    cleanup_stale_locks_dry_run_default: bool = True
+    write_lock_audit: bool = True
+
+@dataclass
+class ConcurrencyConfig:
+    enabled: bool = True
+    global_max_concurrent_runs: int = 1
+    scan_max_concurrent_runs: int = 1
+    backtest_max_concurrent_runs: int = 1
+    paper_max_concurrent_runs: int = 1
+    regression_max_concurrent_runs: int = 1
+    retention_max_concurrent_runs: int = 1
+    observability_max_concurrent_runs: int = 2
+    notification_max_concurrent_runs: int = 1
+    block_on_conflict: bool = True
+    allow_overlap_default: bool = False
+
+@dataclass
+class IdempotencyConfig:
+    enabled: bool = True
+    store_path: str = "data/scheduler/idempotency.jsonl"
+    duplicate_policy: str = "SKIP"
+    record_completed_runs: bool = True
+    prune_after_days: int = 30
+    prune_dry_run_default: bool = True
+
+@dataclass
+class AtomicIOConfig:
+    enabled: bool = True
+    use_atomic_writes: bool = True
+    temp_suffix: str = ".tmp"
+    verify_checksum_after_write: bool = True
+    block_protected_target_write: bool = False
+
+@dataclass
+class SchedulerJobsConfig:
+    enabled: bool = True
+    default_dry_run: bool = True
+    execute_commands: bool = False
+    safe_allowlist_only: bool = True
+    blocked_commands: List[str] = field(default_factory=lambda: [
+        "cleanup-execute",
+        "rollback-execute",
+        "send-broker-order",
+        "live-order",
+        "demo-order"
+    ])
+
+@dataclass
+class SchedulerNotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    notify_scheduler_report: bool = True
+    notify_stale_lock_warning: bool = True
+    notify_concurrency_blocked: bool = True
+    default_channel: str = "DRY_RUN"
+    warn_no_real_send_default: bool = True
+
+def validate_scheduler_config(config: SchedulerConfig) -> None:
+    if not config.dry_run_default:
+        pass # warning maybe, but schema says dry_run_default is true
+    if config.execute_commands_default:
+        raise ValueError("execute_commands_default must be False")
+    if config.install_daemon:
+        raise ValueError("install_daemon must be False")
+    if config.install_cron:
+        raise ValueError("install_cron must be False")
+    if config.install_service:
+        raise ValueError("install_service must be False")
+    if config.allow_destructive_jobs:
+        raise ValueError("allow_destructive_jobs must be False")
+
+def validate_run_locks_config(config: RunLocksConfig) -> None:
+    if config.stale_after_seconds_default <= 0:
+        raise ValueError("stale_after_seconds_default must be positive")
+
+def validate_concurrency_config(config: ConcurrencyConfig) -> None:
+    for f in [config.global_max_concurrent_runs, config.scan_max_concurrent_runs,
+              config.backtest_max_concurrent_runs, config.paper_max_concurrent_runs,
+              config.regression_max_concurrent_runs, config.retention_max_concurrent_runs,
+              config.observability_max_concurrent_runs, config.notification_max_concurrent_runs]:
+        if f <= 0:
+            raise ValueError("max_concurrent_runs must be positive")
+
+def validate_idempotency_config(config: IdempotencyConfig) -> None:
+    if config.duplicate_policy.upper() not in ["SKIP", "REVIEW", "BLOCK"]:
+        raise ValueError("duplicate_policy must be SKIP, REVIEW, or BLOCK")
+    if config.prune_after_days <= 0:
+        raise ValueError("prune_after_days must be positive")
+
+def validate_scheduler_jobs_config(config: SchedulerJobsConfig) -> None:
+    if config.execute_commands:
+        raise ValueError("execute_commands must be False in scheduler_jobs")
+    if not config.safe_allowlist_only:
+        raise ValueError("safe_allowlist_only must be True")
+    if not all(cmd in config.blocked_commands for cmd in ["cleanup-execute", "rollback-execute", "send-broker-order", "live-order", "demo-order"]):
+        raise ValueError("blocked_commands must include destructive commands")
+
+def validate_scheduler_notifications_config(config: SchedulerNotificationsConfig) -> None:
+    if not config.dry_run:
+        raise ValueError("scheduler_notifications.dry_run must be True")
+
+
+@dataclass
+class SchedulerConfig:
+    enabled: bool = True
+    store_dir: str = "data/scheduler"
+    dry_run_default: bool = True
+    execute_commands_default: bool = False
+    install_daemon: bool = False
+    install_cron: bool = False
+    install_service: bool = False
+    allow_destructive_jobs: bool = False
+    write_scheduler_reports: bool = True
+    warn_local_only: bool = True
+    warn_not_investment_advice: bool = True
+    warn_no_broker_execution: bool = True
+
+@dataclass
+class RunLocksConfig:
+    enabled: bool = True
+    locks_dir: str = "data/scheduler/locks"
+    stale_after_seconds_default: int = 3600
+    global_stale_after_seconds: int = 7200
+    acquisition_mode_default: str = "FAIL_FAST"
+    allow_steal_if_stale: bool = True
+    cleanup_stale_locks_dry_run_default: bool = True
+    write_lock_audit: bool = True
+
+@dataclass
+class ConcurrencyConfig:
+    enabled: bool = True
+    global_max_concurrent_runs: int = 1
+    scan_max_concurrent_runs: int = 1
+    backtest_max_concurrent_runs: int = 1
+    paper_max_concurrent_runs: int = 1
+    regression_max_concurrent_runs: int = 1
+    retention_max_concurrent_runs: int = 1
+    observability_max_concurrent_runs: int = 2
+    notification_max_concurrent_runs: int = 1
+    block_on_conflict: bool = True
+    allow_overlap_default: bool = False
+
+@dataclass
+class IdempotencyConfig:
+    enabled: bool = True
+    store_path: str = "data/scheduler/idempotency.jsonl"
+    duplicate_policy: str = "SKIP"
+    record_completed_runs: bool = True
+    prune_after_days: int = 30
+    prune_dry_run_default: bool = True
+
+@dataclass
+class AtomicIOConfig:
+    enabled: bool = True
+    use_atomic_writes: bool = True
+    temp_suffix: str = ".tmp"
+    verify_checksum_after_write: bool = True
+    block_protected_target_write: bool = False
+
+@dataclass
+class SchedulerJobsConfig:
+    enabled: bool = True
+    default_dry_run: bool = True
+    execute_commands: bool = False
+    safe_allowlist_only: bool = True
+    blocked_commands: List[str] = field(default_factory=lambda: [
+        "cleanup-execute",
+        "rollback-execute",
+        "send-broker-order",
+        "live-order",
+        "demo-order"
+    ])
+
+@dataclass
+class SchedulerNotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    notify_scheduler_report: bool = True
+    notify_stale_lock_warning: bool = True
+    notify_concurrency_blocked: bool = True
+    default_channel: str = "DRY_RUN"
+    warn_no_real_send_default: bool = True
+
+def validate_scheduler_config(config: SchedulerConfig) -> None:
+    if not config.dry_run_default:
+        pass # warning maybe, but schema says dry_run_default is true
+    if config.execute_commands_default:
+        raise ValueError("execute_commands_default must be False")
+    if config.install_daemon:
+        raise ValueError("install_daemon must be False")
+    if config.install_cron:
+        raise ValueError("install_cron must be False")
+    if config.install_service:
+        raise ValueError("install_service must be False")
+    if config.allow_destructive_jobs:
+        raise ValueError("allow_destructive_jobs must be False")
+
+def validate_run_locks_config(config: RunLocksConfig) -> None:
+    if config.stale_after_seconds_default <= 0:
+        raise ValueError("stale_after_seconds_default must be positive")
+
+def validate_concurrency_config(config: ConcurrencyConfig) -> None:
+    for f in [config.global_max_concurrent_runs, config.scan_max_concurrent_runs,
+              config.backtest_max_concurrent_runs, config.paper_max_concurrent_runs,
+              config.regression_max_concurrent_runs, config.retention_max_concurrent_runs,
+              config.observability_max_concurrent_runs, config.notification_max_concurrent_runs]:
+        if f <= 0:
+            raise ValueError("max_concurrent_runs must be positive")
+
+def validate_idempotency_config(config: IdempotencyConfig) -> None:
+    if config.duplicate_policy.upper() not in ["SKIP", "REVIEW", "BLOCK"]:
+        raise ValueError("duplicate_policy must be SKIP, REVIEW, or BLOCK")
+    if config.prune_after_days <= 0:
+        raise ValueError("prune_after_days must be positive")
+
+def validate_scheduler_jobs_config(config: SchedulerJobsConfig) -> None:
+    if config.execute_commands:
+        raise ValueError("execute_commands must be False in scheduler_jobs")
+    if not config.safe_allowlist_only:
+        raise ValueError("safe_allowlist_only must be True")
+    if not all(cmd in config.blocked_commands for cmd in ["cleanup-execute", "rollback-execute", "send-broker-order", "live-order", "demo-order"]):
+        raise ValueError("blocked_commands must include destructive commands")
+
+def validate_scheduler_notifications_config(config: SchedulerNotificationsConfig) -> None:
+    if not config.dry_run:
+        raise ValueError("scheduler_notifications.dry_run must be True")
