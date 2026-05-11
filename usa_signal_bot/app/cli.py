@@ -2812,6 +2812,58 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="USA Signal Bot CLI")
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
 
+    parser_scheduler_info = subparsers.add_parser("scheduler-info", help="Show scheduler config and limitations")
+    parser_scheduler_plan = subparsers.add_parser("scheduler-plan", help="Generate a scheduler plan (dry-run only)")
+    parser_scheduler_plan.add_argument("--write", action="store_true", help="Write plan to disk")
+
+    parser_scheduler_run = subparsers.add_parser("scheduler-run-once", help="Run scheduler plan once (simulated)")
+    parser_scheduler_run.add_argument("--write", action="store_true", help="Write run result to disk")
+
+    parser_scheduler_summary = subparsers.add_parser("scheduler-summary", help="Show scheduler store summary")
+    parser_scheduler_latest_plan = subparsers.add_parser("scheduler-latest-plan", help="Show latest scheduler plan")
+    parser_scheduler_latest_run = subparsers.add_parser("scheduler-latest-run", help="Show latest scheduler run result")
+
+    parser_scheduler_validate = subparsers.add_parser("scheduler-validate", help="Validate a scheduler plan or run")
+    parser_scheduler_validate.add_argument("--latest-plan", action="store_true")
+
+    parser_lock_status = subparsers.add_parser("lock-status", help="List active run locks")
+    parser_lock_status.add_argument("--scope", type=str, help="Filter by scope")
+
+    parser_lock_acquire = subparsers.add_parser("lock-acquire", help="Attempt to acquire a lock")
+    parser_lock_acquire.add_argument("--scope", type=str, required=True)
+    parser_lock_acquire.add_argument("--mode", type=str, default="DRY_RUN")
+
+    parser_lock_release = subparsers.add_parser("lock-release", help="Attempt to release a lock")
+    parser_lock_release.add_argument("--scope", type=str, required=True)
+
+    parser_lock_heartbeat = subparsers.add_parser("lock-heartbeat", help="Send a heartbeat to a lock")
+    parser_lock_heartbeat.add_argument("--scope", type=str, required=True)
+
+    parser_stale_locks = subparsers.add_parser("stale-locks", help="Detect stale locks")
+
+    parser_stale_lock_cleanup = subparsers.add_parser("stale-lock-cleanup", help="Cleanup stale locks")
+    parser_stale_lock_cleanup.add_argument("--dry-run", action="store_true", default=True)
+    parser_stale_lock_cleanup.add_argument("--write", action="store_true")
+
+    parser_lock_audit_summary = subparsers.add_parser("lock-audit-summary", help="Show lock audit summary")
+
+    parser_concurrency_review = subparsers.add_parser("concurrency-review", help="Review concurrency rules")
+    parser_concurrency_review.add_argument("--scope", type=str)
+
+    parser_idempotency_summary = subparsers.add_parser("idempotency-summary", help="Show idempotency summary")
+
+    parser_idempotency_prune = subparsers.add_parser("idempotency-prune", help="Prune expired idempotency records")
+    parser_idempotency_prune.add_argument("--dry-run", action="store_true", default=True)
+
+    parser_atomic_write = subparsers.add_parser("atomic-write-test", help="Test atomic write functionality")
+
+    parser_scheduler_notification_preview = subparsers.add_parser("scheduler-notification-preview", help="Preview notification for latest run")
+    parser_scheduler_notification_preview.add_argument("--latest-run", action="store_true")
+
+    parser_scheduler_notification_dispatch = subparsers.add_parser("scheduler-notification-dispatch-dry-run", help="Dry-run dispatch notification")
+    parser_scheduler_notification_dispatch.add_argument("--latest-run", action="store_true")
+
+
     # Command: smoke
 
     subparsers.add_parser("observability-info", help="Show observability info")

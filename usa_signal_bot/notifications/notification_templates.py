@@ -371,3 +371,62 @@ def format_recovery_plan_report_message(plan):
 
 def format_rollback_dry_run_report_message(result):
     return f"Rollback Result: {result.status.name}"
+
+def format_scheduler_report_message(result: Any) -> Any:
+    from usa_signal_bot.notifications.notification_models import NotificationMessage
+    from usa_signal_bot.core.enums import NotificationType, NotificationChannel, NotificationPriority
+    from usa_signal_bot.scheduler.scheduler_reporting import scheduler_run_result_to_text
+
+    return NotificationMessage(
+        message_id=f"sched_report_{result.run_id}",
+        notification_type=NotificationType.SCHEDULER_REPORT,
+        channel=NotificationChannel.DRY_RUN,
+        priority=NotificationPriority.NORMAL,
+        title=f"Scheduler Run {result.status.value}",
+        body=scheduler_run_result_to_text(result),
+        created_at_utc=result.created_at_utc
+    )
+
+def format_lock_warning_message(report: Any) -> Any:
+    from usa_signal_bot.notifications.notification_models import NotificationMessage
+    from usa_signal_bot.core.enums import NotificationType, NotificationChannel, NotificationPriority
+    from usa_signal_bot.scheduler.stale_lock_detector import stale_lock_report_to_text
+
+    return NotificationMessage(
+        message_id=report.report_id,
+        notification_type=NotificationType.LOCK_WARNING,
+        channel=NotificationChannel.DRY_RUN,
+        priority=NotificationPriority.HIGH,
+        title=f"Stale Lock Warning ({report.stale_count} locks)",
+        body=stale_lock_report_to_text(report),
+        created_at_utc=report.created_at_utc
+    )
+
+def format_concurrency_blocked_message(result: Any) -> Any:
+    from usa_signal_bot.notifications.notification_models import NotificationMessage
+    from usa_signal_bot.core.enums import NotificationType, NotificationChannel, NotificationPriority
+    from usa_signal_bot.scheduler.scheduler_reporting import concurrency_decision_to_text
+
+    return NotificationMessage(
+        message_id=result.decision_id,
+        notification_type=NotificationType.CONCURRENCY_BLOCKED,
+        channel=NotificationChannel.DRY_RUN,
+        priority=NotificationPriority.NORMAL,
+        title="Concurrency Blocked",
+        body=concurrency_decision_to_text(result),
+        created_at_utc=result.created_at_utc
+    )
+
+def notifications_from_scheduler_run_result(result: Any) -> list:
+    return [format_scheduler_report_message(result)]
+
+def notifications_from_stale_lock_report(report: Any) -> list:
+    if report.stale_count > 0:
+        return [format_lock_warning_message(report)]
+    return []
+
+def notifications_from_concurrency_decision(result: Any) -> list:
+    from usa_signal_bot.core.enums import ConcurrencyDecision
+    if result.decision == ConcurrencyDecision.BLOCK:
+        return [format_concurrency_blocked_message(result)]
+    return []
