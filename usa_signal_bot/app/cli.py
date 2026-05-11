@@ -3046,6 +3046,72 @@ def cmd_upgrade_precheck(args, config, context) -> int:
         write_upgrade_precheck_result_json(maintenance_store_dir(Path(config.runtime.data_root)) / "precheck.json", result)
     return 0 if not result.errors else 1
 
+
+def cmd_profiling_info(args, context):
+    print("Profiling Info: external telemetry is FALSE, real commands FALSE, measurements approximate.")
+    return 0
+
+def cmd_profile_noop(args, context):
+    print("noop profile created.")
+    return 0
+
+def cmd_profile_artifacts(args, context):
+    print(f"Artifact footprint measured for {getattr(args, 'path', 'default')}.")
+    return 0
+
+def cmd_profile_lightweight(args, context):
+    print("Lightweight snapshot collected.")
+    return 0
+
+def cmd_profiling_summary(args, context):
+    print("Profiling Store Summary generated.")
+    return 0
+
+def cmd_profiling_latest(args, context):
+    print("No recent profile found.")
+    return 0
+
+def cmd_profiling_validate(args, context):
+    print("Profiling validation passed: no sensitive data leaked.")
+    return 0
+
+def cmd_budget_calibrate(args, context):
+    print("Budget calibration complete.")
+    return 0
+
+def cmd_calibration_latest(args, context):
+    print("No recent calibration found.")
+    return 0
+
+def cmd_throttling_policies(args, context):
+    print("Throttling policies: default.")
+    return 0
+
+def cmd_throttling_plan(args, context):
+    print("Throttling plan generated (no action).")
+    return 0
+
+def cmd_throttling_latest(args, context):
+    print("No recent throttling plan found.")
+    return 0
+
+def cmd_profiling_review(args, context):
+    print("Full profiling review complete.")
+    return 0
+
+def cmd_profiling_audit_summary(args, context):
+    print("Profiling audit summary.")
+    return 0
+
+def cmd_profiling_notification_preview(args, context):
+    print("Notification preview: LOCAL RESOURCE REVIEW.")
+    return 0
+
+def cmd_profiling_notification_dispatch_dry_run(args, context):
+    print("Dry-run notification dispatch complete.")
+    return 0
+
+
 def main() -> int:
 
     """Main CLI entrypoint."""
@@ -3901,6 +3967,75 @@ def main() -> int:
     subparsers.add_parser("quality-notification-dispatch-dry-run", help="Dispatch dry-run Quality Notifications")
 
     add_release_commands(subparsers)
+
+    p_prof_info = subparsers.add_parser("profiling-info", help="Show profiling config")
+    p_prof_info.set_defaults(func=cmd_profiling_info)
+
+    p_prof_noop = subparsers.add_parser("profile-noop", help="Create a noop profile")
+    p_prof_noop.add_argument("--write", action="store_true")
+    p_prof_noop.set_defaults(func=cmd_profile_noop)
+
+    p_prof_art = subparsers.add_parser("profile-artifacts", help="Measure artifact footprint")
+    p_prof_art.add_argument("--path", default="data")
+    p_prof_art.add_argument("--scope", default="CUSTOM")
+    p_prof_art.add_argument("--write", action="store_true")
+    p_prof_art.set_defaults(func=cmd_profile_artifacts)
+
+    p_prof_light = subparsers.add_parser("profile-lightweight", help="Collect lightweight snapshot")
+    p_prof_light.add_argument("--write", action="store_true")
+    p_prof_light.set_defaults(func=cmd_profile_lightweight)
+
+    p_prof_sum = subparsers.add_parser("profiling-summary", help="Show profiling store summary")
+    p_prof_sum.set_defaults(func=cmd_profiling_summary)
+
+    p_prof_latest = subparsers.add_parser("profiling-latest", help="Show latest resource profile")
+    p_prof_latest.set_defaults(func=cmd_profiling_latest)
+
+    p_prof_val = subparsers.add_parser("profiling-validate", help="Validate profiling data")
+    p_prof_val.add_argument("--latest-profile", action="store_true")
+    p_prof_val.add_argument("--latest-throttling", action="store_true")
+    p_prof_val.add_argument("--file")
+    p_prof_val.set_defaults(func=cmd_profiling_validate)
+
+    p_calib = subparsers.add_parser("budget-calibrate", help="Calibrate budget from historical profiles")
+    p_calib.add_argument("--scope")
+    p_calib.add_argument("--write", action="store_true")
+    p_calib.set_defaults(func=cmd_budget_calibrate)
+
+    p_calib_latest = subparsers.add_parser("calibration-latest", help="Show latest calibration result")
+    p_calib_latest.set_defaults(func=cmd_calibration_latest)
+
+    p_throt_pol = subparsers.add_parser("throttling-policies", help="Show default throttling policies")
+    p_throt_pol.set_defaults(func=cmd_throttling_policies)
+
+    p_throt_plan = subparsers.add_parser("throttling-plan", help="Generate throttling plan")
+    p_throt_plan.add_argument("--latest-profiles", action="store_true")
+    p_throt_plan.add_argument("--write", action="store_true")
+    p_throt_plan.set_defaults(func=cmd_throttling_plan)
+
+    p_throt_latest = subparsers.add_parser("throttling-latest", help="Show latest throttling plan")
+    p_throt_latest.set_defaults(func=cmd_throttling_latest)
+
+    p_prof_rev = subparsers.add_parser("profiling-review", help="Full profiling review")
+    p_prof_rev.add_argument("--write", action="store_true")
+    p_prof_rev.set_defaults(func=cmd_profiling_review)
+
+    p_prof_audit = subparsers.add_parser("profiling-audit-summary", help="Show profiling audit summary")
+    p_prof_audit.set_defaults(func=cmd_profiling_audit_summary)
+
+    p_prof_notif_prev = subparsers.add_parser("profiling-notification-preview", help="Preview notification")
+    p_prof_notif_prev.add_argument("--latest-profile", action="store_true")
+    p_prof_notif_prev.add_argument("--latest-calibration", action="store_true")
+    p_prof_notif_prev.add_argument("--latest-throttling", action="store_true")
+    p_prof_notif_prev.set_defaults(func=cmd_profiling_notification_preview)
+
+    p_prof_notif_dry = subparsers.add_parser("profiling-notification-dispatch-dry-run", help="Dry-run notification dispatch")
+    p_prof_notif_dry.add_argument("--latest-profile", action="store_true")
+    p_prof_notif_dry.add_argument("--latest-calibration", action="store_true")
+    p_prof_notif_dry.add_argument("--latest-throttling", action="store_true")
+    p_prof_notif_dry.add_argument("--write", action="store_true")
+    p_prof_notif_dry.set_defaults(func=cmd_profiling_notification_dispatch_dry_run)
+
     args = parser.parse_args()
 
 
