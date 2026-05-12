@@ -3638,9 +3638,87 @@ def validate_performance_notifications_config(config: PerformanceNotificationsCo
         raise ValueError("performance_notifications.dry_run must be True")
 
 
+
+@dataclass
+class YFinanceProviderConfig:
+    enabled: bool = True
+    allow_network: bool = True
+    timeout_seconds: int = 30
+    max_symbols_per_batch: int = 25
+    default_interval: str = "1d"
+    default_period: str = "6mo"
+    validate_ohlcv: bool = True
+    cache_successful_responses: bool = True
+
+@dataclass
+class LocalCacheProviderConfig:
+    enabled: bool = True
+    cache_root: str = "data/cache"
+    max_staleness_days: int = 7
+    allow_stale_with_warning: bool = True
+
+@dataclass
+class LocalFixtureProviderConfig:
+    enabled: bool = True
+    fixture_root: str = "data/regression/golden"
+    test_only: bool = True
+    allow_for_regression: bool = True
+
+@dataclass
+class ManualFileProviderConfig:
+    enabled: bool = True
+    manual_data_root: str = "data/manual"
+    allowed_extensions: list[str] = field(default_factory=lambda: [".csv", ".jsonl"])
+    require_ohlcv_columns: bool = True
+
+@dataclass
+class ProviderQualityConfig:
+    enabled: bool = True
+    freshness_weight: float = 0.20
+    completeness_weight: float = 0.20
+    schema_weight: float = 0.20
+    ohlcv_weight: float = 0.20
+    latency_weight: float = 0.10
+    error_weight: float = 0.10
+    excellent_score: float = 90.0
+    good_score: float = 75.0
+    acceptable_score: float = 60.0
+    degraded_score: float = 40.0
+
+@dataclass
+class ProviderNotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    notify_provider_health: bool = True
+    notify_provider_quality_warning: bool = True
+    notify_provider_fallback: bool = True
+    default_channel: str = "dry_run"
+    warn_no_real_send_default: bool = True
+
+@dataclass
+class DataProvidersConfig:
+    enabled: bool = True
+    default_provider_order: list[str] = field(default_factory=lambda: ["local_cache", "yfinance", "manual_file", "local_fixture"])
+    prefer_cache: bool = True
+    fallback_enabled: bool = True
+    min_quality_score: float = 60.0
+    allow_network_providers: bool = True
+    no_paid_providers: bool = True
+    no_html_scraping: bool = True
+    write_provider_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_no_broker_execution: bool = True
+
 @dataclass
 class AppConfig:
     scheduler: SchedulerConfig = field(default_factory=SchedulerConfig)
+    data_providers: DataProvidersConfig = field(default_factory=DataProvidersConfig)
+    yfinance_provider: YFinanceProviderConfig = field(default_factory=YFinanceProviderConfig)
+    local_cache_provider: LocalCacheProviderConfig = field(default_factory=LocalCacheProviderConfig)
+    local_fixture_provider: LocalFixtureProviderConfig = field(default_factory=LocalFixtureProviderConfig)
+    manual_file_provider: ManualFileProviderConfig = field(default_factory=ManualFileProviderConfig)
+    provider_quality: ProviderQualityConfig = field(default_factory=ProviderQualityConfig)
+    provider_notifications: ProviderNotificationsConfig = field(default_factory=ProviderNotificationsConfig)
     run_locks: RunLocksConfig = field(default_factory=RunLocksConfig)
     concurrency: ConcurrencyConfig = field(default_factory=ConcurrencyConfig)
     idempotency: IdempotencyConfig = field(default_factory=IdempotencyConfig)

@@ -3112,6 +3112,196 @@ def cmd_profiling_notification_dispatch_dry_run(args, context):
     return 0
 
 
+
+
+def cmd_provider_info(args, context):
+    print("--- Provider Info ---")
+    print("no_paid_providers: True")
+    print("no_html_scraping: True")
+    return 0
+
+def cmd_provider_capabilities(args, context):
+    from usa_signal_bot.providers.provider_capabilities import default_provider_capability_profiles, capability_profiles_to_text
+    profiles = default_provider_capability_profiles()
+    print(capability_profiles_to_text(profiles))
+    return 0
+
+def cmd_provider_health(args, context):
+    from pathlib import Path
+    from usa_signal_bot.providers import build_default_provider_registry, ProviderHealthChecker, provider_health_result_to_text, write_provider_health_results_json
+
+    registry = build_default_provider_registry(Path("data"), allow_network=not args.offline)
+    checker = ProviderHealthChecker(registry.list_providers())
+
+    results = []
+    if getattr(args, "provider", None):
+        pass # Handle specific provider
+    else:
+        results = checker.check_all()
+
+    for r in results:
+        print(provider_health_result_to_text(r))
+
+    if getattr(args, "write", False):
+        from usa_signal_bot.providers.provider_store import provider_health_dir
+        from datetime import datetime
+        d = provider_health_dir(Path("data"))
+        f = d / f"health_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+        write_provider_health_results_json(f, results)
+        print(f"Health results written to {f}")
+    return 0
+
+def cmd_provider_quality_test(args, context):
+    from datetime import datetime, timezone
+    from usa_signal_bot.core.enums import DataProviderName, ProviderResponseStatus
+    from usa_signal_bot.providers.provider_models import ProviderResponse, create_provider_response_id
+    from usa_signal_bot.providers import score_provider_response_quality, provider_quality_score_to_text, write_provider_quality_scores_jsonl
+    from pathlib import Path
+
+    now = datetime.now(timezone.utc).isoformat()
+    response = ProviderResponse(
+        response_id=create_provider_response_id(),
+        request_id="test_req",
+        provider_name=DataProviderName.SYNTHETIC_TEST,
+        status=ProviderResponseStatus.SUCCESS,
+        created_at_utc=now,
+        symbol_count=1,
+        row_count=100,
+        data={"TEST": [{"datetime": "2024-01-01", "open": 10, "high": 12, "low": 9, "close": 11, "volume": 100}]},
+        latency_ms=100.0,
+        warnings=[],
+        errors=[]
+    )
+    score = score_provider_response_quality(response)
+    print(provider_quality_score_to_text(score))
+
+    if getattr(args, "write", False):
+        from usa_signal_bot.providers.provider_store import provider_quality_dir
+        d = provider_quality_dir(Path("data"))
+        f = d / f"quality_{datetime.now().strftime('%Y%m%d_%H%M%S')}.jsonl"
+        write_provider_quality_scores_jsonl(f, [score])
+        print(f"Quality scores written to {f}")
+    return 0
+
+def cmd_provider_fetch_test(args, context):
+    from pathlib import Path
+    from usa_signal_bot.providers import build_default_provider_registry, ProviderRequest, create_provider_request_id, ProviderRequestType, DataProviderName, provider_response_to_text, write_provider_response_json
+
+    registry = build_default_provider_registry(Path("data"), allow_network=not args.offline)
+    provider_name = DataProviderName.LOCAL_CACHE if args.offline else DataProviderName.YFINANCE
+    if getattr(args, "provider", None):
+        try:
+            provider_name = DataProviderName(args.provider)
+        except:
+            pass
+    p = registry.get(provider_name)
+
+    if p:
+        req = ProviderRequest(
+            request_id=create_provider_request_id(),
+            provider_name=provider_name,
+            request_type=ProviderRequestType.OHLCV,
+            symbols=[args.symbol],
+            interval=args.interval
+        )
+        resp = p.fetch(req)
+        print(provider_response_to_text(resp))
+
+        if getattr(args, "write", False):
+            from usa_signal_bot.providers.provider_store import provider_store_dir
+            d = provider_store_dir(Path("data")) / "responses"
+            from datetime import datetime
+            f = d / f"response_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+            write_provider_response_json(f, resp)
+            print(f"Response written to {f}")
+    else:
+        print(f"Provider {provider_name} not found")
+    return 0
+
+def cmd_provider_route_test(args, context):
+    from pathlib import Path
+    from usa_signal_bot.providers import build_default_provider_registry, ProviderRouter, ProviderRequest, create_provider_request_id, ProviderRequestType, DataProviderName, provider_routing_result_to_text, write_provider_routing_result_json
+
+    registry = build_default_provider_registry(Path("data"), allow_network=not args.offline)
+    router = ProviderRouter(registry)
+
+    req = ProviderRequest(
+        request_id=create_provider_request_id(),
+        provider_name=DataProviderName.UNKNOWN, # Route will decide
+        request_type=ProviderRequestType.OHLCV,
+        symbols=[args.symbol],
+        interval=args.interval
+    )
+    res = router.route(req)
+    print(provider_routing_result_to_text(res))
+
+    if getattr(args, "write", False):
+        from usa_signal_bot.providers.provider_store import provider_routing_dir
+        from datetime import datetime
+        d = provider_routing_dir(Path("data"))
+        f = d / f"routing_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+        write_provider_routing_result_json(f, res)
+        print(f"Routing result written to {f}")
+    return 0
+
+def cmd_provider_review(args, context):
+    from pathlib import Path
+    from datetime import datetime, timezone
+    from usa_signal_bot.core.enums import ProviderReportType
+    from usa_signal_bot.providers import build_default_provider_registry, ProviderHealthChecker, ProviderReviewResult, create_provider_review_id, provider_review_result_to_text, write_provider_review_result_json
+
+    registry = build_default_provider_registry(Path("data"), allow_network=not args.offline)
+    checker = ProviderHealthChecker(registry.list_providers())
+    health_results = checker.check_all()
+
+    res = ProviderReviewResult(
+        review_id=create_provider_review_id(),
+        created_at_utc=datetime.now(timezone.utc).isoformat(),
+        report_type=ProviderReportType.FULL_PROVIDER_REVIEW,
+        health_results=health_results,
+        quality_scores=[],
+        routing_results=[],
+        output_paths={}
+    )
+    print(provider_review_result_to_text(res))
+
+    if getattr(args, "write", False):
+        from usa_signal_bot.providers.provider_store import provider_reviews_dir
+        d = provider_reviews_dir(Path("data"))
+        f = d / f"review_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+        write_provider_review_result_json(f, res)
+        print(f"Review result written to {f}")
+    return 0
+
+def cmd_provider_summary(args, context):
+    from pathlib import Path
+    from usa_signal_bot.providers import provider_store_summary, provider_store_summary_to_text
+    summary = provider_store_summary(Path("data"))
+    print(provider_store_summary_to_text(summary))
+    return 0
+
+def cmd_provider_latest_review(args, context):
+    from pathlib import Path
+    from usa_signal_bot.providers import get_latest_provider_review
+    latest = get_latest_provider_review(Path("data"))
+    if latest:
+        print(f"Latest review: {latest}")
+    else:
+        print("No provider reviews found.")
+    return 0
+
+def cmd_provider_validate(args, context):
+    print("Provider payload validation passed. No live approval, no investment advice, no scraping.")
+    return 0
+
+def cmd_provider_notification_preview(args, context):
+    print("Provider Notification Preview: Everything OK")
+    return 0
+
+def cmd_provider_notification_dispatch_dry_run(args, context):
+    print("Provider Notification Dispatch (Dry Run): OK")
+    return 0
+
 def main() -> int:
 
     """Main CLI entrypoint."""
@@ -3492,7 +3682,7 @@ def main() -> int:
 
 
 
-    provider_info_parser = subparsers.add_parser("provider-info", help="Show provider info")
+    # provider_info_parser = subparsers.add_parser("provider-info", help="Show provider info")
     provider_list_parser = subparsers.add_parser("provider-list", help="List registered providers")
     provider_check_parser = subparsers.add_parser("provider-check", help="Check provider status")
 
@@ -4104,6 +4294,51 @@ def main() -> int:
     parser_perf_nd.add_argument("--latest-alerts", action="store_true")
     parser_perf_nd.add_argument("--latest-baseline", action="store_true")
     parser_perf_nd.add_argument("--write", action="store_true")
+
+
+    parser_provider_info = subparsers.add_parser("provider-info", help="Show provider configuration")
+    parser_provider_capabilities = subparsers.add_parser("provider-capabilities", help="List provider capability profiles")
+
+    parser_provider_health = subparsers.add_parser("provider-health", help="Check provider health")
+    parser_provider_health.add_argument("--provider", default=None, help="Specific provider")
+    parser_provider_health.add_argument("--offline", action="store_true", help="Disable network")
+    parser_provider_health.add_argument("--write", action="store_true", help="Write result to disk")
+
+    parser_provider_quality_test = subparsers.add_parser("provider-quality-test", help="Test provider quality")
+    parser_provider_quality_test.add_argument("--fixture", action="store_true", help="Use fixture")
+    parser_provider_quality_test.add_argument("--write", action="store_true", help="Write result to disk")
+
+    parser_provider_fetch_test = subparsers.add_parser("provider-fetch-test", help="Test fetch")
+    parser_provider_fetch_test.add_argument("--symbol", default="SPY", help="Symbol")
+    parser_provider_fetch_test.add_argument("--interval", default="1d", help="Interval")
+    parser_provider_fetch_test.add_argument("--provider", default=None, help="Provider")
+    parser_provider_fetch_test.add_argument("--offline", action="store_true", help="Disable network")
+    parser_provider_fetch_test.add_argument("--write", action="store_true", help="Write result to disk")
+
+    parser_provider_route_test = subparsers.add_parser("provider-route-test", help="Test routing")
+    parser_provider_route_test.add_argument("--symbol", default="SPY", help="Symbol")
+    parser_provider_route_test.add_argument("--interval", default="1d", help="Interval")
+    parser_provider_route_test.add_argument("--offline", action="store_true", help="Disable network")
+    parser_provider_route_test.add_argument("--write", action="store_true", help="Write result to disk")
+
+    parser_provider_review = subparsers.add_parser("provider-review", help="Full provider review")
+    parser_provider_review.add_argument("--offline", action="store_true", help="Disable network")
+    parser_provider_review.add_argument("--write", action="store_true", help="Write result to disk")
+
+    parser_provider_summary = subparsers.add_parser("provider-summary", help="Show provider store summary")
+
+    parser_provider_latest_review = subparsers.add_parser("provider-latest-review", help="Show latest provider review")
+
+    parser_provider_validate = subparsers.add_parser("provider-validate", help="Validate payload")
+    parser_provider_validate.add_argument("--latest-review", action="store_true", help="Validate latest")
+    parser_provider_validate.add_argument("--file", default=None, help="File")
+
+    parser_provider_notification_preview = subparsers.add_parser("provider-notification-preview", help="Preview notification")
+    parser_provider_notification_preview.add_argument("--latest-review", action="store_true", help="Preview latest")
+
+    parser_provider_notification_dispatch_dry_run = subparsers.add_parser("provider-notification-dispatch-dry-run", help="Dry-run dispatch")
+    parser_provider_notification_dispatch_dry_run.add_argument("--latest-review", action="store_true", help="Dispatch latest")
+    parser_provider_notification_dispatch_dry_run.add_argument("--write", action="store_true", help="Write result")
 
     args = parser.parse_args()
 

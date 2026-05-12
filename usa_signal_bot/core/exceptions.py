@@ -986,3 +986,30 @@ class PerformanceBaselineValidationError(PerformanceBaselineError):
 
 class PerformanceBaselineReportingError(PerformanceBaselineError):
     pass
+
+class ProviderError(Exception):
+    pass
+class ProviderConfigError(ProviderError):
+    pass
+class ProviderCapabilityError(ProviderError):
+    pass
+class ProviderValidationError(ProviderError):
+    pass
+class ProviderQualityError(ProviderError):
+    pass
+class ProviderRoutingError(ProviderError):
+    pass
+class ProviderRegistryError(ProviderError):
+    pass
+class ProviderStorageError(ProviderError):
+    pass
+class ProviderReportingError(ProviderError):
+    pass
+class YFinanceProviderError(ProviderError):
+    pass
+class LocalCacheProviderError(ProviderError):
+    pass
+class LocalFixtureProviderError(ProviderError):
+    pass
+class ManualFileProviderError(ProviderError):
+    pass
