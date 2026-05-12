@@ -430,3 +430,107 @@ def notifications_from_concurrency_decision(result: Any) -> list:
     if result.decision == ConcurrencyDecision.BLOCK:
         return [format_concurrency_blocked_message(result)]
     return []
+
+def format_performance_baseline_report_message(baseline: Any) -> Any:
+    from usa_signal_bot.notifications.notification_models import NotificationMessage
+    from usa_signal_bot.core.enums import NotificationType, NotificationChannel, NotificationPriority
+    from usa_signal_bot.performance.baseline_reporting import performance_baseline_to_text, performance_baseline_limitations_text
+    import uuid
+    from datetime import datetime, timezone
+
+    text = performance_baseline_to_text(baseline)
+    text += performance_baseline_limitations_text()
+
+    return NotificationMessage(
+        message_id=f"msg_{uuid.uuid4().hex[:8]}",
+        created_at_utc=datetime.now(timezone.utc).isoformat(),
+        title=f"📈 Performance Baseline Generated: {baseline.scope.value}",
+        body=text,
+        notification_type=NotificationType.PERFORMANCE_BASELINE_REPORT,
+        priority=NotificationPriority.NORMAL,
+        channel=NotificationChannel.DRY_RUN,
+        metadata={"baseline_id": baseline.baseline_id, "version": baseline.version}
+    )
+
+def format_sla_threshold_warning_message(report: Any) -> Any:
+    from usa_signal_bot.notifications.notification_models import NotificationMessage
+    from usa_signal_bot.core.enums import NotificationType, NotificationChannel, NotificationPriority, BaselineComparisonStatus
+    from usa_signal_bot.performance.baseline_reporting import sla_evaluation_report_to_text, performance_baseline_limitations_text
+    import uuid
+    from datetime import datetime, timezone
+
+    text = sla_evaluation_report_to_text(report)
+    text += performance_baseline_limitations_text()
+
+    priority = NotificationPriority.HIGH
+    if report.status == BaselineComparisonStatus.BLOCKED:
+        priority = NotificationPriority.CRITICAL
+
+    return NotificationMessage(
+        message_id=f"msg_{uuid.uuid4().hex[:8]}",
+        created_at_utc=datetime.now(timezone.utc).isoformat(),
+        title=f"⚠️ SLA Threshold Warning: {report.status.value}",
+        body=text,
+        notification_type=NotificationType.SLA_THRESHOLD_WARNING,
+        priority=priority,
+        channel=NotificationChannel.DRY_RUN,
+        metadata={"report_id": report.report_id}
+    )
+
+def format_runtime_regression_alert_message(alerts: List[Any]) -> Any:
+    from usa_signal_bot.notifications.notification_models import NotificationMessage
+    from usa_signal_bot.core.enums import NotificationType, NotificationChannel, NotificationPriority
+    from usa_signal_bot.performance.baseline_reporting import performance_alerts_to_text, performance_baseline_limitations_text
+    import uuid
+    from datetime import datetime, timezone
+
+    text = performance_alerts_to_text(alerts)
+    text += performance_baseline_limitations_text()
+
+    # Check max severity from alerts to drive priority
+    priority = NotificationPriority.HIGH
+    for a in alerts:
+        from usa_signal_bot.core.enums import SLASeverity
+        if a.severity == SLASeverity.BLOCKER:
+            priority = NotificationPriority.CRITICAL
+
+    return NotificationMessage(
+        message_id=f"msg_{uuid.uuid4().hex[:8]}",
+        created_at_utc=datetime.now(timezone.utc).isoformat(),
+        title=f"🚨 Runtime Regression Alerts ({len(alerts)})",
+        body=text,
+        notification_type=NotificationType.RUNTIME_REGRESSION_ALERT,
+        priority=priority,
+        channel=NotificationChannel.DRY_RUN,
+        metadata={"alert_count": len(alerts)}
+    )
+
+def notifications_from_performance_review(result: Any) -> List[Any]:
+    from usa_signal_bot.notifications.notification_models import NotificationMessage
+    from usa_signal_bot.core.enums import NotificationType, NotificationChannel, NotificationPriority
+    from usa_signal_bot.performance.baseline_reporting import performance_review_result_to_text
+    import uuid
+    from datetime import datetime, timezone
+
+    text = performance_review_result_to_text(result)
+    priority = NotificationPriority.NORMAL
+    from usa_signal_bot.core.enums import BaselineComparisonStatus
+    if result.acceptance_status in [BaselineComparisonStatus.FAIL, BaselineComparisonStatus.BLOCKED]:
+        priority = NotificationPriority.HIGH
+
+    msg = NotificationMessage(
+        message_id=f"msg_{uuid.uuid4().hex[:8]}",
+        created_at_utc=datetime.now(timezone.utc).isoformat(),
+        title=f"📊 Performance Review: {result.acceptance_status.value}",
+        body=text,
+        notification_type=NotificationType.PERFORMANCE_BASELINE_REPORT,
+        priority=priority,
+        channel=NotificationChannel.DRY_RUN,
+        metadata={"review_id": result.review_id}
+    )
+    return [msg]
+
+def notifications_from_performance_alerts(alerts: List[Any]) -> List[Any]:
+    if not alerts:
+        return []
+    return [format_runtime_regression_alert_message(alerts)]

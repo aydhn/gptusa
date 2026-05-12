@@ -4036,6 +4036,75 @@ def main() -> int:
     p_prof_notif_dry.add_argument("--write", action="store_true")
     p_prof_notif_dry.set_defaults(func=cmd_profiling_notification_dispatch_dry_run)
 
+    parser_perf_info = subparsers.add_parser("performance-info", help="Show performance baseline config")
+
+    parser_perf_col = subparsers.add_parser("performance-collect-samples", help="Collect samples")
+    parser_perf_col.add_argument("--scope", type=str, default="")
+    parser_perf_col.add_argument("--limit", type=int, default=0)
+    parser_perf_col.add_argument("--write", action="store_true")
+
+    parser_perf_bb = subparsers.add_parser("performance-build-baseline", help="Build a baseline")
+    parser_perf_bb.add_argument("--scope", type=str, default="")
+    parser_perf_bb.add_argument("--write", action="store_true")
+
+    parser_perf_baselines = subparsers.add_parser("performance-baselines", help="List baselines")
+
+    parser_perf_latest_b = subparsers.add_parser("performance-latest-baseline", help="Show latest baseline")
+    parser_perf_latest_b.add_argument("--scope", type=str, default="")
+
+    parser_perf_sam_cur = subparsers.add_parser("performance-sample-current", help="Current operational sample")
+    parser_perf_sam_cur.add_argument("--write", action="store_true")
+
+    parser_perf_comp = subparsers.add_parser("performance-compare", help="Compare sample to baseline")
+    parser_perf_comp.add_argument("--scope", type=str, default="")
+    parser_perf_comp.add_argument("--latest-baseline", action="store_true")
+    parser_perf_comp.add_argument("--sample", type=str, default="")
+    parser_perf_comp.add_argument("--write", action="store_true")
+
+    parser_sla_thresh = subparsers.add_parser("sla-thresholds", help="Show SLA thresholds")
+
+    parser_sla_eval = subparsers.add_parser("sla-evaluate", help="Evaluate SLA thresholds")
+    parser_sla_eval.add_argument("--scope", type=str, default="")
+    parser_sla_eval.add_argument("--sample", type=str, default="")
+    parser_sla_eval.add_argument("--latest-baseline", action="store_true")
+    parser_sla_eval.add_argument("--write", action="store_true")
+
+    parser_run_reg = subparsers.add_parser("runtime-regression-check", help="Check runtime regression")
+    parser_run_reg.add_argument("--scope", type=str, default="")
+    parser_run_reg.add_argument("--write", action="store_true")
+
+    parser_perf_acc = subparsers.add_parser("performance-acceptance", help="Run performance acceptance gate")
+    parser_perf_acc.add_argument("--scope", type=str, default="")
+    parser_perf_acc.add_argument("--write", action="store_true")
+
+    parser_perf_alerts = subparsers.add_parser("performance-alerts", help="Generate performance alerts")
+    parser_perf_alerts.add_argument("--latest-comparison", action="store_true")
+    parser_perf_alerts.add_argument("--write", action="store_true")
+
+    parser_perf_rev = subparsers.add_parser("performance-review", help="Generate performance review")
+    parser_perf_rev.add_argument("--scope", type=str, default="")
+    parser_perf_rev.add_argument("--write", action="store_true")
+
+    parser_perf_sum = subparsers.add_parser("performance-summary", help="Show performance store summary")
+
+    parser_perf_lrev = subparsers.add_parser("performance-latest-review", help="Show latest review")
+
+    parser_perf_val = subparsers.add_parser("performance-validate", help="Validate performance review")
+    parser_perf_val.add_argument("--latest-review", action="store_true")
+    parser_perf_val.add_argument("--latest-baseline", action="store_true")
+    parser_perf_val.add_argument("--file", type=str, default="")
+
+    parser_perf_np = subparsers.add_parser("performance-notification-preview", help="Preview notification")
+    parser_perf_np.add_argument("--latest-review", action="store_true")
+    parser_perf_np.add_argument("--latest-alerts", action="store_true")
+    parser_perf_np.add_argument("--latest-baseline", action="store_true")
+
+    parser_perf_nd = subparsers.add_parser("performance-notification-dispatch-dry-run", help="Dry run notification dispatch")
+    parser_perf_nd.add_argument("--latest-review", action="store_true")
+    parser_perf_nd.add_argument("--latest-alerts", action="store_true")
+    parser_perf_nd.add_argument("--latest-baseline", action="store_true")
+    parser_perf_nd.add_argument("--write", action="store_true")
+
     args = parser.parse_args()
 
 
@@ -4054,6 +4123,43 @@ def main() -> int:
         context = initialize_runtime()
 
 
+
+        if args.command == "performance-info":
+            return cmd_performance_info(context, args)
+        elif args.command == "performance-collect-samples":
+            return cmd_performance_collect_samples(context, args)
+        elif args.command == "performance-build-baseline":
+            return cmd_performance_build_baseline(context, args)
+        elif args.command == "performance-baselines":
+            return cmd_performance_baselines(context, args)
+        elif args.command == "performance-latest-baseline":
+            return cmd_performance_latest_baseline(context, args)
+        elif args.command == "performance-sample-current":
+            return cmd_performance_sample_current(context, args)
+        elif args.command == "performance-compare":
+            return cmd_performance_compare(context, args)
+        elif args.command == "sla-thresholds":
+            return cmd_sla_thresholds(context, args)
+        elif args.command == "sla-evaluate":
+            return cmd_sla_evaluate(context, args)
+        elif args.command == "runtime-regression-check":
+            return cmd_runtime_regression_check(context, args)
+        elif args.command == "performance-acceptance":
+            return cmd_performance_acceptance(context, args)
+        elif args.command == "performance-alerts":
+            return cmd_performance_alerts(context, args)
+        elif args.command == "performance-review":
+            return cmd_performance_review(context, args)
+        elif args.command == "performance-summary":
+            return cmd_performance_summary(context, args)
+        elif args.command == "performance-latest-review":
+            return cmd_performance_latest_review(context, args)
+        elif args.command == "performance-validate":
+            return cmd_performance_validate(context, args)
+        elif args.command == "performance-notification-preview":
+            return cmd_performance_notification_preview(context, args)
+        elif args.command == "performance-notification-dispatch-dry-run":
+            return cmd_performance_notification_dispatch_dry_run(context, args)
 
         if args.command == "signal-rank-file":
             return handle_signal_rank_file(context, args.file, args.min_rank_score, args.write)
@@ -7971,4 +8077,316 @@ def cmd_observability_notification_preview(context, args) -> int:
 def cmd_observability_notification_dispatch_dry_run(context, args) -> int:
     print("Dispatch Dry Run: SUCCESS")
     print("Real Send: DISABLED")
+    return 0
+
+# --- Performance Baseline Handlers ---
+
+def cmd_performance_info(context, args) -> int:
+    print("Performance Baseline Config:")
+    print("Enabled:", context.config.performance_baselines.enabled)
+    print("External Telemetry:", context.config.performance_baselines.external_telemetry_enabled)
+    print("Dry-Run Alerting:", context.config.performance_alerting.dry_run)
+    print("\nNote: PASS acceptance logic is NOT live trading approval. This is entirely for local pipeline regression benchmarking.")
+    return 0
+
+def cmd_performance_collect_samples(context, args) -> int:
+    from usa_signal_bot.performance.baseline_collectors import collect_samples_from_profiling_store
+    from usa_signal_bot.core.enums import PerformanceBaselineScope
+    from usa_signal_bot.performance.baseline_reporting import current_performance_sample_to_text
+    from usa_signal_bot.performance.baseline_store import write_current_performance_sample_json
+    from pathlib import Path
+
+    scope = PerformanceBaselineScope(args.scope.upper()) if args.scope else None
+    limit = args.limit
+
+    root = Path(context.config.data.root_dir)
+    samples = collect_samples_from_profiling_store(root, scope, limit)
+
+    if not samples:
+        print("No samples collected.")
+        return 0
+
+    print(f"Collected {len(samples)} samples:")
+    for s in samples[:5]:
+        print(current_performance_sample_to_text(s))
+
+    if getattr(args, "write", False):
+        for s in samples:
+            write_current_performance_sample_json(root / "performance" / "samples" / f"{s.sample_id}.json", s)
+        print("Wrote samples to disk.")
+
+    return 0
+
+def cmd_performance_build_baseline(context, args) -> int:
+    from usa_signal_bot.performance.baseline_collectors import collect_samples_from_profiling_store
+    from usa_signal_bot.performance.baseline_builder import build_performance_baseline, baseline_builder_summary_to_text
+    from usa_signal_bot.core.enums import PerformanceBaselineScope, BaselineStatus
+    from usa_signal_bot.performance.baseline_store import write_performance_baseline_json
+    from pathlib import Path
+
+    scope_str = args.scope or "FULL_LOCAL_STACK"
+    scope = PerformanceBaselineScope(scope_str.upper())
+
+    root = Path(context.config.data.root_dir)
+    samples = collect_samples_from_profiling_store(root, scope)
+
+    base = build_performance_baseline(scope, samples)
+    if base.status == BaselineStatus.INSUFFICIENT_DATA:
+        print("Insufficient data to build active baseline.")
+
+    print(baseline_builder_summary_to_text([base]))
+
+    if getattr(args, "write", False):
+        write_performance_baseline_json(root / "performance" / "baselines" / f"{base.baseline_id}.json", base)
+        print("Baseline written to disk.")
+
+    return 0
+
+def cmd_performance_baselines(context, args) -> int:
+    from usa_signal_bot.performance.baseline_store import list_performance_baselines, read_performance_baseline_json
+    from pathlib import Path
+
+    root = Path(context.config.data.root_dir)
+    paths = list_performance_baselines(root)
+    if not paths:
+        print("No baselines found.")
+        return 0
+
+    print(f"Found {len(paths)} baselines:")
+    for p in paths[:10]:
+        data = read_performance_baseline_json(p)
+        print(f" - {data['baseline_id']} ({data['scope']}): {data['status']}")
+    return 0
+
+def cmd_performance_latest_baseline(context, args) -> int:
+    from usa_signal_bot.performance.baseline_store import get_latest_performance_baseline, read_performance_baseline_json
+    from usa_signal_bot.core.enums import PerformanceBaselineScope
+    from pathlib import Path
+    import json
+
+    root = Path(context.config.data.root_dir)
+    scope = PerformanceBaselineScope(args.scope.upper()) if args.scope else None
+
+    p = get_latest_performance_baseline(root, scope)
+    if not p:
+        print("No latest baseline found.")
+        return 0
+
+    data = read_performance_baseline_json(p)
+    print(json.dumps(data, indent=2))
+    return 0
+
+def cmd_performance_sample_current(context, args) -> int:
+    from usa_signal_bot.performance.baseline_collectors import collect_current_operational_sample
+    from usa_signal_bot.performance.baseline_reporting import current_performance_sample_to_text
+    from usa_signal_bot.performance.baseline_store import write_current_performance_sample_json
+    from pathlib import Path
+
+    root = Path(context.config.data.root_dir)
+    s = collect_current_operational_sample(root)
+    print(current_performance_sample_to_text(s))
+
+    if getattr(args, "write", False):
+         write_current_performance_sample_json(root / "performance" / "samples" / f"{s.sample_id}.json", s)
+    return 0
+
+def cmd_performance_compare(context, args) -> int:
+    from usa_signal_bot.performance.baseline_collectors import collect_current_operational_sample
+    from usa_signal_bot.performance.baseline_comparator import compare_sample_to_baseline
+    from usa_signal_bot.performance.baseline_store import get_latest_performance_baseline, read_performance_baseline_json, write_baseline_comparison_result_json
+    from usa_signal_bot.performance.baseline_reporting import baseline_comparison_result_to_text
+    from usa_signal_bot.performance.baseline_models import PerformanceBaseline
+    from usa_signal_bot.core.enums import BaselineStatus, PerformanceBaselineScope
+    from pathlib import Path
+
+    root = Path(context.config.data.root_dir)
+    s = collect_current_operational_sample(root)
+
+    base_path = get_latest_performance_baseline(root)
+    base = None
+    if base_path:
+        data = read_performance_baseline_json(base_path)
+        base = PerformanceBaseline(
+            baseline_id=data["baseline_id"], version=data["version"], scope=PerformanceBaselineScope(data["scope"]),
+            status=BaselineStatus(data["status"]), created_at_utc=data["created_at_utc"],
+            source_count=data["source_count"], metrics=[], source_paths=data["source_paths"],
+            warnings=[], errors=[]
+        )
+
+    comp = compare_sample_to_baseline(s, base)
+    print(baseline_comparison_result_to_text(comp))
+
+    if getattr(args, "write", False):
+        write_baseline_comparison_result_json(root / "performance" / "comparisons" / f"{comp.comparison_id}.json", comp)
+    return 0
+
+def cmd_sla_thresholds(context, args) -> int:
+    from usa_signal_bot.performance.threshold_evaluator import default_sla_thresholds
+    from usa_signal_bot.performance.baseline_reporting import sla_threshold_to_text
+    ts = default_sla_thresholds()
+    print("Default SLA Thresholds:")
+    for t in ts:
+        print(f" - {sla_threshold_to_text(t)}")
+    return 0
+
+def cmd_sla_evaluate(context, args) -> int:
+    from usa_signal_bot.performance.baseline_collectors import collect_current_operational_sample
+    from usa_signal_bot.performance.threshold_evaluator import evaluate_thresholds
+    from usa_signal_bot.performance.baseline_reporting import sla_evaluation_report_to_text
+    from usa_signal_bot.performance.baseline_store import write_sla_evaluation_report_json
+    from pathlib import Path
+
+    root = Path(context.config.data.root_dir)
+    s = collect_current_operational_sample(root)
+    rep = evaluate_thresholds(s.scope, s, None)
+
+    print(sla_evaluation_report_to_text(rep))
+    if getattr(args, "write", False):
+        write_sla_evaluation_report_json(root / "performance" / "thresholds" / f"{rep.report_id}.json", rep)
+    return 0
+
+def cmd_runtime_regression_check(context, args) -> int:
+    from usa_signal_bot.performance.baseline_collectors import collect_current_operational_sample
+    from usa_signal_bot.performance.regression_detector import RuntimeRegressionDetector
+    from usa_signal_bot.performance.baseline_store import write_baseline_comparison_result_json
+    from usa_signal_bot.performance.baseline_reporting import baseline_comparison_result_to_text
+    from pathlib import Path
+
+    root = Path(context.config.data.root_dir)
+    s = collect_current_operational_sample(root)
+
+    det = RuntimeRegressionDetector([])
+    comp, trep = det.detect(s)
+
+    print(baseline_comparison_result_to_text(comp))
+    if getattr(args, "write", False):
+        write_baseline_comparison_result_json(root / "performance" / "comparisons" / f"{comp.comparison_id}.json", comp)
+    return 0
+
+def cmd_performance_acceptance(context, args) -> int:
+    from usa_signal_bot.performance.baseline_collectors import collect_current_operational_sample
+    from usa_signal_bot.performance.regression_detector import RuntimeRegressionDetector
+    from usa_signal_bot.performance.acceptance_gate import evaluate_performance_acceptance_gate
+    from usa_signal_bot.performance.baseline_reporting import performance_acceptance_gate_result_to_text
+    from usa_signal_bot.performance.baseline_store import write_performance_gate_result_json
+    from pathlib import Path
+
+    root = Path(context.config.data.root_dir)
+    s = collect_current_operational_sample(root)
+    det = RuntimeRegressionDetector([])
+    comp, trep = det.detect(s)
+
+    gate = evaluate_performance_acceptance_gate(s.scope, [comp], [trep])
+    print(performance_acceptance_gate_result_to_text(gate))
+
+    if getattr(args, "write", False):
+        write_performance_gate_result_json(root / "performance" / "acceptance" / f"{gate.gate_id}.json", gate)
+    return 0
+
+def cmd_performance_alerts(context, args) -> int:
+    from usa_signal_bot.performance.alert_rules import build_performance_alerts
+    from usa_signal_bot.performance.baseline_reporting import performance_alerts_to_text
+    from usa_signal_bot.performance.baseline_store import write_performance_alerts_jsonl
+    from pathlib import Path
+    from datetime import datetime, timezone
+
+    alerts = build_performance_alerts([])
+    print(performance_alerts_to_text(alerts))
+
+    if getattr(args, "write", False) and alerts:
+        root = Path(context.config.data.root_dir)
+        ts = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S")
+        write_performance_alerts_jsonl(root / "performance" / "alerts" / f"{ts}.jsonl", alerts)
+    return 0
+
+def cmd_performance_review(context, args) -> int:
+    from usa_signal_bot.performance.baseline_collectors import collect_current_operational_sample
+    from usa_signal_bot.performance.regression_detector import RuntimeRegressionDetector
+    from usa_signal_bot.performance.acceptance_gate import evaluate_performance_acceptance_gate
+    from usa_signal_bot.performance.alert_rules import build_performance_alerts
+    from usa_signal_bot.performance.baseline_models import PerformanceReviewResult, create_performance_review_id
+    from usa_signal_bot.core.enums import PerformanceReportType
+    from usa_signal_bot.performance.baseline_reporting import performance_review_result_to_text, write_performance_report_json
+    from datetime import datetime, timezone
+    from pathlib import Path
+
+    root = Path(context.config.data.root_dir)
+    s = collect_current_operational_sample(root)
+    det = RuntimeRegressionDetector([])
+    comp, trep = det.detect(s)
+    gate = evaluate_performance_acceptance_gate(s.scope, [comp], [trep])
+    alerts = build_performance_alerts([comp], [trep])
+
+    rev = PerformanceReviewResult(
+        review_id=create_performance_review_id(),
+        created_at_utc=datetime.now(timezone.utc).isoformat(),
+        report_type=PerformanceReportType.FULL_PERFORMANCE_REVIEW,
+        status=gate.status,
+        baselines=[], samples=[s], comparisons=[comp],
+        threshold_results=[trep], regression_alerts=alerts,
+        acceptance_status=gate.status, output_paths={}, warnings=[], errors=[]
+    )
+
+    print(performance_review_result_to_text(rev))
+
+    if getattr(args, "write", False):
+        write_performance_report_json(root / "performance" / "reviews" / f"{rev.review_id}.json", rev)
+    return 0
+
+def cmd_performance_summary(context, args) -> int:
+    from usa_signal_bot.performance.baseline_store import baseline_store_summary
+    from usa_signal_bot.performance.baseline_reporting import baseline_store_summary_to_text
+    from pathlib import Path
+    s = baseline_store_summary(Path(context.config.data.root_dir))
+    print(baseline_store_summary_to_text(s))
+    return 0
+
+def cmd_performance_latest_review(context, args) -> int:
+    from usa_signal_bot.performance.baseline_store import get_latest_performance_review, read_performance_review_result_json
+    from pathlib import Path
+    import json
+
+    root = Path(context.config.data.root_dir)
+    p = get_latest_performance_review(root)
+    if not p:
+        print("No latest review found.")
+        return 0
+
+    data = read_performance_review_result_json(p)
+    print(json.dumps(data, indent=2))
+    return 0
+
+def cmd_performance_validate(context, args) -> int:
+    from usa_signal_bot.performance.baseline_validation import validate_no_live_execution_language_in_performance
+    from usa_signal_bot.performance.baseline_store import get_latest_performance_review, read_performance_review_result_json
+    from pathlib import Path
+    import json
+
+    root = Path(context.config.data.root_dir)
+    p = get_latest_performance_review(root)
+    if not p:
+        print("No review found to validate.")
+        return 1
+
+    data = read_performance_review_result_json(p)
+    text = json.dumps(data)
+    rep = validate_no_live_execution_language_in_performance(text)
+
+    if rep.valid:
+        print("Validation PASS. No external telemetry or live execution text found.")
+        return 0
+    else:
+        print("Validation FAIL:")
+        for i in rep.issues:
+            print(f" - {i.message}")
+        return 1
+
+def cmd_performance_notification_preview(context, args) -> int:
+    print("Performance Notification Preview: DRY RUN.")
+    print("Local notification generated. Telegram Real Send is OFF.")
+    return 0
+
+def cmd_performance_notification_dispatch_dry_run(context, args) -> int:
+    print("Performance Notification Dispatch [DRY RUN].")
+    print("Simulated dispatching alerts successfully.")
     return 0

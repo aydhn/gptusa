@@ -947,3 +947,42 @@ class ProfilingReportingError(ProfilingError):
 
 class ProfilingAuditError(ProfilingError):
     pass
+
+class PerformanceBaselineError(USASignalBotError):
+    pass
+
+class BaselineBuilderError(PerformanceBaselineError):
+    pass
+
+class BaselineCollectorError(PerformanceBaselineError):
+    pass
+
+class SLAThresholdError(PerformanceBaselineError):
+    pass
+
+class ThresholdEvaluatorError(PerformanceBaselineError):
+    pass
+
+class BaselineComparatorError(PerformanceBaselineError):
+    pass
+
+class RuntimeRegressionDetectorError(PerformanceBaselineError):
+    pass
+
+class BaselineDriftError(PerformanceBaselineError):
+    pass
+
+class PerformanceAcceptanceGateError(PerformanceBaselineError):
+    pass
+
+class PerformanceAlertRuleError(PerformanceBaselineError):
+    pass
+
+class PerformanceBaselineStorageError(PerformanceBaselineError):
+    pass
+
+class PerformanceBaselineValidationError(PerformanceBaselineError):
+    pass
+
+class PerformanceBaselineReportingError(PerformanceBaselineError):
+    pass

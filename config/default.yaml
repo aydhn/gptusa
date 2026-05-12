@@ -130,3 +130,72 @@ scheduler_notifications:
   notify_concurrency_blocked: true
   default_channel: "DRY_RUN"
   warn_no_real_send_default: true
+
+performance_baselines:
+  enabled: true
+  store_dir: "data/performance"
+  min_samples_per_baseline: 3
+  preferred_percentile: 90
+  active_baseline_version: "latest"
+  mark_stale_after_days: 30
+  write_baselines: true
+  external_telemetry_enabled: false
+  warn_local_only: true
+  warn_not_investment_advice: true
+  warn_no_broker_execution: true
+
+sla_thresholds:
+  enabled: true
+  scan_wall_time_warning_seconds: 1800
+  scan_wall_time_critical_seconds: 3600
+  scan_wall_time_blocker_seconds: 7200
+  backtest_wall_time_warning_seconds: 7200
+  backtest_wall_time_critical_seconds: 14400
+  backtest_wall_time_blocker_seconds: 21600
+  regression_wall_time_warning_seconds: 3600
+  regression_wall_time_critical_seconds: 7200
+  regression_wall_time_blocker_seconds: 10800
+  memory_peak_warning_mb: 4096
+  memory_peak_critical_mb: 6144
+  memory_peak_blocker_mb: 8192
+  output_growth_warning_mb: 512
+  output_growth_critical_mb: 2048
+  output_growth_blocker_mb: 4096
+  error_count_warning: 1
+  error_count_critical: 5
+  error_count_blocker: 10
+
+runtime_regression:
+  enabled: true
+  compare_against_p90: true
+  warning_delta_pct: 25.0
+  fail_delta_pct: 50.0
+  blocker_delta_pct: 100.0
+  suppress_insufficient_data_alerts: true
+  write_regression_reports: true
+
+performance_acceptance:
+  enabled: true
+  block_on_blocker_threshold: true
+  fail_on_critical_regression: true
+  warn_on_moderate_regression: true
+  pass_with_minor_regression_allowed: true
+  pass_is_not_live_approval: true
+
+performance_alerting:
+  enabled: true
+  dry_run: true
+  alert_on_sla_warning: true
+  alert_on_runtime_regression: true
+  alert_on_stale_baseline: true
+  suppress_duplicate_alerts: true
+  write_alert_reports: true
+
+performance_notifications:
+  enabled: true
+  dry_run: true
+  notify_baseline_report: true
+  notify_sla_threshold_warning: true
+  notify_runtime_regression_alert: true
+  default_channel: "dry_run"
+  warn_no_real_send_default: true
