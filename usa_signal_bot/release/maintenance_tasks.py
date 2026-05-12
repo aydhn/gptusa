@@ -23,12 +23,18 @@ def daily_maintenance_tasks() -> List[MaintenanceTask]:
         MaintenanceTask(task_id="scheduler-run-once-dry-run", name="Scheduler Run Once Dry Run", description="Simulate execution of a scheduler plan", frequency=MaintenanceFrequency.WEEKLY, command="python -m usa_signal_bot scheduler-run-once --dry-run", required=False),
         MaintenanceTask(task_id="idempotency-summary", name="Idempotency Summary", description="Review idempotency records to prevent duplicate runs", frequency=MaintenanceFrequency.WEEKLY, command="python -m usa_signal_bot idempotency-summary", required=False),
         MaintenanceTask(task_id="idempotency-prune-dry-run", name="Idempotency Prune Dry Run", description="Simulate pruning of expired idempotency records", frequency=MaintenanceFrequency.MONTHLY, command="python -m usa_signal_bot idempotency-prune --dry-run", required=False),
-        MaintenanceTask(task_id="scheduler-health", name="Scheduler Health", description="Check health of local scheduler components", frequency=MaintenanceFrequency.PRE_RELEASE, command="python -m usa_signal_bot scheduler-info", required=False)
+        MaintenanceTask(task_id="scheduler-health", name="Scheduler Health", description="Check health of local scheduler components", frequency=MaintenanceFrequency.PRE_RELEASE, command="python -m usa_signal_bot scheduler-info", required=False),
+        MaintenanceTask(task_id="performance-sample-current", name="Performance Sample", description="Collect current operational sample", frequency=MaintenanceFrequency.DAILY, command="python -m usa_signal_bot performance-sample-current", required=False),
+        MaintenanceTask(task_id="performance-compare-latest", name="Performance Compare", description="Compare operational sample to P90 baselines", frequency=MaintenanceFrequency.DAILY, command="python -m usa_signal_bot performance-compare", required=False),
+        MaintenanceTask(task_id="runtime-regression-check", name="Runtime Regression Check", description="Detect minor to critical performance drifts", frequency=MaintenanceFrequency.DAILY, command="python -m usa_signal_bot runtime-regression-check", required=False)
     ]
 
 def weekly_maintenance_tasks() -> List[MaintenanceTask]:
     return [
         MaintenanceTask(task_id=create_maintenance_task_id("regression-run-smoke"), name="regression-run-smoke", frequency=MaintenanceFrequency.WEEKLY, description="Run regression smoke tests.", command="python -m usa_signal_bot regression-info", required=True),
+        MaintenanceTask(task_id="performance-build-baseline", name="Performance Build Baseline", description="Build new performance baseline from recent samples", frequency=MaintenanceFrequency.WEEKLY, command="python -m usa_signal_bot performance-build-baseline --write", required=False),
+        MaintenanceTask(task_id="sla-evaluate", name="SLA Evaluate", description="Check current baselines against SLA thresholds", frequency=MaintenanceFrequency.WEEKLY, command="python -m usa_signal_bot sla-evaluate --write", required=False),
+        MaintenanceTask(task_id="performance-review", name="Performance Review", description="Run the full performance acceptance gate locally", frequency=MaintenanceFrequency.WEEKLY, command="python -m usa_signal_bot performance-review --write", required=False),
         MaintenanceTask(task_id=create_maintenance_task_id("quality-scorecard"), name="quality-scorecard", frequency=MaintenanceFrequency.WEEKLY, description="Generate quality scorecard.", command="python -m usa_signal_bot quality-scorecard", required=True),
         MaintenanceTask(task_id=create_maintenance_task_id("acceptance-evaluate"), name="acceptance-evaluate", frequency=MaintenanceFrequency.WEEKLY, description="Evaluate system acceptance.", command="python -m usa_signal_bot acceptance-evaluate", required=True),
         MaintenanceTask(task_id=create_maintenance_task_id("backup-create"), name="backup-create dry-run/precheck", frequency=MaintenanceFrequency.WEEKLY, description="Create a reports backup.", command="python -m usa_signal_bot backup-create --scope reports_only", required=False),
@@ -36,6 +42,8 @@ def weekly_maintenance_tasks() -> List[MaintenanceTask]:
 
 def monthly_maintenance_tasks() -> List[MaintenanceTask]:
     return [
+        MaintenanceTask(task_id="performance-baseline-stale-review", name="Baseline Stale Review", description="Review older baseline versions for freshness", frequency=MaintenanceFrequency.MONTHLY, command="python -m usa_signal_bot performance-baselines", required=False),
+        MaintenanceTask(task_id="sla-threshold-review", name="SLA Threshold Review", description="Review currently registered SLA thresholds limits", frequency=MaintenanceFrequency.MONTHLY, command="python -m usa_signal_bot sla-thresholds", required=False),
         MaintenanceTask(task_id=create_maintenance_task_id("release-rehearsal"), name="release-rehearsal", frequency=MaintenanceFrequency.MONTHLY, description="Run full release rehearsal.", command="python -m usa_signal_bot release-rehearsal", required=True),
         MaintenanceTask(task_id=create_maintenance_task_id("backup-validate"), name="backup-validate", frequency=MaintenanceFrequency.MONTHLY, description="Validate latest backups.", command=None, required=False),
         MaintenanceTask(task_id=create_maintenance_task_id("config-profile-validate"), name="config-profile-validate", frequency=MaintenanceFrequency.MONTHLY, description="Validate config profiles.", command="python -m usa_signal_bot config-profile-validate --all", required=True)
@@ -44,7 +52,8 @@ def monthly_maintenance_tasks() -> List[MaintenanceTask]:
 def pre_release_maintenance_tasks() -> List[MaintenanceTask]:
     return [
         MaintenanceTask(task_id=create_maintenance_task_id("pre-release-rehearsal"), name="release-rehearsal --scope golden_sample", frequency=MaintenanceFrequency.PRE_RELEASE, description="Run release rehearsal on golden sample.", command="python -m usa_signal_bot release-rehearsal", required=True),
-        MaintenanceTask(task_id=create_maintenance_task_id("pre-release-build"), name="release-build-local dry-run", frequency=MaintenanceFrequency.PRE_RELEASE, description="Dry-run a local release build.", command="python -m usa_signal_bot release-build-local", required=True)
+        MaintenanceTask(task_id=create_maintenance_task_id("pre-release-regression-check"), name="pre-release-regression-check", frequency=MaintenanceFrequency.PRE_RELEASE, description="Run regression smoke checks before release.", command="python -m usa_signal_bot regression-info", required=True),
+        MaintenanceTask(task_id="pre-release-performance-review", name="Pre-release Performance Review", description="Ensure no critical regression or blocked SLA breach", frequency=MaintenanceFrequency.PRE_RELEASE, command="python -m usa_signal_bot performance-review --write", required=True)
     ]
 
 def default_maintenance_plan() -> MaintenancePlan:

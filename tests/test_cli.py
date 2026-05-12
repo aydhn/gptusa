@@ -36,3 +36,18 @@ def test_cli_commands_registered():
     ]
     for cmd in commands:
         check_cli_command_registered(cmd)
+
+def test_performance_info(monkeypatch, tmp_path):
+    monkeypatch.setattr("sys.argv", ["usa_signal_bot", "performance-info"])
+    from usa_signal_bot.app.cli import main
+    assert main() == 0
+
+def test_performance_baselines(monkeypatch, tmp_path):
+    monkeypatch.setattr("sys.argv", ["usa_signal_bot", "performance-baselines"])
+    from usa_signal_bot.app.cli import main
+    assert main() == 0
+
+def test_sla_thresholds(monkeypatch, tmp_path):
+    monkeypatch.setattr("sys.argv", ["usa_signal_bot", "sla-thresholds"])
+    from usa_signal_bot.app.cli import main
+    assert main() == 0

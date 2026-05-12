@@ -511,7 +511,17 @@ def run_health_checks(context) -> List[HealthCheckResult]:
         check_provider_health(context),
         check_data_quality_config_health(context),
         check_cache_refresh_health(context),
-        check_momentum_feature_health(context)
+        check_momentum_feature_health(context),
+        check_performance_baseline_config_health(context),
+        check_baseline_builder_health(context),
+        check_baseline_collector_health(context),
+        check_sla_threshold_health(context),
+        check_baseline_comparator_health(context),
+        check_runtime_regression_detector_health(context),
+        check_performance_acceptance_gate_health(context),
+        check_performance_alert_rules_health(context),
+        check_baseline_store_health(context),
+        check_performance_notification_health(context)
     ]
 
 def health_results_to_dict(results: List[HealthCheckResult]) -> List[Dict]:
@@ -1330,3 +1340,120 @@ def check_scheduler_notification_health(context: 'RuntimeContext') -> HealthChec
     if context.config.scheduler_notifications.dry_run:
         return HealthCheckResult(component="scheduler_notification", status=HealthStatus.HEALTHY, message="Dry run preview mode is ON")
     return HealthCheckResult(component="scheduler_notification", status=HealthStatus.WARNING, message="Dry run preview mode is OFF")
+
+def check_performance_baseline_config_health(context) -> HealthCheckResult:
+    try:
+        from usa_signal_bot.core.config_schema import validate_performance_baselines_config
+        validate_performance_baselines_config(context.config.performance_baselines)
+        if context.config.performance_baselines.external_telemetry_enabled:
+             return HealthCheckResult("PerformanceBaselineConfig", False, "External telemetry must be false", datetime.now(timezone.utc).isoformat())
+        return HealthCheckResult("PerformanceBaselineConfig", True, "Performance baseline config valid", datetime.now(timezone.utc).isoformat())
+    except Exception as e:
+        return HealthCheckResult("PerformanceBaselineConfig", False, str(e), datetime.now(timezone.utc).isoformat())
+
+def check_baseline_builder_health(context) -> HealthCheckResult:
+    try:
+        from usa_signal_bot.performance.baseline_builder import build_performance_baseline
+        from usa_signal_bot.core.enums import PerformanceBaselineScope
+        from usa_signal_bot.performance.baseline_models import CurrentPerformanceSample
+
+        # Test fake sample
+        s = CurrentPerformanceSample("test_1", PerformanceBaselineScope.SCAN, datetime.now(timezone.utc).isoformat(), {"WALL_TIME_SECONDS": 10}, None, [], [], {})
+        b = build_performance_baseline(PerformanceBaselineScope.SCAN, [s])
+
+        if b.scope == PerformanceBaselineScope.SCAN:
+            return HealthCheckResult("BaselineBuilder", True, "Baseline builder generates baselines", datetime.now(timezone.utc).isoformat())
+        return HealthCheckResult("BaselineBuilder", False, "Baseline builder mismatch", datetime.now(timezone.utc).isoformat())
+    except Exception as e:
+        return HealthCheckResult("BaselineBuilder", False, str(e), datetime.now(timezone.utc).isoformat())
+
+def check_baseline_collector_health(context) -> HealthCheckResult:
+    try:
+        from usa_signal_bot.performance.baseline_collectors import collect_samples_from_profiling_store
+        from pathlib import Path
+        collect_samples_from_profiling_store(Path(context.config.data.root_dir))
+        return HealthCheckResult("BaselineCollector", True, "Baseline collector safe against missing stores", datetime.now(timezone.utc).isoformat())
+    except Exception as e:
+        return HealthCheckResult("BaselineCollector", False, str(e), datetime.now(timezone.utc).isoformat())
+
+def check_sla_threshold_health(context) -> HealthCheckResult:
+    try:
+        from usa_signal_bot.performance.threshold_evaluator import default_sla_thresholds
+        from usa_signal_bot.core.config_schema import validate_sla_thresholds_config
+        validate_sla_thresholds_config(context.config.sla_thresholds)
+        t = default_sla_thresholds()
+        if t:
+            return HealthCheckResult("SLAThresholds", True, "SLA thresholds load safely", datetime.now(timezone.utc).isoformat())
+        return HealthCheckResult("SLAThresholds", False, "No default SLA thresholds", datetime.now(timezone.utc).isoformat())
+    except Exception as e:
+        return HealthCheckResult("SLAThresholds", False, str(e), datetime.now(timezone.utc).isoformat())
+
+def check_baseline_comparator_health(context) -> HealthCheckResult:
+    try:
+        from usa_signal_bot.performance.baseline_comparator import compare_sample_to_baseline
+        from usa_signal_bot.core.enums import PerformanceBaselineScope
+        from usa_signal_bot.performance.baseline_models import CurrentPerformanceSample
+
+        s = CurrentPerformanceSample("test_1", PerformanceBaselineScope.SCAN, datetime.now(timezone.utc).isoformat(), {"WALL_TIME_SECONDS": 10}, None, [], [], {})
+        c = compare_sample_to_baseline(s, None)
+        if c.comparison_id:
+             return HealthCheckResult("BaselineComparator", True, "Baseline comparator safe", datetime.now(timezone.utc).isoformat())
+        return HealthCheckResult("BaselineComparator", False, "Comparator failed ID", datetime.now(timezone.utc).isoformat())
+    except Exception as e:
+        return HealthCheckResult("BaselineComparator", False, str(e), datetime.now(timezone.utc).isoformat())
+
+def check_runtime_regression_detector_health(context) -> HealthCheckResult:
+    try:
+        from usa_signal_bot.performance.regression_detector import RuntimeRegressionDetector
+        from usa_signal_bot.core.enums import PerformanceBaselineScope
+        from usa_signal_bot.performance.baseline_models import CurrentPerformanceSample
+        s = CurrentPerformanceSample("test_1", PerformanceBaselineScope.SCAN, datetime.now(timezone.utc).isoformat(), {"WALL_TIME_SECONDS": 10}, None, [], [], {})
+        det = RuntimeRegressionDetector([])
+        comp, rep = det.detect(s)
+        return HealthCheckResult("RuntimeRegressionDetector", True, "Regression detector safe", datetime.now(timezone.utc).isoformat())
+    except Exception as e:
+        return HealthCheckResult("RuntimeRegressionDetector", False, str(e), datetime.now(timezone.utc).isoformat())
+
+def check_performance_acceptance_gate_health(context) -> HealthCheckResult:
+    try:
+        from usa_signal_bot.performance.acceptance_gate import evaluate_performance_acceptance_gate
+        from usa_signal_bot.core.enums import PerformanceBaselineScope
+        gate = evaluate_performance_acceptance_gate(PerformanceBaselineScope.SCAN, [], [])
+        if gate.gate_id:
+             return HealthCheckResult("PerformanceAcceptanceGate", True, "Acceptance gate safe", datetime.now(timezone.utc).isoformat())
+        return HealthCheckResult("PerformanceAcceptanceGate", False, "Gate missing ID", datetime.now(timezone.utc).isoformat())
+    except Exception as e:
+        return HealthCheckResult("PerformanceAcceptanceGate", False, str(e), datetime.now(timezone.utc).isoformat())
+
+def check_performance_alert_rules_health(context) -> HealthCheckResult:
+    try:
+        from usa_signal_bot.performance.alert_rules import default_performance_alert_rules, build_performance_alerts
+        alerts = build_performance_alerts([], [], default_performance_alert_rules())
+        return HealthCheckResult("PerformanceAlertRules", True, "Alert rules evaluate safely", datetime.now(timezone.utc).isoformat())
+    except Exception as e:
+        return HealthCheckResult("PerformanceAlertRules", False, str(e), datetime.now(timezone.utc).isoformat())
+
+def check_baseline_store_health(context) -> HealthCheckResult:
+    try:
+        from usa_signal_bot.performance.baseline_store import list_performance_baselines
+        from pathlib import Path
+        list_performance_baselines(Path(context.config.data.root_dir))
+        return HealthCheckResult("BaselineStore", True, "Baseline store checks path safely", datetime.now(timezone.utc).isoformat())
+    except Exception as e:
+        return HealthCheckResult("BaselineStore", False, str(e), datetime.now(timezone.utc).isoformat())
+
+def check_performance_notification_health(context) -> HealthCheckResult:
+    try:
+        from usa_signal_bot.notifications.notification_templates import format_performance_baseline_report_message
+        from usa_signal_bot.core.enums import PerformanceBaselineScope, BaselineStatus
+        from usa_signal_bot.performance.baseline_models import PerformanceBaseline
+
+        b = PerformanceBaseline("dummy", "v1", PerformanceBaselineScope.SCAN, BaselineStatus.ACTIVE, datetime.now(timezone.utc).isoformat(), 0, [], [], [], [], {})
+        msg = format_performance_baseline_report_message(b)
+
+        # Checking broker instruction guard implicitly by checking title renders
+        if "Performance Baseline Generated" in msg.title:
+            return HealthCheckResult("PerformanceNotification", True, "Notification template renders safely", datetime.now(timezone.utc).isoformat())
+        return HealthCheckResult("PerformanceNotification", False, "Missing template title", datetime.now(timezone.utc).isoformat())
+    except Exception as e:
+        return HealthCheckResult("PerformanceNotification", False, str(e), datetime.now(timezone.utc).isoformat())

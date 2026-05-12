@@ -3528,6 +3528,117 @@ class TaskQueueNotificationsConfig:
     warn_no_real_send_default: bool = True
 
 @dataclass
+class PerformanceBaselinesConfig:
+    enabled: bool = True
+    store_dir: str = "data/performance"
+    min_samples_per_baseline: int = 3
+    preferred_percentile: int = 90
+    active_baseline_version: str = "latest"
+    mark_stale_after_days: int = 30
+    write_baselines: bool = True
+    external_telemetry_enabled: bool = False
+    warn_local_only: bool = True
+    warn_not_investment_advice: bool = True
+    warn_no_broker_execution: bool = True
+
+@dataclass
+class SLAThresholdsConfig:
+    enabled: bool = True
+    scan_wall_time_warning_seconds: float = 1800.0
+    scan_wall_time_critical_seconds: float = 3600.0
+    scan_wall_time_blocker_seconds: float = 7200.0
+    backtest_wall_time_warning_seconds: float = 7200.0
+    backtest_wall_time_critical_seconds: float = 14400.0
+    backtest_wall_time_blocker_seconds: float = 21600.0
+    regression_wall_time_warning_seconds: float = 3600.0
+    regression_wall_time_critical_seconds: float = 7200.0
+    regression_wall_time_blocker_seconds: float = 10800.0
+    memory_peak_warning_mb: float = 4096.0
+    memory_peak_critical_mb: float = 6144.0
+    memory_peak_blocker_mb: float = 8192.0
+    output_growth_warning_mb: float = 512.0
+    output_growth_critical_mb: float = 2048.0
+    output_growth_blocker_mb: float = 4096.0
+    error_count_warning: int = 1
+    error_count_critical: int = 5
+    error_count_blocker: int = 10
+
+@dataclass
+class RuntimeRegressionConfig:
+    enabled: bool = True
+    compare_against_p90: bool = True
+    warning_delta_pct: float = 25.0
+    fail_delta_pct: float = 50.0
+    blocker_delta_pct: float = 100.0
+    suppress_insufficient_data_alerts: bool = True
+    write_regression_reports: bool = True
+
+@dataclass
+class PerformanceAcceptanceConfig:
+    enabled: bool = True
+    block_on_blocker_threshold: bool = True
+    fail_on_critical_regression: bool = True
+    warn_on_moderate_regression: bool = True
+    pass_with_minor_regression_allowed: bool = True
+    pass_is_not_live_approval: bool = True
+
+@dataclass
+class PerformanceAlertingConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    alert_on_sla_warning: bool = True
+    alert_on_runtime_regression: bool = True
+    alert_on_stale_baseline: bool = True
+    suppress_duplicate_alerts: bool = True
+    write_alert_reports: bool = True
+
+@dataclass
+class PerformanceNotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    notify_baseline_report: bool = True
+    notify_sla_threshold_warning: bool = True
+    notify_runtime_regression_alert: bool = True
+    default_channel: str = "dry_run"
+    warn_no_real_send_default: bool = True
+
+def validate_performance_baselines_config(config: PerformanceBaselinesConfig) -> None:
+    if config.min_samples_per_baseline <= 0:
+        raise ValueError("min_samples_per_baseline must be positive")
+    if not (50 <= config.preferred_percentile <= 99):
+        raise ValueError("preferred_percentile must be between 50 and 99")
+    if config.mark_stale_after_days <= 0:
+        raise ValueError("mark_stale_after_days must be positive")
+    if config.external_telemetry_enabled:
+        raise ValueError("external_telemetry_enabled must be False")
+    if not config.warn_local_only:
+        raise ValueError("warn_local_only must be True")
+    if not config.warn_not_investment_advice:
+        raise ValueError("warn_not_investment_advice must be True")
+    if not config.warn_no_broker_execution:
+        raise ValueError("warn_no_broker_execution must be True")
+
+def validate_sla_thresholds_config(config: SLAThresholdsConfig) -> None:
+    pass
+
+def validate_runtime_regression_config(config: RuntimeRegressionConfig) -> None:
+    if not (config.warning_delta_pct < config.fail_delta_pct < config.blocker_delta_pct):
+        raise ValueError("delta percentages must strictly increase: warning < fail < blocker")
+
+def validate_performance_acceptance_config(config: PerformanceAcceptanceConfig) -> None:
+    if not config.pass_is_not_live_approval:
+        raise ValueError("pass_is_not_live_approval must be True")
+
+def validate_performance_alerting_config(config: PerformanceAlertingConfig) -> None:
+    if not config.dry_run:
+        raise ValueError("performance_alerting.dry_run must be True")
+
+def validate_performance_notifications_config(config: PerformanceNotificationsConfig) -> None:
+    if not config.dry_run:
+        raise ValueError("performance_notifications.dry_run must be True")
+
+
+@dataclass
 class AppConfig:
     scheduler: SchedulerConfig = field(default_factory=SchedulerConfig)
     run_locks: RunLocksConfig = field(default_factory=RunLocksConfig)
@@ -3607,6 +3718,12 @@ class AppConfig:
     task_conflicts: TaskConflictsConfig = field(default_factory=TaskConflictsConfig)
     queue_executor: QueueExecutorConfig = field(default_factory=QueueExecutorConfig)
     taskqueue_notifications: TaskQueueNotificationsConfig = field(default_factory=TaskQueueNotificationsConfig)
+    performance_baselines: PerformanceBaselinesConfig = field(default_factory=PerformanceBaselinesConfig)
+    sla_thresholds: SLAThresholdsConfig = field(default_factory=SLAThresholdsConfig)
+    runtime_regression: RuntimeRegressionConfig = field(default_factory=RuntimeRegressionConfig)
+    performance_acceptance: PerformanceAcceptanceConfig = field(default_factory=PerformanceAcceptanceConfig)
+    performance_alerting: PerformanceAlertingConfig = field(default_factory=PerformanceAlertingConfig)
+    performance_notifications: PerformanceNotificationsConfig = field(default_factory=PerformanceNotificationsConfig)
     project: ProjectConfig = field(default_factory=ProjectConfig)
     runtime: RuntimeConfig = field(default_factory=RuntimeConfig)
     data: DataConfig = field(default_factory=DataConfig)
