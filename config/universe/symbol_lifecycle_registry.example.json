@@ -1,0 +1,32 @@
+[
+  {
+    "symbol": "SPY",
+    "status": "ACTIVE",
+    "source": "MANUAL_REGISTRY",
+    "first_seen_date": null,
+    "last_seen_date": null,
+    "listed_date": "1993-01-22",
+    "delisted_date": null,
+    "successor_symbol": null,
+    "predecessor_symbol": null,
+    "reason": null,
+    "confidence": null,
+    "notes": [],
+    "metadata": {}
+  },
+  {
+    "symbol": "TWTR",
+    "status": "ACQUIRED",
+    "source": "MANUAL_REGISTRY",
+    "first_seen_date": null,
+    "last_seen_date": null,
+    "listed_date": null,
+    "delisted_date": "2022-10-28",
+    "successor_symbol": null,
+    "predecessor_symbol": null,
+    "reason": "Acquired by Elon Musk",
+    "confidence": null,
+    "notes": [],
+    "metadata": {}
+  }
+]

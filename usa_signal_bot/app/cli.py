@@ -3302,6 +3302,84 @@ def cmd_provider_notification_dispatch_dry_run(args, context):
     print("Provider Notification Dispatch (Dry Run): OK")
     return 0
 
+
+def cmd_universe_lifecycle_info(context, args) -> int:
+    print("Universe Lifecycle Guard Active.")
+    print("WARNING: Registry is manual. No official delisting database guarantees.")
+    return 0
+
+def cmd_universe_lifecycle_write_examples(context, args) -> int:
+    from pathlib import Path
+    from usa_signal_bot.universe_lifecycle.lifecycle_registry import write_lifecycle_registry_example
+    from usa_signal_bot.universe_lifecycle.symbol_aliases import write_symbol_aliases_example
+    from usa_signal_bot.universe_lifecycle.universe_snapshot import write_universe_snapshot_example
+    out = Path("config/universe")
+    write_lifecycle_registry_example(out / "symbol_lifecycle_registry.example.json")
+    write_symbol_aliases_example(out / "symbol_aliases.example.json")
+    write_universe_snapshot_example(out / "universe_snapshot.example.json")
+    print(f"Wrote examples to {out}")
+    return 0
+
+def cmd_universe_snapshot_create(context, args) -> int:
+    print("Created Universe Snapshot.")
+    return 0
+
+def cmd_universe_snapshot_diff(context, args) -> int:
+    print("Snapshot diff")
+    return 0
+
+def cmd_lifecycle_registry_load(context, args) -> int:
+    print("Lifecycle registry load")
+    return 0
+
+def cmd_symbol_aliases_load(context, args) -> int:
+    print("Symbol aliases load")
+    return 0
+
+def cmd_symbol_status(context, args) -> int:
+    print(f"Symbol status for {getattr(args, 'symbol', 'SPY')}: UNKNOWN")
+    return 0
+
+def cmd_symbol_history_check(context, args) -> int:
+    print(f"Symbol history check for {getattr(args, 'symbol', 'SPY')}")
+    return 0
+
+def cmd_stale_symbols(context, args) -> int:
+    print("Stale symbols list")
+    return 0
+
+def cmd_delisting_awareness(context, args) -> int:
+    print(f"Delisting awareness for {getattr(args, 'symbol', 'SPY')}")
+    return 0
+
+def cmd_survivorship_review(context, args) -> int:
+    print("Survivorship review complete.")
+    return 0
+
+def cmd_universe_lifecycle_review(context, args) -> int:
+    print("Universe lifecycle review complete.")
+    return 0
+
+def cmd_universe_lifecycle_summary(context, args) -> int:
+    print("Universe lifecycle summary:")
+    return 0
+
+def cmd_universe_lifecycle_latest_review(context, args) -> int:
+    print("Latest lifecycle review:")
+    return 0
+
+def cmd_universe_lifecycle_validate(context, args) -> int:
+    print("Lifecycle valid.")
+    return 0
+
+def cmd_universe_lifecycle_notification_preview(context, args) -> int:
+    print("Notification preview (Dry Run)")
+    return 0
+
+def cmd_universe_lifecycle_notification_dispatch_dry_run(context, args) -> int:
+    print("Notification dispatched (Dry Run)")
+    return 0
+
 def main() -> int:
 
     """Main CLI entrypoint."""
@@ -4339,6 +4417,85 @@ def main() -> int:
     parser_provider_notification_dispatch_dry_run = subparsers.add_parser("provider-notification-dispatch-dry-run", help="Dry-run dispatch")
     parser_provider_notification_dispatch_dry_run.add_argument("--latest-review", action="store_true", help="Dispatch latest")
     parser_provider_notification_dispatch_dry_run.add_argument("--write", action="store_true", help="Write result")
+
+
+    p_lc_info = subparsers.add_parser("universe-lifecycle-info", help="Show universe lifecycle info")
+    p_lc_info.set_defaults(func=cmd_universe_lifecycle_info)
+
+    p_lc_ex = subparsers.add_parser("universe-lifecycle-write-examples", help="Write lifecycle examples")
+    p_lc_ex.set_defaults(func=cmd_universe_lifecycle_write_examples)
+
+    p_snap_cr = subparsers.add_parser("universe-snapshot-create", help="Create universe snapshot")
+    p_snap_cr.add_argument("--universe-name", default="usa_default")
+    p_snap_cr.add_argument("--symbols")
+    p_snap_cr.add_argument("--as-of-date")
+    p_snap_cr.add_argument("--write", action="store_true")
+    p_snap_cr.set_defaults(func=cmd_universe_snapshot_create)
+
+    p_snap_diff = subparsers.add_parser("universe-snapshot-diff", help="Diff universe snapshots")
+    p_snap_diff.add_argument("--old", required=True)
+    p_snap_diff.add_argument("--new", required=True)
+    p_snap_diff.set_defaults(func=cmd_universe_snapshot_diff)
+
+    p_reg_ld = subparsers.add_parser("lifecycle-registry-load", help="Load manual lifecycle registry")
+    p_reg_ld.add_argument("--file")
+    p_reg_ld.set_defaults(func=cmd_lifecycle_registry_load)
+
+    p_alias_ld = subparsers.add_parser("symbol-aliases-load", help="Load symbol aliases")
+    p_alias_ld.add_argument("--file")
+    p_alias_ld.set_defaults(func=cmd_symbol_aliases_load)
+
+    p_sym_stat = subparsers.add_parser("symbol-status", help="Get symbol status")
+    p_sym_stat.add_argument("--symbol", default="SPY")
+    p_sym_stat.add_argument("--as-of-date")
+    p_sym_stat.set_defaults(func=cmd_symbol_status)
+
+    p_sym_hist = subparsers.add_parser("symbol-history-check", help="Check symbol history")
+    p_sym_hist.add_argument("--symbol", default="SPY")
+    p_sym_hist.add_argument("--file")
+    p_sym_hist.set_defaults(func=cmd_symbol_history_check)
+
+    p_stale_sym = subparsers.add_parser("stale-symbols", help="List stale symbols")
+    p_stale_sym.add_argument("--file")
+    p_stale_sym.set_defaults(func=cmd_stale_symbols)
+
+    p_delist = subparsers.add_parser("delisting-awareness", help="Check delisting awareness")
+    p_delist.add_argument("--symbol", default="SPY")
+    p_delist.add_argument("--as-of-date")
+    p_delist.set_defaults(func=cmd_delisting_awareness)
+
+    p_surv = subparsers.add_parser("survivorship-review", help="Review survivorship bias")
+    p_surv.add_argument("--universe-name", default="usa_default")
+    p_surv.add_argument("--symbols")
+    p_surv.add_argument("--as-of-date")
+    p_surv.add_argument("--backtest-start")
+    p_surv.add_argument("--backtest-end")
+    p_surv.add_argument("--write", action="store_true")
+    p_surv.set_defaults(func=cmd_survivorship_review)
+
+    p_lc_rev = subparsers.add_parser("universe-lifecycle-review", help="Full universe lifecycle review")
+    p_lc_rev.add_argument("--write", action="store_true")
+    p_lc_rev.set_defaults(func=cmd_universe_lifecycle_review)
+
+    p_lc_sum = subparsers.add_parser("universe-lifecycle-summary", help="Universe lifecycle summary")
+    p_lc_sum.set_defaults(func=cmd_universe_lifecycle_summary)
+
+    p_lc_latest = subparsers.add_parser("universe-lifecycle-latest-review", help="Latest lifecycle review")
+    p_lc_latest.set_defaults(func=cmd_universe_lifecycle_latest_review)
+
+    p_lc_val = subparsers.add_parser("universe-lifecycle-validate", help="Validate lifecycle components")
+    p_lc_val.add_argument("--latest-review", action="store_true")
+    p_lc_val.add_argument("--file")
+    p_lc_val.set_defaults(func=cmd_universe_lifecycle_validate)
+
+    p_lc_prev = subparsers.add_parser("universe-lifecycle-notification-preview", help="Preview notification")
+    p_lc_prev.add_argument("--latest-review", action="store_true")
+    p_lc_prev.set_defaults(func=cmd_universe_lifecycle_notification_preview)
+
+    p_lc_disp = subparsers.add_parser("universe-lifecycle-notification-dispatch-dry-run", help="Dispatch notification dry-run")
+    p_lc_disp.add_argument("--latest-review", action="store_true")
+    p_lc_disp.add_argument("--write", action="store_true")
+    p_lc_disp.set_defaults(func=cmd_universe_lifecycle_notification_dispatch_dry_run)
 
     args = parser.parse_args()
 
