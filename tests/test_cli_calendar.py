@@ -1,5 +1,3 @@
 """CLI tests."""
-import subprocess
-
 def test_dummy_cli():
     assert True

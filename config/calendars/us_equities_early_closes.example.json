@@ -1,0 +1,20 @@
+[
+    {
+        "date": "2024-07-03",
+        "close_time_local": "13:00",
+        "name": "Day before Independence Day",
+        "calendar_name": "US_EQUITIES"
+    },
+    {
+        "date": "2024-11-29",
+        "close_time_local": "13:00",
+        "name": "Day after Thanksgiving",
+        "calendar_name": "US_EQUITIES"
+    },
+    {
+        "date": "2024-12-24",
+        "close_time_local": "13:00",
+        "name": "Christmas Eve",
+        "calendar_name": "US_EQUITIES"
+    }
+]

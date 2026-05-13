@@ -1,0 +1,21 @@
+[
+    {
+        "symbol": "AAPL",
+        "action_type": "SPLIT",
+        "ex_date": "2020-08-31",
+        "ratio_numerator": 4,
+        "ratio_denominator": 1,
+        "notes": [
+            "Example 4-for-1 split"
+        ]
+    },
+    {
+        "symbol": "MSFT",
+        "action_type": "DIVIDEND",
+        "ex_date": "2023-11-15",
+        "value": 0.75,
+        "notes": [
+            "Example quarterly dividend"
+        ]
+    }
+]
