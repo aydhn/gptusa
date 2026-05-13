@@ -38,6 +38,15 @@ class DataReadinessReport(BaseDomainModel):
     ready_items: int = 0
     partial_items: int = 0
     failed_items: int = 0
+
+    liquidity_status_summary: dict[str, int] = field(default_factory=dict)
+    illiquid_symbol_count: int = 0
+    thin_liquidity_symbol_count: int = 0
+    insufficient_liquidity_data_count: int = 0
+    high_spread_proxy_count: int = 0
+    high_slippage_proxy_count: int = 0
+    stale_data_execution_count: int = 0
+    execution_realism_status: str = "UNKNOWN"
     items: list[DataReadinessItem] = field(default_factory=list)
     blocking_reasons: list[str] = field(default_factory=list)
     warnings: list[str] = field(default_factory=list)

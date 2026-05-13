@@ -199,3 +199,70 @@ performance_notifications:
   notify_runtime_regression_alert: true
   default_channel: "dry_run"
   warn_no_real_send_default: true
+
+execution_realism:
+  enabled: true
+  write_execution_reports: true
+  warn_no_broker_execution: true
+  warn_not_investment_advice: true
+  warn_proxies_are_heuristic: true
+  no_real_borrow_feed: true
+
+liquidity_guard:
+  enabled: true
+  lookback_bars: 60
+  min_price: 2.0
+  penny_stock_price_threshold: 5.0
+  min_avg_daily_volume: 500000.0
+  min_avg_dollar_volume: 5000000.0
+  thin_avg_daily_volume: 1000000.0
+  thin_avg_dollar_volume: 10000000.0
+  max_stale_days: 5
+  block_signal_on_illiquid: true
+  warn_on_thin_liquidity: true
+
+spread_slippage_proxy:
+  enabled: true
+  max_spread_proxy_bps: 100.0
+  max_slippage_proxy_bps: 150.0
+  high_spread_proxy_bps: 200.0
+  high_slippage_proxy_bps: 300.0
+  use_atr_penalty: true
+  use_gap_penalty: true
+  use_low_price_penalty: true
+
+volume_participation:
+  enabled: true
+  default_notional_usd: 1000.0
+  max_participation_pct: 1.0
+  high_participation_pct: 5.0
+  critical_participation_pct: 10.0
+  block_backtest_fill_on_critical_participation: true
+
+borrowability_proxy:
+  enabled: true
+  no_real_borrow_feed: true
+  low_price_penalty: true
+  low_liquidity_penalty: true
+  high_volatility_penalty: true
+  lifecycle_risk_penalty: true
+  corporate_action_risk_penalty: true
+  block_short_on_likely_unavailable: true
+  require_review_on_hard_to_borrow_proxy: true
+
+execution_quality:
+  enabled: true
+  liquidity_quality_weight: 0.30
+  tradability_weight: 0.25
+  slippage_realism_weight: 0.20
+  borrowability_proxy_weight: 0.10
+  participation_weight: 0.15
+
+execution_notifications:
+  enabled: true
+  dry_run: true
+  notify_liquidity_warning: true
+  notify_tradability_guard: true
+  notify_execution_realism_warning: true
+  default_channel: "dry_run"
+  warn_no_real_send_default: true

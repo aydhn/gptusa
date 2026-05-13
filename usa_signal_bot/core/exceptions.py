@@ -1097,3 +1097,36 @@ class LifecycleValidationError(USASignalBotError):
 
 class LifecycleReportingError(USASignalBotError):
     pass
+
+class ExecutionRealismError(USASignalBotError):
+    pass
+
+class LiquidityMetricError(ExecutionRealismError):
+    pass
+
+class SpreadProxyError(ExecutionRealismError):
+    pass
+
+class SlippageProxyError(ExecutionRealismError):
+    pass
+
+class VolumeParticipationError(ExecutionRealismError):
+    pass
+
+class TradabilityGuardError(ExecutionRealismError):
+    pass
+
+class BorrowabilityProxyError(ExecutionRealismError):
+    pass
+
+class ShortRealismGuardError(ExecutionRealismError):
+    pass
+
+class ExecutionStorageError(ExecutionRealismError):
+    pass
+
+class ExecutionValidationError(ExecutionRealismError):
+    pass
+
+class ExecutionReportingError(ExecutionRealismError):
+    pass

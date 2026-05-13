@@ -247,3 +247,48 @@ def get_selected_signals(report: CandidateSelectionReport) -> List[StrategySigna
 
 def get_selected_ranked_signals(report: CandidateSelectionReport) -> List[RankedSignal]:
     return [c.ranked_signal for c in report.selected_candidates]
+
+from usa_signal_bot.execution.liquidity_models import TradabilityGuardResult
+from usa_signal_bot.execution.signal_adapter import attach_execution_realism_to_candidate, suppress_candidate_if_untradable
+
+def apply_tradability_to_candidates(candidates: list[dict[str, Any]], guard_results: list[TradabilityGuardResult]) -> list[dict[str, Any]]:
+    # A non-intrusive way to inject execution realism metadata to candidate dict representations
+    results_map = {r.symbol: r for r in guard_results}
+
+    out = []
+    for c in candidates:
+        symbol = c.get("symbol")
+        if symbol in results_map:
+            c = attach_execution_realism_to_candidate(c, results_map[symbol])
+            c = suppress_candidate_if_untradable(c, results_map[symbol])
+        out.append(c)
+    return out
+
+def filter_untradable_candidates(candidates: list[dict[str, Any]], strict: bool = False) -> list[dict[str, Any]]:
+    out = []
+    for c in candidates:
+        meta = c.get("metadata", {})
+        if strict and meta.get("suppressed", False):
+            continue
+        out.append(c)
+    return out
+
+def candidate_tradability_summary(candidates: list[dict[str, Any]]) -> dict[str, Any]:
+    suppressed = 0
+    tradable = 0
+    caution = 0
+    for c in candidates:
+        meta = c.get("metadata", {})
+        if meta.get("suppressed", False):
+            suppressed += 1
+        elif meta.get("tradability_status") == "TRADABLE":
+            tradable += 1
+        else:
+            caution += 1
+
+    return {
+        "total_candidates": len(candidates),
+        "tradable_count": tradable,
+        "caution_count": caution,
+        "suppressed_count": suppressed
+    }
