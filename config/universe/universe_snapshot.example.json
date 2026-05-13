@@ -1,0 +1,18 @@
+{
+  "snapshot_id": "universe_snapshot_3401ab2b",
+  "created_at_utc": "2026-05-13T15:53:37.149199+00:00",
+  "snapshot_type": "HISTORICAL",
+  "as_of_date": "2020-01-01",
+  "universe_name": "example_universe",
+  "symbols": [
+    "AAPL",
+    "DELISTED_CO",
+    "MSFT",
+    "TSLA"
+  ],
+  "source": "MANUAL_REGISTRY",
+  "symbol_count": 4,
+  "metadata": {},
+  "warnings": [],
+  "errors": []
+}

@@ -1061,3 +1061,39 @@ class CorporateActionValidationError(Exception):
 
 class CorporateActionReportingError(Exception):
     """Raised for corporate action reporting errors."""
+
+class UniverseLifecycleError(USASignalBotError):
+    pass
+
+class LifecycleRegistryError(USASignalBotError):
+    pass
+
+class UniverseSnapshotError(USASignalBotError):
+    pass
+
+class SymbolAliasError(USASignalBotError):
+    pass
+
+class SymbolStatusResolverError(USASignalBotError):
+    pass
+
+class DelistingAwarenessError(USASignalBotError):
+    pass
+
+class MissingHistoryError(USASignalBotError):
+    pass
+
+class StaleSymbolError(USASignalBotError):
+    pass
+
+class SurvivorshipBiasGuardError(USASignalBotError):
+    pass
+
+class LifecycleStorageError(USASignalBotError):
+    pass
+
+class LifecycleValidationError(USASignalBotError):
+    pass
+
+class LifecycleReportingError(USASignalBotError):
+    pass

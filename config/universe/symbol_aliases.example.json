@@ -1,0 +1,22 @@
+[
+  {
+    "alias_id": "alias_e9c624d8",
+    "old_symbol": "FB",
+    "new_symbol": "META",
+    "alias_type": "TICKER_CHANGE",
+    "effective_date": "2022-06-09",
+    "source": "MANUAL_REGISTRY",
+    "confidence": null,
+    "notes": []
+  },
+  {
+    "alias_id": "alias_e93ba708",
+    "old_symbol": "SQ",
+    "new_symbol": "BLOCK",
+    "alias_type": "TICKER_CHANGE",
+    "effective_date": "2021-12-10",
+    "source": "MANUAL_REGISTRY",
+    "confidence": null,
+    "notes": []
+  }
+]
