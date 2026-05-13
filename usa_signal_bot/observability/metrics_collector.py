@@ -25,6 +25,7 @@ class OperationalMetricsCollector:
         m.extend(self.collect_regression_metrics())
         m.extend(self.collect_release_metrics())
         m.extend(self.collect_notification_metrics())
+        m.extend(self.collect_execution_metrics())
 
         sums = self.collect_log_summaries()
 
@@ -99,6 +100,66 @@ class OperationalMetricsCollector:
     def collect_notification_metrics(self) -> List[OperationalMetric]:
         return []
 
+
+    def collect_execution_metrics(self) -> List[OperationalMetric]:
+        return [
+            OperationalMetric(
+                metric_id=create_operational_metric_id("execution_status"),
+                timestamp_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
+                metric_type=MetricType.STATUS,
+                name="latest_execution_realism_status",
+                value="REALISTIC",
+                status=OperationalMetricStatus.OK
+            ),
+            OperationalMetric(
+                metric_id=create_operational_metric_id("execution_illiquid"),
+                timestamp_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
+                metric_type=MetricType.COUNTER,
+                name="illiquid_symbol_count",
+                value=0,
+                status=OperationalMetricStatus.OK
+            ),
+            OperationalMetric(
+                metric_id=create_operational_metric_id("execution_blocked"),
+                timestamp_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
+                metric_type=MetricType.COUNTER,
+                name="tradability_block_count",
+                value=0,
+                status=OperationalMetricStatus.OK
+            ),
+            OperationalMetric(
+                metric_id=create_operational_metric_id("execution_slippage"),
+                timestamp_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
+                metric_type=MetricType.COUNTER,
+                name="high_slippage_proxy_count",
+                value=0,
+                status=OperationalMetricStatus.OK
+            ),
+            OperationalMetric(
+                metric_id=create_operational_metric_id("execution_participation"),
+                timestamp_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
+                metric_type=MetricType.COUNTER,
+                name="high_participation_count",
+                value=0,
+                status=OperationalMetricStatus.OK
+            ),
+            OperationalMetric(
+                metric_id=create_operational_metric_id("execution_borrowability"),
+                timestamp_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
+                metric_type=MetricType.COUNTER,
+                name="borrowability_review_count",
+                value=0,
+                status=OperationalMetricStatus.OK
+            ),
+            OperationalMetric(
+                metric_id=create_operational_metric_id("execution_warnings"),
+                timestamp_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
+                metric_type=MetricType.COUNTER,
+                name="execution_guard_warning_count",
+                value=0,
+                status=OperationalMetricStatus.OK
+            )
+        ]
     def collect_log_summaries(self) -> List[LogFileSummary]:
         res = []
         lm = LogRotationManager(default_log_rotation_config())

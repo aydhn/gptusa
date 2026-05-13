@@ -3710,7 +3710,90 @@ class DataProvidersConfig:
     warn_no_broker_execution: bool = True
 
 @dataclass
+
+@dataclass
+class ExecutionRealismConfig:
+    enabled: bool = True
+    write_execution_reports: bool = True
+    warn_no_broker_execution: bool = True
+    warn_not_investment_advice: bool = True
+    warn_proxies_are_heuristic: bool = True
+    no_real_borrow_feed: bool = True
+
+@dataclass
+class LiquidityGuardConfig:
+    enabled: bool = True
+    lookback_bars: int = 60
+    min_price: float = 2.0
+    penny_stock_price_threshold: float = 5.0
+    min_avg_daily_volume: float = 500000.0
+    min_avg_dollar_volume: float = 5000000.0
+    thin_avg_daily_volume: float = 1000000.0
+    thin_avg_dollar_volume: float = 10000000.0
+    max_stale_days: int = 5
+    block_signal_on_illiquid: bool = True
+    warn_on_thin_liquidity: bool = True
+
+@dataclass
+class SpreadSlippageProxyConfig:
+    enabled: bool = True
+    max_spread_proxy_bps: float = 100.0
+    max_slippage_proxy_bps: float = 150.0
+    high_spread_proxy_bps: float = 200.0
+    high_slippage_proxy_bps: float = 300.0
+    use_atr_penalty: bool = True
+    use_gap_penalty: bool = True
+    use_low_price_penalty: bool = True
+
+@dataclass
+class VolumeParticipationConfig:
+    enabled: bool = True
+    default_notional_usd: float = 1000.0
+    max_participation_pct: float = 1.0
+    high_participation_pct: float = 5.0
+    critical_participation_pct: float = 10.0
+    block_backtest_fill_on_critical_participation: bool = True
+
+@dataclass
+class BorrowabilityProxyConfig:
+    enabled: bool = True
+    no_real_borrow_feed: bool = True
+    low_price_penalty: bool = True
+    low_liquidity_penalty: bool = True
+    high_volatility_penalty: bool = True
+    lifecycle_risk_penalty: bool = True
+    corporate_action_risk_penalty: bool = True
+    block_short_on_likely_unavailable: bool = True
+    require_review_on_hard_to_borrow_proxy: bool = True
+
+@dataclass
+class ExecutionQualityConfig:
+    enabled: bool = True
+    liquidity_quality_weight: float = 0.30
+    tradability_weight: float = 0.25
+    slippage_realism_weight: float = 0.20
+    borrowability_proxy_weight: float = 0.10
+    participation_weight: float = 0.15
+
+@dataclass
+class ExecutionNotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    notify_liquidity_warning: bool = True
+    notify_tradability_guard: bool = True
+    notify_execution_realism_warning: bool = True
+    default_channel: str = "dry_run"
+    warn_no_real_send_default: bool = True
+@dataclass
 class AppConfig:
+
+    execution_realism: ExecutionRealismConfig = field(default_factory=ExecutionRealismConfig)
+    liquidity_guard: LiquidityGuardConfig = field(default_factory=LiquidityGuardConfig)
+    spread_slippage_proxy: SpreadSlippageProxyConfig = field(default_factory=SpreadSlippageProxyConfig)
+    volume_participation: VolumeParticipationConfig = field(default_factory=VolumeParticipationConfig)
+    borrowability_proxy: BorrowabilityProxyConfig = field(default_factory=BorrowabilityProxyConfig)
+    execution_quality: ExecutionQualityConfig = field(default_factory=ExecutionQualityConfig)
+    execution_notifications: ExecutionNotificationsConfig = field(default_factory=ExecutionNotificationsConfig)
     scheduler: SchedulerConfig = field(default_factory=SchedulerConfig)
     data_providers: DataProvidersConfig = field(default_factory=DataProvidersConfig)
     yfinance_provider: YFinanceProviderConfig = field(default_factory=YFinanceProviderConfig)

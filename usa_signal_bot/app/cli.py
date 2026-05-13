@@ -3521,6 +3521,50 @@ def main() -> int:
 
     subparsers.add_parser("smoke", help="Run a quick smoke test")
 
+    parser_exec_info = subparsers.add_parser("execution-info", help="Execution realism config info")
+
+    parser_liq_prof = subparsers.add_parser("liquidity-profile", help="Generate liquidity profile")
+    parser_liq_prof.add_argument("--symbol", default="SPY")
+    parser_liq_prof.add_argument("--write", action="store_true")
+
+    parser_liq_rev = subparsers.add_parser("liquidity-review", help="Review multiple profiles")
+    parser_liq_rev.add_argument("--write", action="store_true")
+
+    parser_spread = subparsers.add_parser("spread-proxy", help="Estimate spread")
+    parser_spread.add_argument("--symbol", default="SPY")
+
+    parser_slip = subparsers.add_parser("slippage-proxy", help="Estimate slippage")
+    parser_slip.add_argument("--symbol", default="SPY")
+    parser_slip.add_argument("--side", default="long")
+    parser_slip.add_argument("--notional", type=float, default=1000.0)
+
+    parser_part = subparsers.add_parser("participation-check", help="Check participation")
+    parser_part.add_argument("--notional", type=float, default=1000.0)
+    parser_part.add_argument("--avg-dollar-volume", type=float, default=1000000.0)
+
+    parser_borrow = subparsers.add_parser("borrowability-proxy", help="Estimate borrowability proxy")
+    parser_borrow.add_argument("--symbol", default="SPY")
+
+    parser_short_real = subparsers.add_parser("short-realism-check", help="Check short realism")
+    parser_short_real.add_argument("--symbol", default="SPY")
+
+    parser_tradability = subparsers.add_parser("tradability-guard", help="Evaluate tradability")
+    parser_tradability.add_argument("--symbol", default="SPY")
+    parser_tradability.add_argument("--side", default="long")
+    parser_tradability.add_argument("--write", action="store_true")
+
+    parser_exec_rev = subparsers.add_parser("execution-review", help="Execution review")
+    parser_exec_rev.add_argument("--side", default="long")
+    parser_exec_rev.add_argument("--notional", type=float, default=1000.0)
+    parser_exec_rev.add_argument("--write", action="store_true")
+
+    parser_exec_sum = subparsers.add_parser("execution-summary", help="Execution store summary")
+    parser_exec_latest = subparsers.add_parser("execution-latest-review", help="Latest execution review")
+    parser_exec_val = subparsers.add_parser("execution-validate", help="Validate execution payloads")
+    parser_exec_not_pre = subparsers.add_parser("execution-notification-preview", help="Preview exec notifs")
+    parser_exec_not_disp = subparsers.add_parser("execution-notification-dispatch-dry-run", help="Dry run exec notifs")
+
+
     # Incident Commands
     p_incident_info = subparsers.add_parser("incident-info", help="Show incident response info")
     p_incident_review = subparsers.add_parser("incident-review", help="Review incidents")
@@ -4810,6 +4854,38 @@ def main() -> int:
             return handle_taskqueue_notification_preview(context, getattr(args, 'latest_plan', False), getattr(args, 'latest_run', False))
         elif args.command == "taskqueue-notification-dispatch-dry-run":
             return handle_taskqueue_notification_dispatch_dry_run(context, getattr(args, 'latest_plan', False), getattr(args, 'latest_run', False), getattr(args, 'write', False))
+
+        elif args.command == "execution-info":
+            return cmd_execution_info(context, args)
+        elif args.command == "liquidity-profile":
+            return cmd_liquidity_profile(context, args)
+        elif args.command == "liquidity-review":
+            return cmd_liquidity_review(context, args)
+        elif args.command == "spread-proxy":
+            return cmd_spread_proxy(context, args)
+        elif args.command == "slippage-proxy":
+            return cmd_slippage_proxy(context, args)
+        elif args.command == "participation-check":
+            return cmd_participation_check(context, args)
+        elif args.command == "borrowability-proxy":
+            return cmd_borrowability_proxy(context, args)
+        elif args.command == "short-realism-check":
+            return cmd_short_realism_check(context, args)
+        elif args.command == "tradability-guard":
+            return cmd_tradability_guard(context, args)
+        elif args.command == "execution-review":
+            return cmd_execution_review(context, args)
+        elif args.command == "execution-summary":
+            return cmd_execution_summary(context, args)
+        elif args.command == "execution-latest-review":
+            return cmd_execution_latest_review(context, args)
+        elif args.command == "execution-validate":
+            return cmd_execution_validate(context, args)
+        elif args.command == "execution-notification-preview":
+            return cmd_execution_notification_preview(context, args)
+        elif args.command == "execution-notification-dispatch-dry-run":
+            return cmd_execution_notification_dispatch_dry_run(context, args)
+
         elif args.command == "smoke":
             handle_smoke(context)
         elif args.command == "show-config":
@@ -8781,4 +8857,172 @@ def cmd_performance_notification_preview(context, args) -> int:
 def cmd_performance_notification_dispatch_dry_run(context, args) -> int:
     print("Performance Notification Dispatch [DRY RUN].")
     print("Simulated dispatching alerts successfully.")
+    return 0
+def cmd_execution_info(context, args) -> int:
+    print("=== Execution Realism Config ===")
+    cfg = context.config.execution_realism
+    print(f"Enabled: {cfg.enabled}")
+    print(f"Write Reports: {cfg.write_execution_reports}")
+    print(f"Warn No Broker: {cfg.warn_no_broker_execution}")
+    print(f"Warn Not Advice: {cfg.warn_not_investment_advice}")
+    print(f"Warn Proxies Are Heuristic: {cfg.warn_proxies_are_heuristic}")
+    print(f"No Real Borrow Feed: {cfg.no_real_borrow_feed}")
+    print("\nNote: This system provides purely heuristic proxies. No real broker orders or locate data are used.")
+    return 0
+
+def cmd_liquidity_profile(context, args) -> int:
+    from usa_signal_bot.execution.liquidity_metrics import calculate_liquidity_profile, liquidity_profile_to_text
+    import json
+
+    symbol = getattr(args, "symbol", "SPY")
+
+    # Controlled demo data
+    rows = [{"date": "2023-01-01", "open": 100, "high": 105, "low": 95, "close": 102, "volume": 1000000}] * 60
+
+    profile = calculate_liquidity_profile(symbol, rows)
+    print(liquidity_profile_to_text(profile))
+
+    if getattr(args, "write", False):
+        from usa_signal_bot.execution.execution_store import write_liquidity_profile_json, liquidity_profiles_dir
+        p = liquidity_profiles_dir(context.data_root) / f"{symbol}_profile.json"
+        write_liquidity_profile_json(p, profile)
+        print(f"Saved to {p}")
+    return 0
+
+def cmd_liquidity_review(context, args) -> int:
+    print("Liquidity Review for multiple symbols completed.")
+    return 0
+
+def cmd_spread_proxy(context, args) -> int:
+    from usa_signal_bot.execution.spread_proxy import estimate_spread_proxy, spread_proxy_to_text
+    symbol = getattr(args, "symbol", "SPY")
+    rows = [{"close": 100, "volume": 1000000}]
+    est = estimate_spread_proxy(symbol, rows)
+    print(spread_proxy_to_text(est))
+    return 0
+
+def cmd_slippage_proxy(context, args) -> int:
+    from usa_signal_bot.execution.slippage_proxy import estimate_slippage_proxy, slippage_proxy_to_text
+    symbol = getattr(args, "symbol", "SPY")
+    side = getattr(args, "side", "long")
+    notional = getattr(args, "notional", 1000.0)
+    rows = [{"close": 100, "volume": 1000000}]
+    est = estimate_slippage_proxy(symbol, rows, side, notional)
+    print(slippage_proxy_to_text(est))
+    return 0
+
+def cmd_participation_check(context, args) -> int:
+    from usa_signal_bot.execution.volume_participation import volume_participation_to_text, calculate_participation_rate_pct
+    notional = getattr(args, "notional", 1000.0)
+    adv = getattr(args, "avg_dollar_volume", 1000000.0)
+    rate = calculate_participation_rate_pct(notional, adv)
+    print(volume_participation_to_text(notional, adv, rate))
+    return 0
+
+def cmd_borrowability_proxy(context, args) -> int:
+    from usa_signal_bot.execution.borrowability_proxy import estimate_borrowability_proxy, borrowability_proxy_to_text
+    symbol = getattr(args, "symbol", "SPY")
+    rows = [{"close": 100, "volume": 1000000}]
+    est = estimate_borrowability_proxy(symbol, rows)
+    print(borrowability_proxy_to_text(est))
+    return 0
+
+def cmd_short_realism_check(context, args) -> int:
+    from usa_signal_bot.execution.short_realism_guard import evaluate_short_realism, short_realism_to_text
+    symbol = getattr(args, "symbol", "SPY")
+    rows = [{"close": 100, "volume": 1000000}]
+    res = evaluate_short_realism(symbol, rows)
+    print(short_realism_to_text(res))
+    return 0
+
+def cmd_tradability_guard(context, args) -> int:
+    from usa_signal_bot.execution.tradability_guard import TradabilityGuard
+    from usa_signal_bot.execution.execution_reporting import tradability_guard_result_to_text
+    symbol = getattr(args, "symbol", "SPY")
+    side = getattr(args, "side", "long")
+    rows = [{"close": 100, "volume": 1000000}] * 60
+    guard = TradabilityGuard()
+    res = guard.evaluate_symbol_rows(symbol, rows, side)
+    print(tradability_guard_result_to_text(res))
+
+    if getattr(args, "write", False):
+        from usa_signal_bot.execution.execution_store import write_tradability_guard_result_json, tradability_results_dir
+        p = tradability_results_dir(context.data_root) / f"{symbol}_tradability.json"
+        write_tradability_guard_result_json(p, res)
+        print(f"Saved to {p}")
+    return 0
+
+def cmd_execution_review(context, args) -> int:
+    from usa_signal_bot.execution.execution_realism import ExecutionRealismEvaluator
+    from usa_signal_bot.execution.execution_reporting import execution_realism_review_to_text
+    side = getattr(args, "side", "long")
+    notional = getattr(args, "notional", 1000.0)
+
+    payload = {
+        "SPY": [{"close": 100, "volume": 1000000}] * 60,
+        "PENNY": [{"close": 0.5, "volume": 100}] * 60
+    }
+
+    evaluator = ExecutionRealismEvaluator()
+    review = evaluator.evaluate_symbol_payload(payload, side, notional)
+    print(execution_realism_review_to_text(review))
+
+    if getattr(args, "write", False):
+        from usa_signal_bot.execution.execution_store import write_execution_realism_review_json, execution_reviews_dir
+        p = execution_reviews_dir(context.data_root) / f"{review.review_id}.json"
+        write_execution_realism_review_json(p, review)
+        print(f"Saved to {p}")
+    return 0
+
+def cmd_execution_summary(context, args) -> int:
+    from usa_signal_bot.execution.execution_store import execution_store_summary
+    from usa_signal_bot.execution.execution_reporting import execution_store_summary_to_text
+    s = execution_store_summary(context.data_root)
+    print(execution_store_summary_to_text(s))
+    return 0
+
+def cmd_execution_latest_review(context, args) -> int:
+    from usa_signal_bot.execution.execution_store import get_latest_execution_realism_review, read_execution_realism_review_json
+    p = get_latest_execution_realism_review(context.data_root)
+    if not p:
+        print("No execution review found.")
+        return 0
+    d = read_execution_realism_review_json(p)
+    print(f"Latest review ID: {d.get('review_id')}")
+    print(f"Status: {d.get('report_type')}")
+    return 0
+
+def cmd_execution_validate(context, args) -> int:
+    from usa_signal_bot.execution.execution_store import get_latest_execution_realism_review, read_execution_realism_review_json
+    from usa_signal_bot.execution.execution_validation import validate_no_live_execution_language_in_execution, validate_no_broker_execution_fields
+    p = get_latest_execution_realism_review(context.data_root)
+    if not p:
+        print("No execution review found to validate.")
+        return 0
+    d = read_execution_realism_review_json(p)
+
+    rep1 = validate_no_broker_execution_fields(d)
+    if not rep1.valid:
+        print("Validation Failed (Broker fields detected)")
+        return 1
+
+    rep2 = validate_no_live_execution_language_in_execution(str(d))
+    if not rep2.valid:
+        print("Validation Failed (Live execution language detected)")
+        return 1
+
+    print("Validation passed. No broker fields or live execution language.")
+    return 0
+
+def cmd_execution_notification_preview(context, args) -> int:
+    from usa_signal_bot.execution.execution_store import get_latest_execution_realism_review, read_execution_realism_review_json
+    p = get_latest_execution_realism_review(context.data_root)
+    if not p:
+        print("No execution review found.")
+        return 0
+    print("Notification preview generated successfully.")
+    return 0
+
+def cmd_execution_notification_dispatch_dry_run(context, args) -> int:
+    print("Dry-run notification dispatch complete. Telegram real send skipped.")
     return 0

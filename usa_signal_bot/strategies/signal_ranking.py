@@ -286,3 +286,22 @@ def ranking_report_to_text(report: SignalRankingReport, limit: int = 20) -> str:
             lines.append(f"  {rs.rank}. {rs.signal.symbol} [{rs.signal.timeframe}] {rs.signal.action.value} - Score: {rs.rank_score:.2f} (Str: {rs.signal.strategy_name})")
 
     return "\n".join(lines)
+
+from usa_signal_bot.execution.liquidity_models import TradabilityGuardResult
+from usa_signal_bot.execution.signal_adapter import rank_penalty_from_tradability_guard
+
+def apply_tradability_penalty_to_candidates(candidates: list[RankedSignal], guard_results: list[TradabilityGuardResult]) -> list[RankedSignal]:
+    results_map = {r.symbol: r for r in guard_results}
+
+    for c in candidates:
+        if c.signal.symbol in results_map:
+            guard_result = results_map[c.signal.symbol]
+            penalty = rank_penalty_from_tradability_guard(guard_result)
+            if penalty > 0:
+                c.rank_score = max(0.0, c.rank_score - penalty)
+                if "execution_penalty" not in c.reasons:
+                    c.reasons.append(f"Execution penalty applied: {penalty}")
+
+    # Re-sort
+    candidates.sort(key=lambda x: x.rank_score, reverse=True)
+    return candidates

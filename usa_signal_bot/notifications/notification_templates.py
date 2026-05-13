@@ -534,3 +534,88 @@ def notifications_from_performance_alerts(alerts: List[Any]) -> List[Any]:
     if not alerts:
         return []
     return [format_runtime_regression_alert_message(alerts)]
+
+def format_liquidity_warning_message(profiles: list) -> 'NotificationMessage':
+    from usa_signal_bot.core.enums import NotificationType, NotificationPriority, NotificationChannel
+    from usa_signal_bot.notifications.notification_models import NotificationMessage
+    import uuid
+    import datetime
+
+    msg_id = f"msg_{uuid.uuid4().hex[:8]}"
+    title = f"Liquidity Warning ({len(profiles)} symbols)"
+
+    lines = ["The following symbols have liquidity warnings:"]
+    for p in profiles:
+        lines.append(f"- {p.symbol}: {p.status.value}")
+
+    body = "\n".join(lines)
+    return NotificationMessage(
+        message_id=msg_id,
+        notification_type=NotificationType.LIQUIDITY_WARNING,
+        channel=NotificationChannel.DRY_RUN,
+        priority=NotificationPriority.HIGH,
+        title=title,
+        body=body,
+        created_at_utc=datetime.datetime.now(datetime.timezone.utc).isoformat()
+    )
+
+def format_tradability_guard_report_message(review) -> 'NotificationMessage':
+    from usa_signal_bot.core.enums import NotificationType, NotificationPriority, NotificationChannel
+    from usa_signal_bot.notifications.notification_models import NotificationMessage
+    import uuid
+    import datetime
+
+    msg_id = f"msg_{uuid.uuid4().hex[:8]}"
+    title = "Tradability Guard Report"
+
+    blocked = sum(1 for t in review.tradability_results if t.status.value == "BLOCK_SIGNAL")
+    body = f"Analyzed {len(review.symbols)} symbols. Blocked {blocked} signals due to tradability constraints.\nNo live orders are generated."
+
+    return NotificationMessage(
+        message_id=msg_id,
+        notification_type=NotificationType.TRADABILITY_GUARD_REPORT,
+        channel=NotificationChannel.DRY_RUN,
+        priority=NotificationPriority.NORMAL,
+        title=title,
+        body=body,
+        created_at_utc=datetime.datetime.now(datetime.timezone.utc).isoformat()
+    )
+
+def format_execution_realism_warning_message(review) -> 'NotificationMessage':
+    from usa_signal_bot.core.enums import NotificationType, NotificationPriority, NotificationChannel
+    from usa_signal_bot.notifications.notification_models import NotificationMessage
+    import uuid
+    import datetime
+
+    msg_id = f"msg_{uuid.uuid4().hex[:8]}"
+    title = "Execution Realism Warning"
+
+    body = "Execution realism review indicates optimistic or unrealistic assumptions.\n"
+    if review.warnings:
+        body += "Warnings:\n"
+        for w in review.warnings[:5]:
+            body += f"- {w}\n"
+
+    return NotificationMessage(
+        message_id=msg_id,
+        notification_type=NotificationType.EXECUTION_REALISM_WARNING,
+        channel=NotificationChannel.DRY_RUN,
+        priority=NotificationPriority.HIGH,
+        title=title,
+        body=body,
+        created_at_utc=datetime.datetime.now(datetime.timezone.utc).isoformat()
+    )
+
+def notifications_from_execution_realism_review(review) -> list:
+    msgs = []
+
+    illiquid_profiles = [p for p in review.liquidity_profiles if p.status.value in ["THIN", "ILLIQUID"]]
+    if illiquid_profiles:
+        msgs.append(format_liquidity_warning_message(illiquid_profiles))
+
+    msgs.append(format_tradability_guard_report_message(review))
+
+    if review.report_type.value in ["UNREALISTIC", "OPTIMISTIC"] or len(review.warnings) > 0:
+        msgs.append(format_execution_realism_warning_message(review))
+
+    return msgs
