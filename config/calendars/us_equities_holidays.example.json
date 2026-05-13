@@ -1,0 +1,52 @@
+[
+    {
+        "date": "2024-01-01",
+        "name": "New Year's Day",
+        "calendar_name": "US_EQUITIES"
+    },
+    {
+        "date": "2024-01-15",
+        "name": "Martin Luther King Jr. Day",
+        "calendar_name": "US_EQUITIES"
+    },
+    {
+        "date": "2024-02-19",
+        "name": "Washington's Birthday",
+        "calendar_name": "US_EQUITIES"
+    },
+    {
+        "date": "2024-03-29",
+        "name": "Good Friday",
+        "calendar_name": "US_EQUITIES"
+    },
+    {
+        "date": "2024-05-27",
+        "name": "Memorial Day",
+        "calendar_name": "US_EQUITIES"
+    },
+    {
+        "date": "2024-06-19",
+        "name": "Juneteenth National Independence Day",
+        "calendar_name": "US_EQUITIES"
+    },
+    {
+        "date": "2024-07-04",
+        "name": "Independence Day",
+        "calendar_name": "US_EQUITIES"
+    },
+    {
+        "date": "2024-09-02",
+        "name": "Labor Day",
+        "calendar_name": "US_EQUITIES"
+    },
+    {
+        "date": "2024-11-28",
+        "name": "Thanksgiving Day",
+        "calendar_name": "US_EQUITIES"
+    },
+    {
+        "date": "2024-12-25",
+        "name": "Christmas Day",
+        "calendar_name": "US_EQUITIES"
+    }
+]

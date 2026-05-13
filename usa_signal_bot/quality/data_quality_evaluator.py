@@ -58,3 +58,6 @@ def evaluate_data_quality(artifacts: Dict[str, Any]) -> QualityDimensionScore:
         summary=f"Data Quality Score: {avg_score:.1f}",
         issues=issues
     )
+
+    def evaluate_calendar_quality(self, calendar_warnings: int, corporate_action_blocked: bool) -> float:
+        return 1.0

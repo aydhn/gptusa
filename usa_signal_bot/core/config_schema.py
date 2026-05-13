@@ -4196,3 +4196,64 @@ def validate_scheduler_jobs_config(config: SchedulerJobsConfig) -> None:
 def validate_scheduler_notifications_config(config: SchedulerNotificationsConfig) -> None:
     if not config.dry_run:
         raise ValueError("scheduler_notifications.dry_run must be True")
+
+@dataclass
+class MarketCalendarConfig:
+    enabled: bool = True
+    calendar_name: str = "US_EQUITIES"
+    timezone: str = "America/New_York"
+    regular_open_time_local: str = "09:30"
+    regular_close_time_local: str = "16:00"
+    use_manual_holiday_file: bool = True
+    holiday_file: str = "config/calendars/us_equities_holidays.example.json"
+    early_close_file: str = "config/calendars/us_equities_early_closes.example.json"
+    warn_calendar_not_official: bool = True
+    write_calendar_reports: bool = True
+
+@dataclass
+class SessionAwarenessConfig:
+    enabled: bool = True
+    validate_provider_rows: bool = True
+    validate_runtime_rows: bool = True
+    allow_premarket_with_warning: bool = True
+    allow_after_hours_with_warning: bool = True
+    block_closed_session_signals: bool = True
+    warn_missing_trading_days: bool = True
+    max_missing_trading_days_warning: int = 3
+
+@dataclass
+class CorporateActionsConfig:
+    enabled: bool = True
+    manual_actions_file: str = "config/corporate_actions/manual_corporate_actions.example.json"
+    load_provider_metadata_actions: bool = True
+    detect_possible_splits: bool = True
+    detect_possible_dividends: bool = True
+    validate_adjusted_close: bool = True
+    adjusted_close_tolerance_pct: float = 0.5
+    split_gap_threshold_pct: float = 35.0
+    price_gap_anomaly_threshold_pct: float = 15.0
+    volume_anomaly_multiplier: float = 10.0
+    skip_signal_on_action_date: bool = True
+    skip_days_after_split: int = 3
+    block_signal_on_adjusted_inconsistency: bool = True
+    write_corporate_action_reports: bool = True
+
+@dataclass
+class CalendarQualityConfig:
+    enabled: bool = True
+    calendar_alignment_weight: float = 0.25
+    session_validation_weight: float = 0.25
+    corporate_action_weight: float = 0.25
+    adjusted_price_weight: float = 0.25
+    fail_on_non_trading_day_rows: bool = False
+    warn_on_missing_trading_days: bool = True
+
+@dataclass
+class CalendarNotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    notify_calendar_session_report: bool = True
+    notify_corporate_action_warning: bool = True
+    notify_adjusted_price_warning: bool = True
+    default_channel: str = "dry_run"
+    warn_no_real_send_default: bool = True

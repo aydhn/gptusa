@@ -110,3 +110,6 @@ class OperationalMetricsCollector:
         if j.exists(): res.append(lm.summarize_log_file(j))
         if t.exists(): res.append(lm.summarize_log_file(t))
         return res
+
+    def record_calendar_metrics(self, calendar_summary: dict, corporate_action_summary: dict):
+        pass

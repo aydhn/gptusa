@@ -1013,3 +1013,51 @@ class LocalFixtureProviderError(ProviderError):
     pass
 class ManualFileProviderError(ProviderError):
     pass
+
+class MarketCalendarError(Exception):
+    """Raised for general market calendar errors."""
+
+class SessionClassificationError(Exception):
+    """Raised for session classification errors."""
+
+class SessionValidationError(Exception):
+    """Raised for session validation errors."""
+
+class HolidayStoreError(Exception):
+    """Raised for manual holiday/early-close store errors."""
+
+class CalendarStorageError(Exception):
+    """Raised for calendar storage errors."""
+
+class CalendarValidationError(Exception):
+    """Raised for calendar validation constraints or assertions."""
+
+class CalendarReportingError(Exception):
+    """Raised for calendar reporting issues."""
+
+class CorporateActionError(Exception):
+    """Raised for general corporate action errors."""
+
+class CorporateActionLoaderError(Exception):
+    """Raised for corporate action loading errors."""
+
+class SplitDetectionError(Exception):
+    """Raised for split detection errors."""
+
+class DividendDetectionError(Exception):
+    """Raised for dividend detection errors."""
+
+class AdjustedPriceValidationError(Exception):
+    """Raised for adjusted price validation errors."""
+
+class CorporateActionGuardError(Exception):
+    """Raised for corporate action guard evaluation errors."""
+
+class CorporateActionStorageError(Exception):
+    """Raised for corporate action storage errors."""
+
+class CorporateActionValidationError(Exception):
+    """Raised for corporate action validation constraints or assertions."""
+
+class CorporateActionReportingError(Exception):
+    """Raised for corporate action reporting errors."""

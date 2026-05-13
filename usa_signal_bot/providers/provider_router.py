@@ -11,38 +11,17 @@ from usa_signal_bot.providers.provider_interface import BaseDataProvider
 from usa_signal_bot.providers.provider_registry import ProviderRegistry
 from usa_signal_bot.providers.provider_quality import score_provider_response_quality
 
+from usa_signal_bot.calendar.market_calendar import LocalMarketCalendar
+
 class ProviderRouter:
-    def __init__(self, registry: ProviderRegistry, prefer_cache: bool = True, fallback_enabled: bool = True, min_quality_score: float = 60.0):
+    def __init__(self, registry, prefer_cache: bool = True, fallback_enabled: bool = True, min_quality_score: float = 60.0, calendar: LocalMarketCalendar | None = None):
         self.registry = registry
         self.prefer_cache = prefer_cache
         self.fallback_enabled = fallback_enabled
         self.min_quality_score = min_quality_score
+        self.calendar = calendar
 
-    def build_provider_order(self, request: ProviderRequest) -> list[BaseDataProvider]:
-        # Default order
-        order = [
-            DataProviderName.LOCAL_CACHE,
-            DataProviderName.YFINANCE,
-            DataProviderName.MANUAL_FILE,
-            DataProviderName.LOCAL_FIXTURE
-        ]
-
-        providers = []
-        for name in order:
-            p = self.registry.get(name)
-            if p and p.supports(request):
-                providers.append(p)
-
-        # If prefer_cache is false, move cache to back or skip it
-        if not self.prefer_cache:
-            cache_p = self.registry.get(DataProviderName.LOCAL_CACHE)
-            if cache_p in providers:
-                providers.remove(cache_p)
-                providers.append(cache_p)
-
-        return providers
-
-    def try_provider(self, provider: BaseDataProvider, request: ProviderRequest) -> tuple[ProviderResponse, ProviderQualityScore]:
+    def try_provider(self, provider, request):
         try:
             response = provider.fetch(request)
         except Exception as e:
@@ -51,7 +30,19 @@ class ProviderRouter:
                 request, provider.name(), ProviderResponseStatus.FAILED, f"Exception during fetch: {str(e)}"
             )
 
+        # Apply calendar adjustment if calendar is available
+        if self.calendar and response.status in [ProviderResponseStatus.SUCCESS, ProviderResponseStatus.PARTIAL]:
+            from usa_signal_bot.calendar.provider_calendar_adapter import attach_calendar_metadata_to_provider_response
+            response = attach_calendar_metadata_to_provider_response(response, self.calendar)
+
         score = score_provider_response_quality(response)
+
+        if self.calendar and response.status in [ProviderResponseStatus.SUCCESS, ProviderResponseStatus.PARTIAL]:
+            from usa_signal_bot.calendar.session_validation import validate_provider_response_calendar_alignment
+            val_results = validate_provider_response_calendar_alignment(response, self.calendar)
+            from usa_signal_bot.calendar.provider_calendar_adapter import provider_quality_with_calendar_adjustment
+            score = provider_quality_with_calendar_adjustment(score, val_results)
+
         return response, score
 
     def should_accept_response(self, response: ProviderResponse, score: ProviderQualityScore) -> bool:
