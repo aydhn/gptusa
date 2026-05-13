@@ -21,6 +21,11 @@ class StrategySignal:
     lifecycle_status: SignalLifecycleStatus = SignalLifecycleStatus.CREATED
     expires_at_utc: Optional[str] = None
     metadata: Dict[str, Any] = field(default_factory=dict)
+    session_type: Optional[str] = None
+    is_trading_day: Optional[bool] = None
+    corporate_action_guard_status: Optional[str] = None
+    corporate_action_severity: Optional[str] = None
+    recommended_guards: List[str] = field(default_factory=list)
     quality_status: Optional[SignalQualityStatus] = None
     score_breakdown: Dict[str, Any] = field(default_factory=dict)
     confluence_score: Optional[float] = None

@@ -28,6 +28,13 @@ def score_data_freshness(artifacts: Dict[str, Any]) -> Tuple[float, List[Quality
 def score_missing_data_warnings(artifacts: Dict[str, Any]) -> Tuple[float, List[QualityIssue]]:
     return 100.0, []
 
+
+def score_calendar_alignment(artifacts: Dict[str, Any]) -> Tuple[float, List[QualityIssue]]:
+    return 100.0, []
+
+def score_corporate_action_guard(artifacts: Dict[str, Any]) -> Tuple[float, List[QualityIssue]]:
+    return 100.0, []
+
 def evaluate_data_quality(artifacts: Dict[str, Any]) -> QualityDimensionScore:
     issues = []
     s1, i1 = score_data_cache_presence(artifacts)

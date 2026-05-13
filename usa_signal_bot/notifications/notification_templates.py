@@ -97,6 +97,22 @@ def _create_base_message(
         created_at_utc=datetime.datetime.now(datetime.timezone.utc).isoformat()
     )
 
+
+def format_calendar_session_report_message(result: Any) -> NotificationMessage:
+    return _create_base_message(NotificationType.CALENDAR_SESSION_REPORT, "Calendar Session Report", "Report details", NotificationPriority.NORMAL)
+
+def format_corporate_action_warning_message(result: Any) -> NotificationMessage:
+    return _create_base_message(NotificationType.CORPORATE_ACTION_WARNING, "Corporate Action Warning", "Warning details", NotificationPriority.HIGH)
+
+def format_adjusted_price_warning_message(result: Any) -> NotificationMessage:
+    return _create_base_message(NotificationType.ADJUSTED_PRICE_WARNING, "Adjusted Price Warning", "Price details", NotificationPriority.NORMAL)
+
+def notifications_from_calendar_review(result: Any) -> List[NotificationMessage]:
+    return [format_calendar_session_report_message(result)]
+
+def notifications_from_corporate_action_review(result: Any) -> List[NotificationMessage]:
+    return [format_corporate_action_warning_message(result)]
+
 def format_scan_summary_message(scan_result: MarketScanResult) -> NotificationMessage:
     title = f"📊 Scan Summary: {scan_result.run_id}"
 

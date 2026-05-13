@@ -2538,3 +2538,11 @@ class ProviderReportType(str, Enum):
     ROUTING_DECISION = "ROUTING_DECISION"
     RESPONSE_VALIDATION = "RESPONSE_VALIDATION"
     FULL_PROVIDER_REVIEW = "FULL_PROVIDER_REVIEW"
+class PaperRuntimeSource(str, Enum):
+    SCAN_CONTEXT = "SCAN_CONTEXT"
+    API_REQUEST = "API_REQUEST"
+    MANUAL = "MANUAL"
+class PaperRuntimeStatus(str, Enum):
+    STARTED = "STARTED"
+    COMPLETED = "COMPLETED"
+    FAILED = "FAILED"

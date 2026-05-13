@@ -1,0 +1,9 @@
+[
+  {
+    "symbol": "AAPL",
+    "action_type": "SPLIT",
+    "ex_date": "2020-08-31",
+    "ratio_numerator": 4,
+    "ratio_denominator": 1
+  }
+]

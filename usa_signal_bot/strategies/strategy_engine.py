@@ -162,6 +162,11 @@ class StrategyEngine:
         return paths
 
     def score_and_validate_signals(self, signals: List[StrategySignal]) -> tuple[List[StrategySignal], List[SignalScoringResult], SignalQualityReport]:
+        for s in signals:
+            if s.corporate_action_guard_status == "BLOCK_SIGNAL":
+                s.metadata["suppressed"] = True
+                s.metadata["suppress_reason"] = "Corporate action guard triggered BLOCK_SIGNAL"
+
         scored_signals = []
         scoring_results = []
 

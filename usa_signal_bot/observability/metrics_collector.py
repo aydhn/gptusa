@@ -65,6 +65,12 @@ class OperationalMetricsCollector:
             source="collector"
         )
 
+
+    def collect_calendar_metrics(self) -> List[OperationalMetric]:
+        return [
+            OperationalMetric(name="calendar_status", value=1, type=OperationalMetricType.GAUGE, status=OperationalMetricStatus.OK)
+        ]
+
     def collect_runtime_metrics(self) -> List[OperationalMetric]:
         return []
 
