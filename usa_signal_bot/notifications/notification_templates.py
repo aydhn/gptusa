@@ -619,3 +619,19 @@ def notifications_from_execution_realism_review(review) -> list:
         msgs.append(format_execution_realism_warning_message(review))
 
     return msgs
+
+
+from typing import Any, Dict, List
+from usa_signal_bot.cost_robustness.robustness_models import CostRobustnessReview, CostFragilityAssessment, ExecutionSensitivityMatrix
+
+def format_cost_robustness_report_message(review: CostRobustnessReview) -> Dict[str, Any]:
+    return {"message": "Cost Robustness Report", "review_id": review.review_id}
+
+def format_cost_fragility_warning_message(assessment: CostFragilityAssessment) -> Dict[str, Any]:
+    return {"message": "Cost Fragility Warning", "score": assessment.fragility_score}
+
+def format_execution_sensitivity_warning_message(matrix: ExecutionSensitivityMatrix) -> Dict[str, Any]:
+    return {"message": "Execution Sensitivity Warning", "status": matrix.robustness_status}
+
+def notifications_from_cost_robustness_review(review: CostRobustnessReview) -> List[Dict[str, Any]]:
+    return [format_cost_robustness_report_message(review)]

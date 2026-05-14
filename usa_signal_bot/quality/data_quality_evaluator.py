@@ -83,3 +83,14 @@ def evaluate_data_quality(artifacts: Dict[str, Any]) -> QualityDimensionScore:
 
     def evaluate_calendar_quality(self, calendar_warnings: int, corporate_action_blocked: bool) -> float:
         return 1.0
+
+
+# Data Quality Evaluator extension for Cost Robustness
+def evaluate_cost_robustness_dimensions(score: float, slippage_score: float, impact_score: float, sensitivity_score: float, fragility_score: float) -> dict:
+    return {
+        "cost_robustness_score": score,
+        "slippage_stress_score": slippage_score,
+        "market_impact_stress_score": impact_score,
+        "execution_sensitivity_score": sensitivity_score,
+        "cost_fragility_score": fragility_score
+    }

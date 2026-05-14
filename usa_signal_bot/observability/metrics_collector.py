@@ -174,3 +174,8 @@ class OperationalMetricsCollector:
 
     def record_calendar_metrics(self, calendar_summary: dict, corporate_action_summary: dict):
         pass
+
+
+# Operational metrics addition
+def update_cost_robustness_metrics(status: str, score: float, failed_scenarios: int, fragile_windows: int, breakeven_bps: float, failed_cells: int, fragility_reasons: int):
+    pass

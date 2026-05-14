@@ -1130,3 +1130,21 @@ class ExecutionValidationError(ExecutionRealismError):
 
 class ExecutionReportingError(ExecutionRealismError):
     pass
+
+
+class CostRobustnessError(Exception): pass
+class CostStressScenarioError(CostRobustnessError): pass
+class SlippageStressError(CostRobustnessError): pass
+class SpreadStressError(CostRobustnessError): pass
+class ImpactStressError(CostRobustnessError): pass
+class FeeStressError(CostRobustnessError): pass
+class ParticipationStressError(CostRobustnessError): pass
+class LiquidityFilterStressError(CostRobustnessError): pass
+class FillRealismStressError(CostRobustnessError): pass
+class ExecutionSensitivityMatrixError(CostRobustnessError): pass
+class WalkForwardCostRobustnessError(CostRobustnessError): pass
+class CostFragilityError(CostRobustnessError): pass
+class BreakevenCostError(CostRobustnessError): pass
+class CostRobustnessStorageError(CostRobustnessError): pass
+class CostRobustnessValidationError(CostRobustnessError): pass
+class CostRobustnessReportingError(CostRobustnessError): pass
