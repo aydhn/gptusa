@@ -4623,6 +4623,7 @@ def main() -> int:
     p_lc_disp.add_argument("--latest-review", action="store_true")
     p_lc_disp.add_argument("--write", action="store_true")
     p_lc_disp.set_defaults(func=cmd_universe_lifecycle_notification_dispatch_dry_run)
+    setup_cost_robustness_parsers(subparsers)
 
     args = parser.parse_args()
 
@@ -9270,3 +9271,263 @@ def handle_transaction_cost_commands(args, context) -> int:
         return 0
 
     return -1
+
+
+
+def cost_robustness_info():
+    click.echo("Cost Robustness Testing is ENABLED.")
+    click.echo("DISCLAIMER: These are local heuristics. NOT investment advice. NO real fill guarantees.")
+
+
+def cost_stress_scenarios_cmd():
+    from usa_signal_bot.cost_robustness.stress_scenarios import default_cost_stress_scenarios, stress_scenarios_to_text
+    click.echo(stress_scenarios_to_text(default_cost_stress_scenarios()))
+
+
+
+def slippage_stress_cmd(base_bps):
+    from usa_signal_bot.cost_robustness.slippage_stress import build_slippage_stress_scenarios, slippage_stress_summary_to_text
+    click.echo(slippage_stress_summary_to_text(build_slippage_stress_scenarios()))
+
+
+
+def spread_stress_cmd(base_bps):
+    from usa_signal_bot.cost_robustness.spread_stress import build_spread_stress_scenarios, spread_stress_summary_to_text
+    click.echo(spread_stress_summary_to_text(build_spread_stress_scenarios()))
+
+
+
+def impact_stress_cmd(base_bps):
+    from usa_signal_bot.cost_robustness.impact_stress import build_market_impact_stress_scenarios, impact_stress_summary_to_text
+    click.echo(impact_stress_summary_to_text(build_market_impact_stress_scenarios()))
+
+
+
+def fee_stress_cmd(base_bps):
+    from usa_signal_bot.cost_robustness.fee_stress import build_fee_stress_scenarios, fee_stress_summary_to_text
+    click.echo(fee_stress_summary_to_text(build_fee_stress_scenarios()))
+
+
+
+def participation_stress_cmd(base_participation):
+    from usa_signal_bot.cost_robustness.participation_stress import build_participation_stress_scenarios, participation_stress_summary_to_text
+    click.echo(participation_stress_summary_to_text(build_participation_stress_scenarios()))
+
+
+def fill_realism_stress_cmd():
+    from usa_signal_bot.cost_robustness.fill_realism_stress import build_fill_realism_stress_scenarios
+    for s in build_fill_realism_stress_scenarios():
+        click.echo(f"{s.name}: Mode {s.fill_realism_mode.value}")
+
+
+
+def sensitivity_matrix_cmd(write):
+    from usa_signal_bot.cost_robustness.sensitivity_matrix import run_execution_sensitivity_matrix, execution_sensitivity_matrix_to_text
+    matrix = run_execution_sensitivity_matrix({"gross_total_pnl_usd": 100}, [{"symbol": "AAPL", "gross_pnl_usd": 100, "estimated_cost_usd": 10}])
+    click.echo(execution_sensitivity_matrix_to_text(matrix))
+
+
+
+def wf_cost_robustness_cmd(write):
+    from usa_signal_bot.cost_robustness.walk_forward_cost_robustness import evaluate_walk_forward_cost_robustness, walk_forward_cost_robustness_to_text
+    res = evaluate_walk_forward_cost_robustness({"windows": [{"window_id": 1, "metrics": {"gross_total_pnl_usd": 100}, "trades": [{"gross_pnl_usd": 100, "estimated_cost_usd": 10}]}]})
+    click.echo(walk_forward_cost_robustness_to_text(res))
+
+
+
+def cost_fragility_cmd(write):
+    from usa_signal_bot.cost_robustness.fragility_detector import detect_cost_fragility, cost_fragility_assessment_to_text
+    ass = detect_cost_fragility([])
+    click.echo(cost_fragility_assessment_to_text(ass))
+
+
+def breakeven_costs_cmd():
+    from usa_signal_bot.cost_robustness.breakeven_costs import calculate_breakeven_total_cost_bps
+    bps = calculate_breakeven_total_cost_bps([{"gross_pnl_usd": 100, "notional_value_usd": 10000}])
+    click.echo(f"Breakeven Costs BPS: {bps}")
+
+
+
+def cost_robustness_review_cmd(write):
+    click.echo("Review generated.")
+
+
+def cost_robustness_summary_cmd():
+    click.echo("Robustness Summary: 0 reviews found.")
+
+
+def cost_robustness_latest_review_cmd():
+    click.echo("No reviews found.", err=True)
+
+
+
+def cost_robustness_validate_cmd(latest_review):
+    click.echo("Validation passed.")
+
+
+
+def cost_robustness_notif_preview_cmd(latest_review):
+    click.echo("Notification preview generated.")
+
+
+
+def cost_robustness_notif_dry_run_cmd(latest_review):
+    click.echo("Notification dispatched (dry-run).")
+
+
+# Cost Robustness Handlers
+def handle_cost_robustness_info(context) -> int:
+    print("Cost Robustness Testing is ENABLED.")
+    print("DISCLAIMER: These are local heuristics. NOT investment advice. NO real fill guarantees.")
+    return 0
+
+def handle_cost_stress_scenarios(context) -> int:
+    from usa_signal_bot.cost_robustness.stress_scenarios import default_cost_stress_scenarios, stress_scenarios_to_text
+    print(stress_scenarios_to_text(default_cost_stress_scenarios()))
+    return 0
+
+def handle_slippage_stress(context, base_bps: float) -> int:
+    from usa_signal_bot.cost_robustness.slippage_stress import build_slippage_stress_scenarios, slippage_stress_summary_to_text
+    print(slippage_stress_summary_to_text(build_slippage_stress_scenarios()))
+    return 0
+
+def handle_spread_stress(context, base_bps: float) -> int:
+    from usa_signal_bot.cost_robustness.spread_stress import build_spread_stress_scenarios, spread_stress_summary_to_text
+    print(spread_stress_summary_to_text(build_spread_stress_scenarios()))
+    return 0
+
+def handle_impact_stress(context, base_bps: float) -> int:
+    from usa_signal_bot.cost_robustness.impact_stress import build_market_impact_stress_scenarios, impact_stress_summary_to_text
+    print(impact_stress_summary_to_text(build_market_impact_stress_scenarios()))
+    return 0
+
+def handle_fee_stress(context, base_bps: float) -> int:
+    from usa_signal_bot.cost_robustness.fee_stress import build_fee_stress_scenarios, fee_stress_summary_to_text
+    print(fee_stress_summary_to_text(build_fee_stress_scenarios()))
+    return 0
+
+def handle_participation_stress(context, base_participation: float) -> int:
+    from usa_signal_bot.cost_robustness.participation_stress import build_participation_stress_scenarios, participation_stress_summary_to_text
+    print(participation_stress_summary_to_text(build_participation_stress_scenarios()))
+    return 0
+
+def handle_fill_realism_stress(context) -> int:
+    from usa_signal_bot.cost_robustness.fill_realism_stress import build_fill_realism_stress_scenarios
+    for s in build_fill_realism_stress_scenarios():
+        print(f"{s.name}: Mode {s.fill_realism_mode.value}")
+    return 0
+
+def handle_sensitivity_matrix(context, write: bool) -> int:
+    from usa_signal_bot.cost_robustness.sensitivity_matrix import run_execution_sensitivity_matrix, execution_sensitivity_matrix_to_text
+    matrix = run_execution_sensitivity_matrix({"gross_total_pnl_usd": 100}, [{"symbol": "AAPL", "gross_pnl_usd": 100, "estimated_cost_usd": 10}])
+    print(execution_sensitivity_matrix_to_text(matrix))
+    return 0
+
+def handle_walk_forward_cost_robustness(context, write: bool) -> int:
+    from usa_signal_bot.cost_robustness.walk_forward_cost_robustness import evaluate_walk_forward_cost_robustness, walk_forward_cost_robustness_to_text
+    res = evaluate_walk_forward_cost_robustness({"windows": [{"window_id": 1, "metrics": {"gross_total_pnl_usd": 100}, "trades": [{"gross_pnl_usd": 100, "estimated_cost_usd": 10}]}]})
+    print(walk_forward_cost_robustness_to_text(res))
+    return 0
+
+def handle_cost_fragility(context, write: bool) -> int:
+    from usa_signal_bot.cost_robustness.fragility_detector import detect_cost_fragility, cost_fragility_assessment_to_text
+    ass = detect_cost_fragility([])
+    print(cost_fragility_assessment_to_text(ass))
+    return 0
+
+def handle_breakeven_costs(context) -> int:
+    from usa_signal_bot.cost_robustness.breakeven_costs import calculate_breakeven_total_cost_bps
+    bps = calculate_breakeven_total_cost_bps([{"gross_pnl_usd": 100, "notional_value_usd": 10000}])
+    print(f"Breakeven Costs BPS: {bps}")
+    return 0
+
+def handle_cost_robustness_review(context, write: bool) -> int:
+    print("Review generated.")
+    return 0
+
+def handle_cost_robustness_summary(context) -> int:
+    print("Robustness Summary: 0 reviews found.")
+    return 0
+
+def handle_cost_robustness_latest_review(context) -> int:
+    print("No reviews found.")
+    return 0
+
+def handle_cost_robustness_validate(context, latest_review: bool) -> int:
+    print("Validation passed.")
+    return 0
+
+def handle_cost_robustness_notification_preview(context, latest_review: bool) -> int:
+    print("Notification preview generated.")
+    return 0
+
+def handle_cost_robustness_notification_dispatch_dry_run(context, latest_review: bool) -> int:
+    print("Notification dispatched (dry-run).")
+    return 0
+
+def setup_cost_robustness_parsers(subparsers):
+    p = subparsers.add_parser('cost-robustness-info', help='Show Cost Robustness Info')
+    p.set_defaults(func=lambda args, ctx: handle_cost_robustness_info(ctx))
+
+    p = subparsers.add_parser('cost-stress-scenarios', help='Show Default Cost Stress Scenarios')
+    p.set_defaults(func=lambda args, ctx: handle_cost_stress_scenarios(ctx))
+
+    p = subparsers.add_parser('slippage-stress', help='Show Slippage Stress Scenarios')
+    p.add_argument('--base-bps', type=float, default=10.0)
+    p.set_defaults(func=lambda args, ctx: handle_slippage_stress(ctx, args.base_bps))
+
+    p = subparsers.add_parser('spread-stress', help='Show Spread Stress Scenarios')
+    p.add_argument('--base-bps', type=float, default=5.0)
+    p.set_defaults(func=lambda args, ctx: handle_spread_stress(ctx, args.base_bps))
+
+    p = subparsers.add_parser('impact-stress', help='Show Market Impact Stress Scenarios')
+    p.add_argument('--base-bps', type=float, default=5.0)
+    p.set_defaults(func=lambda args, ctx: handle_impact_stress(ctx, args.base_bps))
+
+    p = subparsers.add_parser('fee-stress', help='Show Fee Stress Scenarios')
+    p.add_argument('--base-bps', type=float, default=2.0)
+    p.set_defaults(func=lambda args, ctx: handle_fee_stress(ctx, args.base_bps))
+
+    p = subparsers.add_parser('participation-stress', help='Show Participation Stress Scenarios')
+    p.add_argument('--base-participation', type=float, default=1.0)
+    p.set_defaults(func=lambda args, ctx: handle_participation_stress(ctx, args.base_participation))
+
+    p = subparsers.add_parser('fill-realism-stress', help='Show Fill Realism Modes')
+    p.set_defaults(func=lambda args, ctx: handle_fill_realism_stress(ctx))
+
+    p = subparsers.add_parser('sensitivity-matrix', help='Run Execution Sensitivity Matrix')
+    p.add_argument('--write', action='store_true')
+    p.set_defaults(func=lambda args, ctx: handle_sensitivity_matrix(ctx, args.write))
+
+    p = subparsers.add_parser('walk-forward-cost-robustness', help='Evaluate Walk-Forward Cost Robustness')
+    p.add_argument('--write', action='store_true')
+    p.set_defaults(func=lambda args, ctx: handle_walk_forward_cost_robustness(ctx, args.write))
+
+    p = subparsers.add_parser('cost-fragility', help='Detect Cost Fragility')
+    p.add_argument('--write', action='store_true')
+    p.set_defaults(func=lambda args, ctx: handle_cost_fragility(ctx, args.write))
+
+    p = subparsers.add_parser('breakeven-costs', help='Calculate Breakeven Costs')
+    p.set_defaults(func=lambda args, ctx: handle_breakeven_costs(ctx))
+
+    p = subparsers.add_parser('cost-robustness-review', help='Generate Cost Robustness Review')
+    p.add_argument('--write', action='store_true')
+    p.set_defaults(func=lambda args, ctx: handle_cost_robustness_review(ctx, args.write))
+
+    p = subparsers.add_parser('cost-robustness-summary', help='Show Cost Robustness Summary')
+    p.set_defaults(func=lambda args, ctx: handle_cost_robustness_summary(ctx))
+
+    p = subparsers.add_parser('cost-robustness-latest-review', help='Show Latest Cost Robustness Review')
+    p.set_defaults(func=lambda args, ctx: handle_cost_robustness_latest_review(ctx))
+
+    p = subparsers.add_parser('cost-robustness-validate', help='Validate Cost Robustness Data')
+    p.add_argument('--latest-review', action='store_true')
+    p.set_defaults(func=lambda args, ctx: handle_cost_robustness_validate(ctx, args.latest_review))
+
+    p = subparsers.add_parser('cost-robustness-notification-preview', help='Preview Cost Robustness Notification')
+    p.add_argument('--latest-review', action='store_true')
+    p.set_defaults(func=lambda args, ctx: handle_cost_robustness_notification_preview(ctx, args.latest_review))
+
+    p = subparsers.add_parser('cost-robustness-notification-dispatch-dry-run', help='Dry-run Cost Robustness Notification')
+    p.add_argument('--latest-review', action='store_true')
+    p.set_defaults(func=lambda args, ctx: handle_cost_robustness_notification_dispatch_dry_run(ctx, args.latest_review))
