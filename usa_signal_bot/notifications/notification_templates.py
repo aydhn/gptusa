@@ -683,3 +683,46 @@ def format_regime_cost_block_warning_message(review: Any) -> NotificationMessage
         timestamp_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
         metadata={"review_id": review.review_id}
     )
+
+
+from usa_signal_bot.regime_map.regime_map_models import RegimeMapReview, RegimeTransitionSignal, SymbolRegimeAlignment
+from usa_signal_bot.regime_map.regime_map_reporting import regime_map_review_to_text, regime_transition_signal_to_text, symbol_regime_alignment_to_text
+
+def format_regime_map_report_message(review: RegimeMapReview) -> NotificationMessage:
+    body = regime_map_review_to_text(review, limit=20)
+    return NotificationMessage(
+        title=f"Regime Map Review: {review.universe_name}",
+        body=body,
+        type="REGIME_MAP_REPORT"
+    )
+
+def format_regime_transition_warning_message(signals: list[RegimeTransitionSignal]) -> NotificationMessage:
+    lines = [regime_transition_signal_to_text(s) for s in signals]
+    return NotificationMessage(
+        title="Regime Transition Warning",
+        body="\n".join(lines),
+        type="REGIME_TRANSITION_WARNING"
+    )
+
+def format_regime_alignment_warning_message(alignments: list[SymbolRegimeAlignment]) -> NotificationMessage:
+    lines = [symbol_regime_alignment_to_text(a) for a in alignments]
+    return NotificationMessage(
+        title="Regime Alignment Warning",
+        body="\n".join(lines),
+        type="REGIME_ALIGNMENT_WARNING"
+    )
+
+def notifications_from_regime_map_review(review: RegimeMapReview) -> list[NotificationMessage]:
+    messages = [format_regime_map_report_message(review)]
+
+    if review.transition_signals:
+         high_risks = [s for s in review.transition_signals if s.risk.value in ["HIGH", "CRITICAL"]]
+         if high_risks:
+             messages.append(format_regime_transition_warning_message(high_risks))
+
+    if review.alignments:
+         conflicts = [a for a in review.alignments if a.status.value == "CONFLICTED"]
+         if conflicts:
+             messages.append(format_regime_alignment_warning_message(conflicts))
+
+    return messages

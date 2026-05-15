@@ -127,3 +127,54 @@ def score_regime_aware_execution_quality(artifacts: Dict[str, Any]) -> Tuple[flo
         score -= 10.0
 
     return max(0.0, score), issues
+
+
+def add_regime_map_dimensions_to_scorecard(scorecard: dict[str, Any], review: Any) -> dict[str, Any]:
+    enriched = scorecard.copy()
+    if not review:
+        return enriched
+
+    enriched["multi_timeframe_confirmation_score"] = _calc_mt_score(review)
+    enriched["cross_sectional_regime_score"] = _calc_xs_score(review)
+    enriched["regime_alignment_score"] = _calc_alignment_score(review)
+    enriched["transition_risk_score"] = _calc_risk_score(review)
+
+    if review.cross_sectional_map:
+         enriched["breadth_quality_score"] = review.cross_sectional_map.breadth_score
+
+    return enriched
+
+def _calc_mt_score(review: Any) -> float:
+    if not review.timeframe_confirmations: return 0.0
+    confirmed = sum(1 for c in review.timeframe_confirmations if c.status.value == "CONFIRMED")
+    return (confirmed / len(review.timeframe_confirmations)) * 100
+
+def _calc_xs_score(review: Any) -> float:
+    if not review.cross_sectional_map: return 0.0
+    val = review.cross_sectional_map.cross_sectional_regime.value
+    if val in ["BROAD_UPTREND", "BROAD_DOWNTREND"]:
+        return 90.0
+    if val in ["SELECTIVE_UPTREND"]:
+        return 70.0
+    if val == "ROTATION":
+        return 50.0
+    return 30.0
+
+def _calc_alignment_score(review: Any) -> float:
+    if not review.alignments: return 0.0
+    total = 0.0
+    valid = 0
+    for a in review.alignments:
+        if a.alignment_score is not None:
+             total += a.alignment_score
+             valid += 1
+    return total / valid if valid > 0 else 0.0
+
+def _calc_risk_score(review: Any) -> float:
+    if not review.transition_signals: return 100.0
+    risks = [s.risk.value for s in review.transition_signals]
+    if "CRITICAL" in risks: return 10.0
+    if "HIGH" in risks: return 30.0
+    if "MODERATE" in risks: return 60.0
+    if "LOW" in risks: return 80.0
+    return 100.0

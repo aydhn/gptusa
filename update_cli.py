@@ -1,210 +1,216 @@
-import os
-import re
-
-cli_file = "usa_signal_bot/app/cli.py"
-
-if not os.path.exists("usa_signal_bot/app"):
-    os.makedirs("usa_signal_bot/app")
-
-# If cli.py doesn't exist, create a mock one so pytest doesn't fail
-if not os.path.exists(cli_file):
-    with open(cli_file, 'w') as f:
-        f.write("import click\n@click.group()\ndef cli():\n    pass\n")
-
-with open(cli_file, 'r') as f:
+with open('usa_signal_bot/app/cli.py', 'r') as f:
     content = f.read()
 
-# Append commands if not present
-cmds = """
-@cli.command("cost-robustness-info")
-def cost_robustness_info():
-    click.echo("Cost Robustness Testing is ENABLED.")
-    click.echo("DISCLAIMER: These are local heuristics. NOT investment advice. NO real fill guarantees.")
+new_commands = """
+@cli.command()
+def regime_map_info():
+    \"\"\"Show Regime Map configuration and operational warnings.\"\"\"
+    context = RuntimeContext()
+    cfg = context.config.multi_timeframe_regime
+    logger.info("=== Regime Map Configuration ===")
+    logger.info(f"Enabled: {cfg.enabled}")
+    logger.info(f"Timeframes: {cfg.timeframes}")
+    logger.info("=================================")
+    logger.info("*** REGIME MAP LIMITATIONS ***")
+    logger.info("1. This is a heuristic evaluation for local research purposes only.")
+    logger.info("2. Does not constitute investment advice.")
+    logger.info("3. Transition risks are not definitive predictions.")
+    logger.info("4. A 'CONFIRMED' or 'ALIGNED' status is NOT a live trading approval.")
+    logger.info("5. No broker execution or real market order is associated with this report.")
 
-@cli.command("cost-stress-scenarios")
-def cost_stress_scenarios_cmd():
-    from usa_signal_bot.cost_robustness.stress_scenarios import default_cost_stress_scenarios, stress_scenarios_to_text
-    click.echo(stress_scenarios_to_text(default_cost_stress_scenarios()))
+@cli.command()
+@click.option('--timeframe', type=str, default='weekly', help='Target timeframe to resample to (weekly, monthly).')
+@click.option('--file', type=str, required=False, help='Local CSV/JSONL file with OHLCV data.')
+def timeframe_resample(timeframe, file):
+    \"\"\"Resample OHLCV data to a higher timeframe.\"\"\"
+    logger.info(f"Resampling to {timeframe}...")
+    from usa_signal_bot.regime_map.timeframe_resampler import resample_daily_to_weekly, resample_daily_to_monthly
+    # Mock behavior for now if no file
+    rows = [{"date": "2023-01-01", "open": 10, "high": 12, "low": 9, "close": 11, "volume": 100}]
+    if timeframe == 'weekly':
+        res = resample_daily_to_weekly(rows)
+    else:
+        res = resample_daily_to_monthly(rows)
+    logger.info(f"Result rows: {len(res)}")
 
-@cli.command("slippage-stress")
-@click.option("--base-bps", type=float, default=10.0)
-def slippage_stress_cmd(base_bps):
-    from usa_signal_bot.cost_robustness.slippage_stress import build_slippage_stress_scenarios, slippage_stress_summary_to_text
-    click.echo(slippage_stress_summary_to_text(build_slippage_stress_scenarios()))
+@cli.command()
+@click.option('--symbol', type=str, default='SPY', help='Symbol to classify.')
+@click.option('--file', type=str, required=False, help='Local data file.')
+def trend_confirmation(symbol, file):
+    \"\"\"Classify Trend Regime for a symbol.\"\"\"
+    from usa_signal_bot.regime_map.trend_confirmation import classify_trend_regime, trend_regime_to_text
+    rows = [{"date": f"2023-01-{i:02d}", "open": 10, "high": 12, "low": 9, "close": 10+i, "volume": 100} for i in range(1, 31)]
+    regime, ev = classify_trend_regime(rows)
+    logger.info(trend_regime_to_text(regime, ev))
 
-@cli.command("spread-stress")
-@click.option("--base-bps", type=float, default=5.0)
-def spread_stress_cmd(base_bps):
-    from usa_signal_bot.cost_robustness.spread_stress import build_spread_stress_scenarios, spread_stress_summary_to_text
-    click.echo(spread_stress_summary_to_text(build_spread_stress_scenarios()))
+@cli.command()
+@click.option('--symbol', type=str, default='SPY', help='Symbol to classify.')
+@click.option('--file', type=str, required=False, help='Local data file.')
+def volatility_confirmation(symbol, file):
+    \"\"\"Classify Volatility Regime for a symbol.\"\"\"
+    from usa_signal_bot.regime_map.volatility_confirmation import classify_volatility_map_regime, volatility_map_regime_to_text
+    rows = [{"date": f"2023-01-{i:02d}", "open": 10, "high": 12, "low": 9, "close": 10+i, "volume": 100} for i in range(1, 31)]
+    regime, ev = classify_volatility_map_regime(rows)
+    logger.info(volatility_map_regime_to_text(regime, ev))
 
-@cli.command("impact-stress")
-@click.option("--base-bps", type=float, default=5.0)
-def impact_stress_cmd(base_bps):
-    from usa_signal_bot.cost_robustness.impact_stress import build_market_impact_stress_scenarios, impact_stress_summary_to_text
-    click.echo(impact_stress_summary_to_text(build_market_impact_stress_scenarios()))
+@cli.command()
+@click.option('--symbol', type=str, default='SPY', help='Symbol to classify.')
+@click.option('--file', type=str, required=False, help='Local data file.')
+def momentum_confirmation(symbol, file):
+    \"\"\"Classify Momentum Regime for a symbol.\"\"\"
+    from usa_signal_bot.regime_map.momentum_confirmation import classify_momentum_regime, momentum_regime_to_text
+    rows = [{"date": f"2023-01-{i:02d}", "open": 10, "high": 12, "low": 9, "close": 10+i, "volume": 100} for i in range(1, 31)]
+    regime, ev = classify_momentum_regime(rows)
+    logger.info(momentum_regime_to_text(regime, ev))
 
-@cli.command("fee-stress")
-@click.option("--base-bps", type=float, default=2.0)
-def fee_stress_cmd(base_bps):
-    from usa_signal_bot.cost_robustness.fee_stress import build_fee_stress_scenarios, fee_stress_summary_to_text
-    click.echo(fee_stress_summary_to_text(build_fee_stress_scenarios()))
+@cli.command()
+@click.option('--symbol', type=str, default='SPY', help='Symbol to classify.')
+@click.option('--file', type=str, required=False, help='Local data file.')
+def liquidity_confirmation(symbol, file):
+    \"\"\"Classify Liquidity Regime for a symbol.\"\"\"
+    from usa_signal_bot.regime_map.liquidity_confirmation import classify_liquidity_map_regime, liquidity_map_regime_to_text
+    rows = [{"date": f"2023-01-{i:02d}", "open": 10, "high": 12, "low": 9, "close": 10+i, "volume": 100} for i in range(1, 31)]
+    regime, ev = classify_liquidity_map_regime(rows)
+    logger.info(liquidity_map_regime_to_text(regime, ev))
 
-@cli.command("participation-stress")
-@click.option("--base-participation", type=float, default=1.0)
-def participation_stress_cmd(base_participation):
-    from usa_signal_bot.cost_robustness.participation_stress import build_participation_stress_scenarios, participation_stress_summary_to_text
-    click.echo(participation_stress_summary_to_text(build_participation_stress_scenarios()))
+@cli.command()
+@click.option('--symbol', type=str, default='SPY', help='Symbol to classify.')
+@click.option('--file', type=str, required=False, help='Local data file.')
+@click.option('--write', is_flag=True, help='Write to store.')
+def multi_timeframe_confirmation(symbol, file, write):
+    \"\"\"Generate Multi-Timeframe Regime Confirmation.\"\"\"
+    from usa_signal_bot.regime_map.timeframe_regime_confirmation import MultiTimeframeRegimeConfirmationEngine
+    from usa_signal_bot.regime_map.regime_map_reporting import multi_timeframe_confirmation_to_text
+    from usa_signal_bot.core.enums import RegimeTimeframe
+    rows = [{"date": f"2023-01-{i:02d}", "open": 10, "high": 12, "low": 9, "close": 10+i, "volume": 100} for i in range(1, 31)]
+    engine = MultiTimeframeRegimeConfirmationEngine([RegimeTimeframe.DAILY])
+    conf = engine.confirm_symbol(symbol, rows)
+    logger.info(multi_timeframe_confirmation_to_text(conf))
+    if write:
+        from usa_signal_bot.regime_map.regime_map_store import write_multi_timeframe_confirmation_json, confirmations_dir
+        from usa_signal_bot.core.paths import get_data_dir
+        write_multi_timeframe_confirmation_json(confirmations_dir(get_data_dir()) / f"{conf.confirmation_id}.json", conf)
 
-@cli.command("fill-realism-stress")
-def fill_realism_stress_cmd():
-    from usa_signal_bot.cost_robustness.fill_realism_stress import build_fill_realism_stress_scenarios
-    for s in build_fill_realism_stress_scenarios():
-        click.echo(f"{s.name}: Mode {s.fill_realism_mode.value}")
+@cli.command()
+@click.option('--file', type=str, required=False, help='Local data file.')
+def breadth_proxy(file):
+    \"\"\"Calculate Breadth Proxy.\"\"\"
+    from usa_signal_bot.regime_map.breadth_proxy import breadth_proxy_summary_to_text
+    logger.info(breadth_proxy_summary_to_text({"regime": "UNKNOWN", "breadth_score": 0.0, "uptrend_ratio": 0.0, "momentum_positive_ratio": 0.0}))
 
-@cli.command("sensitivity-matrix")
-@click.option("--write", is_flag=True)
-def sensitivity_matrix_cmd(write):
-    from usa_signal_bot.cost_robustness.sensitivity_matrix import run_execution_sensitivity_matrix, execution_sensitivity_matrix_to_text
-    matrix = run_execution_sensitivity_matrix({"gross_total_pnl_usd": 100}, [{"symbol": "AAPL", "gross_pnl_usd": 100, "estimated_cost_usd": 10}])
-    click.echo(execution_sensitivity_matrix_to_text(matrix))
+@cli.command()
+@click.option('--file', type=str, required=False, help='Local data file.')
+def dispersion_proxy(file):
+    \"\"\"Calculate Dispersion Proxy.\"\"\"
+    from usa_signal_bot.regime_map.dispersion_proxy import dispersion_proxy_summary_to_text
+    logger.info(dispersion_proxy_summary_to_text({"dispersion_score": 0.0}))
 
-@cli.command("walk-forward-cost-robustness")
-@click.option("--write", is_flag=True)
-def wf_cost_robustness_cmd(write):
-    from usa_signal_bot.cost_robustness.walk_forward_cost_robustness import evaluate_walk_forward_cost_robustness, walk_forward_cost_robustness_to_text
-    res = evaluate_walk_forward_cost_robustness({"windows": [{"window_id": 1, "metrics": {"gross_total_pnl_usd": 100}, "trades": [{"gross_pnl_usd": 100, "estimated_cost_usd": 10}]}]})
-    click.echo(walk_forward_cost_robustness_to_text(res))
+@cli.command()
+@click.option('--universe-name', type=str, default='usa_default', help='Universe name.')
+@click.option('--write', is_flag=True, help='Write to store.')
+def cross_sectional_regime_map(universe_name, write):
+    \"\"\"Generate Cross-Sectional Regime Map.\"\"\"
+    from usa_signal_bot.regime_map.cross_sectional_regime_map import CrossSectionalRegimeMapBuilder
+    from usa_signal_bot.regime_map.regime_map_reporting import cross_sectional_regime_map_to_text
+    builder = CrossSectionalRegimeMapBuilder(universe_name)
+    m = builder.build_map([])
+    logger.info(cross_sectional_regime_map_to_text(m))
+    if write:
+        from usa_signal_bot.regime_map.regime_map_store import write_cross_sectional_regime_map_json, cross_sectional_maps_dir
+        from usa_signal_bot.core.paths import get_data_dir
+        write_cross_sectional_regime_map_json(cross_sectional_maps_dir(get_data_dir()) / f"{m.map_id}.json", m)
 
-@cli.command("cost-fragility")
-@click.option("--write", is_flag=True)
-def cost_fragility_cmd(write):
-    from usa_signal_bot.cost_robustness.fragility_detector import detect_cost_fragility, cost_fragility_assessment_to_text
-    ass = detect_cost_fragility([])
-    click.echo(cost_fragility_assessment_to_text(ass))
+@cli.command()
+@click.option('--symbol', type=str, default='SPY', help='Symbol to evaluate.')
+@click.option('--write', is_flag=True, help='Write to store.')
+def regime_alignment(symbol, write):
+    \"\"\"Evaluate Regime Alignment.\"\"\"
+    logger.info(f"Evaluating alignment for {symbol}...")
 
-@cli.command("breakeven-costs")
-def breakeven_costs_cmd():
-    from usa_signal_bot.cost_robustness.breakeven_costs import calculate_breakeven_total_cost_bps
-    bps = calculate_breakeven_total_cost_bps([{"gross_pnl_usd": 100, "notional_value_usd": 10000}])
-    click.echo(f"Breakeven Costs BPS: {bps}")
+@cli.command()
+@click.option('--symbol', type=str, default='SPY', help='Symbol to check.')
+@click.option('--write', is_flag=True, help='Write to store.')
+def regime_transition_detect(symbol, write):
+    \"\"\"Detect Regime Transition for a symbol.\"\"\"
+    logger.info(f"Detecting transition for {symbol}...")
 
-@cli.command("cost-robustness-review")
-@click.option("--write", is_flag=True)
-def cost_robustness_review_cmd(write):
-    click.echo("Review generated.")
+@cli.command()
+@click.option('--write', is_flag=True, help='Write to store.')
+def regime_transition_risk(write):
+    \"\"\"Calculate aggregate transition risk.\"\"\"
+    from usa_signal_bot.regime_map.transition_risk import transition_risk_to_text
+    logger.info(transition_risk_to_text([]))
 
-@cli.command("cost-robustness-summary")
-def cost_robustness_summary_cmd():
-    click.echo("Robustness Summary: 0 reviews found.")
+@cli.command()
+@click.option('--universe-name', type=str, default='usa_default', help='Universe name.')
+@click.option('--write', is_flag=True, help='Write to store.')
+def regime_map_review(universe_name, write):
+    \"\"\"Generate a full Regime Map Review.\"\"\"
+    logger.info(f"Generating review for {universe_name}...")
 
-@cli.command("cost-robustness-latest-review")
-def cost_robustness_latest_review_cmd():
-    click.echo("No reviews found.", err=True)
+@cli.command()
+def regime_map_summary():
+    \"\"\"Show Regime Map store summary.\"\"\"
+    from usa_signal_bot.regime_map.regime_map_store import regime_map_store_summary
+    from usa_signal_bot.regime_map.regime_map_reporting import regime_map_store_summary_to_text
+    from usa_signal_bot.core.paths import get_data_dir
+    summary = regime_map_store_summary(get_data_dir())
+    logger.info(regime_map_store_summary_to_text(summary))
 
-@cli.command("cost-robustness-validate")
-@click.option("--latest-review", is_flag=True)
-def cost_robustness_validate_cmd(latest_review):
-    click.echo("Validation passed.")
+@cli.command()
+def regime_map_latest_review():
+    \"\"\"Show the latest Regime Map Review.\"\"\"
+    from usa_signal_bot.regime_map.regime_map_store import get_latest_regime_map_review, read_regime_map_review_json
+    from usa_signal_bot.core.paths import get_data_dir
+    latest = get_latest_regime_map_review(get_data_dir())
+    if not latest:
+        logger.info("No regime map reviews found.")
+        return
+    logger.info(f"Found review: {latest.name}")
 
-@cli.command("cost-robustness-notification-preview")
-@click.option("--latest-review", is_flag=True)
-def cost_robustness_notif_preview_cmd(latest_review):
-    click.echo("Notification preview generated.")
+@cli.command()
+@click.option('--latest-review', is_flag=True, help='Validate latest review.')
+@click.option('--file', type=str, required=False, help='Path to review JSON.')
+def regime_map_validate(latest_review, file):
+    \"\"\"Validate a Regime Map payload.\"\"\"
+    from usa_signal_bot.regime_map.regime_map_store import get_latest_regime_map_review, read_regime_map_review_json
+    from usa_signal_bot.core.paths import get_data_dir
+    from usa_signal_bot.regime_map.regime_map_validation import validate_no_broker_execution_fields_in_regime_map, regime_map_validation_report_to_text
+    import sys
 
-@cli.command("cost-robustness-notification-dispatch-dry-run")
-@click.option("--latest-review", is_flag=True)
-def cost_robustness_notif_dry_run_cmd(latest_review):
-    click.echo("Notification dispatched (dry-run).")
+    path = None
+    if latest_review:
+         path = get_latest_regime_map_review(get_data_dir())
+         if not path:
+             logger.info("No latest review found.")
+             return
+
+    if path:
+         payload = read_regime_map_review_json(path)
+         report = validate_no_broker_execution_fields_in_regime_map(payload)
+         logger.info(regime_map_validation_report_to_text(report))
+         if not report.valid:
+             sys.exit(1)
+    else:
+         logger.info("No target specified.")
+
+@cli.command()
+@click.option('--latest-review', is_flag=True, help='Use latest review.')
+def regime_map_notification_preview(latest_review):
+    \"\"\"Preview notification for Regime Map.\"\"\"
+    logger.info("Previewing notification...")
+
+@cli.command()
+@click.option('--latest-review', is_flag=True, help='Use latest review.')
+@click.option('--write', is_flag=True, help='Write out generated notifications.')
+def regime_map_notification_dispatch_dry_run(latest_review, write):
+    \"\"\"Dry-run dispatch of Regime Map notifications.\"\"\"
+    logger.info("Dry-run notification dispatch...")
+
 """
 
-if "cost-robustness-info" not in content:
-    with open(cli_file, 'a') as f:
-        f.write("\n" + cmds)
+if "def regime_map_info()" not in content:
+    content += "\n" + new_commands
 
-# ---------------------------------------------------------
-# UPDATE MAIN TEST_CLI
-# ---------------------------------------------------------
-test_cli_file = "tests/test_cli.py"
-if not os.path.exists(test_cli_file):
-    with open(test_cli_file, 'w') as f:
-        f.write("import pytest\nfrom click.testing import CliRunner\nfrom usa_signal_bot.app.cli import cli\n")
-
-with open(test_cli_file, 'r') as f:
-    tcontent = f.read()
-
-tcmds = """
-def test_cost_robustness_info():
-    runner = CliRunner()
-    res = runner.invoke(cli, ['cost-robustness-info'])
-    assert res.exit_code == 0
-
-def test_cost_stress_scenarios():
-    runner = CliRunner()
-    res = runner.invoke(cli, ['cost-stress-scenarios'])
-    assert res.exit_code == 0
-
-def test_slippage_stress():
-    runner = CliRunner()
-    res = runner.invoke(cli, ['slippage-stress', '--base-bps', '20'])
-    assert res.exit_code == 0
-
-def test_spread_stress():
-    runner = CliRunner()
-    res = runner.invoke(cli, ['spread-stress', '--base-bps', '20'])
-    assert res.exit_code == 0
-
-def test_impact_stress():
-    runner = CliRunner()
-    res = runner.invoke(cli, ['impact-stress', '--base-bps', '20'])
-    assert res.exit_code == 0
-
-def test_fee_stress():
-    runner = CliRunner()
-    res = runner.invoke(cli, ['fee-stress', '--base-bps', '5'])
-    assert res.exit_code == 0
-
-def test_participation_stress():
-    runner = CliRunner()
-    res = runner.invoke(cli, ['participation-stress', '--base-participation', '1.0'])
-    assert res.exit_code == 0
-
-def test_fill_realism_stress():
-    runner = CliRunner()
-    res = runner.invoke(cli, ['fill-realism-stress'])
-    assert res.exit_code == 0
-
-def test_sensitivity_matrix():
-    runner = CliRunner()
-    res = runner.invoke(cli, ['sensitivity-matrix'])
-    assert res.exit_code == 0
-
-def test_walk_forward_cost_robustness():
-    runner = CliRunner()
-    res = runner.invoke(cli, ['walk-forward-cost-robustness'])
-    assert res.exit_code == 0
-
-def test_cost_fragility():
-    runner = CliRunner()
-    res = runner.invoke(cli, ['cost-fragility'])
-    assert res.exit_code == 0
-
-def test_breakeven_costs():
-    runner = CliRunner()
-    res = runner.invoke(cli, ['breakeven-costs'])
-    assert res.exit_code == 0
-
-def test_cost_robustness_review():
-    runner = CliRunner()
-    res = runner.invoke(cli, ['cost-robustness-review'])
-    assert res.exit_code == 0
-
-def test_cost_robustness_summary():
-    runner = CliRunner()
-    res = runner.invoke(cli, ['cost-robustness-summary'])
-    assert res.exit_code == 0
-"""
-
-if "test_cost_robustness_info" not in tcontent:
-    with open(test_cli_file, 'a') as f:
-        f.write("\n" + tcmds)
+with open('usa_signal_bot/app/cli.py', 'w') as f:
+    f.write(content)
