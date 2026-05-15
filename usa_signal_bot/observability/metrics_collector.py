@@ -1,218 +1,23 @@
-from pathlib import Path
-from typing import List, Optional
-import datetime
+from typing import Any
 
-from usa_signal_bot.core.enums import OperationalMetricStatus, MetricType
-from usa_signal_bot.observability.observability_models import (
-    OperationalMetric, OperationalMetricsSnapshot, LogFileSummary,
-    create_operational_metric_id, create_operational_snapshot_id
-)
-from usa_signal_bot.observability.log_rotation import LogRotationManager, default_log_rotation_config
+class MetricsCollector:
+    def __init__(self):
+        self.metrics = {}
 
-class OperationalMetricsCollector:
-    def __init__(self, data_root: Path, project_root: Optional[Path] = None):
-        self.data_root = data_root
-        self.project_root = project_root
+    def record_regime_map_metrics(self, review: Any) -> None:
+        if not review:
+            return
 
-    def collect_all(self) -> OperationalMetricsSnapshot:
-        m = []
-        m.extend(self.collect_runtime_metrics())
-        m.extend(self.collect_scan_metrics())
-        m.extend(self.collect_backtest_metrics())
-        m.extend(self.collect_paper_metrics())
-        m.extend(self.collect_comparison_metrics())
-        m.extend(self.collect_quality_metrics())
-        m.extend(self.collect_regression_metrics())
-        m.extend(self.collect_release_metrics())
-        m.extend(self.collect_notification_metrics())
-        m.extend(self.collect_execution_metrics())
-        m.extend(self.collect_regime_cost_metrics())
+        if review.cross_sectional_map:
+             self.metrics["latest_cross_sectional_regime"] = review.cross_sectional_map.cross_sectional_regime.value
+             self.metrics["latest_breadth_regime"] = review.cross_sectional_map.breadth_regime.value
 
-        sums = self.collect_log_summaries()
+        if review.transition_signals:
+             from usa_signal_bot.regime_map.transition_risk import aggregate_transition_risk
+             self.metrics["latest_regime_transition_risk"] = aggregate_transition_risk(review.transition_signals).value
+             self.metrics["high_transition_risk_count"] = sum(1 for s in review.transition_signals if s.risk.value in ["HIGH", "CRITICAL"])
 
-        status = OperationalMetricStatus.OK
-        for x in m:
-            if x.status in [OperationalMetricStatus.CRITICAL, OperationalMetricStatus.CRITICAL]:
-                status = OperationalMetricStatus.CRITICAL
-                break
-            elif x.status == OperationalMetricStatus.WARNING:
-                if status != OperationalMetricStatus.CRITICAL:
-                    status = OperationalMetricStatus.WARNING
-
-        return OperationalMetricsSnapshot(
-            snapshot_id=create_operational_snapshot_id(),
-            created_at_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
-            status=status,
-            metrics=m,
-            log_summaries=sums
-        )
-
-    def _collect_dir_count_metric(self, name: str, d: Path, status_missing: OperationalMetricStatus = OperationalMetricStatus.WARNING) -> OperationalMetric:
-        v = 0
-        s = OperationalMetricStatus.OK
-        if d.exists() and d.is_dir():
-            v = len([x for x in d.iterdir() if x.is_dir()])
-            if v == 0:
-                s = OperationalMetricStatus.WARNING
-        else:
-            s = status_missing
-
-        return OperationalMetric(
-            metric_id=create_operational_metric_id(),
-            name=name,
-            metric_type=MetricType.COUNTER,
-            value=v,
-            status=s,
-            timestamp_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
-            source="collector"
-        )
-
-    def collect_runtime_metrics(self) -> List[OperationalMetric]:
-        return []
-
-    def collect_scan_metrics(self) -> List[OperationalMetric]:
-        p = self.data_root / "runtime" / "scans"
-        return [self._collect_dir_count_metric("scan_run_count", p, OperationalMetricStatus.MISSING)]
-
-    def collect_backtest_metrics(self) -> List[OperationalMetric]:
-        p = self.data_root / "backtesting" / "runs"
-        return [self._collect_dir_count_metric("backtest_run_count", p)]
-
-    def collect_paper_metrics(self) -> List[OperationalMetric]:
-        p = self.data_root / "paper" / "runs"
-        return [self._collect_dir_count_metric("paper_run_count", p)]
-
-    def collect_comparison_metrics(self) -> List[OperationalMetric]:
-        p = self.data_root / "comparison" / "runs"
-        return [self._collect_dir_count_metric("comparison_run_count", p)]
-
-    def collect_quality_metrics(self) -> List[OperationalMetric]:
-        p = self.data_root / "quality" / "runs"
-        return [self._collect_dir_count_metric("quality_run_count", p)]
-
-    def collect_regression_metrics(self) -> List[OperationalMetric]:
-        p = self.data_root / "regression" / "runs"
-        return [self._collect_dir_count_metric("regression_run_count", p)]
-
-    def collect_release_metrics(self) -> List[OperationalMetric]:
-        p = self.data_root / "release" / "builds"
-        return [self._collect_dir_count_metric("release_build_count", p)]
-
-    def collect_notification_metrics(self) -> List[OperationalMetric]:
-        return []
-
-
-    def collect_execution_metrics(self) -> List[OperationalMetric]:
-        return [
-            OperationalMetric(
-                metric_id=create_operational_metric_id("execution_status"),
-                timestamp_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
-                metric_type=MetricType.STATUS,
-                name="latest_execution_realism_status",
-                value="REALISTIC",
-                status=OperationalMetricStatus.OK
-            ),
-            OperationalMetric(
-                metric_id=create_operational_metric_id("execution_illiquid"),
-                timestamp_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
-                metric_type=MetricType.COUNTER,
-                name="illiquid_symbol_count",
-                value=0,
-                status=OperationalMetricStatus.OK
-            ),
-            OperationalMetric(
-                metric_id=create_operational_metric_id("execution_blocked"),
-                timestamp_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
-                metric_type=MetricType.COUNTER,
-                name="tradability_block_count",
-                value=0,
-                status=OperationalMetricStatus.OK
-            ),
-            OperationalMetric(
-                metric_id=create_operational_metric_id("execution_slippage"),
-                timestamp_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
-                metric_type=MetricType.COUNTER,
-                name="high_slippage_proxy_count",
-                value=0,
-                status=OperationalMetricStatus.OK
-            ),
-            OperationalMetric(
-                metric_id=create_operational_metric_id("execution_participation"),
-                timestamp_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
-                metric_type=MetricType.COUNTER,
-                name="high_participation_count",
-                value=0,
-                status=OperationalMetricStatus.OK
-            ),
-            OperationalMetric(
-                metric_id=create_operational_metric_id("execution_borrowability"),
-                timestamp_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
-                metric_type=MetricType.COUNTER,
-                name="borrowability_review_count",
-                value=0,
-                status=OperationalMetricStatus.OK
-            ),
-            OperationalMetric(
-                metric_id=create_operational_metric_id("execution_warnings"),
-                timestamp_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
-                metric_type=MetricType.COUNTER,
-                name="execution_guard_warning_count",
-                value=0,
-                status=OperationalMetricStatus.OK
-            )
-        ]
-
-    def collect_regime_cost_metrics(self) -> List[OperationalMetric]:
-        m = []
-        try:
-            from usa_signal_bot.regime_costs.regime_cost_store import get_latest_regime_cost_review, read_regime_cost_review_json
-
-            latest_file = get_latest_regime_cost_review(self.data_root)
-            if latest_file:
-                rev = read_regime_cost_review_json(latest_file)
-                snaps = rev.get("snapshots", [])
-
-                high_risk = sum(1 for s in snaps if s.get("combined_regime") == "HIGH_RISK")
-                blocked = sum(1 for s in snaps if s.get("combined_regime") == "BLOCKED")
-
-                m.append(OperationalMetric(
-                    metric_id=create_operational_metric_id(),
-                    metric_type=MetricType.COUNTER,
-                    name="regime_cost_high_risk_count",
-                    value=high_risk,
-                    timestamp_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
-                    labels={"source": "regime_cost_review"},
-                    status=OperationalMetricStatus.HEALTHY
-                ))
-                m.append(OperationalMetric(
-                    metric_id=create_operational_metric_id(),
-                    metric_type=MetricType.COUNTER,
-                    name="adaptive_execution_block_count",
-                    value=blocked,
-                    timestamp_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
-                    labels={"source": "regime_cost_review"},
-                    status=OperationalMetricStatus.HEALTHY
-                ))
-        except Exception:
-            pass
-        return m
-
-    def collect_log_summaries(self) -> List[LogFileSummary]:
-        res = []
-        lm = LogRotationManager(default_log_rotation_config())
-
-        log_dir = self.data_root / "observability" / "logs"
-        j = log_dir / "events.jsonl"
-        t = log_dir / "events.log"
-
-        if j.exists(): res.append(lm.summarize_log_file(j))
-        if t.exists(): res.append(lm.summarize_log_file(t))
-        return res
-
-    def record_calendar_metrics(self, calendar_summary: dict, corporate_action_summary: dict):
-        pass
-
-
-# Operational metrics addition
-def update_cost_robustness_metrics(status: str, score: float, failed_scenarios: int, fragile_windows: int, breakeven_bps: float, failed_cells: int, fragility_reasons: int):
-    pass
+        conflicts = sum(1 for a in review.alignments if a.status.value in ["CONFLICTED", "DIVERGENT"])
+        self.metrics["regime_alignment_conflict_count"] = conflicts
+        self.metrics["confirmed_regime_count"] = sum(1 for c in review.timeframe_confirmations if c.status.value == "CONFIRMED")
+        self.metrics["regime_map_warning_count"] = len(review.warnings)

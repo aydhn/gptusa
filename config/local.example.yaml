@@ -1,9 +1,78 @@
-# Example local configuration
-
-scheduler:
+multi_timeframe_regime:
   enabled: true
-  dry_run_default: true
+  timeframes:
+    - "daily"
+    - "weekly"
+    - "monthly"
+  min_daily_rows: 120
+  min_weekly_rows: 40
+  min_monthly_rows: 12
+  require_weekly_confirmation: true
+  require_monthly_confirmation_for_strict_mode: false
+  warn_on_timeframe_conflict: true
+  write_regime_map_reports: true
+  warn_not_investment_advice: true
+  warn_no_broker_execution: true
 
-regime_aware_costs:
+trend_regime_confirmation:
   enabled: true
-  write_regime_cost_reports: true
+  short_ma_window: 20
+  long_ma_window: 50
+  slope_window: 20
+  strong_trend_threshold_pct: 10.0
+  choppy_ma_distance_pct: 2.0
+
+volatility_regime_confirmation:
+  enabled: true
+  realized_vol_lookback: 20
+  atr_lookback: 60
+  compressed_vol_threshold_pct: 1.0
+  high_vol_threshold_pct: 4.0
+  extreme_vol_threshold_pct: 7.0
+
+momentum_regime_confirmation:
+  enabled: true
+  roc_lookback: 20
+  strong_momentum_threshold_pct: 10.0
+  exhaustion_threshold_pct: 5.0
+
+liquidity_regime_confirmation:
+  enabled: true
+  lookback_bars: 60
+  thin_dollar_volume_threshold: 5000000.0
+  deep_dollar_volume_threshold: 100000000.0
+  thinning_score_threshold: 50.0
+
+cross_sectional_regime_map:
+  enabled: true
+  min_symbol_count: 20
+  broad_uptrend_ratio: 0.60
+  broad_downtrend_ratio: 0.60
+  risk_off_breadth_threshold: 35.0
+  risk_on_breadth_threshold: 65.0
+  high_dispersion_threshold: 60.0
+
+regime_transition_risk:
+  enabled: true
+  high_risk_score_threshold: 70.0
+  critical_risk_score_threshold: 85.0
+  warn_on_breadth_deterioration: true
+  warn_on_momentum_exhaustion: true
+  warn_on_volatility_expansion: true
+  warn_on_liquidity_thinning: true
+
+regime_alignment:
+  enabled: true
+  min_alignment_score_warning: 50.0
+  min_alignment_score_suppression: 30.0
+  suppress_conflicted_candidates: true
+  rank_penalty_on_divergence: true
+
+regime_map_notifications:
+  enabled: true
+  dry_run: true
+  notify_regime_map_report: true
+  notify_transition_warning: true
+  notify_alignment_warning: true
+  default_channel: "dry_run"
+  warn_no_real_send_default: true

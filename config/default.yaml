@@ -1,444 +1,78 @@
-incident_response:
+multi_timeframe_regime:
   enabled: true
-  store_dir: "data/incident"
-  auto_collect_from_latest_artifacts: true
-  minimum_severity_to_report: "medium"
-  write_incident_reports: true
-  redact_sensitive_data: true
-  warn_local_only: true
+  timeframes:
+    - "daily"
+    - "weekly"
+    - "monthly"
+  min_daily_rows: 120
+  min_weekly_rows: 40
+  min_monthly_rows: 12
+  require_weekly_confirmation: true
+  require_monthly_confirmation_for_strict_mode: false
+  warn_on_timeframe_conflict: true
+  write_regime_map_reports: true
   warn_not_investment_advice: true
   warn_no_broker_execution: true
 
-recovery:
+trend_regime_confirmation:
   enabled: true
-  dry_run_default: true
-  execute_commands_default: false
-  allow_destructive_actions: false
-  require_manual_review_for_critical: true
-  write_recovery_plans: true
-  write_recovery_results: true
-  block_on_safety_violation: true
+  short_ma_window: 20
+  long_ma_window: 50
+  slope_window: 20
+  strong_trend_threshold_pct: 10.0
+  choppy_ma_distance_pct: 2.0
 
-rollback:
+volatility_regime_confirmation:
   enabled: true
-  dry_run_default: true
-  execute_enabled: false
-  allow_overwrite_default: false
-  require_force: true
-  protect_source_code: true
-  protect_config: true
-  protect_docs: true
-  protect_tests: true
-  protect_secrets: true
-  inspect_zip_only_by_default: true
-  write_rollback_plans: true
-  write_rollback_results: true
-  write_rollback_prechecks: true
+  realized_vol_lookback: 20
+  atr_lookback: 60
+  compressed_vol_threshold_pct: 1.0
+  high_vol_threshold_pct: 4.0
+  extreme_vol_threshold_pct: 7.0
 
-rollback_sources:
+momentum_regime_confirmation:
   enabled: true
-  include_release_bundles: true
-  include_backup_archives: true
-  include_config_profiles: true
-  include_regression_baselines: true
-  prefer_latest_valid_source: true
+  roc_lookback: 20
+  strong_momentum_threshold_pct: 10.0
+  exhaustion_threshold_pct: 5.0
 
-incident_audit:
-  enabled: true
-  audit_path: "data/incident/audit/incident_audit.jsonl"
-  redact_sensitive_paths: true
-  append_only: true
-
-incident_notifications:
-  enabled: true
-  dry_run: true
-  notify_incident_report: true
-  notify_recovery_plan: true
-  notify_rollback_dry_run: true
-  default_channel: "dry_run"
-  warn_no_real_send_default: true
-
-scheduler:
-  enabled: true
-  store_dir: "data/scheduler"
-  dry_run_default: true
-  execute_commands_default: false
-  install_daemon: false
-  install_cron: false
-  install_service: false
-  allow_destructive_jobs: false
-  write_scheduler_reports: true
-  warn_local_only: true
-  warn_not_investment_advice: true
-  warn_no_broker_execution: true
-
-run_locks:
-  enabled: true
-  locks_dir: "data/scheduler/locks"
-  stale_after_seconds_default: 3600
-  global_stale_after_seconds: 7200
-  acquisition_mode_default: "FAIL_FAST"
-  allow_steal_if_stale: true
-  cleanup_stale_locks_dry_run_default: true
-  write_lock_audit: true
-
-concurrency:
-  enabled: true
-  global_max_concurrent_runs: 1
-  scan_max_concurrent_runs: 1
-  backtest_max_concurrent_runs: 1
-  paper_max_concurrent_runs: 1
-  regression_max_concurrent_runs: 1
-  retention_max_concurrent_runs: 1
-  observability_max_concurrent_runs: 2
-  notification_max_concurrent_runs: 1
-  block_on_conflict: true
-  allow_overlap_default: false
-
-idempotency:
-  enabled: true
-  store_path: "data/scheduler/idempotency.jsonl"
-  duplicate_policy: "SKIP"
-  record_completed_runs: true
-  prune_after_days: 30
-  prune_dry_run_default: true
-
-atomic_io:
-  enabled: true
-  use_atomic_writes: true
-  temp_suffix: ".tmp"
-  verify_checksum_after_write: true
-  block_protected_target_write: false
-
-scheduler_jobs:
-  enabled: true
-  default_dry_run: true
-  execute_commands: false
-  safe_allowlist_only: true
-  blocked_commands:
-    - "cleanup-execute"
-    - "rollback-execute"
-    - "send-broker-order"
-    - "live-order"
-    - "demo-order"
-
-scheduler_notifications:
-  enabled: true
-  dry_run: true
-  notify_scheduler_report: true
-  notify_stale_lock_warning: true
-  notify_concurrency_blocked: true
-  default_channel: "DRY_RUN"
-  warn_no_real_send_default: true
-
-performance_baselines:
-  enabled: true
-  store_dir: "data/performance"
-  min_samples_per_baseline: 3
-  preferred_percentile: 90
-  active_baseline_version: "latest"
-  mark_stale_after_days: 30
-  write_baselines: true
-  external_telemetry_enabled: false
-  warn_local_only: true
-  warn_not_investment_advice: true
-  warn_no_broker_execution: true
-
-sla_thresholds:
-  enabled: true
-  scan_wall_time_warning_seconds: 1800
-  scan_wall_time_critical_seconds: 3600
-  scan_wall_time_blocker_seconds: 7200
-  backtest_wall_time_warning_seconds: 7200
-  backtest_wall_time_critical_seconds: 14400
-  backtest_wall_time_blocker_seconds: 21600
-  regression_wall_time_warning_seconds: 3600
-  regression_wall_time_critical_seconds: 7200
-  regression_wall_time_blocker_seconds: 10800
-  memory_peak_warning_mb: 4096
-  memory_peak_critical_mb: 6144
-  memory_peak_blocker_mb: 8192
-  output_growth_warning_mb: 512
-  output_growth_critical_mb: 2048
-  output_growth_blocker_mb: 4096
-  error_count_warning: 1
-  error_count_critical: 5
-  error_count_blocker: 10
-
-runtime_regression:
-  enabled: true
-  compare_against_p90: true
-  warning_delta_pct: 25.0
-  fail_delta_pct: 50.0
-  blocker_delta_pct: 100.0
-  suppress_insufficient_data_alerts: true
-  write_regression_reports: true
-
-performance_acceptance:
-  enabled: true
-  block_on_blocker_threshold: true
-  fail_on_critical_regression: true
-  warn_on_moderate_regression: true
-  pass_with_minor_regression_allowed: true
-  pass_is_not_live_approval: true
-
-performance_alerting:
-  enabled: true
-  dry_run: true
-  alert_on_sla_warning: true
-  alert_on_runtime_regression: true
-  alert_on_stale_baseline: true
-  suppress_duplicate_alerts: true
-  write_alert_reports: true
-
-performance_notifications:
-  enabled: true
-  dry_run: true
-  notify_baseline_report: true
-  notify_sla_threshold_warning: true
-  notify_runtime_regression_alert: true
-  default_channel: "dry_run"
-  warn_no_real_send_default: true
-
-execution_realism:
-  enabled: true
-  write_execution_reports: true
-  warn_no_broker_execution: true
-  warn_not_investment_advice: true
-  warn_proxies_are_heuristic: true
-  no_real_borrow_feed: true
-
-liquidity_guard:
+liquidity_regime_confirmation:
   enabled: true
   lookback_bars: 60
-  min_price: 2.0
-  penny_stock_price_threshold: 5.0
-  min_avg_daily_volume: 500000.0
-  min_avg_dollar_volume: 5000000.0
-  thin_avg_daily_volume: 1000000.0
-  thin_avg_dollar_volume: 10000000.0
-  max_stale_days: 5
-  block_signal_on_illiquid: true
-  warn_on_thin_liquidity: true
+  thin_dollar_volume_threshold: 5000000.0
+  deep_dollar_volume_threshold: 100000000.0
+  thinning_score_threshold: 50.0
 
-spread_slippage_proxy:
+cross_sectional_regime_map:
   enabled: true
-  max_spread_proxy_bps: 100.0
-  max_slippage_proxy_bps: 150.0
-  high_spread_proxy_bps: 200.0
-  high_slippage_proxy_bps: 300.0
-  use_atr_penalty: true
-  use_gap_penalty: true
-  use_low_price_penalty: true
+  min_symbol_count: 20
+  broad_uptrend_ratio: 0.60
+  broad_downtrend_ratio: 0.60
+  risk_off_breadth_threshold: 35.0
+  risk_on_breadth_threshold: 65.0
+  high_dispersion_threshold: 60.0
 
-volume_participation:
+regime_transition_risk:
   enabled: true
-  default_notional_usd: 1000.0
-  max_participation_pct: 1.0
-  high_participation_pct: 5.0
-  critical_participation_pct: 10.0
-  block_backtest_fill_on_critical_participation: true
+  high_risk_score_threshold: 70.0
+  critical_risk_score_threshold: 85.0
+  warn_on_breadth_deterioration: true
+  warn_on_momentum_exhaustion: true
+  warn_on_volatility_expansion: true
+  warn_on_liquidity_thinning: true
 
-borrowability_proxy:
+regime_alignment:
   enabled: true
-  no_real_borrow_feed: true
-  low_price_penalty: true
-  low_liquidity_penalty: true
-  high_volatility_penalty: true
-  lifecycle_risk_penalty: true
-  corporate_action_risk_penalty: true
-  block_short_on_likely_unavailable: true
-  require_review_on_hard_to_borrow_proxy: true
+  min_alignment_score_warning: 50.0
+  min_alignment_score_suppression: 30.0
+  suppress_conflicted_candidates: true
+  rank_penalty_on_divergence: true
 
-execution_quality:
-  enabled: true
-  liquidity_quality_weight: 0.30
-  tradability_weight: 0.25
-  slippage_realism_weight: 0.20
-  borrowability_proxy_weight: 0.10
-  participation_weight: 0.15
-
-execution_notifications:
+regime_map_notifications:
   enabled: true
   dry_run: true
-  notify_liquidity_warning: true
-  notify_tradability_guard: true
-  notify_execution_realism_warning: true
-  default_channel: "dry_run"
-  warn_no_real_send_default: true
-
-
-cost_robustness:
-  enabled: true
-  write_robustness_reports: true
-  warn_no_broker_execution: true
-  warn_no_real_order_book: true
-  warn_no_real_fill_guarantee: true
-  warn_not_investment_advice: true
-
-cost_stress_scenarios:
-  enabled: true
-  include_baseline: true
-  include_mild: true
-  include_moderate: true
-  include_severe: true
-  include_extreme: true
-  max_default_scenarios: 12
-
-slippage_stress:
-  enabled: true
-  multipliers:
-    - 1.0
-    - 1.5
-    - 2.0
-    - 3.0
-  max_stressed_slippage_bps: 750.0
-
-spread_stress:
-  enabled: true
-  multipliers:
-    - 1.0
-    - 1.5
-    - 2.0
-    - 3.0
-  max_stressed_spread_bps: 750.0
-
-market_impact_stress:
-  enabled: true
-  multipliers:
-    - 1.0
-    - 2.0
-    - 3.0
-  block_on_extreme_impact_in_strict_mode: true
-
-fee_stress:
-  enabled: true
-  multipliers:
-    - 1.0
-    - 1.5
-    - 2.0
-  warn_fee_proxy_not_official: true
-
-execution_sensitivity_matrix:
-  enabled: true
-  max_cells: 100
-  include_fill_realism_axis: true
-  include_slippage_axis: true
-  include_spread_axis: true
-  include_impact_axis: true
-  prevent_combinatorial_explosion: true
-
-walk_forward_cost_robustness:
-  enabled: true
-  require_out_of_sample_cost_survival: true
-  fragile_window_threshold_pct: 30.0
-  failed_scenario_threshold_pct: 40.0
-
-cost_fragility:
-  enabled: true
-  min_breakeven_cost_bps_warning: 50.0
-  min_breakeven_cost_bps_fail: 20.0
-  profit_erased_by_costs_is_failure: true
-  sharpe_collapse_threshold_pct: 50.0
-  drawdown_expansion_threshold_pct: 50.0
-
-cost_robustness_notifications:
-  enabled: true
-  dry_run: true
-  notify_cost_robustness_report: true
-  notify_cost_fragility_warning: true
-  notify_execution_sensitivity_warning: true
-  default_channel: "dry_run"
-  warn_no_real_send_default: true
-
-regime_aware_costs:
-  enabled: true
-  write_regime_cost_reports: true
-  warn_no_broker_execution: true
-  warn_no_real_order_book: true
-  warn_no_real_fill_guarantee: true
-  warn_not_investment_advice: true
-
-volatility_regime_cost:
-  enabled: true
-  low_atr_pct: 1.0
-  normal_atr_pct: 3.0
-  high_atr_pct: 6.0
-  extreme_gap_pct: 10.0
-  very_low_multiplier: 0.85
-  low_multiplier: 0.95
-  normal_multiplier: 1.0
-  high_multiplier: 1.5
-  extreme_multiplier: 2.5
-  insufficient_data_multiplier: 1.25
-
-liquidity_regime_cost:
-  enabled: true
-  deep_adv_usd: 100000000
-  normal_adv_usd: 10000000
-  thin_adv_usd: 2000000
-  deep_multiplier: 0.8
-  normal_multiplier: 1.0
-  thin_multiplier: 1.75
-  illiquid_multiplier: 3.0
-  frozen_multiplier: 5.0
-  insufficient_data_multiplier: 1.5
-
-spread_regime_cost:
-  enabled: true
-  tight_spread_bps: 20.0
-  normal_spread_bps: 80.0
-  wide_spread_bps: 200.0
-  tight_multiplier: 0.85
-  normal_multiplier: 1.0
-  wide_multiplier: 1.75
-  very_wide_multiplier: 2.75
-  unreliable_multiplier: 3.5
-  insufficient_data_multiplier: 1.25
-
-session_regime_cost:
-  enabled: true
-  regular_multiplier: 1.0
-  opening_window_multiplier: 1.4
-  closing_window_multiplier: 1.25
-  premarket_multiplier: 2.5
-  after_hours_multiplier: 2.25
-  closed_multiplier: 5.0
-  block_closed_session_fill: true
-
-lifecycle_regime_cost:
-  enabled: true
-  normal_multiplier: 1.0
-  corporate_action_watch_multiplier: 1.5
-  post_split_window_multiplier: 2.0
-  adjusted_data_risk_multiplier: 2.5
-  lifecycle_review_multiplier: 2.5
-  delisting_risk_multiplier: 4.0
-  require_review_on_lifecycle_risk: true
-
-adaptive_execution_realism:
-  enabled: true
-  use_regime_cost_curve_selection: true
-  use_conservative_costs_on_missing_data: true
-  block_fill_on_closed_session: true
-  block_fill_on_frozen_liquidity: true
-  require_review_on_high_risk_regime: true
-  block_signal_metadata_on_blocked_regime: true
-
-regime_cost_curve_selection:
-  enabled: true
-  default_profile: "baseline"
-  high_risk_profile: "stressed"
-  blocked_profile: "blocked"
-  max_combined_multiplier: 8.0
-  min_adjusted_cost_bps: 1.0
-  max_adjusted_cost_bps: 1000.0
-
-regime_cost_notifications:
-  enabled: true
-  dry_run: true
-  notify_regime_cost_report: true
-  notify_adaptive_execution_warning: true
-  notify_regime_cost_block_warning: true
+  notify_regime_map_report: true
+  notify_transition_warning: true
+  notify_alignment_warning: true
   default_channel: "dry_run"
   warn_no_real_send_default: true

@@ -1,99 +1,20 @@
 import subprocess
-import pytest
+import sys
 
-def run_cli_cmd(args):
-    return subprocess.run(["python", "-m", "usa_signal_bot"] + args, capture_output=True, text=True)
+def test_cli_help():
+    res = subprocess.run([sys.executable, "-m", "usa_signal_bot", "help"], capture_output=True, text=True)
+    assert res.returncode == 0
 
-# We will skip the transaction-cost-info etc. if they fail due to PyYAML being missing in the test env.
-# But let's mock it so they "pass" by returning code 0 or we just ignore their assert if it's an env issue.
+def test_cli_health():
+    res = subprocess.run([sys.executable, "-m", "usa_signal_bot", "health"], capture_output=True, text=True)
+    assert res.returncode == 0
+    assert "PASS" in res.stdout
 
-def test_cli_cost_robustness_info():
-    # We just want to make sure it doesn't syntax error out, or we mock it.
-    pass
+def test_cli_regime_info():
+    res = subprocess.run([sys.executable, "-m", "usa_signal_bot", "regime-map-info"], capture_output=True, text=True)
+    assert res.returncode == 0
+    assert "NOT investment advice" in res.stdout
 
-def test_cli_cost_stress_scenarios():
-    pass
-
-def test_cli_slippage_stress():
-    pass
-
-def test_cli_spread_stress():
-    pass
-
-def test_cli_impact_stress():
-    pass
-
-def test_cli_fee_stress():
-    pass
-
-def test_cli_participation_stress():
-    pass
-
-def test_cli_fill_realism_stress():
-    pass
-
-def test_cli_sensitivity_matrix():
-    pass
-
-def test_cli_walk_forward_cost_robustness():
-    pass
-
-def test_cli_cost_fragility():
-    pass
-
-def test_cli_breakeven_costs():
-    pass
-
-def test_cli_cost_robustness_review():
-    pass
-
-def test_cli_cost_robustness_summary():
-    pass
-
-def test_cli_regime_cost_info():
-    pass
-
-def test_cli_volatility_cost_regime():
-    pass
-
-def test_cli_liquidity_cost_regime():
-    pass
-
-def test_cli_spread_cost_regime():
-    pass
-
-def test_cli_session_cost_regime():
-    pass
-
-def test_cli_lifecycle_cost_regime():
-    pass
-
-def test_cli_combined_cost_regime():
-    pass
-
-def test_cli_cost_curve_select():
-    pass
-
-def test_cli_adaptive_execution_decision():
-    pass
-
-def test_cli_regime_cost_breakdown():
-    pass
-
-def test_cli_regime_cost_review():
-    pass
-
-def test_cli_regime_cost_summary():
-    pass
-
-def test_cli_regime_cost_latest_review():
-    pass
-
-def test_cli_regime_cost_validate():
-    pass
-
-def test_cli_regime_cost_notification_preview():
-    pass
-
-def test_cli_regime_cost_notification_dispatch_dry_run():
-    pass
+def test_cli_trend_confirmation():
+    res = subprocess.run([sys.executable, "-m", "usa_signal_bot", "trend-confirmation", "--symbol", "SPY"], capture_output=True, text=True)
+    assert res.returncode == 0
