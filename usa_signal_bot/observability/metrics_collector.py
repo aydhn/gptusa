@@ -26,6 +26,7 @@ class OperationalMetricsCollector:
         m.extend(self.collect_release_metrics())
         m.extend(self.collect_notification_metrics())
         m.extend(self.collect_execution_metrics())
+        m.extend(self.collect_regime_cost_metrics())
 
         sums = self.collect_log_summaries()
 
@@ -160,6 +161,42 @@ class OperationalMetricsCollector:
                 status=OperationalMetricStatus.OK
             )
         ]
+
+    def collect_regime_cost_metrics(self) -> List[OperationalMetric]:
+        m = []
+        try:
+            from usa_signal_bot.regime_costs.regime_cost_store import get_latest_regime_cost_review, read_regime_cost_review_json
+
+            latest_file = get_latest_regime_cost_review(self.data_root)
+            if latest_file:
+                rev = read_regime_cost_review_json(latest_file)
+                snaps = rev.get("snapshots", [])
+
+                high_risk = sum(1 for s in snaps if s.get("combined_regime") == "HIGH_RISK")
+                blocked = sum(1 for s in snaps if s.get("combined_regime") == "BLOCKED")
+
+                m.append(OperationalMetric(
+                    metric_id=create_operational_metric_id(),
+                    metric_type=MetricType.COUNTER,
+                    name="regime_cost_high_risk_count",
+                    value=high_risk,
+                    timestamp_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
+                    labels={"source": "regime_cost_review"},
+                    status=OperationalMetricStatus.HEALTHY
+                ))
+                m.append(OperationalMetric(
+                    metric_id=create_operational_metric_id(),
+                    metric_type=MetricType.COUNTER,
+                    name="adaptive_execution_block_count",
+                    value=blocked,
+                    timestamp_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
+                    labels={"source": "regime_cost_review"},
+                    status=OperationalMetricStatus.HEALTHY
+                ))
+        except Exception:
+            pass
+        return m
+
     def collect_log_summaries(self) -> List[LogFileSummary]:
         res = []
         lm = LogRotationManager(default_log_rotation_config())

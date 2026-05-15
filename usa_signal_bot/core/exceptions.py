@@ -1148,3 +1148,42 @@ class BreakevenCostError(CostRobustnessError): pass
 class CostRobustnessStorageError(CostRobustnessError): pass
 class CostRobustnessValidationError(CostRobustnessError): pass
 class CostRobustnessReportingError(CostRobustnessError): pass
+
+class RegimeAwareCostError(USASignalBotError):
+    pass
+
+class VolatilityRegimeCostError(RegimeAwareCostError):
+    pass
+
+class LiquidityRegimeCostError(RegimeAwareCostError):
+    pass
+
+class SpreadRegimeCostError(RegimeAwareCostError):
+    pass
+
+class SessionRegimeCostError(RegimeAwareCostError):
+    pass
+
+class LifecycleRegimeCostError(RegimeAwareCostError):
+    pass
+
+class CombinedCostRegimeError(RegimeAwareCostError):
+    pass
+
+class CostCurveSelectionError(RegimeAwareCostError):
+    pass
+
+class AdaptiveExecutionRealismError(RegimeAwareCostError):
+    pass
+
+class RegimeCostBreakdownError(RegimeAwareCostError):
+    pass
+
+class RegimeCostStorageError(RegimeAwareCostError):
+    pass
+
+class RegimeCostValidationError(RegimeAwareCostError):
+    pass
+
+class RegimeCostReportingError(RegimeAwareCostError):
+    pass

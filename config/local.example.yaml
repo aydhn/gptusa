@@ -3,3 +3,7 @@
 scheduler:
   enabled: true
   dry_run_default: true
+
+regime_aware_costs:
+  enabled: true
+  write_regime_cost_reports: true
