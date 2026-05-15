@@ -1,0 +1,120 @@
+import re
+
+def update_enums():
+    with open('usa_signal_bot/core/enums.py', 'r') as f:
+        content = f.read()
+
+    new_enums = """
+class CostVolatilityRegime(str, Enum):
+    VERY_LOW = "VERY_LOW"
+    LOW = "LOW"
+    NORMAL = "NORMAL"
+    HIGH = "HIGH"
+    EXTREME = "EXTREME"
+    INSUFFICIENT_DATA = "INSUFFICIENT_DATA"
+    UNKNOWN = "UNKNOWN"
+
+class CostLiquidityRegime(str, Enum):
+    DEEP = "DEEP"
+    NORMAL = "NORMAL"
+    THIN = "THIN"
+    ILLIQUID = "ILLIQUID"
+    FROZEN = "FROZEN"
+    INSUFFICIENT_DATA = "INSUFFICIENT_DATA"
+    UNKNOWN = "UNKNOWN"
+
+class CostSpreadRegime(str, Enum):
+    TIGHT = "TIGHT"
+    NORMAL = "NORMAL"
+    WIDE = "WIDE"
+    VERY_WIDE = "VERY_WIDE"
+    UNRELIABLE = "UNRELIABLE"
+    INSUFFICIENT_DATA = "INSUFFICIENT_DATA"
+    UNKNOWN = "UNKNOWN"
+
+class CostSessionRegime(str, Enum):
+    REGULAR = "REGULAR"
+    OPENING_WINDOW = "OPENING_WINDOW"
+    CLOSING_WINDOW = "CLOSING_WINDOW"
+    PREMARKET = "PREMARKET"
+    AFTER_HOURS = "AFTER_HOURS"
+    CLOSED = "CLOSED"
+    HOLIDAY = "HOLIDAY"
+    UNKNOWN = "UNKNOWN"
+
+class CostLifecycleRegime(str, Enum):
+    NORMAL = "NORMAL"
+    CORPORATE_ACTION_WATCH = "CORPORATE_ACTION_WATCH"
+    POST_SPLIT_WINDOW = "POST_SPLIT_WINDOW"
+    ADJUSTED_DATA_RISK = "ADJUSTED_DATA_RISK"
+    LIFECYCLE_REVIEW = "LIFECYCLE_REVIEW"
+    DELISTING_RISK = "DELISTING_RISK"
+    UNKNOWN = "UNKNOWN"
+
+class CombinedCostRegime(str, Enum):
+    NORMAL = "NORMAL"
+    CONSERVATIVE = "CONSERVATIVE"
+    STRESSED = "STRESSED"
+    HIGH_RISK = "HIGH_RISK"
+    BLOCKED = "BLOCKED"
+    INSUFFICIENT_DATA = "INSUFFICIENT_DATA"
+    UNKNOWN = "UNKNOWN"
+
+class RegimeCostCurveProfile(str, Enum):
+    BASELINE = "BASELINE"
+    LIQUID = "LIQUID"
+    CONSERVATIVE = "CONSERVATIVE"
+    STRESSED = "STRESSED"
+    EXTREME = "EXTREME"
+    BLOCKED = "BLOCKED"
+    UNKNOWN = "UNKNOWN"
+
+class AdaptiveExecutionDecision(str, Enum):
+    USE_BASELINE_COSTS = "USE_BASELINE_COSTS"
+    USE_CONSERVATIVE_COSTS = "USE_CONSERVATIVE_COSTS"
+    USE_STRESSED_COSTS = "USE_STRESSED_COSTS"
+    REQUIRE_REVIEW = "REQUIRE_REVIEW"
+    BLOCK_FILL_SIMULATION = "BLOCK_FILL_SIMULATION"
+    BLOCK_SIGNAL_METADATA = "BLOCK_SIGNAL_METADATA"
+    UNKNOWN = "UNKNOWN"
+
+class RegimeCostAdjustmentStatus(str, Enum):
+    APPLIED = "APPLIED"
+    PARTIAL = "PARTIAL"
+    SKIPPED = "SKIPPED"
+    BLOCKED = "BLOCKED"
+    INSUFFICIENT_DATA = "INSUFFICIENT_DATA"
+    UNKNOWN = "UNKNOWN"
+
+class RegimeCostReportType(str, Enum):
+    REGIME_COST_SUMMARY = "REGIME_COST_SUMMARY"
+    COST_CURVE_SELECTION = "COST_CURVE_SELECTION"
+    ADAPTIVE_EXECUTION_REVIEW = "ADAPTIVE_EXECUTION_REVIEW"
+    REGIME_AWARE_BACKTEST_REVIEW = "REGIME_AWARE_BACKTEST_REVIEW"
+    FULL_REGIME_COST_REVIEW = "FULL_REGIME_COST_REVIEW"
+"""
+    if "CostVolatilityRegime" not in content:
+        content += new_enums
+
+    if "REGIME_COST_REPORT" not in content:
+        content = content.replace(
+            '    EXECUTION_REALISM_FAILED = "EXECUTION_REALISM_FAILED"\n',
+            '    EXECUTION_REALISM_FAILED = "EXECUTION_REALISM_FAILED"\n'
+            '    REGIME_COST_REPORT = "REGIME_COST_REPORT"\n'
+            '    ADAPTIVE_EXECUTION_WARNING = "ADAPTIVE_EXECUTION_WARNING"\n'
+            '    REGIME_COST_BLOCK_WARNING = "REGIME_COST_BLOCK_WARNING"\n'
+        )
+
+    if "REGIME_COST_HIGH_RISK" not in content:
+        content = content.replace(
+            '    THROTTLING_BLOCKED = "THROTTLING_BLOCKED"\n',
+            '    THROTTLING_BLOCKED = "THROTTLING_BLOCKED"\n'
+            '    REGIME_COST_HIGH_RISK = "REGIME_COST_HIGH_RISK"\n'
+            '    ADAPTIVE_EXECUTION_BLOCKED = "ADAPTIVE_EXECUTION_BLOCKED"\n'
+            '    REGIME_COST_MODEL_DEGRADED = "REGIME_COST_MODEL_DEGRADED"\n'
+        )
+
+    with open('usa_signal_bot/core/enums.py', 'w') as f:
+        f.write(content)
+
+update_enums()

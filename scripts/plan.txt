@@ -1,0 +1,9 @@
+1. Update `usa_signal_bot/core/enums.py` with new enums.
+2. Update `usa_signal_bot/core/config_schema.py` and `usa_signal_bot/core/config.py`.
+3. Update `usa_signal_bot/core/exceptions.py`.
+4. Create `usa_signal_bot/regime_costs` module and all its files.
+5. Create integrations in `quality`, `observability`, `notifications`, `core/health.py`, `app/cli.py`.
+6. Add config yaml updates.
+7. Add tests in `tests/`.
+8. Add docs in `docs/`.
+9. Run `python -m usa_signal_bot smoke` and `pytest tests/` to verify.
