@@ -1236,3 +1236,34 @@ class RegimeMapValidationError(RegimeMapError):
 
 class RegimeMapReportingError(RegimeMapError):
     pass
+
+
+class StrategyAdaptationError(USASignalBotError):
+    pass
+
+class StrategyRegimeProfileError(StrategyAdaptationError):
+    pass
+
+class StrategyCompatibilityError(StrategyAdaptationError):
+    pass
+
+class StrategyGatingError(StrategyAdaptationError):
+    pass
+
+class StrategyConflictResolutionError(StrategyAdaptationError):
+    pass
+
+class StrategyEnsembleError(StrategyAdaptationError):
+    pass
+
+class AdaptiveStrategyWeightError(StrategyAdaptationError):
+    pass
+
+class StrategyAdaptationStorageError(StrategyAdaptationError):
+    pass
+
+class StrategyAdaptationValidationError(StrategyAdaptationError):
+    pass
+
+class StrategyAdaptationReportingError(StrategyAdaptationError):
+    pass
