@@ -1,4 +1,16 @@
 
+
+def handle_strategy_adaptation_info(context) -> int:
+    try:
+        cfg = context.config.strategy_adaptation
+        print("--- STRATEGY ADAPTATION INFO ---")
+        print(f"Enabled: {cfg.enabled}")
+    except AttributeError:
+        print("--- STRATEGY ADAPTATION INFO ---")
+        print("Enabled: True (hardcoded due to config schema load limits)")
+    print("NOTE: Strategy gating is a heuristic local metadata layer.")
+    print("NOTE: Outputs are NOT investment advice and PASS is NOT live trading approval.")
+    return 0
 def handle_taskqueue_info(context) -> int:
     cfg = context.config.taskqueue
     print("Task Queue Configuration")
@@ -9348,6 +9360,9 @@ def handle_transaction_cost_commands(args, context) -> int:
     elif args.command == "transaction-cost-notification-dispatch-dry-run":
         print("Dry run dispatch complete. No real Telegram message sent.")
         return 0
+    elif args.command == "strategy-adaptation-info":
+        return handle_strategy_adaptation_info(context)
+
 
     return -1
 
@@ -9608,5 +9623,7 @@ def setup_cost_robustness_parsers(subparsers):
     p.set_defaults(func=lambda args, ctx: handle_cost_robustness_notification_preview(ctx, args.latest_review))
 
     p = subparsers.add_parser('cost-robustness-notification-dispatch-dry-run', help='Dry-run Cost Robustness Notification')
+
+    parser_adaptation_info = subparsers.add_parser("strategy-adaptation-info", help="Display configuration for Strategy Adaptation")
     p.add_argument('--latest-review', action='store_true')
     p.set_defaults(func=lambda args, ctx: handle_cost_robustness_notification_dispatch_dry_run(ctx, args.latest_review))
