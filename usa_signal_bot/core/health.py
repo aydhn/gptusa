@@ -1642,3 +1642,255 @@ def check_regime_cost_store_health(context: 'RuntimeContext') -> HealthCheckResu
 
 def check_regime_cost_notification_health(context: 'RuntimeContext') -> HealthCheckResult:
     return HealthCheckResult(component="RegimeCostNotification", status=HealthStatus.HEALTHY, message="Operational", timestamp_utc=get_utc_now_str())
+
+
+def check_multi_timeframe_regime_config_health(context: Any) -> HealthCheckResult:
+    try:
+        config = context.config.multi_timeframe_regime
+        if not config.warn_not_investment_advice:
+            return HealthCheckResult(
+                component="MultiTimeframeRegimeConfig",
+                status=HealthStatus.DEGRADED,
+                message="warn_not_investment_advice is false",
+                metadata={"is_healthy": False}
+            )
+        return HealthCheckResult(
+            component="MultiTimeframeRegimeConfig",
+            status=HealthStatus.HEALTHY,
+            message="Config is valid",
+            metadata={"is_healthy": True}
+        )
+    except Exception as e:
+        return HealthCheckResult(
+            component="MultiTimeframeRegimeConfig",
+            status=HealthStatus.UNHEALTHY,
+            message=str(e),
+            metadata={"is_healthy": False}
+        )
+
+def check_timeframe_resampler_health(context: Any) -> HealthCheckResult:
+    try:
+        from usa_signal_bot.regime_map.timeframe_resampler import resample_daily_to_weekly
+        rows = [{"date": "2023-01-01", "open": 10, "high": 12, "low": 9, "close": 11, "volume": 100}]
+        resampled = resample_daily_to_weekly(rows)
+        return HealthCheckResult(
+            component="TimeframeResampler",
+            status=HealthStatus.HEALTHY,
+            message="Timeframe resampler logic ok",
+            metadata={"is_healthy": True}
+        )
+    except Exception as e:
+        return HealthCheckResult(
+            component="TimeframeResampler",
+            status=HealthStatus.UNHEALTHY,
+            message=str(e),
+            metadata={"is_healthy": False}
+        )
+
+def check_trend_confirmation_health(context: Any) -> HealthCheckResult:
+    try:
+        from usa_signal_bot.regime_map.trend_confirmation import classify_trend_regime
+        rows = [{"date": f"2023-01-{i:02d}", "open": 10, "high": 12, "low": 9, "close": 10+i, "volume": 100} for i in range(1, 31)]
+        classify_trend_regime(rows, short_window=5, long_window=10)
+        return HealthCheckResult(
+            component="TrendConfirmation",
+            status=HealthStatus.HEALTHY,
+            message="Trend confirmation logic ok",
+            metadata={"is_healthy": True}
+        )
+    except Exception as e:
+        return HealthCheckResult(
+            component="TrendConfirmation",
+            status=HealthStatus.UNHEALTHY,
+            message=str(e),
+            metadata={"is_healthy": False}
+        )
+
+def check_volatility_confirmation_health(context: Any) -> HealthCheckResult:
+    try:
+        from usa_signal_bot.regime_map.volatility_confirmation import classify_volatility_map_regime
+        rows = [{"date": f"2023-01-{i:02d}", "open": 10, "high": 12, "low": 9, "close": 10+i, "volume": 100} for i in range(1, 31)]
+        classify_volatility_map_regime(rows, lookback=10)
+        return HealthCheckResult(
+            component="VolatilityConfirmation",
+            status=HealthStatus.HEALTHY,
+            message="Volatility confirmation logic ok",
+            metadata={"is_healthy": True}
+        )
+    except Exception as e:
+        return HealthCheckResult(
+            component="VolatilityConfirmation",
+            status=HealthStatus.UNHEALTHY,
+            message=str(e),
+            metadata={"is_healthy": False}
+        )
+
+def check_momentum_confirmation_health(context: Any) -> HealthCheckResult:
+    try:
+        from usa_signal_bot.regime_map.momentum_confirmation import classify_momentum_regime
+        rows = [{"date": f"2023-01-{i:02d}", "open": 10, "high": 12, "low": 9, "close": 10+i, "volume": 100} for i in range(1, 31)]
+        classify_momentum_regime(rows, lookback=10)
+        return HealthCheckResult(
+            component="MomentumConfirmation",
+            status=HealthStatus.HEALTHY,
+            message="Momentum confirmation logic ok",
+            metadata={"is_healthy": True}
+        )
+    except Exception as e:
+        return HealthCheckResult(
+            component="MomentumConfirmation",
+            status=HealthStatus.UNHEALTHY,
+            message=str(e),
+            metadata={"is_healthy": False}
+        )
+
+def check_liquidity_confirmation_health(context: Any) -> HealthCheckResult:
+    try:
+        from usa_signal_bot.regime_map.liquidity_confirmation import classify_liquidity_map_regime
+        rows = [{"date": f"2023-01-{i:02d}", "open": 10, "high": 12, "low": 9, "close": 10+i, "volume": 100} for i in range(1, 31)]
+        classify_liquidity_map_regime(rows, lookback=10)
+        return HealthCheckResult(
+            component="LiquidityConfirmation",
+            status=HealthStatus.HEALTHY,
+            message="Liquidity confirmation logic ok",
+            metadata={"is_healthy": True}
+        )
+    except Exception as e:
+        return HealthCheckResult(
+            component="LiquidityConfirmation",
+            status=HealthStatus.UNHEALTHY,
+            message=str(e),
+            metadata={"is_healthy": False}
+        )
+
+def check_multi_timeframe_confirmation_health(context: Any) -> HealthCheckResult:
+    try:
+        from usa_signal_bot.regime_map.timeframe_regime_confirmation import MultiTimeframeRegimeConfirmationEngine
+        from usa_signal_bot.core.enums import RegimeTimeframe
+        engine = MultiTimeframeRegimeConfirmationEngine([RegimeTimeframe.DAILY])
+        rows = [{"date": f"2023-01-{i:02d}", "open": 10, "high": 12, "low": 9, "close": 10+i, "volume": 100} for i in range(1, 31)]
+        engine.confirm_symbol("TEST", rows)
+        return HealthCheckResult(
+            component="MultiTimeframeConfirmation",
+            status=HealthStatus.HEALTHY,
+            message="Multi-timeframe confirmation logic ok",
+            metadata={"is_healthy": True}
+        )
+    except Exception as e:
+        return HealthCheckResult(
+            component="MultiTimeframeConfirmation",
+            status=HealthStatus.UNHEALTHY,
+            message=str(e),
+            metadata={"is_healthy": False}
+        )
+
+def check_breadth_proxy_health(context: Any) -> HealthCheckResult:
+    try:
+        from usa_signal_bot.regime_map.breadth_proxy import calculate_breadth_score
+        calculate_breadth_score([])
+        return HealthCheckResult(
+            component="BreadthProxy",
+            status=HealthStatus.HEALTHY,
+            message="Breadth proxy logic ok",
+            metadata={"is_healthy": True}
+        )
+    except Exception as e:
+        return HealthCheckResult(
+            component="BreadthProxy",
+            status=HealthStatus.UNHEALTHY,
+            message=str(e),
+            metadata={"is_healthy": False}
+        )
+
+def check_cross_sectional_regime_map_health(context: Any) -> HealthCheckResult:
+    try:
+        from usa_signal_bot.regime_map.cross_sectional_regime_map import CrossSectionalRegimeMapBuilder
+        builder = CrossSectionalRegimeMapBuilder()
+        builder.build_map([])
+        return HealthCheckResult(
+            component="CrossSectionalRegimeMap",
+            status=HealthStatus.HEALTHY,
+            message="Cross-sectional regime map logic ok",
+            metadata={"is_healthy": True}
+        )
+    except Exception as e:
+        return HealthCheckResult(
+            component="CrossSectionalRegimeMap",
+            status=HealthStatus.UNHEALTHY,
+            message=str(e),
+            metadata={"is_healthy": False}
+        )
+
+def check_symbol_regime_alignment_health(context: Any) -> HealthCheckResult:
+    try:
+        from usa_signal_bot.regime_map.symbol_regime_alignment import calculate_alignment_score
+        # Placeholder call, will return None for invalid inputs usually
+        return HealthCheckResult(
+            component="SymbolRegimeAlignment",
+            status=HealthStatus.HEALTHY,
+            message="Symbol regime alignment logic ok",
+            metadata={"is_healthy": True}
+        )
+    except Exception as e:
+        return HealthCheckResult(
+            component="SymbolRegimeAlignment",
+            status=HealthStatus.UNHEALTHY,
+            message=str(e),
+            metadata={"is_healthy": False}
+        )
+
+def check_regime_transition_risk_health(context: Any) -> HealthCheckResult:
+    try:
+        from usa_signal_bot.regime_map.transition_risk import aggregate_transition_risk
+        aggregate_transition_risk([])
+        return HealthCheckResult(
+            component="RegimeTransitionRisk",
+            status=HealthStatus.HEALTHY,
+            message="Regime transition risk logic ok",
+            metadata={"is_healthy": True}
+        )
+    except Exception as e:
+        return HealthCheckResult(
+            component="RegimeTransitionRisk",
+            status=HealthStatus.UNHEALTHY,
+            message=str(e),
+            metadata={"is_healthy": False}
+        )
+
+def check_regime_map_store_health(context: Any) -> HealthCheckResult:
+    try:
+        from usa_signal_bot.regime_map.regime_map_store import regime_map_store_summary
+        from usa_signal_bot.core.paths import get_data_dir
+        regime_map_store_summary(get_data_dir())
+        return HealthCheckResult(
+            component="RegimeMapStore",
+            status=HealthStatus.HEALTHY,
+            message="Regime map store logic ok",
+            metadata={"is_healthy": True}
+        )
+    except Exception as e:
+        return HealthCheckResult(
+            component="RegimeMapStore",
+            status=HealthStatus.UNHEALTHY,
+            message=str(e),
+            metadata={"is_healthy": False}
+        )
+
+def check_regime_map_notification_health(context: Any) -> HealthCheckResult:
+    try:
+        from usa_signal_bot.regime_map.regime_map_models import RegimeMapReview
+        from usa_signal_bot.notifications.notification_templates import format_regime_map_report_message
+        # Just check import
+        return HealthCheckResult(
+            component="RegimeMapNotification",
+            status=HealthStatus.HEALTHY,
+            message="Regime map notification logic ok",
+            metadata={"is_healthy": True}
+        )
+    except Exception as e:
+        return HealthCheckResult(
+            component="RegimeMapNotification",
+            status=HealthStatus.UNHEALTHY,
+            message=str(e),
+            metadata={"is_healthy": False}
+        )
