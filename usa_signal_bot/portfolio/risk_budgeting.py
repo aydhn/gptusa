@@ -84,8 +84,8 @@ def calculate_weight_by_timeframe(allocations: List[AllocationResult]) -> Dict[s
 def check_budget_items(weights: Dict[str, float], budget_type: RiskBudgetType, limit: float) -> List[RiskBudgetItem]:
     items = []
     for key, weight in weights.items():
-        status = RiskBudgetStatus.BREACHED if weight > limit else RiskBudgetStatus.WITHIN_BUDGET
-        message = f"Weight {weight:.4f} > Limit {limit:.4f}" if status == RiskBudgetStatus.BREACHED else "Within budget"
+        status = RiskBudgetStatus.EXHAUSTED if weight > limit else RiskBudgetStatus.AVAILABLE
+        message = f"Weight {weight:.4f} > Limit {limit:.4f}" if status == RiskBudgetStatus.EXHAUSTED else "Within budget"
         items.append(RiskBudgetItem(
             budget_type=budget_type,
             key=key,
@@ -103,11 +103,11 @@ def build_risk_budget_report(allocations: List[AllocationResult], portfolio_equi
     total_notional = sum(a.target_notional for a in allocations if a.status in [AllocationStatus.ALLOCATED, AllocationStatus.CAPPED, AllocationStatus.REDUCED])
 
     items = []
-    status = RiskBudgetStatus.WITHIN_BUDGET
+    status = RiskBudgetStatus.AVAILABLE
     warnings = []
 
     if total_weight > cfg.max_total_budget_pct:
-        status = RiskBudgetStatus.BREACHED
+        status = RiskBudgetStatus.EXHAUSTED
         warnings.append(f"Total weight {total_weight:.4f} exceeds max_total_budget_pct {cfg.max_total_budget_pct:.4f}")
 
     items.append(RiskBudgetItem(
@@ -115,7 +115,7 @@ def build_risk_budget_report(allocations: List[AllocationResult], portfolio_equi
         key="TOTAL",
         used_weight=total_weight,
         limit_weight=cfg.max_total_budget_pct,
-        status=RiskBudgetStatus.BREACHED if total_weight > cfg.max_total_budget_pct else RiskBudgetStatus.WITHIN_BUDGET,
+        status=RiskBudgetStatus.EXHAUSTED if total_weight > cfg.max_total_budget_pct else RiskBudgetStatus.AVAILABLE,
         message="Total portfolio weight limit check"
     ))
 
@@ -123,8 +123,8 @@ def build_risk_budget_report(allocations: List[AllocationResult], portfolio_equi
     items.extend(check_budget_items(calculate_weight_by_strategy(allocations), RiskBudgetType.STRATEGY, cfg.max_strategy_budget_pct))
     items.extend(check_budget_items(calculate_weight_by_timeframe(allocations), RiskBudgetType.TIMEFRAME, cfg.max_timeframe_budget_pct))
 
-    if any(item.status == RiskBudgetStatus.BREACHED for item in items):
-        status = RiskBudgetStatus.BREACHED
+    if any(item.status == RiskBudgetStatus.EXHAUSTED for item in items):
+        status = RiskBudgetStatus.EXHAUSTED
 
     return RiskBudgetReport(
         report_id=f"rb_{uuid.uuid4().hex[:8]}",

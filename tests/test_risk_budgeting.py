@@ -28,11 +28,11 @@ def test_build_report_breach():
     config.max_total_budget_pct = 0.50 # Less than 0.9
 
     report = build_risk_budget_report(allocs, 10000, config)
-    assert report.status == RiskBudgetStatus.BREACHED
+    assert report.status == RiskBudgetStatus.EXHAUSTED
     assert report.total_allocated_weight == 0.9
 
     text = risk_budget_report_to_text(report)
-    assert "BREACHED" in text
+    assert "EXHAUSTED" in text
 
 def test_build_report_ok():
     allocs = get_test_allocations()
@@ -43,4 +43,4 @@ def test_build_report_ok():
     config.max_timeframe_budget_pct = 1.0
 
     report = build_risk_budget_report(allocs, 10000, config)
-    assert report.status == RiskBudgetStatus.WITHIN_BUDGET
+    assert report.status == RiskBudgetStatus.AVAILABLE

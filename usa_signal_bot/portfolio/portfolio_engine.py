@@ -138,7 +138,7 @@ class PortfolioConstructionEngine:
         risk_budget_report: RiskBudgetReport,
         concentration_report: ConcentrationReport
     ) -> PortfolioReviewStatus:
-        if risk_budget_report.status == RiskBudgetStatus.BREACHED or concentration_report.breach_count > 0:
+        if risk_budget_report.status == RiskBudgetStatus.EXHAUSTED or concentration_report.breach_count > 0:
             return PortfolioReviewStatus.NEEDS_REVIEW
         return PortfolioReviewStatus.ACCEPTABLE
 
