@@ -745,3 +745,13 @@ def format_position_size_warning_message(results) -> NotificationMessage:
 def format_risk_budget_warning_message(budget) -> NotificationMessage:
     body = f"Risk Budget Status: {budget.status.value}\nWarnings: {', '.join(budget.warnings)}"
     return NotificationMessage("Risk Budget Warning", body)
+
+def format_portfolio_construction_report_message(review) -> dict:
+    from usa_signal_bot.portfolio_construction.construction_reporting import portfolio_construction_review_to_text
+    return {
+        "title": "Portfolio Construction Review",
+        "body": portfolio_construction_review_to_text(review, 10)
+    }
+
+def notifications_from_portfolio_construction_review(review) -> list:
+    return [format_portfolio_construction_report_message(review)]

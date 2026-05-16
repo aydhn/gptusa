@@ -1,0 +1,74 @@
+[
+  {
+    "record_id": "sec_rec_AAPL_5fb9e7dd",
+    "symbol": "AAPL",
+    "sector": "technology",
+    "industry": "hardware",
+    "cluster": "mega_cap_tech",
+    "source": "MANUAL_REGISTRY",
+    "confidence": 100.0
+  },
+  {
+    "record_id": "sec_rec_MSFT_6706c497",
+    "symbol": "MSFT",
+    "sector": "technology",
+    "industry": "software",
+    "cluster": "mega_cap_tech",
+    "source": "MANUAL_REGISTRY",
+    "confidence": 100.0
+  },
+  {
+    "record_id": "sec_rec_NVDA_e119fc19",
+    "symbol": "NVDA",
+    "sector": "technology",
+    "industry": "semiconductors",
+    "cluster": "ai_semis",
+    "source": "MANUAL_REGISTRY",
+    "confidence": 100.0
+  },
+  {
+    "record_id": "sec_rec_XOM_1c0d92d4",
+    "symbol": "XOM",
+    "sector": "energy",
+    "industry": "integrated_energy",
+    "cluster": "energy",
+    "source": "MANUAL_REGISTRY",
+    "confidence": 90.0
+  },
+  {
+    "record_id": "sec_rec_JPM_469f63df",
+    "symbol": "JPM",
+    "sector": "financials",
+    "industry": "banks",
+    "cluster": "large_banks",
+    "source": "MANUAL_REGISTRY",
+    "confidence": 95.0
+  },
+  {
+    "record_id": "sec_rec_UNH_421656b5",
+    "symbol": "UNH",
+    "sector": "healthcare",
+    "industry": "managed_care",
+    "cluster": "healthcare",
+    "source": "MANUAL_REGISTRY",
+    "confidence": 90.0
+  },
+  {
+    "record_id": "sec_rec_SPY_e43b72f1",
+    "symbol": "SPY",
+    "sector": "broad_market",
+    "industry": "etf",
+    "cluster": "index_proxy",
+    "source": "MANUAL_REGISTRY",
+    "confidence": 90.0
+  },
+  {
+    "record_id": "sec_rec_QQQ_ca6f2c15",
+    "symbol": "QQQ",
+    "sector": "broad_market",
+    "industry": "etf",
+    "cluster": "growth_index_proxy",
+    "source": "MANUAL_REGISTRY",
+    "confidence": 90.0
+  }
+]

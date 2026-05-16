@@ -217,3 +217,14 @@ class OperationalMetricsCollector:
 # Operational metrics addition
 def update_cost_robustness_metrics(status: str, score: float, failed_scenarios: int, fragile_windows: int, breakeven_bps: float, failed_cells: int, fragility_reasons: int):
     pass
+
+def collect_portfolio_metrics(plan) -> dict:
+    m = {}
+    if plan.exposure_snapshot:
+        m["latest_portfolio_gross_exposure_usd"] = plan.exposure_snapshot.gross_exposure_usd
+        m["latest_portfolio_net_exposure_usd"] = plan.exposure_snapshot.net_exposure_usd
+        m["latest_portfolio_long_exposure_usd"] = plan.exposure_snapshot.long_exposure_usd
+        m["latest_portfolio_short_exposure_usd"] = plan.exposure_snapshot.short_exposure_usd
+    m["latest_portfolio_blocked_allocation_count"] = plan.blocked_count + plan.suppressed_count
+    m["portfolio_construction_warning_count"] = len(plan.warnings)
+    return m

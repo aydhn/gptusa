@@ -178,3 +178,12 @@ def _calc_risk_score(review: Any) -> float:
     if "MODERATE" in risks: return 60.0
     if "LOW" in risks: return 80.0
     return 100.0
+
+def update_quality_scorecard_with_portfolio(scorecard: dict, plan) -> dict:
+    res = dict(scorecard)
+    res["portfolio_construction_quality_score"] = 100.0 if not plan.conflicts else 80.0
+    if plan.blocked_count > 0:
+        res["portfolio_guard_score"] = max(0.0, 100.0 - (plan.blocked_count * 10.0))
+    else:
+        res["portfolio_guard_score"] = 100.0
+    return res
