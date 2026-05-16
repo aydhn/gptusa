@@ -726,3 +726,22 @@ def notifications_from_regime_map_review(review: RegimeMapReview) -> list[Notifi
              messages.append(format_regime_alignment_warning_message(conflicts))
 
     return messages
+
+
+def format_allocation_report_message(review) -> NotificationMessage:
+    body = (
+        f"Allocation Review ID: {review.review_id}\n"
+        f"Total Allocated: ${review.total_allocated_notional_usd}\n"
+        f"Blocked: {review.blocked_count}\n"
+        f"Note: Dry-run sizing metadata. Not an investment advice. No broker execution."
+    )
+    return NotificationMessage("Allocation Review Report", body)
+
+def format_position_size_warning_message(results) -> NotificationMessage:
+    blocked = [r.symbol for r in results if r.status.value in ["BLOCKED", "SUPPRESSED"]]
+    body = f"The following symbols had sizing blocked/suppressed: {', '.join(blocked)}"
+    return NotificationMessage("Position Size Warning", body)
+
+def format_risk_budget_warning_message(budget) -> NotificationMessage:
+    body = f"Risk Budget Status: {budget.status.value}\nWarnings: {', '.join(budget.warnings)}"
+    return NotificationMessage("Risk Budget Warning", body)

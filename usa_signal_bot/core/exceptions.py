@@ -1267,3 +1267,49 @@ class StrategyAdaptationValidationError(StrategyAdaptationError):
 
 class StrategyAdaptationReportingError(StrategyAdaptationError):
     pass
+
+
+class AdaptiveAllocationError(USASignalBotError):
+    pass
+
+class CapitalStateError(AdaptiveAllocationError):
+    pass
+
+class RiskBudgetError(AdaptiveAllocationError):
+    pass
+
+class ConfidenceScalingError(AdaptiveAllocationError):
+    pass
+
+class VolatilitySizingError(AdaptiveAllocationError):
+    pass
+
+class DollarRiskSizingError(AdaptiveAllocationError):
+    pass
+
+class PositionCapsError(AdaptiveAllocationError):
+    pass
+
+class LiquiditySizeAdjustmentError(AdaptiveAllocationError):
+    pass
+
+class CostSizeAdjustmentError(AdaptiveAllocationError):
+    pass
+
+class RegimeSizeAdjustmentError(AdaptiveAllocationError):
+    pass
+
+class DrawdownThrottleError(AdaptiveAllocationError):
+    pass
+
+class ConcentrationGuardError(AdaptiveAllocationError):
+    pass
+
+class AllocationStorageError(AdaptiveAllocationError):
+    pass
+
+class AllocationValidationError(AdaptiveAllocationError):
+    pass
+
+class AllocationReportingError(AdaptiveAllocationError):
+    pass
