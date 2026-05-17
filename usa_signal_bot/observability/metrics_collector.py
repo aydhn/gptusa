@@ -244,3 +244,16 @@ def collect_portfolio_metrics(plan) -> dict:
 # --- Phase 64 Diagnostics Integrations ---
 def expose_diagnostics_metrics(review: 'DiagnosticReview') -> None:
     pass
+
+def collect_research_workflow_metrics(payload: dict) -> dict:
+    return {
+        "latest_repair_queue_count": payload.get("repair_item_count", 0),
+        "latest_high_priority_repair_count": 0,
+        "latest_hypothesis_count": payload.get("hypothesis_count", 0),
+        "latest_ready_experiment_count": payload.get("experiment_plan_count", 0),
+        "latest_blocked_experiment_count": 0,
+        "latest_acceptance_gate_warning_count": 0,
+        "latest_manual_review_required_count": 0,
+        "latest_auto_execution_enabled_count": 0,
+        "research_workflow_warning_count": 0
+    }

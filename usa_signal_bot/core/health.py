@@ -1950,3 +1950,35 @@ def check_failure_signature_mining_health(context: 'RuntimeContext') -> 'HealthC
 def check_diagnostic_scorecard_health(context: 'RuntimeContext') -> 'HealthCheckResult': return HealthCheckResult(is_healthy=True, message="Scorecard healthy")
 def check_diagnostics_store_health(context: 'RuntimeContext') -> 'HealthCheckResult': return HealthCheckResult(is_healthy=True, message="Store healthy")
 def check_diagnostics_notification_health(context: 'RuntimeContext') -> 'HealthCheckResult': return HealthCheckResult(is_healthy=True, message="Notification healthy")
+
+def check_research_workflow_health(context) -> HealthCheckResult:
+    try:
+        if not context.config.research_workflow.enabled:
+            return HealthCheckResult(
+                component="research_workflow",
+                status=HealthStatus.HEALTHY,
+                message="Research workflow is disabled",
+                details={"enabled": False}
+            )
+
+        if context.config.controlled_experiment_planning.allow_auto_execution:
+            return HealthCheckResult(
+                component="research_workflow",
+                status=HealthStatus.DEGRADED,
+                message="allow_auto_execution is True, which violates constraints",
+                details={}
+            )
+
+        return HealthCheckResult(
+            component="research_workflow",
+            status=HealthStatus.HEALTHY,
+            message="Research workflow is healthy and operating in dry-run metadata mode",
+            details={"auto_optimization": False, "live_trading": False}
+        )
+    except Exception as e:
+        return HealthCheckResult(
+            component="research_workflow",
+            status=HealthStatus.UNHEALTHY,
+            message=f"Research workflow health check failed: {e}",
+            details={}
+        )

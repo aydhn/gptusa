@@ -1439,3 +1439,88 @@ class DiagnosticScorecardError(DiagnosticsError): pass
 class DiagnosticsStorageError(DiagnosticsError): pass
 class DiagnosticsValidationError(DiagnosticsError): pass
 class DiagnosticsReportingError(DiagnosticsError): pass
+
+
+class ResearchWorkflowError(USASignalBotError):
+    """Base exception for research workflow errors."""
+    pass
+
+
+class RepairQueueError(ResearchWorkflowError):
+    """Raised when a repair queue operation fails."""
+    pass
+
+
+class HypothesisTrackerError(ResearchWorkflowError):
+    """Raised when a hypothesis tracker operation fails."""
+    pass
+
+
+class ControlledExperimentPlanningError(ResearchWorkflowError):
+    """Raised when a controlled experiment planning operation fails."""
+    pass
+
+
+class ExperimentScopeError(ResearchWorkflowError):
+    """Raised when an experiment scope operation fails."""
+    pass
+
+
+class AcceptanceGateError(ResearchWorkflowError):
+    """Raised when an acceptance gate operation fails."""
+    pass
+
+
+class ParameterChangeProposalError(ResearchWorkflowError):
+    """Raised when a parameter change proposal operation fails."""
+    pass
+
+
+class ValidationPlanError(ResearchWorkflowError):
+    """Raised when a validation plan operation fails."""
+    pass
+
+
+class SampleSizeGuardError(ResearchWorkflowError):
+    """Raised when a sample size guard operation fails."""
+    pass
+
+
+class LeakageOverfitGuardError(ResearchWorkflowError):
+    """Raised when a leakage/overfit guard operation fails."""
+    pass
+
+
+class ResearchPriorityScoringError(ResearchWorkflowError):
+    """Raised when a research priority scoring operation fails."""
+    pass
+
+
+class DependencyGraphError(ResearchWorkflowError):
+    """Raised when a dependency graph operation fails."""
+    pass
+
+
+class RollbackPlanError(ResearchWorkflowError):
+    """Raised when a rollback plan operation fails."""
+    pass
+
+
+class ResearchDecisionLogError(ResearchWorkflowError):
+    """Raised when a research decision log operation fails."""
+    pass
+
+
+class ResearchWorkflowStorageError(ResearchWorkflowError):
+    """Raised when a research workflow storage operation fails."""
+    pass
+
+
+class ResearchWorkflowValidationError(ResearchWorkflowError):
+    """Raised when a research workflow validation operation fails."""
+    pass
+
+
+class ResearchWorkflowReportingError(ResearchWorkflowError):
+    """Raised when a research workflow reporting operation fails."""
+    pass

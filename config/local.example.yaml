@@ -1,9 +1,65 @@
-# Example local configuration
-
 scheduler:
   enabled: true
   dry_run_default: true
-
 regime_aware_costs:
   enabled: true
   write_regime_cost_reports: true
+research_workflow:
+  enabled: true
+  write_workflow_reports: true
+  warn_not_investment_advice: true
+  warn_no_broker_execution: true
+  warn_no_auto_optimization: true
+  warn_experiments_are_plans_only: true
+repair_queue:
+  enabled: true
+  deduplicate_items: true
+  auto_triage: true
+  critical_severity_priority: CRITICAL
+  noisy_evidence_priority: DEFERRED
+  max_items_per_review: 200
+hypothesis_tracker:
+  enabled: true
+  require_null_condition: true
+  require_success_failure_criteria: true
+  min_evidence_refs: 1
+  low_sample_confidence: LOW
+  no_evidence_confidence: INSUFFICIENT_EVIDENCE
+controlled_experiment_planning:
+  enabled: true
+  allow_auto_execution: false
+  require_manual_review: true
+  require_baseline_candidate_refs: true
+  require_rollback_plan: true
+  require_acceptance_gates: true
+  max_parameter_changes_per_experiment: 5
+research_acceptance_gates:
+  enabled: true
+  min_sample_size: 30
+  require_oos_improvement_gate: true
+  require_walk_forward_stability_gate: true
+  require_cost_robustness_gate: true
+  require_drawdown_gate: true
+  require_no_leakage_gate: true
+  require_manual_review_gate: true
+research_validation_plan:
+  enabled: true
+  default_holdout_pct: 20.0
+  min_walk_forward_windows: 3
+  require_oos: true
+  require_regime_bucket_review: true
+  require_cost_bucket_review: true
+research_priority_scoring:
+  enabled: true
+  severity_weight: 0.4
+  evidence_quality_weight: 0.25
+  impact_weight: 0.25
+  risk_penalty_weight: 0.1
+research_notifications:
+  enabled: true
+  dry_run: true
+  notify_workflow_report: true
+  notify_repair_queue_warning: true
+  notify_experiment_plan_warning: true
+  default_channel: dry_run
+  warn_no_real_send_default: true

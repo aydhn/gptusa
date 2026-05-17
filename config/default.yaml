@@ -1,14 +1,13 @@
 incident_response:
   enabled: true
-  store_dir: "data/incident"
+  store_dir: data/incident
   auto_collect_from_latest_artifacts: true
-  minimum_severity_to_report: "medium"
+  minimum_severity_to_report: medium
   write_incident_reports: true
   redact_sensitive_data: true
   warn_local_only: true
   warn_not_investment_advice: true
   warn_no_broker_execution: true
-
 recovery:
   enabled: true
   dry_run_default: true
@@ -18,7 +17,6 @@ recovery:
   write_recovery_plans: true
   write_recovery_results: true
   block_on_safety_violation: true
-
 rollback:
   enabled: true
   dry_run_default: true
@@ -34,7 +32,6 @@ rollback:
   write_rollback_plans: true
   write_rollback_results: true
   write_rollback_prechecks: true
-
 rollback_sources:
   enabled: true
   include_release_bundles: true
@@ -42,25 +39,22 @@ rollback_sources:
   include_config_profiles: true
   include_regression_baselines: true
   prefer_latest_valid_source: true
-
 incident_audit:
   enabled: true
-  audit_path: "data/incident/audit/incident_audit.jsonl"
+  audit_path: data/incident/audit/incident_audit.jsonl
   redact_sensitive_paths: true
   append_only: true
-
 incident_notifications:
   enabled: true
   dry_run: true
   notify_incident_report: true
   notify_recovery_plan: true
   notify_rollback_dry_run: true
-  default_channel: "dry_run"
+  default_channel: dry_run
   warn_no_real_send_default: true
-
 scheduler:
   enabled: true
-  store_dir: "data/scheduler"
+  store_dir: data/scheduler
   dry_run_default: true
   execute_commands_default: false
   install_daemon: false
@@ -71,17 +65,15 @@ scheduler:
   warn_local_only: true
   warn_not_investment_advice: true
   warn_no_broker_execution: true
-
 run_locks:
   enabled: true
-  locks_dir: "data/scheduler/locks"
+  locks_dir: data/scheduler/locks
   stale_after_seconds_default: 3600
   global_stale_after_seconds: 7200
-  acquisition_mode_default: "FAIL_FAST"
+  acquisition_mode_default: FAIL_FAST
   allow_steal_if_stale: true
   cleanup_stale_locks_dry_run_default: true
   write_lock_audit: true
-
 concurrency:
   enabled: true
   global_max_concurrent_runs: 1
@@ -94,56 +86,50 @@ concurrency:
   notification_max_concurrent_runs: 1
   block_on_conflict: true
   allow_overlap_default: false
-
 idempotency:
   enabled: true
-  store_path: "data/scheduler/idempotency.jsonl"
-  duplicate_policy: "SKIP"
+  store_path: data/scheduler/idempotency.jsonl
+  duplicate_policy: SKIP
   record_completed_runs: true
   prune_after_days: 30
   prune_dry_run_default: true
-
 atomic_io:
   enabled: true
   use_atomic_writes: true
-  temp_suffix: ".tmp"
+  temp_suffix: .tmp
   verify_checksum_after_write: true
   block_protected_target_write: false
-
 scheduler_jobs:
   enabled: true
   default_dry_run: true
   execute_commands: false
   safe_allowlist_only: true
   blocked_commands:
-    - "cleanup-execute"
-    - "rollback-execute"
-    - "send-broker-order"
-    - "live-order"
-    - "demo-order"
-
+  - cleanup-execute
+  - rollback-execute
+  - send-broker-order
+  - live-order
+  - demo-order
 scheduler_notifications:
   enabled: true
   dry_run: true
   notify_scheduler_report: true
   notify_stale_lock_warning: true
   notify_concurrency_blocked: true
-  default_channel: "DRY_RUN"
+  default_channel: DRY_RUN
   warn_no_real_send_default: true
-
 performance_baselines:
   enabled: true
-  store_dir: "data/performance"
+  store_dir: data/performance
   min_samples_per_baseline: 3
   preferred_percentile: 90
-  active_baseline_version: "latest"
+  active_baseline_version: latest
   mark_stale_after_days: 30
   write_baselines: true
   external_telemetry_enabled: false
   warn_local_only: true
   warn_not_investment_advice: true
   warn_no_broker_execution: true
-
 sla_thresholds:
   enabled: true
   scan_wall_time_warning_seconds: 1800
@@ -164,7 +150,6 @@ sla_thresholds:
   error_count_warning: 1
   error_count_critical: 5
   error_count_blocker: 10
-
 runtime_regression:
   enabled: true
   compare_against_p90: true
@@ -173,7 +158,6 @@ runtime_regression:
   blocker_delta_pct: 100.0
   suppress_insufficient_data_alerts: true
   write_regression_reports: true
-
 performance_acceptance:
   enabled: true
   block_on_blocker_threshold: true
@@ -181,7 +165,6 @@ performance_acceptance:
   warn_on_moderate_regression: true
   pass_with_minor_regression_allowed: true
   pass_is_not_live_approval: true
-
 performance_alerting:
   enabled: true
   dry_run: true
@@ -190,16 +173,14 @@ performance_alerting:
   alert_on_stale_baseline: true
   suppress_duplicate_alerts: true
   write_alert_reports: true
-
 performance_notifications:
   enabled: true
   dry_run: true
   notify_baseline_report: true
   notify_sla_threshold_warning: true
   notify_runtime_regression_alert: true
-  default_channel: "dry_run"
+  default_channel: dry_run
   warn_no_real_send_default: true
-
 execution_realism:
   enabled: true
   write_execution_reports: true
@@ -207,7 +188,6 @@ execution_realism:
   warn_not_investment_advice: true
   warn_proxies_are_heuristic: true
   no_real_borrow_feed: true
-
 liquidity_guard:
   enabled: true
   lookback_bars: 60
@@ -220,7 +200,6 @@ liquidity_guard:
   max_stale_days: 5
   block_signal_on_illiquid: true
   warn_on_thin_liquidity: true
-
 spread_slippage_proxy:
   enabled: true
   max_spread_proxy_bps: 100.0
@@ -230,7 +209,6 @@ spread_slippage_proxy:
   use_atr_penalty: true
   use_gap_penalty: true
   use_low_price_penalty: true
-
 volume_participation:
   enabled: true
   default_notional_usd: 1000.0
@@ -238,7 +216,6 @@ volume_participation:
   high_participation_pct: 5.0
   critical_participation_pct: 10.0
   block_backtest_fill_on_critical_participation: true
-
 borrowability_proxy:
   enabled: true
   no_real_borrow_feed: true
@@ -249,25 +226,21 @@ borrowability_proxy:
   corporate_action_risk_penalty: true
   block_short_on_likely_unavailable: true
   require_review_on_hard_to_borrow_proxy: true
-
 execution_quality:
   enabled: true
-  liquidity_quality_weight: 0.30
+  liquidity_quality_weight: 0.3
   tradability_weight: 0.25
-  slippage_realism_weight: 0.20
-  borrowability_proxy_weight: 0.10
+  slippage_realism_weight: 0.2
+  borrowability_proxy_weight: 0.1
   participation_weight: 0.15
-
 execution_notifications:
   enabled: true
   dry_run: true
   notify_liquidity_warning: true
   notify_tradability_guard: true
   notify_execution_realism_warning: true
-  default_channel: "dry_run"
+  default_channel: dry_run
   warn_no_real_send_default: true
-
-
 cost_robustness:
   enabled: true
   write_robustness_reports: true
@@ -275,7 +248,6 @@ cost_robustness:
   warn_no_real_order_book: true
   warn_no_real_fill_guarantee: true
   warn_not_investment_advice: true
-
 cost_stress_scenarios:
   enabled: true
   include_baseline: true
@@ -284,41 +256,36 @@ cost_stress_scenarios:
   include_severe: true
   include_extreme: true
   max_default_scenarios: 12
-
 slippage_stress:
   enabled: true
   multipliers:
-    - 1.0
-    - 1.5
-    - 2.0
-    - 3.0
+  - 1.0
+  - 1.5
+  - 2.0
+  - 3.0
   max_stressed_slippage_bps: 750.0
-
 spread_stress:
   enabled: true
   multipliers:
-    - 1.0
-    - 1.5
-    - 2.0
-    - 3.0
+  - 1.0
+  - 1.5
+  - 2.0
+  - 3.0
   max_stressed_spread_bps: 750.0
-
 market_impact_stress:
   enabled: true
   multipliers:
-    - 1.0
-    - 2.0
-    - 3.0
+  - 1.0
+  - 2.0
+  - 3.0
   block_on_extreme_impact_in_strict_mode: true
-
 fee_stress:
   enabled: true
   multipliers:
-    - 1.0
-    - 1.5
-    - 2.0
+  - 1.0
+  - 1.5
+  - 2.0
   warn_fee_proxy_not_official: true
-
 execution_sensitivity_matrix:
   enabled: true
   max_cells: 100
@@ -327,13 +294,11 @@ execution_sensitivity_matrix:
   include_spread_axis: true
   include_impact_axis: true
   prevent_combinatorial_explosion: true
-
 walk_forward_cost_robustness:
   enabled: true
   require_out_of_sample_cost_survival: true
   fragile_window_threshold_pct: 30.0
   failed_scenario_threshold_pct: 40.0
-
 cost_fragility:
   enabled: true
   min_breakeven_cost_bps_warning: 50.0
@@ -341,16 +306,14 @@ cost_fragility:
   profit_erased_by_costs_is_failure: true
   sharpe_collapse_threshold_pct: 50.0
   drawdown_expansion_threshold_pct: 50.0
-
 cost_robustness_notifications:
   enabled: true
   dry_run: true
   notify_cost_robustness_report: true
   notify_cost_fragility_warning: true
   notify_execution_sensitivity_warning: true
-  default_channel: "dry_run"
+  default_channel: dry_run
   warn_no_real_send_default: true
-
 regime_aware_costs:
   enabled: true
   write_regime_cost_reports: true
@@ -358,7 +321,6 @@ regime_aware_costs:
   warn_no_real_order_book: true
   warn_no_real_fill_guarantee: true
   warn_not_investment_advice: true
-
 volatility_regime_cost:
   enabled: true
   low_atr_pct: 1.0
@@ -371,7 +333,6 @@ volatility_regime_cost:
   high_multiplier: 1.5
   extreme_multiplier: 2.5
   insufficient_data_multiplier: 1.25
-
 liquidity_regime_cost:
   enabled: true
   deep_adv_usd: 100000000
@@ -383,7 +344,6 @@ liquidity_regime_cost:
   illiquid_multiplier: 3.0
   frozen_multiplier: 5.0
   insufficient_data_multiplier: 1.5
-
 spread_regime_cost:
   enabled: true
   tight_spread_bps: 20.0
@@ -395,7 +355,6 @@ spread_regime_cost:
   very_wide_multiplier: 2.75
   unreliable_multiplier: 3.5
   insufficient_data_multiplier: 1.25
-
 session_regime_cost:
   enabled: true
   regular_multiplier: 1.0
@@ -405,7 +364,6 @@ session_regime_cost:
   after_hours_multiplier: 2.25
   closed_multiplier: 5.0
   block_closed_session_fill: true
-
 lifecycle_regime_cost:
   enabled: true
   normal_multiplier: 1.0
@@ -415,7 +373,6 @@ lifecycle_regime_cost:
   lifecycle_review_multiplier: 2.5
   delisting_risk_multiplier: 4.0
   require_review_on_lifecycle_risk: true
-
 adaptive_execution_realism:
   enabled: true
   use_regime_cost_curve_selection: true
@@ -424,48 +381,43 @@ adaptive_execution_realism:
   block_fill_on_frozen_liquidity: true
   require_review_on_high_risk_regime: true
   block_signal_metadata_on_blocked_regime: true
-
 regime_cost_curve_selection:
   enabled: true
-  default_profile: "baseline"
-  high_risk_profile: "stressed"
-  blocked_profile: "blocked"
+  default_profile: baseline
+  high_risk_profile: stressed
+  blocked_profile: blocked
   max_combined_multiplier: 8.0
   min_adjusted_cost_bps: 1.0
   max_adjusted_cost_bps: 1000.0
-
 regime_cost_notifications:
   enabled: true
   dry_run: true
   notify_regime_cost_report: true
   notify_adaptive_execution_warning: true
   notify_regime_cost_block_warning: true
-  default_channel: "dry_run"
+  default_channel: dry_run
   warn_no_real_send_default: true
-
 attribution:
   enabled: true
   write_attribution_reports: true
   warn_not_investment_advice: true
   warn_no_broker_execution: true
   warn_attribution_is_local_analytics: true
-
 performance_attribution:
   enabled: true
   dimensions:
-    - "symbol"
-    - "strategy"
-    - "signal_family"
-    - "sector"
-    - "cluster"
-    - "regime"
-    - "side"
-    - "sizing_status"
-    - "rebalance_action"
+  - symbol
+  - strategy
+  - signal_family
+  - sector
+  - cluster
+  - regime
+  - side
+  - sizing_status
+  - rebalance_action
   min_trades_for_high_quality: 30
   min_trades_for_acceptable_quality: 10
   low_sample_warning: true
-
 cost_attribution:
   enabled: true
   cost_drag_warning_pct: 50.0
@@ -473,14 +425,12 @@ cost_attribution:
   include_slippage: true
   include_market_impact: true
   include_fee_proxy: true
-
 signal_contribution:
   enabled: true
   min_signal_trades_for_review: 5
   detrimental_net_pnl_threshold_usd: 0.0
   cost_degraded_threshold_pct: 50.0
   drawdown_contributor_warning: true
-
 risk_attribution:
   enabled: true
   drawdown_attribution_enabled: true
@@ -489,20 +439,77 @@ risk_attribution:
   concentration_proxy_enabled: true
   liquidity_proxy_enabled: true
   high_risk_contribution_score: 70.0
-
 time_window_attribution:
   enabled: true
-  default_window: "monthly"
+  default_window: monthly
   include_daily: false
   include_weekly: true
   include_monthly: true
   include_yearly: true
-
 attribution_notifications:
   enabled: true
   dry_run: true
   notify_attribution_report: true
   notify_signal_contribution_warning: true
   notify_risk_attribution_warning: true
-  default_channel: "dry_run"
+  default_channel: dry_run
+  warn_no_real_send_default: true
+research_workflow:
+  enabled: true
+  write_workflow_reports: true
+  warn_not_investment_advice: true
+  warn_no_broker_execution: true
+  warn_no_auto_optimization: true
+  warn_experiments_are_plans_only: true
+repair_queue:
+  enabled: true
+  deduplicate_items: true
+  auto_triage: true
+  critical_severity_priority: CRITICAL
+  noisy_evidence_priority: DEFERRED
+  max_items_per_review: 200
+hypothesis_tracker:
+  enabled: true
+  require_null_condition: true
+  require_success_failure_criteria: true
+  min_evidence_refs: 1
+  low_sample_confidence: LOW
+  no_evidence_confidence: INSUFFICIENT_EVIDENCE
+controlled_experiment_planning:
+  enabled: true
+  allow_auto_execution: false
+  require_manual_review: true
+  require_baseline_candidate_refs: true
+  require_rollback_plan: true
+  require_acceptance_gates: true
+  max_parameter_changes_per_experiment: 5
+research_acceptance_gates:
+  enabled: true
+  min_sample_size: 30
+  require_oos_improvement_gate: true
+  require_walk_forward_stability_gate: true
+  require_cost_robustness_gate: true
+  require_drawdown_gate: true
+  require_no_leakage_gate: true
+  require_manual_review_gate: true
+research_validation_plan:
+  enabled: true
+  default_holdout_pct: 20.0
+  min_walk_forward_windows: 3
+  require_oos: true
+  require_regime_bucket_review: true
+  require_cost_bucket_review: true
+research_priority_scoring:
+  enabled: true
+  severity_weight: 0.4
+  evidence_quality_weight: 0.25
+  impact_weight: 0.25
+  risk_penalty_weight: 0.1
+research_notifications:
+  enabled: true
+  dry_run: true
+  notify_workflow_report: true
+  notify_repair_queue_warning: true
+  notify_experiment_plan_warning: true
+  default_channel: dry_run
   warn_no_real_send_default: true

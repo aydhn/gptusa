@@ -821,3 +821,15 @@ def format_strategy_diagnostic_warning_message(results: list) -> 'NotificationMe
 
 def notifications_from_diagnostic_review(review: 'DiagnosticReview') -> list:
     return []
+
+def format_research_workflow_report_message(review) -> NotificationMessage:
+    return NotificationMessage("Research Workflow Report (dry-run)")
+
+def format_repair_queue_warning_message(items) -> NotificationMessage:
+    return NotificationMessage("Repair Queue Warning (dry-run)")
+
+def format_experiment_plan_warning_message(plans) -> NotificationMessage:
+    return NotificationMessage("Experiment Plan Warning (dry-run)")
+
+def notifications_from_research_workflow_review(review) -> list[NotificationMessage]:
+    return [format_research_workflow_report_message(review)]
