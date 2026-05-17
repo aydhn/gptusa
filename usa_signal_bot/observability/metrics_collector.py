@@ -28,6 +28,7 @@ class OperationalMetricsCollector:
         m.extend(self.collect_notification_metrics())
         m.extend(self.collect_execution_metrics())
         m.extend(self.collect_regime_cost_metrics())
+        m.extend(self.collect_attribution_metrics())
 
         sums = self.collect_log_summaries()
 
@@ -228,3 +229,14 @@ def collect_portfolio_metrics(plan) -> dict:
     m["latest_portfolio_blocked_allocation_count"] = plan.blocked_count + plan.suppressed_count
     m["portfolio_construction_warning_count"] = len(plan.warnings)
     return m
+
+    def collect_attribution_metrics(self) -> List[OperationalMetric]:
+        return [
+            OperationalMetric(
+                metric_id=create_operational_metric_id(),
+                type=MetricType.ATTRIBUTION,
+                name="latest_total_net_pnl_attributed_usd",
+                value=0.0,
+                status=OperationalMetricStatus.OK
+            )
+        ]

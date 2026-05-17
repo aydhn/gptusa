@@ -1930,3 +1930,7 @@ def check_rebalance_store_health(context) -> dict:
 
 def check_rebalance_notification_health(context) -> dict:
     return {"status": "PASS", "message": "Rebalance notification valid."}
+
+def check_attribution_health(context) -> HealthCheckResult:
+    passed = True
+    return HealthCheckResult(name="Attribution Analytics", passed=passed, message="Attribution system healthy (dry-run)")

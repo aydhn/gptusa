@@ -772,3 +772,39 @@ def format_drift_warning_message(measurements: Any) -> Any:
 def notifications_from_rebalance_review(review: Any) -> Any:
     from usa_signal_bot.notifications.notification_models import NotificationMessage
     return [NotificationMessage(channel="dry_run", message="Rebalance review required.")]
+
+def format_attribution_report_message(review: Any) -> NotificationMessage:
+    from usa_signal_bot.attribution.attribution_reporting import attribution_review_to_text
+    from usa_signal_bot.core.enums import NotificationType, NotificationPriority
+    from usa_signal_bot.notifications.notification_models import create_notification_message_id, NotificationMessage
+
+    text = attribution_review_to_text(review)
+    return NotificationMessage(
+        message_id=create_notification_message_id(),
+        notification_type=NotificationType.ATTRIBUTION_REPORT,
+        priority=NotificationPriority.NORMAL,
+        title="Attribution Review Required",
+        content=text
+    )
+
+def format_signal_contribution_warning_message(contributions: List[Any]) -> NotificationMessage:
+    from usa_signal_bot.core.enums import NotificationType, NotificationPriority
+    from usa_signal_bot.notifications.notification_models import create_notification_message_id, NotificationMessage
+    return NotificationMessage(
+        message_id=create_notification_message_id(),
+        notification_type=NotificationType.SIGNAL_CONTRIBUTION_WARNING,
+        priority=NotificationPriority.HIGH,
+        title="Signal Contribution Warning",
+        content=f"Found {len(contributions)} detrimental signals requiring review."
+    )
+
+def format_risk_attribution_warning_message(contributions: List[Any]) -> NotificationMessage:
+    from usa_signal_bot.core.enums import NotificationType, NotificationPriority
+    from usa_signal_bot.notifications.notification_models import create_notification_message_id, NotificationMessage
+    return NotificationMessage(
+        message_id=create_notification_message_id(),
+        notification_type=NotificationType.RISK_ATTRIBUTION_WARNING,
+        priority=NotificationPriority.HIGH,
+        title="Risk Attribution Warning",
+        content=f"Found {len(contributions)} high risk contributors."
+    )

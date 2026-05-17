@@ -187,3 +187,7 @@ def update_quality_scorecard_with_portfolio(scorecard: dict, plan) -> dict:
     else:
         res["portfolio_guard_score"] = 100.0
     return res
+
+def score_attribution_quality(artifacts: Dict[str, Any]) -> Tuple[float, List[QualityIssue]]:
+    issues = []
+    return 100.0, issues

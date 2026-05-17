@@ -442,3 +442,67 @@ regime_cost_notifications:
   notify_regime_cost_block_warning: true
   default_channel: "dry_run"
   warn_no_real_send_default: true
+
+attribution:
+  enabled: true
+  write_attribution_reports: true
+  warn_not_investment_advice: true
+  warn_no_broker_execution: true
+  warn_attribution_is_local_analytics: true
+
+performance_attribution:
+  enabled: true
+  dimensions:
+    - "symbol"
+    - "strategy"
+    - "signal_family"
+    - "sector"
+    - "cluster"
+    - "regime"
+    - "side"
+    - "sizing_status"
+    - "rebalance_action"
+  min_trades_for_high_quality: 30
+  min_trades_for_acceptable_quality: 10
+  low_sample_warning: true
+
+cost_attribution:
+  enabled: true
+  cost_drag_warning_pct: 50.0
+  cost_drag_critical_pct: 100.0
+  include_slippage: true
+  include_market_impact: true
+  include_fee_proxy: true
+
+signal_contribution:
+  enabled: true
+  min_signal_trades_for_review: 5
+  detrimental_net_pnl_threshold_usd: 0.0
+  cost_degraded_threshold_pct: 50.0
+  drawdown_contributor_warning: true
+
+risk_attribution:
+  enabled: true
+  drawdown_attribution_enabled: true
+  volatility_proxy_enabled: true
+  exposure_proxy_enabled: true
+  concentration_proxy_enabled: true
+  liquidity_proxy_enabled: true
+  high_risk_contribution_score: 70.0
+
+time_window_attribution:
+  enabled: true
+  default_window: "monthly"
+  include_daily: false
+  include_weekly: true
+  include_monthly: true
+  include_yearly: true
+
+attribution_notifications:
+  enabled: true
+  dry_run: true
+  notify_attribution_report: true
+  notify_signal_contribution_warning: true
+  notify_risk_attribution_warning: true
+  default_channel: "dry_run"
+  warn_no_real_send_default: true
