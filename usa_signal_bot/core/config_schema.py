@@ -1,3 +1,100 @@
+from dataclasses import dataclass, field
+
+
+@dataclass
+class DiagnosticsConfig:
+    enabled: bool
+    write_diagnostic_reports: bool
+    warn_not_investment_advice: bool
+    warn_no_broker_execution: bool
+    warn_diagnostics_are_heuristic: bool
+    warn_no_auto_optimization: bool
+
+@dataclass
+class LossEventAnalysisConfig:
+    enabled: bool
+    loss_threshold_usd: float
+    severe_loss_threshold_usd: float
+    critical_loss_threshold_usd: float
+    min_events_for_pattern: int
+    low_sample_warning: bool
+
+@dataclass
+class FalseSignalAnalysisConfig:
+    enabled: bool
+    high_signal_score_threshold: float
+    false_positive_negative_pnl_required: bool
+    min_events_for_signal_family_review: int
+    false_positive_rate_warning_pct: float
+
+@dataclass
+class CostDegradationAnalysisConfig:
+    enabled: bool
+    cost_drag_warning_pct: float
+    cost_drag_critical_pct: float
+    high_slippage_failure_bps: float
+    high_impact_failure_bps: float
+
+@dataclass
+class RegimeFailureAnalysisConfig:
+    enabled: bool
+    unknown_regime_bucket: str
+    treat_transition_risk_losses_as_review: bool
+    min_events_for_regime_matrix: int
+
+@dataclass
+class LiquidityExecutionFailureConfig:
+    enabled: bool
+    thin_liquidity_bucket_names: list[str]
+    high_cost_bucket_names: list[str]
+
+@dataclass
+class SizingFailureAnalysisConfig:
+    enabled: bool
+    oversizing_loss_notional_pct_equity: float
+    undersizing_positive_result_min_score: float
+    risk_budget_failure_review: bool
+
+@dataclass
+class RebalanceFailureAnalysisConfig:
+    enabled: bool
+    turnover_drag_warning_pct: float
+    signal_decay_review_enabled: bool
+    stale_signal_age_minutes: float
+
+@dataclass
+class FailureSignatureMiningConfig:
+    enabled: bool
+    min_signature_count: int
+    max_signature_fields: int
+    rank_by_loss_first: bool
+
+@dataclass
+class StrategyDiagnosticsConfig:
+    enabled: bool
+    min_trades_for_strategy_review: int
+    degraded_win_rate_threshold_pct: float
+    degraded_cost_drag_pct: float
+    failing_net_pnl_threshold_usd: float
+    high_failure_mode_count: int
+
+@dataclass
+class RemediationHintsConfig:
+    enabled: bool
+    max_hints_per_review: int
+    require_evidence_refs: bool
+    safe_language_only: bool
+    no_auto_changes: bool
+
+@dataclass
+class DiagnosticsNotificationsConfig:
+    enabled: bool
+    dry_run: bool
+    notify_diagnostics_report: bool
+    notify_failure_mode_warning: bool
+    notify_strategy_diagnostic_warning: bool
+    default_channel: str
+    warn_no_real_send_default: bool
 """Data classes representing the configuration schema."""
 
 from typing import List, Optional, Dict, Any

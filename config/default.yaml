@@ -506,3 +506,92 @@ attribution_notifications:
   notify_risk_attribution_warning: true
   default_channel: "dry_run"
   warn_no_real_send_default: true
+
+diagnostics:
+  enabled: true
+  write_diagnostic_reports: true
+  warn_not_investment_advice: true
+  warn_no_broker_execution: true
+  warn_diagnostics_are_heuristic: true
+  warn_no_auto_optimization: true
+
+loss_event_analysis:
+  enabled: true
+  loss_threshold_usd: 0.0
+  severe_loss_threshold_usd: 500.0
+  critical_loss_threshold_usd: 2000.0
+  min_events_for_pattern: 3
+  low_sample_warning: true
+
+false_signal_analysis:
+  enabled: true
+  high_signal_score_threshold: 70.0
+  false_positive_negative_pnl_required: true
+  min_events_for_signal_family_review: 5
+  false_positive_rate_warning_pct: 40.0
+
+cost_degradation_analysis:
+  enabled: true
+  cost_drag_warning_pct: 50.0
+  cost_drag_critical_pct: 100.0
+  high_slippage_failure_bps: 150.0
+  high_impact_failure_bps: 150.0
+
+regime_failure_analysis:
+  enabled: true
+  unknown_regime_bucket: "unknown_regime"
+  treat_transition_risk_losses_as_review: true
+  min_events_for_regime_matrix: 5
+
+liquidity_execution_failure:
+  enabled: true
+  thin_liquidity_bucket_names:
+    - "thin"
+    - "illiquid"
+    - "low_liquidity"
+  high_cost_bucket_names:
+    - "high_cost"
+    - "high_impact"
+    - "high_slippage"
+
+sizing_failure_analysis:
+  enabled: true
+  oversizing_loss_notional_pct_equity: 5.0
+  undersizing_positive_result_min_score: 75.0
+  risk_budget_failure_review: true
+
+rebalance_failure_analysis:
+  enabled: true
+  turnover_drag_warning_pct: 30.0
+  signal_decay_review_enabled: true
+  stale_signal_age_minutes: 1440.0
+
+failure_signature_mining:
+  enabled: true
+  min_signature_count: 3
+  max_signature_fields: 8
+  rank_by_loss_first: true
+
+strategy_diagnostics:
+  enabled: true
+  min_trades_for_strategy_review: 10
+  degraded_win_rate_threshold_pct: 40.0
+  degraded_cost_drag_pct: 50.0
+  failing_net_pnl_threshold_usd: 0.0
+  high_failure_mode_count: 5
+
+remediation_hints:
+  enabled: true
+  max_hints_per_review: 50
+  require_evidence_refs: true
+  safe_language_only: true
+  no_auto_changes: true
+
+diagnostics_notifications:
+  enabled: true
+  dry_run: true
+  notify_diagnostics_report: true
+  notify_failure_mode_warning: true
+  notify_strategy_diagnostic_warning: true
+  default_channel: "dry_run"
+  warn_no_real_send_default: true
