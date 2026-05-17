@@ -808,3 +808,16 @@ def format_risk_attribution_warning_message(contributions: List[Any]) -> Notific
         title="Risk Attribution Warning",
         content=f"Found {len(contributions)} high risk contributors."
     )
+
+# --- Phase 64 Diagnostics Integrations ---
+def format_diagnostics_report_message(review: 'DiagnosticReview') -> 'NotificationMessage':
+    return None
+
+def format_failure_mode_warning_message(assessments: list) -> 'NotificationMessage':
+    return None
+
+def format_strategy_diagnostic_warning_message(results: list) -> 'NotificationMessage':
+    return None
+
+def notifications_from_diagnostic_review(review: 'DiagnosticReview') -> list:
+    return []

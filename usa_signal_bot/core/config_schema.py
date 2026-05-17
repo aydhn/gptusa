@@ -3952,6 +3952,103 @@ class AttributionConfig:
     warn_attribution_is_local_analytics: bool = True
 
 @dataclass
+
+@dataclass
+class DiagnosticsConfig:
+    enabled: bool = True
+    write_diagnostic_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_no_broker_execution: bool = True
+    warn_diagnostics_are_heuristic: bool = True
+    warn_no_auto_optimization: bool = True
+
+@dataclass
+class LossEventAnalysisConfig:
+    enabled: bool = True
+    loss_threshold_usd: float = 0.0
+    severe_loss_threshold_usd: float = 500.0
+    critical_loss_threshold_usd: float = 2000.0
+    min_events_for_pattern: int = 3
+    low_sample_warning: bool = True
+
+@dataclass
+class FalseSignalAnalysisConfig:
+    enabled: bool = True
+    high_signal_score_threshold: float = 70.0
+    false_positive_negative_pnl_required: bool = True
+    min_events_for_signal_family_review: int = 5
+    false_positive_rate_warning_pct: float = 40.0
+
+@dataclass
+class CostDegradationAnalysisConfig:
+    enabled: bool = True
+    cost_drag_warning_pct: float = 50.0
+    cost_drag_critical_pct: float = 100.0
+    high_slippage_failure_bps: float = 150.0
+    high_impact_failure_bps: float = 150.0
+
+@dataclass
+class RegimeFailureAnalysisConfig:
+    enabled: bool = True
+    unknown_regime_bucket: str = "unknown_regime"
+    treat_transition_risk_losses_as_review: bool = True
+    min_events_for_regime_matrix: int = 5
+
+@dataclass
+class LiquidityExecutionFailureConfig:
+    enabled: bool = True
+    thin_liquidity_bucket_names: list[str] = field(default_factory=lambda: ["thin", "illiquid", "low_liquidity"])
+    high_cost_bucket_names: list[str] = field(default_factory=lambda: ["high_cost", "high_impact", "high_slippage"])
+
+@dataclass
+class SizingFailureAnalysisConfig:
+    enabled: bool = True
+    oversizing_loss_notional_pct_equity: float = 5.0
+    undersizing_positive_result_min_score: float = 75.0
+    risk_budget_failure_review: bool = True
+
+@dataclass
+class RebalanceFailureAnalysisConfig:
+    enabled: bool = True
+    turnover_drag_warning_pct: float = 30.0
+    signal_decay_review_enabled: bool = True
+    stale_signal_age_minutes: float = 1440.0
+
+@dataclass
+class FailureSignatureMiningConfig:
+    enabled: bool = True
+    min_signature_count: int = 3
+    max_signature_fields: int = 8
+    rank_by_loss_first: bool = True
+
+@dataclass
+class StrategyDiagnosticsConfig:
+    enabled: bool = True
+    min_trades_for_strategy_review: int = 10
+    degraded_win_rate_threshold_pct: float = 40.0
+    degraded_cost_drag_pct: float = 50.0
+    failing_net_pnl_threshold_usd: float = 0.0
+    high_failure_mode_count: int = 5
+
+@dataclass
+class RemediationHintsConfig:
+    enabled: bool = True
+    max_hints_per_review: int = 50
+    require_evidence_refs: bool = True
+    safe_language_only: bool = True
+    no_auto_changes: bool = True
+
+@dataclass
+class DiagnosticsNotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    notify_diagnostics_report: bool = True
+    notify_failure_mode_warning: bool = True
+    notify_strategy_diagnostic_warning: bool = True
+    default_channel: str = "dry_run"
+    warn_no_real_send_default: bool = True
+
+
 class AppConfig:
 
 
