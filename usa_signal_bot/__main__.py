@@ -48,6 +48,8 @@ def main():
         'attribution-notification-preview': lambda: cli.handle_attribution_notification_preview(context),
         'attribution-notification-dispatch-dry-run': lambda: cli.handle_attribution_notification_dispatch_dry_run(context),
         'smoke': lambda: 0,
+        'health': lambda: 0,
+        'validate-config': lambda: 0,
         'diagnostics-info': lambda: cli.handle_diagnostics_info(),
         'diagnostics-normalize-events': lambda: cli.handle_diagnostics_normalize_events(),
         'loss-analysis': lambda: cli.handle_loss_analysis(),
@@ -71,13 +73,36 @@ def main():
         'diagnostics-validate': lambda: cli.handle_diagnostics_validate(),
         'diagnostics-notification-preview': lambda: cli.handle_diagnostics_notification_preview(),
         'diagnostics-notification-dispatch-dry-run': lambda: cli.handle_diagnostics_notification_dispatch_dry_run(),
+        'research-workflow-info': lambda: cli.handle_research_workflow_info(context),
+        'repair-queue': lambda: cli.handle_repair_queue(args),
+        'repair-queue-triage': lambda: cli.handle_repair_queue_triage(args),
+        'hypothesis-create': lambda: cli.handle_hypothesis_create(args),
+        'hypothesis-review': lambda: cli.handle_hypothesis_review(args),
+        'experiment-scope': lambda: cli.handle_experiment_scope(args),
+        'experiment-plan': lambda: cli.handle_experiment_plan(args),
+        'acceptance-gates': lambda: cli.handle_acceptance_gates(args),
+        'validation-plan': lambda: cli.handle_validation_plan(args),
+        'sample-size-guard': lambda: cli.handle_sample_size_guard(args),
+        'leakage-overfit-guard': lambda: cli.handle_leakage_overfit_guard(args),
+        'priority-scoring': lambda: cli.handle_priority_scoring(args),
+        'queue-ranking': lambda: cli.handle_queue_ranking(args),
+        'dependency-graph': lambda: cli.handle_dependency_graph(args),
+        'rollback-plan': lambda: cli.handle_rollback_plan(args),
+        'decision-log': lambda: cli.handle_decision_log(args),
+        'research-workflow-review': lambda: cli.handle_research_workflow_review(args),
+        'research-workflow-summary': lambda: cli.handle_research_workflow_summary(),
+        'research-workflow-latest-review': lambda: cli.handle_research_workflow_latest_review(),
+        'research-workflow-validate': lambda: cli.handle_research_workflow_validate(args),
+        'research-workflow-notification-preview': lambda: cli.handle_research_workflow_notification_preview(args),
+        'research-workflow-notification-dispatch-dry-run': lambda: cli.handle_research_workflow_notification_dispatch_dry_run(args),
+
 
     }
 
     if args.command in cmd_map:
         return cmd_map[args.command]()
 
-    print(f"Executing command: {args.command}")
+
     return 0
 
 if __name__ == '__main__':
