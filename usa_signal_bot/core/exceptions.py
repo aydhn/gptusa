@@ -1313,3 +1313,57 @@ class AllocationValidationError(AdaptiveAllocationError):
 
 class AllocationReportingError(AdaptiveAllocationError):
     pass
+
+class PortfolioRebalanceError(USASignalBotError):
+    pass
+
+class PortfolioStateError(PortfolioRebalanceError):
+    pass
+
+class TargetPortfolioStateError(PortfolioRebalanceError):
+    pass
+
+class DriftCalculationError(PortfolioRebalanceError):
+    pass
+
+class ExposureDriftError(PortfolioRebalanceError):
+    pass
+
+class BucketDriftError(PortfolioRebalanceError):
+    pass
+
+class SignalDecayError(PortfolioRebalanceError):
+    pass
+
+class RebalanceThresholdError(PortfolioRebalanceError):
+    pass
+
+class TurnoverControlError(PortfolioRebalanceError):
+    pass
+
+class TurnoverCostError(PortfolioRebalanceError):
+    pass
+
+class DustGuardError(PortfolioRebalanceError):
+    pass
+
+class CostAwareRebalanceError(PortfolioRebalanceError):
+    pass
+
+class RegimeRebalanceThrottleError(PortfolioRebalanceError):
+    pass
+
+class DrawdownRebalanceThrottleError(PortfolioRebalanceError):
+    pass
+
+class RebalancePlannerError(PortfolioRebalanceError):
+    pass
+
+class RebalanceStorageError(PortfolioRebalanceError):
+    pass
+
+class RebalanceValidationError(PortfolioRebalanceError):
+    pass
+
+class RebalanceReportingError(PortfolioRebalanceError):
+    pass

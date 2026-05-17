@@ -755,3 +755,20 @@ def format_portfolio_construction_report_message(review) -> dict:
 
 def notifications_from_portfolio_construction_review(review) -> list:
     return [format_portfolio_construction_report_message(review)]
+
+def format_rebalance_report_message(review: Any) -> Any:
+    # Basic stub
+    from usa_signal_bot.notifications.notification_models import NotificationMessage
+    return NotificationMessage(channel="dry_run", message="Rebalance report review required.")
+
+def format_turnover_warning_message(assessment: Any) -> Any:
+    from usa_signal_bot.notifications.notification_models import NotificationMessage
+    return NotificationMessage(channel="dry_run", message="High turnover warning.")
+
+def format_drift_warning_message(measurements: Any) -> Any:
+    from usa_signal_bot.notifications.notification_models import NotificationMessage
+    return NotificationMessage(channel="dry_run", message="Drift warning.")
+
+def notifications_from_rebalance_review(review: Any) -> Any:
+    from usa_signal_bot.notifications.notification_models import NotificationMessage
+    return [NotificationMessage(channel="dry_run", message="Rebalance review required.")]
