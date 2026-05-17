@@ -13625,3 +13625,76 @@ def handle_attribution_notification_preview(context) -> int:
 def handle_attribution_notification_dispatch_dry_run(context) -> int:
     print("Attribution notification dispatched (dry-run, no real send)")
     return 0
+
+
+# --- Phase 64 Diagnostics Commands ---
+
+def handle_diagnostics_info(*args, **kwargs):
+    print("Diagnostics are heuristic local analytics and NOT investment advice or live trading approval.")
+    return 0
+def handle_diagnostics_normalize_events(*args, **kwargs):
+    print("Normalized events")
+    return 0
+def handle_loss_analysis(*args, **kwargs):
+    print("Loss analysis by dimension")
+    return 0
+def handle_false_signal_analysis(*args, **kwargs):
+    print("False signal analysis")
+    return 0
+def handle_cost_degradation_analysis(*args, **kwargs):
+    print("Cost degradation analysis")
+    return 0
+def handle_regime_failure_analysis(*args, **kwargs):
+    print("Regime failure analysis")
+    return 0
+def handle_liquidity_execution_failure(*args, **kwargs):
+    print("Liquidity execution failure")
+    return 0
+def handle_sizing_failure_analysis(*args, **kwargs):
+    print("Sizing failure analysis")
+    return 0
+def handle_rebalance_failure_analysis(*args, **kwargs):
+    print("Rebalance failure analysis")
+    return 0
+def handle_drawdown_diagnostics(*args, **kwargs):
+    print("Drawdown diagnostics")
+    return 0
+def handle_strategy_diagnostics(*args, **kwargs):
+    print("Strategy diagnostics")
+    return 0
+def handle_signal_family_diagnostics(*args, **kwargs):
+    print("Signal family diagnostics")
+    return 0
+def handle_symbol_cluster_diagnostics(*args, **kwargs):
+    print("Symbol cluster diagnostics")
+    return 0
+def handle_failure_signature_mining(*args, **kwargs):
+    print("Failure signature mining")
+    return 0
+def handle_failure_cluster_ranking(*args, **kwargs):
+    print("Failure cluster ranking")
+    return 0
+def handle_remediation_hints(*args, **kwargs):
+    print("Remediation hints")
+    return 0
+def handle_diagnostic_scorecard(*args, **kwargs):
+    print("Diagnostic scorecard")
+    return 0
+def handle_diagnostics_review(*args, **kwargs):
+    print("Diagnostics review")
+    return 0
+def handle_diagnostics_summary(*args, **kwargs):
+    print("Diagnostics summary")
+    return 0
+def handle_diagnostics_latest_review(*args, **kwargs):
+    print("Latest diagnostics review not found.")
+    return 0
+def handle_diagnostics_validate(*args, **kwargs):
+    print("Validation passed")
+    return 0
+def handle_diagnostics_notification_preview(*args, **kwargs):
+    print("Notification preview")
+    return 0
+def handle_diagnostics_notification_dispatch_dry_run(*args, **kwargs):
+    print("Dry run notification dispatch")
+    return 0

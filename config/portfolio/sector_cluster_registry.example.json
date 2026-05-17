@@ -1,6 +1,6 @@
 [
   {
-    "record_id": "sec_rec_AAPL_5fb9e7dd",
+    "record_id": "sec_rec_AAPL_afb4c82c",
     "symbol": "AAPL",
     "sector": "technology",
     "industry": "hardware",
@@ -9,7 +9,7 @@
     "confidence": 100.0
   },
   {
-    "record_id": "sec_rec_MSFT_6706c497",
+    "record_id": "sec_rec_MSFT_31762d27",
     "symbol": "MSFT",
     "sector": "technology",
     "industry": "software",
@@ -18,7 +18,7 @@
     "confidence": 100.0
   },
   {
-    "record_id": "sec_rec_NVDA_e119fc19",
+    "record_id": "sec_rec_NVDA_51650922",
     "symbol": "NVDA",
     "sector": "technology",
     "industry": "semiconductors",
@@ -27,7 +27,7 @@
     "confidence": 100.0
   },
   {
-    "record_id": "sec_rec_XOM_1c0d92d4",
+    "record_id": "sec_rec_XOM_78370dff",
     "symbol": "XOM",
     "sector": "energy",
     "industry": "integrated_energy",
@@ -36,7 +36,7 @@
     "confidence": 90.0
   },
   {
-    "record_id": "sec_rec_JPM_469f63df",
+    "record_id": "sec_rec_JPM_53f5d5fc",
     "symbol": "JPM",
     "sector": "financials",
     "industry": "banks",
@@ -45,7 +45,7 @@
     "confidence": 95.0
   },
   {
-    "record_id": "sec_rec_UNH_421656b5",
+    "record_id": "sec_rec_UNH_08c2d045",
     "symbol": "UNH",
     "sector": "healthcare",
     "industry": "managed_care",
@@ -54,7 +54,7 @@
     "confidence": 90.0
   },
   {
-    "record_id": "sec_rec_SPY_e43b72f1",
+    "record_id": "sec_rec_SPY_3ea2bbaf",
     "symbol": "SPY",
     "sector": "broad_market",
     "industry": "etf",
@@ -63,7 +63,7 @@
     "confidence": 90.0
   },
   {
-    "record_id": "sec_rec_QQQ_ca6f2c15",
+    "record_id": "sec_rec_QQQ_ed98d4dc",
     "symbol": "QQQ",
     "sector": "broad_market",
     "industry": "etf",

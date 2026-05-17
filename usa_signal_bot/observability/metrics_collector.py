@@ -240,3 +240,7 @@ def collect_portfolio_metrics(plan) -> dict:
                 status=OperationalMetricStatus.OK
             )
         ]
+
+# --- Phase 64 Diagnostics Integrations ---
+def expose_diagnostics_metrics(review: 'DiagnosticReview') -> None:
+    pass

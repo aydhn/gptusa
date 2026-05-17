@@ -1419,3 +1419,23 @@ class AttributionValidationError(AttributionError):
 class AttributionReportingError(AttributionError):
     """Raised when attribution reporting fails."""
     pass
+
+
+class DiagnosticsError(Exception): pass
+class DiagnosticEventNormalizationError(DiagnosticsError): pass
+class LossEventAnalysisError(DiagnosticsError): pass
+class FalseSignalAnalysisError(DiagnosticsError): pass
+class CostDegradationAnalysisError(DiagnosticsError): pass
+class RegimeFailureAnalysisError(DiagnosticsError): pass
+class LiquidityExecutionFailureError(DiagnosticsError): pass
+class SizingFailureAnalysisError(DiagnosticsError): pass
+class RebalanceFailureAnalysisError(DiagnosticsError): pass
+class DrawdownDiagnosticsError(DiagnosticsError): pass
+class StrategyDiagnosticsError(DiagnosticsError): pass
+class FailureSignatureMiningError(DiagnosticsError): pass
+class FailureClusterRankingError(DiagnosticsError): pass
+class RemediationHintError(DiagnosticsError): pass
+class DiagnosticScorecardError(DiagnosticsError): pass
+class DiagnosticsStorageError(DiagnosticsError): pass
+class DiagnosticsValidationError(DiagnosticsError): pass
+class DiagnosticsReportingError(DiagnosticsError): pass
