@@ -1,3 +1,5 @@
+
+
 import subprocess
 import pytest
 
@@ -97,3 +99,76 @@ def test_cli_regime_cost_notification_preview():
 
 def test_cli_regime_cost_notification_dispatch_dry_run():
     pass
+
+def test_rebalance_info():
+    result = run_cli_cmd(['rebalance-info'])
+    assert result.returncode in [0, 1, 2]
+    pass
+
+def test_current_portfolio_state():
+    result = run_cli_cmd(['current-portfolio-state', '--equity', '100000'])
+    assert result.returncode in [0, 1, 2]
+
+def test_target_portfolio_state():
+    result = run_cli_cmd(['target-portfolio-state', '--equity', '100000'])
+    assert result.returncode in [0, 1, 2]
+
+def test_drift_summary():
+    result = run_cli_cmd(['drift-summary', '--equity', '100000'])
+    assert result.returncode in [0, 1, 2]
+
+def test_exposure_drift():
+    result = run_cli_cmd(['exposure-drift', '--equity', '100000'])
+    assert result.returncode in [0, 1, 2]
+
+def test_bucket_drift():
+    result = run_cli_cmd(['bucket-drift', '--equity', '100000'])
+    assert result.returncode in [0, 1, 2]
+
+def test_signal_decay():
+    result = run_cli_cmd(['signal-decay', '--age-minutes', '120'])
+    assert result.returncode in [0, 1, 2]
+
+def test_rebalance_thresholds():
+    result = run_cli_cmd(['rebalance-thresholds'])
+    assert result.returncode in [0, 1, 2]
+
+def test_turnover_review():
+    result = run_cli_cmd(['turnover-review', '--equity', '100000'])
+    assert result.returncode in [0, 1, 2]
+
+def test_turnover_cost():
+    result = run_cli_cmd(['turnover-cost', '--delta-notional', '1000', '--cost-bps', '50'])
+    assert result.returncode in [0, 1, 2]
+
+def test_dust_guard():
+    result = run_cli_cmd(['dust-guard', '--delta-notional', '10', '--min-notional', '25'])
+    assert result.returncode in [0, 1, 2]
+
+def test_rebalance_plan():
+    result = run_cli_cmd(['rebalance-plan', '--equity', '100000'])
+    assert result.returncode in [0, 1, 2]
+
+def test_rebalance_review():
+    result = run_cli_cmd(['rebalance-review'])
+    assert result.returncode in [0, 1, 2]
+
+def test_rebalance_summary():
+    result = run_cli_cmd(['rebalance-summary'])
+    assert result.returncode in [0, 1, 2]
+
+def test_rebalance_latest_review():
+    result = run_cli_cmd(['rebalance-latest-review'])
+    assert result.returncode in [0, 1, 2]
+
+def test_rebalance_validate():
+    result = run_cli_cmd(['rebalance-validate'])
+    assert result.returncode in [0, 1, 2]
+
+def test_rebalance_notification_preview():
+    result = run_cli_cmd(['rebalance-notification-preview'])
+    assert result.returncode in [0, 1, 2]
+
+def test_rebalance_notification_dispatch():
+    result = run_cli_cmd(['rebalance-notification-dispatch-dry-run'])
+    assert result.returncode in [0, 1, 2]

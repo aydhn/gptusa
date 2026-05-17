@@ -4537,3 +4537,117 @@ class CostRobustnessNotificationsConfig:
     notify_execution_sensitivity_warning: bool = True
     default_channel: str = "dry_run"
     warn_no_real_send_default: bool = True
+
+@dataclass
+class PortfolioRebalanceConfig:
+    enabled: bool = True
+    mode: str = "hybrid"
+    write_rebalance_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_no_broker_execution: bool = True
+    warn_rebalance_is_local_metadata: bool = True
+
+@dataclass
+class RebalanceThresholdsConfig:
+    enabled: bool = True
+    min_symbol_drift_pct: float = 1.0
+    min_exposure_drift_pct: float = 3.0
+    min_bucket_drift_pct: float = 5.0
+    min_trade_notional_usd: float = 25.0
+    max_turnover_pct_equity: float = 10.0
+    max_action_count: int = 50
+    cost_sensitive_multiplier: float = 1.5
+    regime_sensitive_multiplier: float = 1.5
+    drawdown_sensitive_multiplier: float = 2.0
+
+@dataclass
+class TurnoverControlConfig:
+    enabled: bool = True
+    suppress_dust_actions: bool = True
+    suppress_to_fit_max_turnover: bool = True
+    prioritize_exits_over_increases: bool = True
+    prioritize_high_drift_actions: bool = True
+    suppress_low_priority_first: bool = True
+
+@dataclass
+class RebalanceCostControlConfig:
+    enabled: bool = True
+    suppress_when_cost_exceeds_drift_benefit: bool = True
+    high_cost_bps_warning: float = 150.0
+    high_cost_bps_suppress: float = 300.0
+    high_market_impact_suppress: bool = True
+    cost_robustness_failed_suppress: bool = True
+
+@dataclass
+class RebalanceRegimeControlConfig:
+    enabled: bool = True
+    throttle_on_high_transition_risk: bool = True
+    throttle_on_regime_conflict: bool = True
+    suppress_in_blocked_regime: bool = True
+    allow_exits_in_blocked_regime: bool = True
+
+@dataclass
+class RebalanceDrawdownControlConfig:
+    enabled: bool = True
+    light_drawdown_pct: float = 3.0
+    moderate_drawdown_pct: float = 6.0
+    heavy_drawdown_pct: float = 10.0
+    full_block_drawdown_pct: float = 15.0
+    block_increases_on_heavy_drawdown: bool = True
+    allow_risk_reducing_actions: bool = True
+
+@dataclass
+class SignalDecayRebalanceConfig:
+    enabled: bool = True
+    signal_half_life_minutes: float = 240.0
+    max_signal_age_minutes: float = 1440.0
+    suppress_expired_signal_targets: bool = True
+    warn_missing_signal_timestamp: bool = True
+
+@dataclass
+class RebalanceNotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    notify_rebalance_report: bool = True
+    notify_turnover_warning: bool = True
+    notify_drift_warning: bool = True
+    default_channel: str = "dry_run"
+    warn_no_real_send_default: bool = True
+
+def validate_portfolio_rebalance_config(config: PortfolioRebalanceConfig) -> None:
+    if not config.warn_not_investment_advice:
+        raise ValueError("warn_not_investment_advice must be True")
+    if not config.warn_no_broker_execution:
+        raise ValueError("warn_no_broker_execution must be True")
+    if not config.warn_rebalance_is_local_metadata:
+        raise ValueError("warn_rebalance_is_local_metadata must be True")
+
+def validate_rebalance_thresholds_config(config: RebalanceThresholdsConfig) -> None:
+    if config.min_symbol_drift_pct < 0 or config.min_exposure_drift_pct < 0 or config.min_bucket_drift_pct < 0:
+        raise ValueError("drift thresholds cannot be negative")
+    if config.min_trade_notional_usd < 0:
+        raise ValueError("min_trade_notional_usd cannot be negative")
+    if not 0 <= config.max_turnover_pct_equity <= 100:
+        raise ValueError("max_turnover_pct_equity must be between 0 and 100")
+    if config.max_action_count <= 0:
+        raise ValueError("max_action_count must be positive")
+    if config.cost_sensitive_multiplier < 1.0 or config.regime_sensitive_multiplier < 1.0 or config.drawdown_sensitive_multiplier < 1.0:
+        raise ValueError("multipliers must be >= 1.0")
+
+def validate_rebalance_cost_control_config(config: RebalanceCostControlConfig) -> None:
+    if config.high_cost_bps_warning >= config.high_cost_bps_suppress:
+        raise ValueError("high_cost_bps_warning must be less than high_cost_bps_suppress")
+
+def validate_rebalance_drawdown_control_config(config: RebalanceDrawdownControlConfig) -> None:
+    if not (config.light_drawdown_pct < config.moderate_drawdown_pct < config.heavy_drawdown_pct < config.full_block_drawdown_pct):
+        raise ValueError("drawdown thresholds must be in ascending order")
+
+def validate_signal_decay_rebalance_config(config: SignalDecayRebalanceConfig) -> None:
+    if config.signal_half_life_minutes <= 0 or config.max_signal_age_minutes <= 0:
+        raise ValueError("signal half life and max age must be positive")
+
+def validate_rebalance_notifications_config(config: RebalanceNotificationsConfig) -> None:
+    if not config.dry_run:
+        raise ValueError("rebalance_notifications.dry_run must be True")
+    if not config.default_channel:
+        raise ValueError("default_channel cannot be empty")
