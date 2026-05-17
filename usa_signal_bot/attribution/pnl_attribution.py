@@ -1,0 +1,136 @@
+"""Gross and net PnL attribution calculators."""
+
+from typing import Dict, List, Optional
+from collections import defaultdict
+
+from usa_signal_bot.core.enums import AttributionDimension, ContributionDirection, AttributionQuality
+from usa_signal_bot.attribution.attribution_models import (
+    AttributionTradeEvent,
+    AttributionContribution,
+    create_attribution_contribution_id
+)
+
+def calculate_win_rate(events: List[AttributionTradeEvent]) -> Optional[float]:
+    win = sum(1 for e in events if e.net_pnl_usd is not None and e.net_pnl_usd > 0)
+    loss = sum(1 for e in events if e.net_pnl_usd is not None and e.net_pnl_usd <= 0)
+    total = win + loss
+    if total == 0:
+        return None
+    return (win / total) * 100.0
+
+def classify_contribution_direction(net_pnl_usd: Optional[float]) -> ContributionDirection:
+    if net_pnl_usd is None:
+        return ContributionDirection.INSUFFICIENT_DATA
+    if net_pnl_usd > 0:
+        return ContributionDirection.POSITIVE
+    if net_pnl_usd < 0:
+        return ContributionDirection.NEGATIVE
+    return ContributionDirection.NEUTRAL
+
+def classify_attribution_quality(events: List[AttributionTradeEvent]) -> AttributionQuality:
+    valid_pnl = sum(1 for e in events if e.net_pnl_usd is not None)
+    if valid_pnl == 0:
+        return AttributionQuality.INSUFFICIENT_DATA
+    if valid_pnl < 10:
+        return AttributionQuality.WEAK
+    if valid_pnl < 30:
+        return AttributionQuality.NOISY
+    if valid_pnl >= 30:
+        return AttributionQuality.HIGH
+    return AttributionQuality.ACCEPTABLE
+
+def calculate_contribution_for_group(
+    name: str,
+    dimension: AttributionDimension,
+    events: List[AttributionTradeEvent],
+    total_net_pnl: Optional[float] = None
+) -> AttributionContribution:
+    gross = sum(e.gross_pnl_usd for e in events if e.gross_pnl_usd is not None)
+    net = sum(e.net_pnl_usd for e in events if e.net_pnl_usd is not None)
+    cost = sum(e.total_cost_usd for e in events if e.total_cost_usd is not None)
+
+    trade_count = len(events)
+    win_count = sum(1 for e in events if e.net_pnl_usd is not None and e.net_pnl_usd > 0)
+    loss_count = sum(1 for e in events if e.net_pnl_usd is not None and e.net_pnl_usd <= 0)
+
+    win_rate = calculate_win_rate(events)
+    avg_net = net / trade_count if trade_count > 0 else None
+
+    pct_total = None
+    if total_net_pnl and total_net_pnl != 0:
+        pct_total = (net / total_net_pnl) * 100.0
+
+    quality = classify_attribution_quality(events)
+    direction = classify_contribution_direction(net)
+
+    warnings = []
+    if quality in [AttributionQuality.WEAK, AttributionQuality.NOISY]:
+        warnings.append("Low sample size for attribution group.")
+
+    return AttributionContribution(
+        contribution_id=create_attribution_contribution_id(name),
+        dimension=dimension,
+        name=name,
+        contribution_direction=direction,
+        gross_pnl_usd=gross,
+        net_pnl_usd=net,
+        total_cost_usd=cost,
+        trade_count=trade_count,
+        win_count=win_count,
+        loss_count=loss_count,
+        win_rate=win_rate,
+        avg_net_pnl_usd=avg_net,
+        contribution_pct_total=pct_total,
+        quality=quality,
+        warnings=warnings
+    )
+
+def aggregate_pnl_by_dimension(events: List[AttributionTradeEvent], dimension: AttributionDimension) -> List[AttributionContribution]:
+    groups = defaultdict(list)
+
+    for e in events:
+        key = "UNKNOWN"
+        if dimension == AttributionDimension.SYMBOL:
+            key = e.symbol
+        elif dimension == AttributionDimension.STRATEGY:
+            key = e.strategy_name or "UNKNOWN"
+        elif dimension == AttributionDimension.SIGNAL_FAMILY:
+            key = e.signal_family or "UNKNOWN"
+        elif dimension == AttributionDimension.SECTOR:
+            key = e.sector or "UNKNOWN"
+        elif dimension == AttributionDimension.CLUSTER:
+            key = e.cluster or "UNKNOWN"
+        elif dimension == AttributionDimension.REGIME:
+            key = e.regime_label or "UNKNOWN"
+        elif dimension == AttributionDimension.SIDE:
+            key = e.side or "UNKNOWN"
+        elif dimension == AttributionDimension.SIZING_STATUS:
+            key = e.sizing_status or "UNKNOWN"
+        elif dimension == AttributionDimension.REBALANCE_ACTION:
+            key = e.rebalance_action_type or "UNKNOWN"
+
+        groups[key].append(e)
+
+    total_net_pnl = sum(e.net_pnl_usd for e in events if e.net_pnl_usd is not None)
+
+    contributions = []
+    for name, group_events in groups.items():
+        contributions.append(calculate_contribution_for_group(name, dimension, group_events, total_net_pnl))
+
+    return sorted(contributions, key=lambda x: x.net_pnl_usd, reverse=True)
+
+def pnl_attribution_to_text(contributions: List[AttributionContribution], limit: int = 100) -> str:
+    if not contributions:
+        return "No contributions to display."
+
+    dimension = contributions[0].dimension.value
+    lines = [f"--- PnL Attribution by {dimension} ---"]
+    for c in contributions[:limit]:
+        wr = f"{c.win_rate:.1f}%" if c.win_rate is not None else "N/A"
+        pct = f"{c.contribution_pct_total:.1f}%" if c.contribution_pct_total is not None else "N/A"
+        lines.append(
+            f"[{c.contribution_direction.value[:3]}] {c.name}: Net PnL: ${c.net_pnl_usd:.2f} "
+            f"(Gross: ${c.gross_pnl_usd:.2f}, Cost: ${c.total_cost_usd:.2f}) | "
+            f"Trades: {c.trade_count} | WR: {wr} | Share: {pct}"
+        )
+    return "\n".join(lines)

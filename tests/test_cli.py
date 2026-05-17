@@ -172,3 +172,16 @@ def test_rebalance_notification_preview():
 def test_rebalance_notification_dispatch():
     result = run_cli_cmd(['rebalance-notification-dispatch-dry-run'])
     assert result.returncode in [0, 1, 2]
+
+def test_attribution_info():
+    import subprocess
+    result = subprocess.run(["python", "-m", "usa_signal_bot", "attribution-info"], capture_output=True, text=True)
+    assert result.returncode == 0
+    assert "ATTRIBUTION INFO" in result.stdout
+    assert "NOT investment advice" in result.stdout
+
+def test_pnl_attribution():
+    import subprocess
+    result = subprocess.run(["python", "-m", "usa_signal_bot", "pnl-attribution", "--dimension", "symbol"], capture_output=True, text=True)
+    assert result.returncode == 0
+    assert "PnL attribution for symbol" in result.stdout

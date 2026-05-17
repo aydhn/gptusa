@@ -1,26 +1,24 @@
 # Performance Attribution
 
-The Performance Attribution module decomposes the overall Net PnL of a backtest run into specific dimensions to identify what worked and what didn't.
+## Overview
+The Performance Attribution system isolates the Gross and Net PnL of historical backtests and local paper trading runs across multiple dimensions. It operates strictly as a local heuristics layer and produces metadata designed to help identify the sources of performance.
 
-## Purpose
-To drill down into the trade ledger and summarize performance grouped by key characteristics.
+## Gross vs Net PnL
+Attribution models capture both Gross PnL (pre-cost) and Net PnL (post-cost). Discrepancies between the two highlight strategy components that may be overly fragile to execution costs.
 
-## Supported Dimensions
-- **STRATEGY**: PnL grouped by the strategy that generated the signal.
-- **SYMBOL**: PnL grouped by individual ticker symbols.
-- **TIMEFRAME**: PnL grouped by the signal timeframe (e.g., `1d`, `1h`).
-- **ACTION**: PnL grouped by the trade direction (LONG/SHORT).
-- **MONTH / YEAR**: PnL grouped by trade exit or entry time to see temporal performance.
-- **HOLDING_PERIOD**: PnL grouped by holding duration buckets (0-1, 2-5, 6-20, 21+ bars).
+## Dimensions
+Performance attribution can be calculated across the following dimensions:
+- `symbol`: Highlights top and worst contributing instruments.
+- `strategy`: Highlights performance differences between deployed strategies.
+- `sector` / `cluster`: Aggregates performance by higher-level asset classifications.
+- `regime`: Shows how performance varies across different identified market regimes (e.g. BULL, BEAR, HIGH_VOL).
 
-## Contribution Percentage
-For each row in a dimension, the `contribution_pct` represents the proportion of that specific group's Net PnL relative to the absolute total Net PnL of the backtest.
-
-*Note: This is a simplified attribution estimation based on closed and partially closed trades. It is not a formal fund performance attribution report.*
+## Quality Metrics
+The system provides a `win_rate` and `avg_net_pnl_usd` for each dimension to evaluate robustness. Groups with low sample sizes will trigger warnings, and their quality rating will fall to `WEAK` or `NOISY`.
 
 ## CLI Usage
-
-Generate an attribution report for the latest run:
 ```bash
-python -m usa_signal_bot backtest-attribution --latest --dimensions strategy,symbol,timeframe,month --write
+python -m usa_signal_bot attribution-info
+python -m usa_signal_bot pnl-attribution --dimension symbol
+python -m usa_signal_bot strategy-attribution
 ```

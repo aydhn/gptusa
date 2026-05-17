@@ -3888,7 +3888,72 @@ class RegimeCostNotificationsConfig:
     warn_no_real_send_default: bool = True
 
 @dataclass
+
+@dataclass
+class PerformanceAttributionConfig:
+    dimensions: List[str] = field(default_factory=lambda: ["symbol", "strategy", "signal_family", "sector", "cluster", "regime", "side", "sizing_status", "rebalance_action"])
+    enabled: bool = True
+    min_trades_for_high_quality: int = 30
+    min_trades_for_acceptable_quality: int = 10
+    low_sample_warning: bool = True
+
+@dataclass
+class CostAttributionConfig:
+    enabled: bool = True
+    cost_drag_warning_pct: float = 50.0
+    cost_drag_critical_pct: float = 100.0
+    include_slippage: bool = True
+    include_market_impact: bool = True
+    include_fee_proxy: bool = True
+
+@dataclass
+class SignalContributionConfig:
+    enabled: bool = True
+    min_signal_trades_for_review: int = 5
+    detrimental_net_pnl_threshold_usd: float = 0.0
+    cost_degraded_threshold_pct: float = 50.0
+    drawdown_contributor_warning: bool = True
+
+@dataclass
+class RiskAttributionConfig:
+    enabled: bool = True
+    drawdown_attribution_enabled: bool = True
+    volatility_proxy_enabled: bool = True
+    exposure_proxy_enabled: bool = True
+    concentration_proxy_enabled: bool = True
+    liquidity_proxy_enabled: bool = True
+    high_risk_contribution_score: float = 70.0
+
+@dataclass
+class TimeWindowAttributionConfig:
+    enabled: bool = True
+    default_window: str = "monthly"
+    include_daily: bool = False
+    include_weekly: bool = True
+    include_monthly: bool = True
+    include_yearly: bool = True
+
+@dataclass
+class AttributionNotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    notify_attribution_report: bool = True
+    notify_signal_contribution_warning: bool = True
+    notify_risk_attribution_warning: bool = True
+    default_channel: str = "dry_run"
+    warn_no_real_send_default: bool = True
+
+@dataclass
+class AttributionConfig:
+    enabled: bool = True
+    write_attribution_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_no_broker_execution: bool = True
+    warn_attribution_is_local_analytics: bool = True
+
+@dataclass
 class AppConfig:
+
 
 
     execution_realism: ExecutionRealismConfig = field(default_factory=ExecutionRealismConfig)

@@ -1367,3 +1367,55 @@ class RebalanceValidationError(PortfolioRebalanceError):
 
 class RebalanceReportingError(PortfolioRebalanceError):
     pass
+
+class AttributionError(USASignalBotError):
+    """Base exception for attribution errors."""
+    pass
+
+class TradeNormalizationError(AttributionError):
+    """Raised when trade normalization fails."""
+    pass
+
+class PerformanceAttributionError(AttributionError):
+    """Raised when performance attribution calculation fails."""
+    pass
+
+class CostAttributionError(AttributionError):
+    """Raised when cost attribution calculation fails."""
+    pass
+
+class SignalContributionError(AttributionError):
+    """Raised when signal contribution calculation fails."""
+    pass
+
+class RiskAttributionError(AttributionError):
+    """Raised when risk attribution calculation fails."""
+    pass
+
+class DrawdownAttributionError(AttributionError):
+    """Raised when drawdown attribution calculation fails."""
+    pass
+
+class ExposureAttributionError(AttributionError):
+    """Raised when exposure attribution calculation fails."""
+    pass
+
+class TimeWindowAttributionError(AttributionError):
+    """Raised when time window attribution calculation fails."""
+    pass
+
+class AttributionScorecardError(AttributionError):
+    """Raised when attribution scorecard generation fails."""
+    pass
+
+class AttributionStorageError(AttributionError):
+    """Raised when attribution storage operations fail."""
+    pass
+
+class AttributionValidationError(AttributionError):
+    """Raised when attribution validation fails."""
+    pass
+
+class AttributionReportingError(AttributionError):
+    """Raised when attribution reporting fails."""
+    pass
