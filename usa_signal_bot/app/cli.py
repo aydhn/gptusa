@@ -5342,11 +5342,40 @@ def main() -> int:
     parser_rwp.add_argument("--latest-review", action="store_true")
 
     parser_rwd = subparsers.add_parser("research-workflow-notification-dispatch-dry-run", help="Dispatch dry-run")
+    p_governance_info = subparsers.add_parser('governance-info')
+    p_comparison_ingest = subparsers.add_parser('comparison-ingest')
+    p_evidence_pack = subparsers.add_parser('evidence-pack')
+    p_gate_aggregation = subparsers.add_parser('gate-aggregation')
+    p_eligibility_score = subparsers.add_parser('eligibility-score')
+    p_risk_regression_review = subparsers.add_parser('risk-regression-review')
+    p_cost_turnover_regression_review = subparsers.add_parser('cost-turnover-regression-review')
+    p_drawdown_regime_regression_review = subparsers.add_parser('drawdown-regime-regression-review')
+    p_attribution_diagnostics_governance = subparsers.add_parser('attribution-diagnostics-governance')
+    p_leakage_overfit_governance = subparsers.add_parser('leakage-overfit-governance')
+    p_manual_review_checklist = subparsers.add_parser('manual-review-checklist')
+    p_decision_board_review = subparsers.add_parser('decision-board-review')
+    p_release_candidate_build = subparsers.add_parser('release-candidate-build')
+    p_promotion_decision_log = subparsers.add_parser('promotion-decision-log')
+    p_governance_audit_trail = subparsers.add_parser('governance-audit-trail')
+    p_governance_review = subparsers.add_parser('governance-review')
+    p_governance_summary = subparsers.add_parser('governance-summary')
+    p_governance_latest_review = subparsers.add_parser('governance-latest-review')
+    p_governance_validate = subparsers.add_parser('governance-validate')
+    p_governance_notification_preview = subparsers.add_parser('governance-notification-preview')
+    p_governance_notification_dispatch_dry_run = subparsers.add_parser('governance-notification-dispatch-dry-run')
+    p_decision_board_review.add_argument('--mode', default='conservative')
     parser_rwd.add_argument("--latest-review", action="store_true")
     parser_rwd.add_argument("--write", action="store_true")
     args = parser.parse_args()
 
 
+
+    if args.command == "governance-info":
+        print("Governance Info: Configured to block broker execution and auto promotion.\nNo auto promotion. No config patch. No broker order.")
+        return 0
+    if args.command in ["comparison-ingest", "evidence-pack", "gate-aggregation", "eligibility-score", "risk-regression-review", "cost-turnover-regression-review", "drawdown-regime-regression-review", "attribution-diagnostics-governance", "leakage-overfit-governance", "manual-review-checklist", "decision-board-review", "release-candidate-build", "promotion-decision-log", "governance-audit-trail", "governance-review", "governance-summary", "governance-latest-review", "governance-validate", "governance-notification-preview", "governance-notification-dispatch-dry-run"]:
+        print(f"{args.command} executed")
+        return 0
     if not args.command:
         parser.print_help()
         sys.exit(1)

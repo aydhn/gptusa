@@ -4888,3 +4888,68 @@ def validate_rebalance_notifications_config(config: RebalanceNotificationsConfig
         raise ValueError("rebalance_notifications.dry_run must be True")
     if not config.default_channel:
         raise ValueError("default_channel cannot be empty")
+
+from dataclasses import dataclass, field
+from typing import List, Optional
+
+@dataclass
+class ResearchGovernanceConfig:
+    enabled: bool = True
+    write_governance_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_no_broker_execution: bool = True
+    warn_no_auto_promotion: bool = True
+    warn_no_production_config_patch: bool = True
+
+@dataclass
+class PromotionReviewConfig:
+    enabled: bool = True
+    decision_board_mode: str = "conservative"
+    require_manual_review: bool = True
+    allow_auto_promotion: bool = False
+    allow_config_patch: bool = False
+    allow_order_routing: bool = False
+    require_complete_evidence_pack: bool = True
+    min_eligibility_score: float = 70.0
+
+@dataclass
+class EvidencePackConfig:
+    enabled: bool = True
+    required_items: List[str] = field(default_factory=lambda: [
+        "baseline_run", "candidate_run", "metric_comparisons",
+        "acceptance_gates", "config_snapshots", "validation_plan",
+        "attribution_delta", "diagnostics_delta", "safety_flags"
+    ])
+    block_on_missing_config_snapshot: bool = True
+    request_more_data_on_missing_oos: bool = True
+
+@dataclass
+class GovernanceRiskChecksConfig:
+    enabled: bool = True
+    block_on_secret_leak: bool = True
+    block_on_order_routing_risk: bool = True
+    block_on_config_mutation_risk: bool = True
+    block_on_leakage_failure: bool = True
+    reject_on_major_drawdown_regression: bool = True
+    reject_on_major_cost_regression: bool = True
+    request_retest_on_walk_forward_instability: bool = True
+    request_more_data_on_small_sample: bool = True
+
+@dataclass
+class ReleaseCandidateReviewConfig:
+    enabled: bool = True
+    allow_auto_apply: bool = False
+    allow_live_or_demo_execution: bool = False
+    accepted_status_means_local_research_only: bool = True
+    require_evidence_pack_ref: bool = True
+    require_decision_board_result: bool = True
+
+@dataclass
+class GovernanceNotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    notify_governance_report: bool = True
+    notify_promotion_review_warning: bool = True
+    notify_release_candidate_warning: bool = True
+    default_channel: str = "dry_run"
+    warn_no_real_send_default: bool = True

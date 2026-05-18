@@ -513,3 +513,64 @@ research_notifications:
   notify_experiment_plan_warning: true
   default_channel: dry_run
   warn_no_real_send_default: true
+
+research_governance:
+  enabled: true
+  write_governance_reports: true
+  warn_not_investment_advice: true
+  warn_no_broker_execution: true
+  warn_no_auto_promotion: true
+  warn_no_production_config_patch: true
+
+promotion_review:
+  enabled: true
+  decision_board_mode: "conservative"
+  require_manual_review: true
+  allow_auto_promotion: false
+  allow_config_patch: false
+  allow_order_routing: false
+  require_complete_evidence_pack: true
+  min_eligibility_score: 70.0
+
+evidence_pack:
+  enabled: true
+  required_items:
+    - "baseline_run"
+    - "candidate_run"
+    - "metric_comparisons"
+    - "acceptance_gates"
+    - "config_snapshots"
+    - "validation_plan"
+    - "attribution_delta"
+    - "diagnostics_delta"
+    - "safety_flags"
+  block_on_missing_config_snapshot: true
+  request_more_data_on_missing_oos: true
+
+governance_risk_checks:
+  enabled: true
+  block_on_secret_leak: true
+  block_on_order_routing_risk: true
+  block_on_config_mutation_risk: true
+  block_on_leakage_failure: true
+  reject_on_major_drawdown_regression: true
+  reject_on_major_cost_regression: true
+  request_retest_on_walk_forward_instability: true
+  request_more_data_on_small_sample: true
+
+release_candidate_review:
+  enabled: true
+  allow_auto_apply: false
+  allow_live_or_demo_execution: false
+  accepted_status_means_local_research_only: true
+  require_evidence_pack_ref: true
+  require_decision_board_result: true
+
+governance_notifications:
+  enabled: true
+  dry_run: true
+  notify_governance_report: true
+  notify_promotion_review_warning: true
+  notify_release_candidate_warning: true
+  default_channel: "dry_run"
+  warn_no_real_send_default: true

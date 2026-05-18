@@ -257,3 +257,18 @@ def collect_research_workflow_metrics(payload: dict) -> dict:
         "latest_auto_execution_enabled_count": 0,
         "research_workflow_warning_count": 0
     }
+
+class GovernanceMetrics:
+    def __init__(self):
+        self.latest_governance_review_count = 0
+        self.latest_promotion_review_count = 0
+        self.latest_release_candidate_count = 0
+        self.latest_governance_blocked_count = 0
+        self.latest_governance_request_retest_count = 0
+        self.latest_governance_request_more_data_count = 0
+        self.latest_local_research_candidate_count = 0
+        self.latest_governance_risk_flag_count = 0
+        self.latest_manual_review_required_count = 0
+        self.governance_warning_count = 0
+
+governance_metrics = GovernanceMetrics()

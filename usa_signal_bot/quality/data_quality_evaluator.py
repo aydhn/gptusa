@@ -210,3 +210,7 @@ def update_scorecard_with_research_workflow(scorecard: dict, payload: dict) -> d
     res["acceptance_gate_coverage_score"] = 0.8
     res["overfit_leakage_guard_score"] = 0.8
     return res
+
+def calculate_governance_quality_score(pack_completeness: float, safety_score: float) -> float:
+    # Example integration hook for governance score
+    return (pack_completeness + safety_score) / 2.0

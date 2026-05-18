@@ -1576,3 +1576,29 @@ class ResearchExecutionValidationError(ResearchExecutionError):
 
 class ResearchExecutionReportingError(ResearchExecutionError):
     pass
+
+
+class ResearchGovernanceError(USASignalBotError):
+    pass
+class GovernanceEvidencePackError(ResearchGovernanceError):
+    pass
+class PromotionReviewError(ResearchGovernanceError):
+    pass
+class ReleaseCandidateError(ResearchGovernanceError):
+    pass
+class GovernanceDecisionBoardError(ResearchGovernanceError):
+    pass
+class GovernanceRiskRegressionError(ResearchGovernanceError):
+    pass
+class GovernanceChecklistError(ResearchGovernanceError):
+    pass
+class PromotionDecisionLogError(ResearchGovernanceError):
+    pass
+class GovernanceAuditTrailError(ResearchGovernanceError):
+    pass
+class GovernanceStorageError(ResearchGovernanceError):
+    pass
+class GovernanceValidationError(ResearchGovernanceError):
+    pass
+class GovernanceReportingError(ResearchGovernanceError):
+    pass
