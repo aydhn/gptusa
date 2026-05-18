@@ -1524,3 +1524,55 @@ class ResearchWorkflowValidationError(ResearchWorkflowError):
 class ResearchWorkflowReportingError(ResearchWorkflowError):
     """Raised when a research workflow reporting operation fails."""
     pass
+
+
+class ResearchExecutionError(USASignalBotError):
+    pass
+
+class ExperimentPlanLoadError(ResearchExecutionError):
+    pass
+
+class ConfigSnapshotError(ResearchExecutionError):
+    pass
+
+class CandidateOverlayError(ResearchExecutionError):
+    pass
+
+class ExperimentRunContextError(ResearchExecutionError):
+    pass
+
+class LocalExperimentHarnessError(ResearchExecutionError):
+    pass
+
+class BacktestExperimentRunnerError(ResearchExecutionError):
+    pass
+
+class WalkForwardExperimentRunnerError(ResearchExecutionError):
+    pass
+
+class MockExperimentRunnerError(ResearchExecutionError):
+    pass
+
+class RunRegistryError(ResearchExecutionError):
+    pass
+
+class ExperimentArtifactError(ResearchExecutionError):
+    pass
+
+class MetricsExtractionError(ResearchExecutionError):
+    pass
+
+class ResultComparisonError(ResearchExecutionError):
+    pass
+
+class GateEvaluationError(ResearchExecutionError):
+    pass
+
+class ResearchExecutionStorageError(ResearchExecutionError):
+    pass
+
+class ResearchExecutionValidationError(ResearchExecutionError):
+    pass
+
+class ResearchExecutionReportingError(ResearchExecutionError):
+    pass
