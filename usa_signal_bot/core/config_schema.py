@@ -4049,7 +4049,82 @@ class DiagnosticsNotificationsConfig:
     warn_no_real_send_default: bool = True
 
 
+
+@dataclass
+class ResearchExecutionConfig:
+    enabled: bool = False
+    default_execution_mode: str = "mock_only"
+    write_execution_reports: bool = False
+    warn_not_investment_advice: bool = True
+    warn_no_broker_execution: bool = True
+    warn_no_auto_optimization: bool = True
+    warn_no_production_config_patch: bool = True
+
+@dataclass
+class ExperimentHarnessConfig:
+    enabled: bool = False
+    allow_config_mutation: bool = False
+    allow_order_routing: bool = False
+    allow_live_execution: bool = False
+    allow_demo_execution: bool = False
+    require_manual_review: bool = True
+    max_runs_per_review: int = 20
+
+@dataclass
+class ConfigSnapshotConfig:
+    enabled: bool = False
+    redact_secrets: bool = True
+    include_config_hash: bool = True
+    include_source_ref: bool = True
+    block_unredacted_secret_keys: bool = True
+
+@dataclass
+class CandidateOverlayConfig:
+    enabled: bool = False
+    allow_overlay_in_memory_only: bool = True
+    block_broker_fields: bool = True
+    block_auto_apply_fields: bool = True
+    max_overlay_keys: int = 50
+
+@dataclass
+class ExperimentComparisonConfig:
+    enabled: bool = False
+    required_metrics: list[str] = field(default_factory=lambda: [
+        "total_net_pnl_usd", "total_gross_pnl_usd", "max_drawdown_pct", "win_rate_pct",
+        "cost_drag_pct", "turnover_pct", "trade_count", "walk_forward_pass_ratio", "robustness_score"
+    ])
+    min_trade_count_for_comparison: int = 30
+    candidate_better_requires_gate_pass: bool = True
+    inconclusive_on_missing_required_metrics: bool = True
+
+@dataclass
+class GateEvaluationConfig:
+    enabled: bool = False
+    mode: str = "preliminary"
+    fail_on_no_leakage_gate_failure: bool = True
+    warn_on_insufficient_sample: bool = True
+    warn_on_missing_oos: bool = True
+    warn_gate_pass_not_live_approval: bool = True
+
+@dataclass
+class ResearchExecutionNotificationsConfig:
+    enabled: bool = False
+    dry_run: bool = True
+    notify_execution_report: bool = True
+    notify_run_warning: bool = True
+    notify_comparison_warning: bool = True
+    default_channel: str = "dry_run"
+    warn_no_real_send_default: bool = True
+
 class AppConfig:
+
+    research_execution: ResearchExecutionConfig = field(default_factory=ResearchExecutionConfig)
+    experiment_harness: ExperimentHarnessConfig = field(default_factory=ExperimentHarnessConfig)
+    config_snapshot: ConfigSnapshotConfig = field(default_factory=ConfigSnapshotConfig)
+    candidate_overlay: CandidateOverlayConfig = field(default_factory=CandidateOverlayConfig)
+    experiment_comparison: ExperimentComparisonConfig = field(default_factory=ExperimentComparisonConfig)
+    gate_evaluation: GateEvaluationConfig = field(default_factory=GateEvaluationConfig)
+    research_execution_notifications: ResearchExecutionNotificationsConfig = field(default_factory=ResearchExecutionNotificationsConfig)
 
 
 

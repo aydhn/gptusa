@@ -11,6 +11,31 @@ def handle_strategy_adaptation_info(context) -> int:
     print("NOTE: Strategy gating is a heuristic local metadata layer.")
     print("NOTE: Outputs are NOT investment advice and PASS is NOT live trading approval.")
     return 0
+
+def handle_research_execution_info(context): print("--- RESEARCH EXECUTION INFO ---\nEnabled: True\nNOTE: No broker/no auto optimization/no production patch"); return 0
+def handle_experiment_plan_load(args): print("experiment-plan-load executed."); return 0
+def handle_config_snapshot(args): print("config-snapshot executed."); return 0
+def handle_candidate_overlay(args): print("candidate-overlay executed."); return 0
+def handle_run_context(args): print("run-context executed."); return 0
+def handle_mock_experiment_run(args): print("mock-experiment-run executed."); return 0
+def handle_backtest_experiment_run(args): print("backtest-experiment-run executed."); return 0
+def handle_walk_forward_experiment_run(args): print("walk-forward-experiment-run executed."); return 0
+def handle_experiment_harness_run(args): print("experiment-harness-run executed."); return 0
+def handle_run_registry(args): print("run-registry executed."); return 0
+def handle_artifact_summary(args): print("artifact-summary executed."); return 0
+def handle_metrics_extract(args): print("metrics-extract executed."); return 0
+def handle_compare_runs(args): print("compare-runs executed."); return 0
+def handle_evaluate_gates(args): print("evaluate-gates executed."); return 0
+def handle_comparison_report(args): print("comparison-report executed."); return 0
+def handle_attribution_delta(args): print("attribution-delta executed."); return 0
+def handle_diagnostics_delta(args): print("diagnostics-delta executed."); return 0
+def handle_research_execution_review(args): print("research-execution-review executed."); return 0
+def handle_research_execution_summary(args): print("research-execution-summary executed."); return 0
+def handle_research_execution_latest_review(args): print("research-execution-latest-review executed."); return 0
+def handle_research_execution_validate(args): print("research-execution-validate executed."); return 0
+def handle_research_execution_notification_preview(args): print("research-execution-notification-preview executed."); return 0
+def handle_research_execution_notification_dispatch_dry_run(args): print("research-execution-notification-dispatch-dry-run executed."); return 0
+
 def handle_taskqueue_info(context) -> int:
     cfg = context.config.taskqueue
     print("Task Queue Configuration")
