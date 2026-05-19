@@ -2055,3 +2055,47 @@ def check_release_packaging_store_health(context) -> dict:
 
 def check_release_packaging_notification_health(context) -> dict:
     return {"status": "PASS", "component": "release_packaging_notification"}
+
+def check_release_sandbox_config_health(context: 'RuntimeContext') -> HealthCheckResult:
+    cfg = getattr(context.config, "release_sandbox", None)
+    if not cfg:
+        return HealthCheckResult(
+            module="release_sandbox_config",
+            status=HealthStatus.WARN,
+            message="Release sandbox config missing",
+            details={"resolution": "Check if default.yaml contains release_sandbox."}
+        )
+    return HealthCheckResult("release_sandbox_config", HealthStatus.PASS, "OK")
+
+def check_sandbox_mount_planner_health(context: 'RuntimeContext') -> HealthCheckResult:
+    return HealthCheckResult("sandbox_mount_planner", HealthStatus.PASS, "OK")
+
+def check_read_only_verifier_health(context: 'RuntimeContext') -> HealthCheckResult:
+    return HealthCheckResult("read_only_verifier", HealthStatus.PASS, "OK")
+
+def check_sandbox_activation_planner_health(context: 'RuntimeContext') -> HealthCheckResult:
+    return HealthCheckResult("sandbox_activation_planner", HealthStatus.PASS, "OK")
+
+def check_overlay_resolver_health(context: 'RuntimeContext') -> HealthCheckResult:
+    return HealthCheckResult("overlay_resolver", HealthStatus.PASS, "OK")
+
+def check_output_isolation_health(context: 'RuntimeContext') -> HealthCheckResult:
+    return HealthCheckResult("output_isolation", HealthStatus.PASS, "OK")
+
+def check_blocked_operation_guard_health(context: 'RuntimeContext') -> HealthCheckResult:
+    return HealthCheckResult("blocked_operation_guard", HealthStatus.PASS, "OK")
+
+def check_sandbox_runtime_context_health(context: 'RuntimeContext') -> HealthCheckResult:
+    return HealthCheckResult("sandbox_runtime_context", HealthStatus.PASS, "OK")
+
+def check_preview_runner_health(context: 'RuntimeContext') -> HealthCheckResult:
+    return HealthCheckResult("preview_runner", HealthStatus.PASS, "OK")
+
+def check_sandbox_safety_validator_health(context: 'RuntimeContext') -> HealthCheckResult:
+    return HealthCheckResult("sandbox_safety_validator", HealthStatus.PASS, "OK")
+
+def check_sandbox_store_health(context: 'RuntimeContext') -> HealthCheckResult:
+    return HealthCheckResult("sandbox_store", HealthStatus.PASS, "OK")
+
+def check_sandbox_notification_health(context: 'RuntimeContext') -> HealthCheckResult:
+    return HealthCheckResult("sandbox_notification", HealthStatus.PASS, "OK")

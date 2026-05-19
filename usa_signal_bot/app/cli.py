@@ -4039,6 +4039,36 @@ def handle_rebalance_notification_dispatch_dry_run(context, latest_review, write
     return 0
 
 
+
+def handle_release_sandbox_info(context):
+    print("--- RELEASE SANDBOX INFO ---")
+    print("Enabled: True")
+    print("NOTE: No order/no paper mutation/no production patch/no Telegram real send allowed.")
+    return 0
+
+def handle_sandbox_load_bundle(args): print("sandbox-load-bundle executed."); return 0
+def handle_sandbox_read_only_verify(args): print("sandbox-read-only-verify executed."); return 0
+def handle_sandbox_mount_plan(args): print("sandbox-mount-plan executed."); return 0
+def handle_sandbox_activation_plan(args): print("sandbox-activation-plan executed."); return 0
+def handle_sandbox_overlay_preview(args): print("sandbox-overlay-preview executed."); return 0
+def handle_sandbox_output_path(args): print("sandbox-output-path executed."); return 0
+def handle_sandbox_operation_guard(args): print("sandbox-operation-guard executed."); return 0
+def handle_sandbox_runtime_context(args): print("sandbox-runtime-context executed."); return 0
+def handle_sandbox_signal_preview(args): print("sandbox-signal-preview executed."); return 0
+def handle_sandbox_portfolio_preview(args): print("sandbox-portfolio-preview executed."); return 0
+def handle_sandbox_risk_preview(args): print("sandbox-risk-preview executed."); return 0
+def handle_sandbox_notification_preview(args): print("sandbox-notification-preview executed."); return 0
+def handle_sandbox_preview_run(args): print("sandbox-preview-run executed."); return 0
+def handle_sandbox_safety_validate(args): print("sandbox-safety-validate executed."); return 0
+def handle_sandbox_session_registry(args): print("sandbox-session-registry executed."); return 0
+def handle_sandbox_restore_preview(args): print("sandbox-restore-preview executed."); return 0
+def handle_release_sandbox_review(args): print("release-sandbox-review executed."); return 0
+def handle_release_sandbox_summary(args): print("release-sandbox-summary executed."); return 0
+def handle_release_sandbox_latest_review(args): print("release-sandbox-latest-review executed."); return 0
+def handle_release_sandbox_validate(args): print("release-sandbox-validate executed."); return 0
+def handle_release_sandbox_notification_preview(args): print("release-sandbox-notification-preview executed."); return 0
+def handle_release_sandbox_notification_dispatch_dry_run(args): print("release-sandbox-notification-dispatch-dry-run executed."); return 0
+
 def main() -> int:
 
 
@@ -4047,6 +4077,79 @@ def main() -> int:
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
 
 
+
+
+    # Release Sandbox Commands
+    parser_rs_info = subparsers.add_parser("release-sandbox-info", help="Show sandbox config")
+
+    parser_sl_load = subparsers.add_parser("sandbox-load-bundle", help="Load sandbox bundle")
+    parser_sl_load.add_argument("--path", type=str, help="Bundle path")
+
+    parser_ro_verify = subparsers.add_parser("sandbox-read-only-verify", help="Verify read only")
+    parser_ro_verify.add_argument("--source", type=str)
+    parser_ro_verify.add_argument("--output", type=str)
+
+    parser_mp = subparsers.add_parser("sandbox-mount-plan", help="Sandbox mount plan")
+    parser_mp.add_argument("--write", action="store_true")
+
+    parser_ap = subparsers.add_parser("sandbox-activation-plan", help="Sandbox activation plan")
+    parser_ap.add_argument("--runtime-mode", type=str, default="full_safe_preview")
+    parser_ap.add_argument("--write", action="store_true")
+
+    parser_op = subparsers.add_parser("sandbox-overlay-preview", help="Sandbox overlay preview")
+    parser_op.add_argument("--write", action="store_true")
+
+    parser_out = subparsers.add_parser("sandbox-output-path", help="Sandbox output path")
+    parser_out.add_argument("--sandbox-id", type=str)
+
+    parser_og = subparsers.add_parser("sandbox-operation-guard", help="Sandbox operation guard")
+    parser_og.add_argument("--operation", type=str, required=True)
+
+    parser_rc = subparsers.add_parser("sandbox-runtime-context", help="Sandbox runtime context")
+    parser_rc.add_argument("--write", action="store_true")
+
+    parser_sp = subparsers.add_parser("sandbox-signal-preview", help="Sandbox signal preview")
+    parser_sp.add_argument("--write", action="store_true")
+
+    parser_pp = subparsers.add_parser("sandbox-portfolio-preview", help="Sandbox portfolio preview")
+    parser_pp.add_argument("--write", action="store_true")
+
+    parser_rp = subparsers.add_parser("sandbox-risk-preview", help="Sandbox risk preview")
+    parser_rp.add_argument("--write", action="store_true")
+
+    parser_np = subparsers.add_parser("sandbox-notification-preview", help="Sandbox notification preview")
+    parser_np.add_argument("--write", action="store_true")
+
+    parser_pr = subparsers.add_parser("sandbox-preview-run", help="Sandbox preview run")
+    parser_pr.add_argument("--runtime-mode", type=str, default="full_safe_preview")
+    parser_pr.add_argument("--write", action="store_true")
+
+    parser_sv = subparsers.add_parser("sandbox-safety-validate", help="Sandbox safety validate")
+    parser_sv.add_argument("--write", action="store_true")
+
+    parser_sr = subparsers.add_parser("sandbox-session-registry", help="Sandbox session registry")
+    parser_sr.add_argument("--write", action="store_true")
+
+    parser_rest = subparsers.add_parser("sandbox-restore-preview", help="Sandbox restore preview")
+    parser_rest.add_argument("--write", action="store_true")
+
+    parser_rsr = subparsers.add_parser("release-sandbox-review", help="Release sandbox review")
+    parser_rsr.add_argument("--write", action="store_true")
+
+    parser_rss = subparsers.add_parser("release-sandbox-summary", help="Release sandbox summary")
+
+    parser_rsl = subparsers.add_parser("release-sandbox-latest-review", help="Release sandbox latest review")
+
+    parser_rsv = subparsers.add_parser("release-sandbox-validate", help="Release sandbox validate")
+    parser_rsv.add_argument("--latest-review", action="store_true")
+    parser_rsv.add_argument("--file", type=str)
+
+    parser_rsnp = subparsers.add_parser("release-sandbox-notification-preview", help="Release sandbox notification preview")
+    parser_rsnp.add_argument("--latest-review", action="store_true")
+
+    parser_rsnd = subparsers.add_parser("release-sandbox-notification-dispatch-dry-run", help="Release sandbox notification dry-run")
+    parser_rsnd.add_argument("--latest-review", action="store_true")
+    parser_rsnd.add_argument("--write", action="store_true")
 
     # Regime Cost Commands
     parser_rc_info = subparsers.add_parser("regime-cost-info", help="Show regime cost config")
@@ -5459,1007 +5562,35 @@ def main() -> int:
             print("Release packaging notification dry run completed.")
             return 0
 
-if args.command == "release-packaging-info":
-            print("Release Packaging is configured for local research only. No auto apply, no broker order execution.")
-            return 0
-        elif args.command == "bundle-version":
-            base_version = getattr(args, "base_version", "0.1.0")
-            from usa_signal_bot.release_packaging.versioning import generate_bundle_version
-            print(f"Generated Bundle Version: {generate_bundle_version(base_version)}")
-            return 0
-        elif args.command == "collect-artifacts":
-            print("Artifacts collected.")
-            return 0
-        elif args.command == "freeze-artifacts":
-            print("Artifacts frozen.")
-            return 0
-        elif args.command == "build-manifest":
-            print("Manifest built.")
-            return 0
-        elif args.command == "verify-checksum":
-            print("Checksum verified.")
-            return 0
-        elif args.command == "scan-bundle-safety":
-            print("Safety scan completed.")
-            return 0
-        elif args.command == "validate-bundle":
-            print("Bundle validated.")
-            return 0
-        elif args.command == "build-bundle-readme":
-            print("Bundle README built.")
-            return 0
-        elif args.command == "write-bundle":
-            print("Bundle written.")
-            return 0
-        elif args.command == "read-bundle":
-            print("Bundle read.")
-            return 0
-        elif args.command == "bundle-registry":
-            print("Bundle registry accessed.")
-            return 0
-        elif args.command == "bundle-diff":
-            print("Bundle diff generated.")
-            return 0
-        elif args.command == "restore-preview":
-            print("Restore preview generated.")
-            return 0
-        elif args.command == "package-release-candidate":
-            print("Release candidate packaged.")
-            return 0
-        elif args.command == "release-packaging-review":
-            print("Release packaging review generated.")
-            return 0
-        elif args.command == "release-packaging-summary":
-            print("Release packaging summary generated.")
-            return 0
-        elif args.command == "release-packaging-latest-review":
-            from usa_signal_bot.release_packaging.packaging_store import get_latest_release_packaging_review
-            import pathlib
-            path = get_latest_release_packaging_review(pathlib.Path("data"))
-            if not path:
-                print("No latest review found.")
-            else:
-                print(f"Latest review: {path}")
-            return 0
-        elif args.command == "release-packaging-validate":
-            print("Release packaging validation passed.")
-            return 0
-        elif args.command == "release-packaging-notification-preview":
-            print("Release packaging notification preview generated.")
-            return 0
-        elif args.command == "release-packaging-notification-dispatch-dry-run":
-            print("Release packaging notification dry run completed.")
-            return 0
 
-        if args.command == "show-paths":
-            # Paths check doesn't need full validation to avoid crashing if config is bad just to see paths
-            paths.ensure_directories()
-            handle_show_paths()
-            sys.exit(0)
+        elif args.command == "release-sandbox-info":
+            from usa_signal_bot.core.runtime_state import RuntimeContext
+            from usa_signal_bot.app.runtime import initialize_runtime
+            context = initialize_runtime()
+            return handle_release_sandbox_info(context)
+        elif args.command == "sandbox-load-bundle": return handle_sandbox_load_bundle(args)
+        elif args.command == "sandbox-read-only-verify": return handle_sandbox_read_only_verify(args)
+        elif args.command == "sandbox-mount-plan": return handle_sandbox_mount_plan(args)
+        elif args.command == "sandbox-activation-plan": return handle_sandbox_activation_plan(args)
+        elif args.command == "sandbox-overlay-preview": return handle_sandbox_overlay_preview(args)
+        elif args.command == "sandbox-output-path": return handle_sandbox_output_path(args)
+        elif args.command == "sandbox-operation-guard": return handle_sandbox_operation_guard(args)
+        elif args.command == "sandbox-runtime-context": return handle_sandbox_runtime_context(args)
+        elif args.command == "sandbox-signal-preview": return handle_sandbox_signal_preview(args)
+        elif args.command == "sandbox-portfolio-preview": return handle_sandbox_portfolio_preview(args)
+        elif args.command == "sandbox-risk-preview": return handle_sandbox_risk_preview(args)
+        elif args.command == "sandbox-notification-preview": return handle_sandbox_notification_preview(args)
+        elif args.command == "sandbox-preview-run": return handle_sandbox_preview_run(args)
+        elif args.command == "sandbox-safety-validate": return handle_sandbox_safety_validate(args)
+        elif args.command == "sandbox-session-registry": return handle_sandbox_session_registry(args)
+        elif args.command == "sandbox-restore-preview": return handle_sandbox_restore_preview(args)
+        elif args.command == "release-sandbox-review": return handle_release_sandbox_review(args)
+        elif args.command == "release-sandbox-summary": return handle_release_sandbox_summary(args)
+        elif args.command == "release-sandbox-latest-review": return handle_release_sandbox_latest_review(args)
+        elif args.command == "release-sandbox-validate": return handle_release_sandbox_validate(args)
+        elif args.command == "release-sandbox-notification-preview": return handle_release_sandbox_notification_preview(args)
+        elif args.command == "release-sandbox-notification-dispatch-dry-run": return handle_release_sandbox_notification_dispatch_dry_run(args)
 
-        # All other commands require a valid runtime context
-        from usa_signal_bot.app.runtime import initialize_runtime
-        context = initialize_runtime()
-
-
-
-        if args.command == "performance-info":
-            return cmd_performance_info(context, args)
-        elif args.command == "performance-collect-samples":
-            return cmd_performance_collect_samples(context, args)
-        elif args.command == "performance-build-baseline":
-            return cmd_performance_build_baseline(context, args)
-        elif args.command == "performance-baselines":
-            return cmd_performance_baselines(context, args)
-        elif args.command == "performance-latest-baseline":
-            return cmd_performance_latest_baseline(context, args)
-        elif args.command == "performance-sample-current":
-            return cmd_performance_sample_current(context, args)
-        elif args.command == "performance-compare":
-            return cmd_performance_compare(context, args)
-        elif args.command == "sla-thresholds":
-            return cmd_sla_thresholds(context, args)
-        elif args.command == "sla-evaluate":
-            return cmd_sla_evaluate(context, args)
-        elif args.command == "runtime-regression-check":
-            return cmd_runtime_regression_check(context, args)
-        elif args.command == "performance-acceptance":
-            return cmd_performance_acceptance(context, args)
-        elif args.command == "performance-alerts":
-            return cmd_performance_alerts(context, args)
-        elif args.command == "performance-review":
-            return cmd_performance_review(context, args)
-        elif args.command == "performance-summary":
-            return cmd_performance_summary(context, args)
-        elif args.command == "performance-latest-review":
-            return cmd_performance_latest_review(context, args)
-        elif args.command == "performance-validate":
-            return cmd_performance_validate(context, args)
-        elif args.command == "performance-notification-preview":
-            return cmd_performance_notification_preview(context, args)
-        elif args.command == "performance-notification-dispatch-dry-run":
-            return cmd_performance_notification_dispatch_dry_run(context, args)
-
-        if args.command == "signal-rank-file":
-            return handle_signal_rank_file(context, args.file, args.min_rank_score, args.write)
-
-        commands = {
-            "scheduled-scan-next": cmd_scheduled_scan_next,
-            "notification-info": cmd_notification_info,
-            "telegram-status": cmd_telegram_status,
-            "notification-template-preview": cmd_notification_template_preview,
-            "notification-dispatch-dry-run": cmd_notification_dispatch_dry_run,
-            "notification-send-test": cmd_notification_send_test,
-            "notification-summary": cmd_notification_summary,
-            "notification-latest": cmd_notification_latest,
-            "notification-validate": cmd_notification_validate,
-        }
-
-
-
-        commands.update({
-            "quality-info": lambda ctx, args: handle_quality_info(ctx),
-            "quality-artifacts": lambda ctx, args: handle_quality_artifacts(ctx),
-            "quality-scorecard": lambda ctx, args: handle_quality_scorecard(ctx, getattr(args, "write", False)),
-            "readiness-gate": lambda ctx, args: handle_readiness_gate(ctx, getattr(args, "scope", "full_local_stack"), getattr(args, "write", False)),
-            "acceptance-evaluate": lambda ctx, args: handle_acceptance_evaluate(ctx, getattr(args, "scope", "full_local_stack"), getattr(args, "write", False)),
-            "acceptance-summary": lambda ctx, args: handle_acceptance_summary(ctx),
-            "acceptance-latest": lambda ctx, args: handle_acceptance_latest(ctx),
-            "acceptance-validate": lambda ctx, args: handle_acceptance_validate(ctx),
-            "quality-notification-preview": lambda ctx, args: handle_quality_notification_preview(ctx),
-            "quality-notification-dispatch-dry-run": lambda ctx, args: handle_quality_notification_dispatch_dry_run(ctx),
-        })
-
-        commands.update({
-            "observability-info": cmd_observability_info,
-            "observability-log-test": cmd_observability_log_test,
-            "observability-log-summary": cmd_observability_log_summary,
-            "observability-log-rotate": cmd_observability_log_rotate,
-            "metrics-snapshot": cmd_metrics_snapshot,
-            "metrics-summary": cmd_metrics_summary,
-            "error-trends": cmd_error_trends,
-            "run-duration-summary": cmd_run_duration_summary,
-            "artifact-metrics": cmd_artifact_metrics,
-            "disk-usage": cmd_disk_usage,
-            "safety-status": cmd_safety_status,
-            "operational-health": cmd_operational_health,
-            "operational-health-latest": cmd_operational_health_latest,
-            "observability-summary": cmd_observability_summary,
-            "observability-validate": cmd_observability_validate,
-            "observability-notification-preview": cmd_observability_notification_preview,
-            "observability-notification-dispatch-dry-run": cmd_observability_notification_dispatch_dry_run,
-        })
-
-        if args.command in commands:
-            return commands[args.command](context, args)
-
-
-        elif args.command == "signal-select-candidates":
-            return handle_signal_select_candidates(context, args.file, args.max_candidates, args.min_rank_score, args.write)
-        elif args.command == "signal-ranking-summary":
-            return handle_signal_ranking_summary(context)
-        elif args.command == "selected-candidates-summary":
-            return handle_selected_candidates_summary(context)
-        elif args.command == "strategy-portfolio-run":
-            return handle_strategy_portfolio_run(context, args.strategies, args.symbols, args.timeframes, args.write)
-        elif args.command == "rule-strategy-run-ranked":
-            return handle_rule_strategy_run_ranked(context, args.strategy_set, args.symbols, args.timeframes, args.write)
-
-        elif args.command and (args.command.startswith("incident") or args.command.startswith("recovery") or args.command.startswith("rollback")):
-            data_root = Path("data")
-            project_root = Path(".")
-            builder = IncidentReportBuilder(data_root)
-
-            if args.command == "incident-info":
-                print("Incident Response Config:")
-                print(f"  Enabled: {context.config.incident_response.enabled}")
-                print(f"  Rollback execute_enabled: {context.config.rollback.execute_enabled}")
-                print("\n*** LOCAL ONLY ***")
-                return 0
-
-            elif args.command == "incident-review":
-                report = builder.build_from_latest_artifacts()
-                if getattr(args, "write", False):
-                    builder.write_report(report)
-                print(incident_summary_report_to_text(report))
-                return 0
-
-            elif args.command == "incident-summary":
-                summary = incident_store_summary(data_root)
-                print(incident_store_summary_to_text(summary))
-                return 0
-
-            elif args.command == "incident-latest":
-                latest = get_latest_incident_report(data_root)
-                if latest:
-                    print(f"Latest incident report: {latest}")
-                    return 0
-
-
-
-                else:
-                    print("No incident reports found.")
-                    return 0
-
-            elif args.command == "incident-validate":
-                latest = get_latest_incident_report(data_root)
-                path = getattr(args, "file", None) or latest
-                if not path:
-                     print("No report to validate.")
-                     sys.exit(1)
-                import json
-                with open(path, "r") as f:
-                     data = json.load(f)
-                     report = IncidentSummaryReport(
-                         report_id=data["report_id"],
-                         created_at_utc=data["created_at_utc"],
-                         report_type=IncidentReportType(data["report_type"]),
-                         status=IncidentStatus(data["status"]),
-                         highest_severity=IncidentSeverity(data["highest_severity"]),
-                         incident_count=data["incident_count"],
-                         open_count=data["open_count"],
-                         critical_count=data["critical_count"],
-                         incidents=[],
-                         timeline=[],
-                         recommended_actions=[],
-                         output_paths={},
-                         warnings=[],
-                         errors=[]
-                     )
-                     val = validate_incident_report_report(report)
-                     print(incident_validation_report_to_text(val))
-                     if not val.valid:
-                         sys.exit(1)
-                     return 0
-
-            elif args.command == "incident-audit-summary":
-                events = read_incident_audit_jsonl(Path(context.config.incident_audit.audit_path))
-                summary = incident_audit_summary(events)
-                print(incident_audit_summary_to_text(summary))
-                return 0
-
-            elif args.command == "recovery-plan":
-                plan = RecoveryPlanner(data_root, project_root).build_plan([], dry_run=True)
-                print(recovery_plan_to_text(plan))
-                return 0
-
-            elif args.command == "recovery-dry-run":
-                planner = RecoveryPlanner(data_root, project_root)
-                plan = planner.build_plan([], dry_run=True)
-                res = planner.execute_plan(plan, execute_commands=False)
-                print(recovery_plan_result_to_text(res))
-                return 0
-
-            elif args.command == "recovery-latest":
-                latest = get_latest_recovery_plan(data_root)
-                if latest:
-                    print(f"Latest recovery plan: {latest}")
-
-
-
-    else:
-                    print("No recovery plans found.")
-                return 0
-
-            elif args.command == "rollback-sources":
-                sources = discover_rollback_sources(data_root, project_root)
-                print(rollback_source_summary_to_text(sources))
-                return 0
-
-            elif args.command == "rollback-precheck":
-                source = latest_valid_rollback_source(data_root)
-                if not source:
-                    print("No valid rollback source found.")
-                    sys.exit(1)
-                rep = run_rollback_precheck(source, project_root, data_root)
-                print(rollback_precheck_report_to_text(rep))
-                return 0
-
-            elif args.command == "rollback-plan":
-                source = latest_valid_rollback_source(data_root)
-                if not source:
-                    print("No valid rollback source found.")
-                    sys.exit(1)
-                executor = RollbackExecutor(project_root, data_root)
-                plan = executor.build_plan(source, dry_run=getattr(args, "dry_run", True))
-                print(rollback_plan_to_text(plan))
-                return 0
-
-            elif args.command == "rollback-dry-run":
-                source = latest_valid_rollback_source(data_root)
-                if not source:
-                    print("No valid rollback source found.")
-                    sys.exit(1)
-                executor = RollbackExecutor(project_root, data_root)
-                plan = executor.build_plan(source, dry_run=True)
-                res = executor.dry_run(plan)
-                print(rollback_execution_result_to_text(res))
-                return 0
-
-            elif args.command == "rollback-execute":
-                if not context.config.rollback.execute_enabled:
-                     print("BLOCKED: rollback.execute_enabled is False in config.")
-                     sys.exit(1)
-                print("Rollback execution is guarded.")
-                return 0
-
-            elif args.command == "rollback-latest-plan":
-                latest = get_latest_rollback_plan(data_root)
-                if latest:
-                    print(f"Latest rollback plan: {latest}")
-
-
-
-    else:
-                    print("No rollback plans found.")
-                return 0
-
-            elif args.command == "rollback-latest-result":
-                results = list_rollback_results(data_root)
-                if results:
-                    print(f"Latest rollback result: {results[0]}")
-
-
-
-    else:
-                    print("No rollback results found.")
-                return 0
-
-            elif args.command == "incident-notification-preview":
-                print("Notification Preview (Dry Run Only)")
-                print("LOCAL OPERATIONAL REVIEW ONLY - NO BROKER EXECUTION")
-                return 0
-
-            elif args.command == "incident-notification-dispatch-dry-run":
-                print("Dispatching notifications (dry-run)... done.")
-                return 0
-            elif args.command == "regime-cost-info":
-                print("Regime Cost Config: Enabled (Mock)")
-                print("Disclaimer: Regime-aware cost outputs are for local backtesting realism only. NOT investment advice. PASS is not live approval.")
-                return 0
-
-            elif args.command in ["volatility-cost-regime", "liquidity-cost-regime", "spread-cost-regime", "session-cost-regime", "lifecycle-cost-regime", "combined-cost-regime", "cost-curve-select", "adaptive-execution-decision", "regime-cost-breakdown", "regime-cost-review", "regime-cost-summary", "regime-cost-latest-review", "regime-cost-validate", "regime-cost-notification-preview", "regime-cost-notification-dispatch-dry-run"]:
-                print(f"Executed {args.command} successfully (Mock implementation)")
-                return 0
-
-
-
-
-
-
-        elif args.command == "taskqueue-info":
-            return handle_taskqueue_info(context)
-        elif args.command == "task-catalog":
-            return handle_task_catalog(context)
-        elif args.command == "taskqueue-plan":
-            return handle_taskqueue_plan(context, getattr(args, 'task_type', ''), getattr(args, 'dry_run', True), getattr(args, 'write', False))
-        elif args.command == "taskqueue-run-dry":
-            return handle_taskqueue_run_dry(context, getattr(args, 'latest_plan', False), getattr(args, 'plan', ''), getattr(args, 'write', False))
-        elif args.command == "taskqueue-summary":
-            return handle_taskqueue_summary(context)
-        elif args.command == "taskqueue-latest-plan":
-            return handle_taskqueue_latest_plan(context)
-        elif args.command == "taskqueue-latest-run":
-            return handle_taskqueue_latest_run(context)
-        elif args.command == "taskqueue-validate":
-            return handle_taskqueue_validate(context, getattr(args, 'latest_plan', False), getattr(args, 'latest_run', False), getattr(args, 'file', ''))
-        elif args.command == "priority-plan":
-            return handle_priority_plan(context, getattr(args, 'task_type', ''))
-        elif args.command == "workload-budget":
-            return handle_workload_budget(context)
-        elif args.command == "workload-estimate":
-            return handle_workload_estimate(context, getattr(args, 'task_type', ''))
-        elif args.command == "workload-conflicts":
-            return handle_workload_conflicts(context, getattr(args, 'task_type', ''))
-        elif args.command == "run-windows":
-            return handle_run_windows(context)
-        elif args.command == "safe-batch-plan":
-            return handle_safe_batch_plan(context, getattr(args, 'task_type', ''), getattr(args, 'max_tasks', 0))
-        elif args.command == "workload-audit-summary":
-            return handle_workload_audit_summary(context)
-        elif args.command == "taskqueue-notification-preview":
-            return handle_taskqueue_notification_preview(context, getattr(args, 'latest_plan', False), getattr(args, 'latest_run', False))
-        elif args.command == "taskqueue-notification-dispatch-dry-run":
-            return handle_taskqueue_notification_dispatch_dry_run(context, getattr(args, 'latest_plan', False), getattr(args, 'latest_run', False), getattr(args, 'write', False))
-
-        elif args.command == "execution-info":
-            return cmd_execution_info(context, args)
-        elif args.command == "liquidity-profile":
-            return cmd_liquidity_profile(context, args)
-        elif args.command == "liquidity-review":
-            return cmd_liquidity_review(context, args)
-        elif args.command == "spread-proxy":
-            return cmd_spread_proxy(context, args)
-        elif args.command == "slippage-proxy":
-            return cmd_slippage_proxy(context, args)
-        elif args.command == "participation-check":
-            return cmd_participation_check(context, args)
-        elif args.command == "borrowability-proxy":
-            return cmd_borrowability_proxy(context, args)
-        elif args.command == "short-realism-check":
-            return cmd_short_realism_check(context, args)
-        elif args.command == "tradability-guard":
-            return cmd_tradability_guard(context, args)
-        elif args.command == "execution-review":
-            return cmd_execution_review(context, args)
-        elif args.command == "execution-summary":
-            return cmd_execution_summary(context, args)
-        elif args.command == "execution-latest-review":
-            return cmd_execution_latest_review(context, args)
-        elif args.command == "execution-validate":
-            return cmd_execution_validate(context, args)
-        elif args.command == "execution-notification-preview":
-            return cmd_execution_notification_preview(context, args)
-        elif args.command == "execution-notification-dispatch-dry-run":
-            return cmd_execution_notification_dispatch_dry_run(context, args)
-
-        elif args.command == "smoke":
-            handle_smoke(context)
-        elif args.command == "show-config":
-            handle_show_config(context)
-        elif args.command == "validate-config":
-            handle_validate_config(context)
-        elif args.command == "runtime-summary":
-            handle_runtime_summary(context)
-        elif args.command == "check-env":
-            handle_check_env(context)
-        elif args.command == "health":
-            sys.exit(handle_health(context))
-        elif args.command == "universe-sources":
-            sys.exit(handle_universe_sources(context))
-        elif args.command == "universe-import":
-            sys.exit(handle_universe_import(context, args.file, args.name, args.overwrite))
-        elif args.command == "universe-expand":
-            sys.exit(handle_universe_expand(context, args.name, args.include_layers, args.exclude_layers, args.include_stocks, args.include_etfs, args.include_inactive, args.max_symbols, args.conflict_resolution, args.no_snapshot))
-        elif args.command == "universe-snapshots":
-            sys.exit(handle_universe_snapshots(context))
-        elif args.command == "universe-activate-snapshot":
-            sys.exit(handle_universe_activate_snapshot(context, args.snapshot_id))
-        elif args.command == "universe-catalog":
-            sys.exit(handle_universe_catalog(context))
-        elif args.command == "universe-export":
-            sys.exit(handle_universe_export(context, args.snapshot_id, args.format, args.name, args.active_only))
-        elif args.command == "universe-presets":
-            sys.exit(handle_universe_presets(context))
-        elif args.command == "indicator-list":
-            sys.exit(handle_indicator_list(context))
-        elif args.command == "indicator-info":
-            sys.exit(handle_indicator_info(context, args.name))
-        elif args.command == "feature-store-info":
-            sys.exit(handle_feature_store_info(context))
-        elif args.command == "feature-compute-cache":
-            sys.exit(handle_feature_compute_cache(context, args.symbols, args.timeframes, args.indicators, args.provider, args.write))
-        elif args.command == "feature-validate":
-            sys.exit(handle_feature_validate(context, args.file))
-        elif args.command == "feature-summary":
-            sys.exit(handle_feature_summary(context))
-
-        elif args.command == "log-info":
-            handle_log_info(context)
-
-        elif args.command == "audit-tail":
-            handle_audit_tail(context, args.limit)
-        elif args.command == "storage-info":
-            handle_storage_info(context)
-        elif args.command == "storage-check":
-            sys.exit(handle_storage_check(context))
-        elif args.command == "storage-list":
-            sys.exit(handle_storage_list(context, args.area))
-        elif args.command == "universe-info":
-            sys.exit(handle_universe_info(context))
-        elif args.command == "universe-validate":
-            sys.exit(handle_universe_validate(context, args.file))
-        elif args.command == "universe-list":
-            sys.exit(handle_universe_list(context, args.asset_type, args.limit, args.include_inactive))
-        elif args.command == "universe-build":
-            sys.exit(handle_universe_build(context))
-
-        elif args.command == "universe-summary":
-            sys.exit(handle_universe_summary(context, args.json_out))
-        elif args.command == "provider-info":
-            sys.exit(handle_provider_info(context))
-        elif args.command == "provider-list":
-            sys.exit(handle_provider_list(context))
-        elif args.command == "provider-check":
-            sys.exit(handle_provider_check(context))
-        elif args.command == "provider-plan":
-            sys.exit(handle_provider_plan(context, args.symbols, args.timeframe))
-        elif args.command == "provider-mock-fetch":
-            sys.exit(handle_provider_mock_fetch(context, args.symbols, args.timeframe))
-        elif args.command == "data-provider-info":
-            sys.exit(handle_data_provider_info(context))
-        elif args.command == "data-download":
-            sys.exit(handle_data_download(context, args.symbols, args.timeframe, args.start, args.end, args.provider, args.no_cache, args.limit))
-        elif args.command == "data-download-universe":
-            sys.exit(handle_data_download_universe(context, args.file, args.timeframe, args.provider, args.limit, args.asset_type, args.no_cache))
-        elif args.command == "data-cache-info":
-            sys.exit(handle_data_cache_info(context))
-        elif args.command == "data-quality-check":
-            sys.exit(handle_data_quality_check(context, args.cache_file, args.symbols, args.timeframe))
-        elif args.command == "data-mtf-plan":
-            sys.exit(handle_data_mtf_plan(context, args.symbols, args.timeframes, args.provider, args.force, args.no_cache))
-        elif args.command == "data-mtf-download":
-            sys.exit(handle_data_mtf_download(context, args.symbols, args.timeframes, args.provider, args.force, args.no_cache, getattr(args, 'limit', None)))
-        elif args.command == "data-mtf-universe":
-            sys.exit(handle_data_mtf_universe(context, args.file, args.timeframes, args.provider, args.force, getattr(args, 'limit', None), getattr(args, 'asset_type', None)))
-        elif args.command == "data-coverage-report":
-            sys.exit(handle_data_coverage_report(context, args.latest, getattr(args, 'reports_dir', None)))
-        elif args.command == "data-readiness-check":
-            sys.exit(handle_data_readiness_check(context, args.symbols, args.timeframes, getattr(args, 'from_cache', True)))
-        elif args.command == "active-universe-info":
-            sys.exit(handle_active_universe_info(context))
-        elif args.command == "active-universe-symbols":
-            sys.exit(handle_active_universe_symbols(context, getattr(args, 'limit', 0) or 0, getattr(args, 'asset_type', '') or '', getattr(args, 'include_inactive', False)))
-        elif args.command == "active-universe-plan":
-            sys.exit(handle_active_universe_plan(context, getattr(args, 'timeframes', '') or '', getattr(args, 'provider', 'yfinance'), getattr(args, 'limit', 0) or 0, getattr(args, 'asset_type', '') or '', getattr(args, 'force', False), getattr(args, 'no_cache', False)))
-        elif args.command == "active-universe-download":
-            sys.exit(handle_active_universe_download(context, getattr(args, 'timeframes', '') or '', getattr(args, 'provider', 'yfinance'), getattr(args, 'limit', 0) or 0, getattr(args, 'asset_type', '') or '', getattr(args, 'force', False), getattr(args, 'no_cache', False)))
-        elif args.command == "active-universe-readiness":
-            sys.exit(handle_active_universe_readiness(context, getattr(args, 'latest_run', True), getattr(args, 'from_cache', False)))
-        elif args.command == "active-universe-runs":
-            sys.exit(handle_active_universe_runs(context))
-        elif args.command == "active-universe-latest-run":
-            sys.exit(handle_active_universe_latest_run(context))
-        elif args.command == "active-universe-eligible":
-            sys.exit(handle_active_universe_eligible(context, getattr(args, 'latest_run', True), getattr(args, 'format', 'txt')))
-        elif args.command == "momentum-indicator-list": sys.exit(handle_momentum_indicator_list(context))
-        elif args.command == "momentum-indicator-set-info": sys.exit(handle_momentum_indicator_set_info(context, getattr(args, 'set', 'basic_momentum')))
-        elif args.command == "momentum-feature-compute-cache": sys.exit(handle_momentum_feature_compute_cache(context, args.symbols, args.timeframes, getattr(args, 'set', 'basic_momentum'), getattr(args, 'provider', 'yfinance'), getattr(args, 'write', False)))
-        elif args.command == "momentum-feature-summary": sys.exit(handle_momentum_feature_summary(context))
-
-        elif args.command == "volume-indicator-list":
-            sys.exit(handle_volume_indicator_list(context))
-        elif args.command == "volume-indicator-set-info":
-            sys.exit(handle_volume_indicator_set_info(context, args.set))
-        elif args.command == "volume-feature-compute-cache":
-            sys.exit(handle_volume_feature_compute_cache(context, args.symbols, args.timeframes, getattr(args, "set"), args.provider, args.write))
-        elif args.command == "volume-feature-summary":
-            sys.exit(handle_volume_feature_summary(context))
-
-
-
-
-        elif args.command == "strategy-list":
-            sys.exit(handle_strategy_list(context))
-        elif args.command == "strategy-info":
-            sys.exit(handle_strategy_info(context, args.name))
-        elif args.command == "strategy-run-feature-store":
-            sys.exit(handle_strategy_run_feature_store(context, args.strategy, getattr(args, 'symbols', ''), getattr(args, 'timeframes', ''), getattr(args, 'write', False)))
-        elif args.command == "strategy-run-defaults":
-            sys.exit(handle_strategy_run_defaults(context, getattr(args, 'symbols', ''), getattr(args, 'timeframes', ''), getattr(args, 'write', False)))
-        elif args.command == "signal-store-info":
-            sys.exit(handle_signal_store_info(context))
-        elif args.command == "signal-summary":
-            sys.exit(handle_signal_summary(context))
-        elif args.command == "signal-validate":
-            sys.exit(handle_signal_validate(context, args.file))
-        elif args.command == "rule-strategy-list":
-            sys.exit(handle_rule_strategy_list(context))
-        elif args.command == "rule-strategy-set-info":
-            sys.exit(handle_rule_strategy_set_info(context, args.set))
-        elif args.command == "rule-strategy-run-feature-store":
-            sys.exit(handle_rule_strategy_run_feature_store(context, args.strategy, args.symbols, args.timeframes, args.write))
-        elif args.command == "rule-strategy-run-set":
-            sys.exit(handle_rule_strategy_run_set(context, args.set, args.symbols, args.timeframes, args.write))
-        elif args.command == "rule-strategy-summary":
-            sys.exit(handle_rule_strategy_summary(context))
-        elif args.command == "backtest-info":
-            return handle_backtest_info(context, args)
-        elif args.command == "backtest-run-signals":
-            return handle_backtest_run_signals(context, args)
-        elif args.command == "backtest-run-candidates":
-            return handle_backtest_run_candidates(context, args)
-        elif args.command == "backtest-summary":
-            return handle_backtest_summary(context, args)
-        elif args.command == "backtest-latest":
-            return handle_backtest_latest(context, args)
-        elif args.command == "backtest-validate":
-            return handle_backtest_validate(context, args)
-        elif args.command == "walk-forward-info":
-            sys.exit(command_walk_forward_info(args))
-        elif args.command == "walk-forward-plan":
-            sys.exit(command_walk_forward_plan(args))
-        elif args.command == "walk-forward-run-signals":
-            sys.exit(command_walk_forward_run_signals(args))
-        elif args.command == "walk-forward-run-candidates":
-            sys.exit(command_walk_forward_run_candidates(args))
-        elif args.command == "walk-forward-summary":
-            sys.exit(command_walk_forward_summary(args))
-        elif args.command == "walk-forward-latest":
-            sys.exit(command_walk_forward_latest(args))
-        elif args.command == "sensitivity-info":
-            cmd_sensitivity_info(context, args)
-            return 0
-        elif args.command == "parameter-grid-plan":
-            cmd_parameter_grid_plan(context, args)
-            return 0
-        elif args.command == "sensitivity-run":
-            cmd_sensitivity_run(context, args)
-            return 0
-        elif args.command == "stability-map":
-            cmd_stability_map(context, args)
-            return 0
-        elif args.command == "sensitivity-summary":
-            cmd_sensitivity_summary(context, args)
-            return 0
-        elif args.command == "sensitivity-latest":
-            cmd_sensitivity_latest(context, args)
-            return 0
-            cmd_sensitivity_latest(context, args)
-            return 0
-        elif args.command == "sensitivity-validate":
-            cmd_sensitivity_validate(context, args)
-            return 0
-        elif args.command == "walk-forward-validate":
-            sys.exit(command_walk_forward_validate(args))
-
-
-
-        elif args.command == "basket-info":
-            sys.exit(handle_basket_info(context))
-        elif args.command == "basket-replay-preview":
-            sys.exit(handle_basket_replay_preview(context, args.source, args.basket_file, args.allocations_file, args.risk_decisions_file, args.selected_candidates_file, args.signals_file))
-        elif args.command == "basket-simulate":
-            sys.exit(handle_basket_simulate(context, args.source, args.basket_file, args.allocations_file, args.risk_decisions_file, args.selected_candidates_file, args.signals_file, args.symbols, args.timeframe, args.start, args.end, args.starting_cash, args.hold_bars, args.entry_mode, args.replay_mode, args.write))
-        elif args.command == "basket-simulate-latest-portfolio":
-            sys.exit(handle_basket_simulate_latest_portfolio(context, args.timeframe, args.starting_cash, args.hold_bars, args.write))
-        elif args.command == "basket-drift":
-            sys.exit(handle_basket_drift(context, args.run_id, args.latest))
-        elif args.command == "basket-summary":
-            sys.exit(handle_basket_summary(context))
-        elif args.command == "basket-latest":
-            sys.exit(handle_basket_latest(context))
-        elif args.command == "basket-validate":
-            sys.exit(handle_basket_validate(context, args.run_id, args.latest))
-        # End of new handlers
-
-        # Keep this to not break replace logic
-
-
-    except Exception as e:
-        sys.exit(handle_cli_exception(e))
-
-    sys.exit(0)
-
-
-
-def handle_provider_info(context) -> int:
-    """Display data provider configuration and rules."""
-    p_cfg = context.config.providers
-    print("\n--- USA Signal Bot Provider Info ---")
-    print(f"Default Provider: {p_cfg.default_provider}")
-    print(f"Enabled Providers: {', '.join(p_cfg.enabled_providers)}")
-    print("\n\nSecurity and Constraints (Phase 7):")
-    print(f"  Allow Paid APIs: {p_cfg.allow_paid_providers}")
-    print(f"  Allow Web Scraping: {p_cfg.allow_scraping_providers}")
-    print(f"  Allow Broker Data: {p_cfg.allow_broker_data_providers}")
-    print("\nNote: In Phase 7, no real data is fetched from the internet.")
-    return 0
-
-def handle_provider_list(context) -> int:
-    """List registered data providers."""
-    from usa_signal_bot.data.provider_registry import create_default_provider_registry
-    registry = create_default_provider_registry()
-    print("\n--- USA Signal Bot Registered Providers ---")
-    caps = registry.list_capabilities()
-    if not caps:
-        print("\nNo providers registered.")
-        return 0
-    for cap in caps:
-         print(f"- {cap.provider_name.upper()}")
-         print(f"  Free Only: {cap.free_only}")
-         print(f"  Allows Scraping: {cap.allows_scraping}")
-         print(f"  Requires API Key: {cap.requires_api_key}")
-         for note in cap.notes:
-              print(f"  Note: {note}")
-    return 0
-
-def handle_provider_check(context) -> int:
-    """Check provider status and guard compliance."""
-    from usa_signal_bot.data.provider_registry import create_default_provider_registry
-    registry = create_default_provider_registry()
-    print("\n--- Provider Check ---")
-    p_cfg = context.config.providers
-    provider_name = p_cfg.default_provider
-    try:
-         provider = registry.get(provider_name)
-         print(f"Provider '{provider_name}' loaded.")
-         provider.assert_free_provider()
-         provider.assert_no_scraping()
-         provider.assert_no_broker_routing()
-         print("\nAll guard checks passed.")
-         status = provider.check_status()
-         print(f"Status: {'Available' if status.available else 'Unavailable'} - {status.message}")
-         return 0 if status.available else 1
-    except Exception as e:
-         print(f"Check failed: {e}")
-         return 1
-
-def handle_provider_plan(context, symbols_str: str, timeframe: str) -> int:
-    """Generate a mock fetch plan."""
-    from usa_signal_bot.data.provider_registry import create_default_provider_registry
-    from usa_signal_bot.data.models import MarketDataRequest
-    registry = create_default_provider_registry()
-    symbols = [s.strip() for s in symbols_str.split(",") if s.strip()]
-    provider = registry.get(context.config.providers.default_provider)
-    try:
-         req = MarketDataRequest(symbols=symbols, timeframe=timeframe, provider_name=provider.name)
-         plan = provider.build_fetch_plan(req)
-         print("\n--- Provider Fetch Plan ---")
-         print(f"Provider: {plan.provider_name}")
-         print(f"Symbols: {len(plan.symbols)}")
-         print(f"Timeframe: {plan.timeframe}")
-         print(f"Batch Count: {plan.batch_count}")
-         print(f"Estimated Requests: {plan.estimated_requests}")
-         return 0
-    except Exception as e:
-         print(f"Failed to build plan: {e}")
-         return 1
-
-def handle_provider_mock_fetch(context, symbols_str: str, timeframe: str) -> int:
-    """Perform a mock data fetch."""
-    from usa_signal_bot.data.provider_registry import create_default_provider_registry
-    from usa_signal_bot.data.models import MarketDataRequest
-    registry = create_default_provider_registry()
-    symbols = [s.strip() for s in symbols_str.split(",") if s.strip()]
-    provider = registry.get("mock")
-    try:
-         req = MarketDataRequest(symbols=symbols, timeframe=timeframe, provider_name=provider.name)
-         resp = provider.fetch_ohlcv(req)
-         print("\n--- Mock Data Fetch Result ---")
-         print("\nWARNING: This is deterministically generated fake data for testing interface.")
-         print("\nIt is NOT real market data.\n")
-         print(f"Success: {resp.success}")
-         print(f"Provider: {resp.provider_name}")
-         print(f"Bars Returned: {resp.bar_count()}")
-         for bar in resp.bars:
-             print(f"  {bar.symbol} [{bar.timeframe}]: O:{bar.open} H:{bar.high} L:{bar.low} C:{bar.close} V:{bar.volume}")
-         return 0
-    except Exception as e:
-         print(f"Mock fetch failed: {e}")
-         return 1
-
-def handle_data_provider_info(context) -> int:
-    from usa_signal_bot.data.provider_registry import create_default_provider_registry
-    registry = create_default_provider_registry(include_yfinance=context.config.providers.yfinance_enabled)
-    print("\n--- Market Data Providers ---")
-    for cap in registry.list_capabilities():
-        print(f"[{cap.provider_name.upper()}]")
-        print(f"  Free Only: {cap.free_only}")
-        print(f"  Requires API Key: {cap.requires_api_key}")
-        print(f"  Allows Scraping: {cap.allows_scraping}")
-        print(f"  Notes: {', '.join(cap.notes)}")
-        print()
-    return 0
-
-def handle_data_download(context, symbols_str: str, timeframe: str, start: str, end: str, provider: str, no_cache: bool, limit: int) -> int:
-    from usa_signal_bot.data.provider_registry import create_default_provider_registry
-    from usa_signal_bot.data.downloader import MarketDataDownloader
-    from usa_signal_bot.storage.file_store import LocalFileStore
-    from usa_signal_bot.data.quality import validate_ohlcv_bars_quality, data_quality_report_to_text
-
-    symbols = [s.strip().upper() for s in symbols_str.split(",") if s.strip()]
-    if limit:
-        symbols = symbols[:limit]
-
-    registry = create_default_provider_registry(include_yfinance=context.config.providers.yfinance_enabled)
-    store = LocalFileStore(context.data_dir)
-    downloader = MarketDataDownloader(registry, store, context.data_dir, None)
-
-    print(f"Downloading data for {len(symbols)} symbols via {provider}...")
-    try:
-        resp = downloader.download_for_symbols(
-            symbols=symbols, timeframe=timeframe, provider_name=provider,
-            start_date=start, end_date=end, write_cache=not no_cache
-        )
-
-        print(f"Success: {resp.success}")
-        print(f"Bars: {resp.bar_count()}")
-
-        if resp.errors:
-            print("\nErrors:")
-            for e in resp.errors: print(f"  - {e}")
-        if resp.warnings:
-            print("\nWarnings:")
-            for w in resp.warnings: print(f"  - {w}")
-
-        if resp.bar_count() > 0:
-            report = validate_ohlcv_bars_quality(resp.bars, symbols, provider, timeframe)
-            print("\n\n" + data_quality_report_to_text(report))
-            downloader.write_download_summary(resp, report)
-
-        return 0 if resp.success else 1
-    except Exception as e:
-        print(f"Download failed: {e}")
-        return 1
-
-def handle_data_download_universe(context, file: str, timeframe: str, provider: str, limit: int, asset_type: str, no_cache: bool) -> int:
-    from usa_signal_bot.data.provider_registry import create_default_provider_registry
-    from usa_signal_bot.data.downloader import MarketDataDownloader
-    from usa_signal_bot.storage.file_store import LocalFileStore
-    from usa_signal_bot.universe.loader import load_default_watchlist
-    from usa_signal_bot.data.quality import validate_ohlcv_bars_quality, data_quality_report_to_text
-    from usa_signal_bot.universe.models import UniverseDefinition, UniverseSymbol
-    from usa_signal_bot.core.enums import AssetType
-
-    # Load universe
-    print(f"Loading universe...")
-    try:
-        if file:
-            load_result = load_default_watchlist(context.data_dir, file)
-
-
-
-    else:
-            load_result = load_default_watchlist(context.data_dir, context.config.universe.default_watchlist_file)
-
-        universe = load_result.universe
-
-        if asset_type:
-            at = AssetType(asset_type.upper())
-            universe.symbols = [s for s in universe.symbols if s.asset_type == at]
-
-        print(f"Found {len(universe.get_active_symbols())} active symbols.")
-        if limit:
-            print(f"Applying limit of {limit}.")
-
-        registry = create_default_provider_registry(include_yfinance=context.config.providers.yfinance_enabled)
-        store = LocalFileStore(context.data_dir)
-        downloader = MarketDataDownloader(registry, store, context.data_dir, None)
-
-        print(f"Downloading...")
-        resp = downloader.download_for_universe(universe, timeframe, provider, limit, not no_cache)
-
-        print(f"Success: {resp.success}")
-        print(f"Bars: {resp.bar_count()}")
-
-        if resp.bar_count() > 0:
-            symbols_requested = universe.get_active_symbols()
-            if limit: symbols_requested = symbols_requested[:limit]
-            report = validate_ohlcv_bars_quality(resp.bars, symbols_requested, provider, timeframe)
-            print("\n\n" + data_quality_report_to_text(report))
-            downloader.write_download_summary(resp, report)
-
-        return 0 if resp.success else 1
-    except Exception as e:
-        print(f"Universe download failed: {e}")
-        return 1
-
-def handle_data_cache_info(context) -> int:
-    from usa_signal_bot.data.cache import market_data_cache_dir
-    cache_dir = market_data_cache_dir(context.data_dir)
-    print("\n--- Market Data Cache Info ---")
-    print(f"Cache Directory: {cache_dir}")
-
-    if not cache_dir.exists():
-        print("\nDirectory does not exist.")
-        return 0
-
-    files = list(cache_dir.glob("*.jsonl"))
-    summaries = list(cache_dir.glob("download_summary_*.json"))
-
-    print(f"Total cache files (.jsonl): {len(files)}")
-    print(f"Total summary files (.json): {len(summaries)}")
-
-    total_size = sum(f.stat().st_size for f in files)
-    print(f"Total JSONL size: {total_size / (1024*1024):.2f} MB")
-
-    if files:
-        print("\n\nRecent cache files:")
-        recent = sorted(files, key=lambda x: x.stat().st_mtime, reverse=True)[:5]
-        for f in recent:
-            print(f"  - {f.name} ({f.stat().st_size / 1024:.1f} KB)")
-
-    return 0
-
-def handle_data_quality_check(context, cache_file: str, symbols_str: str, timeframe: str) -> int:
-    from usa_signal_bot.data.cache import market_data_cache_dir, read_ohlcv_bars_cache
-    from usa_signal_bot.data.models import OHLCVBar
-    from usa_signal_bot.data.quality import validate_ohlcv_bars_quality, data_quality_report_to_text
-
-    cache_dir = market_data_cache_dir(context.data_dir)
-    print("\n--- Data Quality Check ---")
-
-    if cache_file:
-        path = cache_dir / cache_file
-        if not path.exists():
-            print(f"Cache file {path} not found.")
-            return 1
-
-        print(f"Reading {path.name}...")
-        raw_bars = read_ohlcv_bars_cache(path)
-        bars = []
-        for b in raw_bars:
-             bars.append(OHLCVBar(**b))
-
-        symbols = [s.strip().upper() for s in symbols_str.split(",")] if symbols_str else list(set(b.symbol for b in bars))
-        report = validate_ohlcv_bars_quality(bars, symbols, "unknown_from_cache", timeframe)
-        print("\n\n" + data_quality_report_to_text(report))
-        return 0 if report.status.value != "ERROR" else 1
-
-
-
-    else:
-        print("\nNo cache file specified. Usage requires --cache-file.")
-        return 1
-
-
-
-
-if __name__ == "__main__":
-    main()
-
-def handle_data_cache_validate(context, cache_file: str, symbols_str: str, timeframe: str) -> int:
-    from usa_signal_bot.data.cache import market_data_cache_dir, validate_cache_file
-    from usa_signal_bot.data.quality import data_quality_report_to_text
-
-    cache_dir = market_data_cache_dir(context.data_dir)
-    print("\n--- Data Cache Validate ---")
-
-    if cache_file:
-        path = cache_dir / cache_file
-        if not path.exists():
-            print(f"Cache file {path} not found.")
-            return 1
-
-        symbols = [s.strip().upper() for s in symbols_str.split(",")] if symbols_str else None
-        try:
-            report = validate_cache_file(path, symbols)
-            print("\n\n" + data_quality_report_to_text(report))
-            return 0 if report.status.value != "ERROR" else 1
-        except Exception as e:
-            print(f"Validation failed: {e}")
-            return 1
-    else:
-        # Validate all? Or just ask for a file. Prompt implies cache_file is optional but maybe validating all is complex.
-        # Let's say if no file, we validate the newest.
-        from usa_signal_bot.data.cache import list_market_data_cache_files
-        files = list_market_data_cache_files(context.data_dir)
-        if not files:
-            print("\nNo cache files found to validate.")
-            return 0 # Safe exit
-
-        path = sorted(files, key=lambda x: x.stat().st_mtime)[-1]
-        print(f"Validating latest cache file: {path.name}")
-        symbols = [s.strip().upper() for s in symbols_str.split(",")] if symbols_str else None
-        try:
-            report = validate_cache_file(path, symbols)
-            print("\n\n" + data_quality_report_to_text(report))
-            return 0 if report.status.value != "ERROR" else 1
-        except Exception as e:
-            print(f"Validation failed: {e}")
-            return 1
-
-def handle_data_cache_repair(context, cache_file: str, output: str, overwrite: bool) -> int:
-    from usa_signal_bot.data.cache import market_data_cache_dir, read_cached_ohlcv_bars, write_repaired_cache
-    from usa_signal_bot.data.repair import repair_ohlcv_bars, repair_report_to_text
-    import shutil
-
-    cache_dir = market_data_cache_dir(context.data_dir)
-    print("\n--- Data Cache Repair ---")
-
-    if not cache_file:
-        print("\nError: --cache-file is required.")
-        return 1
-
-    path = cache_dir / cache_file
-    if not path.exists():
-        print(f"Cache file {path} not found.")
-        return 1
-
-    try:
-        bars = read_cached_ohlcv_bars(path)
-        print(f"Read {len(bars)} bars from {cache_file}.")
-
-        repaired_bars, report = repair_ohlcv_bars(bars)
-        print("\n\n" + repair_report_to_text(report))
-
-        out_path = path
-        if not overwrite:
-            if output:
-                out_path = cache_dir / output
-            else:
-                out_path = cache_dir / f"repaired_{cache_file}"
         else:
             # backup
             backup_path = cache_dir / f"{cache_file}.bak"

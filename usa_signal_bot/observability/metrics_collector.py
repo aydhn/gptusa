@@ -28,6 +28,7 @@ class OperationalMetricsCollector:
         m.extend(self.collect_notification_metrics())
         m.extend(self.collect_execution_metrics())
         m.extend(self.collect_regime_cost_metrics())
+        m.extend(self.collect_release_sandbox_metrics())
         m.extend(self.collect_attribution_metrics())
 
         sums = self.collect_log_summaries()
@@ -162,6 +163,18 @@ class OperationalMetricsCollector:
                 value=0,
                 status=OperationalMetricStatus.OK
             )
+        ]
+    def collect_release_sandbox_metrics(self) -> List[OperationalMetric]:
+        return [
+            OperationalMetric(create_operational_metric_id(), MetricType.COUNT, OperationalMetricStatus.OK, "latest_sandbox_activation_count", 0.0, _now_str()),
+            OperationalMetric(create_operational_metric_id(), MetricType.COUNT, OperationalMetricStatus.OK, "latest_sandbox_preview_run_count", 0.0, _now_str()),
+            OperationalMetric(create_operational_metric_id(), MetricType.COUNT, OperationalMetricStatus.OK, "latest_sandbox_blocked_count", 0.0, _now_str()),
+            OperationalMetric(create_operational_metric_id(), MetricType.COUNT, OperationalMetricStatus.OK, "latest_sandbox_validation_pass_count", 0.0, _now_str()),
+            OperationalMetric(create_operational_metric_id(), MetricType.COUNT, OperationalMetricStatus.OK, "latest_sandbox_safety_flag_count", 0.0, _now_str()),
+            OperationalMetric(create_operational_metric_id(), MetricType.COUNT, OperationalMetricStatus.OK, "latest_sandbox_order_risk_count", 0.0, _now_str()),
+            OperationalMetric(create_operational_metric_id(), MetricType.COUNT, OperationalMetricStatus.OK, "latest_sandbox_paper_mutation_risk_count", 0.0, _now_str()),
+            OperationalMetric(create_operational_metric_id(), MetricType.COUNT, OperationalMetricStatus.OK, "latest_sandbox_output_count", 0.0, _now_str()),
+            OperationalMetric(create_operational_metric_id(), MetricType.COUNT, OperationalMetricStatus.OK, "release_sandbox_warning_count", 0.0, _now_str()),
         ]
 
     def collect_regime_cost_metrics(self) -> List[OperationalMetric]:

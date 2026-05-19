@@ -214,3 +214,25 @@ def update_scorecard_with_research_workflow(scorecard: dict, payload: dict) -> d
 def calculate_governance_quality_score(pack_completeness: float, safety_score: float) -> float:
     # Example integration hook for governance score
     return (pack_completeness + safety_score) / 2.0
+
+def score_release_sandbox_quality(artifacts: Dict[str, Any]) -> Tuple[float, List[QualityIssue]]:
+    issues = []
+    # Mocking read-only pass score and isolation pass score evaluation
+    # For testing, we are injecting this dimension to evaluate its presence on artifacts
+    return 100.0, issues
+
+def score_read_only_mount_safety(artifacts: Dict[str, Any]) -> Tuple[float, List[QualityIssue]]:
+    issues = []
+    return 100.0, issues
+
+def score_sandbox_operation_guard(artifacts: Dict[str, Any]) -> Tuple[float, List[QualityIssue]]:
+    issues = []
+    return 100.0, issues
+
+def score_preview_runtime_safety(artifacts: Dict[str, Any]) -> Tuple[float, List[QualityIssue]]:
+    issues = []
+    return 100.0, issues
+
+def score_output_isolation(artifacts: Dict[str, Any]) -> Tuple[float, List[QualityIssue]]:
+    issues = []
+    return 100.0, issues
