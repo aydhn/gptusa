@@ -833,3 +833,20 @@ def format_experiment_plan_warning_message(plans) -> NotificationMessage:
 
 def notifications_from_research_workflow_review(review) -> list[NotificationMessage]:
     return [format_research_workflow_report_message(review)]
+
+from usa_signal_bot.research_governance.governance_models import GovernanceReview, PromotionReview, ReleaseCandidatePackage
+
+def format_governance_report_message(review: GovernanceReview):
+    from usa_signal_bot.notifications.notification_models import NotificationMessage
+    return NotificationMessage(title="Governance Report", body=f"Review ID: {review.governance_review_id}", urgency="NORMAL")
+
+def format_promotion_review_warning_message(reviews: list[PromotionReview]):
+    from usa_signal_bot.notifications.notification_models import NotificationMessage
+    return NotificationMessage(title="Promotion Review Warning", body=f"Found {len(reviews)} reviews needing attention", urgency="WARNING")
+
+def format_release_candidate_warning_message(candidates: list[ReleaseCandidatePackage]):
+    from usa_signal_bot.notifications.notification_models import NotificationMessage
+    return NotificationMessage(title="Release Candidate Warning", body=f"Found {len(candidates)} candidates", urgency="WARNING")
+
+def notifications_from_governance_review(review: GovernanceReview):
+    return [format_governance_report_message(review)]
