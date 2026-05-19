@@ -68,6 +68,11 @@ class ResearchQualityScorecard:
     issues: list[QualityIssue]
     warnings: list[str]
     errors: list[str]
+    release_packaging_quality_score: float = 0.0
+    artifact_freeze_completeness_score: float = 0.0
+    bundle_manifest_quality_score: float = 0.0
+    bundle_safety_score: float = 0.0
+    checksum_verification_score: float = 0.0
     metadata: dict[str, Any] = dataclasses.field(default_factory=dict)
 
 @dataclass

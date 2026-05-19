@@ -574,3 +574,72 @@ governance_notifications:
   notify_release_candidate_warning: true
   default_channel: "dry_run"
   warn_no_real_send_default: true
+
+release_packaging:
+  enabled: true
+  write_packaging_reports: true
+  warn_not_investment_advice: true
+  warn_no_broker_execution: true
+  warn_no_auto_apply: true
+  warn_no_production_config_patch: true
+
+versioned_candidate_bundle:
+  enabled: true
+  default_bundle_type: "LOCAL_RESEARCH_CANDIDATE"
+  default_base_version: "0.1.0"
+  schema_version: "1.0"
+  allow_auto_apply: false
+  allow_live_or_demo_execution: false
+  allow_order_routing: false
+  accepted_status_means_local_research_only: true
+
+artifact_freezing:
+  enabled: true
+  require_payload_hash: true
+  require_manifest_hash: true
+  require_checksum_verification: true
+  block_on_checksum_mismatch: true
+  block_on_secret_risk: true
+  block_on_broker_field_risk: true
+  block_on_live_execution_language: true
+  block_on_auto_apply_language: true
+
+bundle_manifest:
+  enabled: true
+  required_artifact_types:
+    - "release_candidate"
+    - "governance_review"
+    - "evidence_pack"
+    - "comparison_report"
+    - "acceptance_gate_evaluation"
+    - "config_snapshot"
+    - "validation_report"
+    - "safety_report"
+  require_all_required_artifacts: true
+  allow_missing_optional_artifacts: true
+
+bundle_storage:
+  enabled: true
+  bundle_root: "data/release_bundles"
+  write_readme: true
+  write_manifest: true
+  write_validation: true
+  write_artifacts_jsonl: true
+  write_bundle_json: true
+  never_write_to_production_config_path: true
+
+bundle_compatibility:
+  enabled: true
+  supported_schema_versions:
+    - "1.0"
+  min_supported_bundle_version: "0.1.0"
+  warn_on_unknown_schema: true
+
+release_packaging_notifications:
+  enabled: true
+  dry_run: true
+  notify_packaging_report: true
+  notify_bundle_validation_warning: true
+  notify_artifact_freeze_warning: true
+  default_channel: "dry_run"
+  warn_no_real_send_default: true

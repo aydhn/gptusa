@@ -32,6 +32,15 @@ class OperationalMetric:
     unit: Optional[str] = None
     source: Optional[str] = None
     tags: Dict[str, str] = field(default_factory=dict)
+    latest_release_bundle_count: int = 0
+    latest_frozen_artifact_count: int = 0
+    latest_validated_bundle_count: int = 0
+    latest_invalid_bundle_count: int = 0
+    latest_blocked_bundle_count: int = 0
+    latest_bundle_secret_risk_count: int = 0
+    latest_bundle_checksum_mismatch_count: int = 0
+    latest_missing_required_artifact_count: int = 0
+    release_packaging_warning_count: int = 0
     metadata: Dict[str, Any] = field(default_factory=dict)
 
 @dataclass

@@ -1602,3 +1602,60 @@ class GovernanceValidationError(ResearchGovernanceError):
     pass
 class GovernanceReportingError(ResearchGovernanceError):
     pass
+
+class ReleasePackagingError(USASignalBotError):
+    pass
+
+class GovernanceIngestionError(ReleasePackagingError):
+    pass
+
+class BundleVersioningError(ReleasePackagingError):
+    pass
+
+class ArtifactCollectionError(ReleasePackagingError):
+    pass
+
+class ArtifactFreezingError(ReleasePackagingError):
+    pass
+
+class BundleManifestError(ReleasePackagingError):
+    pass
+
+class BundleChecksumError(ReleasePackagingError):
+    pass
+
+class BundleSafetyScannerError(ReleasePackagingError):
+    pass
+
+class BundleCompatibilityError(ReleasePackagingError):
+    pass
+
+class BundleValidationError(ReleasePackagingError):
+    pass
+
+class BundleReadmeError(ReleasePackagingError):
+    pass
+
+class BundleWriterError(ReleasePackagingError):
+    pass
+
+class BundleReaderError(ReleasePackagingError):
+    pass
+
+class BundleRegistryError(ReleasePackagingError):
+    pass
+
+class BundleDiffError(ReleasePackagingError):
+    pass
+
+class RestorePreviewError(ReleasePackagingError):
+    pass
+
+class ReleasePackagingStorageError(ReleasePackagingError):
+    pass
+
+class ReleasePackagingValidationError(ReleasePackagingError):
+    pass
+
+class ReleasePackagingReportingError(ReleasePackagingError):
+    pass
