@@ -1659,3 +1659,20 @@ class ReleasePackagingValidationError(ReleasePackagingError):
 
 class ReleasePackagingReportingError(ReleasePackagingError):
     pass
+
+
+class ReleaseSandboxError(Exception): pass
+class SandboxBundleLoaderError(ReleaseSandboxError): pass
+class ReadOnlyVerifierError(ReleaseSandboxError): pass
+class SandboxActivationPlannerError(ReleaseSandboxError): pass
+class SandboxMountPlannerError(ReleaseSandboxError): pass
+class SandboxOverlayResolverError(ReleaseSandboxError): pass
+class SandboxOutputIsolationError(ReleaseSandboxError): pass
+class BlockedOperationGuardError(ReleaseSandboxError): pass
+class SandboxRuntimeContextError(ReleaseSandboxError): pass
+class SandboxPreviewRunnerError(ReleaseSandboxError): pass
+class SandboxSafetyValidationError(ReleaseSandboxError): pass
+class SandboxSessionRegistryError(ReleaseSandboxError): pass
+class ReleaseSandboxStorageError(ReleaseSandboxError): pass
+class ReleaseSandboxValidationError(ReleaseSandboxError): pass
+class ReleaseSandboxReportingError(ReleaseSandboxError): pass
