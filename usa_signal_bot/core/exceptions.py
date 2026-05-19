@@ -1719,3 +1719,20 @@ class ReleaseSandboxValidationError(ReleaseSandboxError):
 class ReleaseSandboxReportingError(ReleaseSandboxError):
     """Raised when there is an error generating sandbox reports."""
     pass
+
+class PaperShadowError(USASignalBotError): pass
+class ShadowSimulationContextError(PaperShadowError): pass
+class ShadowPortfolioError(PaperShadowError): pass
+class ShadowSignalRehearsalError(PaperShadowError): pass
+class ShadowOrderIntentError(PaperShadowError): pass
+class ShadowRiskGateError(PaperShadowError): pass
+class ShadowFillSimulationError(PaperShadowError): pass
+class ShadowLedgerError(PaperShadowError): pass
+class ShadowPnLError(PaperShadowError): pass
+class ShadowRebalanceError(PaperShadowError): pass
+class ShadowSafetyError(PaperShadowError): pass
+class ShadowValidationError(PaperShadowError): pass
+class ShadowRehearsalRunnerError(PaperShadowError): pass
+class ShadowSessionRegistryError(PaperShadowError): pass
+class ShadowStorageError(PaperShadowError): pass
+class ShadowReportingError(PaperShadowError): pass
