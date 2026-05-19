@@ -1659,3 +1659,63 @@ class ReleasePackagingValidationError(ReleasePackagingError):
 
 class ReleasePackagingReportingError(ReleasePackagingError):
     pass
+
+class ReleaseSandboxError(USASignalBotError):
+    """Base exception for all Release Sandbox errors."""
+    pass
+
+class SandboxBundleLoaderError(ReleaseSandboxError):
+    """Raised when the bundle loader fails to read or parse files."""
+    pass
+
+class ReadOnlyVerifierError(ReleaseSandboxError):
+    """Raised when read-only verification fails."""
+    pass
+
+class SandboxActivationPlannerError(ReleaseSandboxError):
+    """Raised when there is an error in activation planning."""
+    pass
+
+class SandboxMountPlannerError(ReleaseSandboxError):
+    """Raised when there is an error in mount planning."""
+    pass
+
+class SandboxOverlayResolverError(ReleaseSandboxError):
+    """Raised when the candidate overlay cannot be resolved safely."""
+    pass
+
+class SandboxOutputIsolationError(ReleaseSandboxError):
+    """Raised when sandbox output isolation fails."""
+    pass
+
+class BlockedOperationGuardError(ReleaseSandboxError):
+    """Raised when a blocked operation is attempted in the sandbox."""
+    pass
+
+class SandboxRuntimeContextError(ReleaseSandboxError):
+    """Raised when there is an error with the sandbox runtime context."""
+    pass
+
+class SandboxPreviewRunnerError(ReleaseSandboxError):
+    """Raised when the preview runner encounters an error."""
+    pass
+
+class SandboxSafetyValidationError(ReleaseSandboxError):
+    """Raised when sandbox safety validation fails."""
+    pass
+
+class SandboxSessionRegistryError(ReleaseSandboxError):
+    """Raised when there is an error with the sandbox session registry."""
+    pass
+
+class ReleaseSandboxStorageError(ReleaseSandboxError):
+    """Raised when there is an error reading or writing sandbox data."""
+    pass
+
+class ReleaseSandboxValidationError(ReleaseSandboxError):
+    """Raised when overall sandbox validation fails."""
+    pass
+
+class ReleaseSandboxReportingError(ReleaseSandboxError):
+    """Raised when there is an error generating sandbox reports."""
+    pass

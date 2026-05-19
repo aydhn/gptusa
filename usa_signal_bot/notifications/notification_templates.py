@@ -864,3 +864,52 @@ def format_artifact_freeze_warning_message(artifacts: list[FrozenArtifact]):
 
 def notifications_from_release_packaging_review(review: ReleasePackagingReview):
     return [format_release_packaging_report_message(review)]
+
+from usa_signal_bot.release_sandbox.sandbox_models import ReleaseSandboxReview, SandboxValidationResult, SandboxActivationPlan
+from usa_signal_bot.release_sandbox.sandbox_reporting import release_sandbox_review_to_text, sandbox_validation_result_to_text, sandbox_activation_plan_to_text
+
+def format_sandbox_preview_report_message(review: ReleaseSandboxReview) -> NotificationMessage:
+    text = f"🚨 SANDBOX PREVIEW REPORT REQUIRED 🚨\n\n{release_sandbox_review_to_text(review)}"
+    return NotificationMessage(
+        message_id=create_notification_message_id(),
+        timestamp_utc=_now_str(),
+        notification_type=NotificationType.SANDBOX_PREVIEW_REPORT,
+        priority=NotificationPriority.HIGH,
+        channel=NotificationChannel.DRY_RUN,
+        title="Sandbox Preview Report",
+        content=text,
+        metadata={"review_id": review.review_id}
+    )
+
+def format_sandbox_safety_warning_message(results: List[SandboxValidationResult]) -> NotificationMessage:
+    text = "🚨 SANDBOX SAFETY WARNING 🚨\n\n"
+    for r in results:
+        text += f"{sandbox_validation_result_to_text(r)}\n"
+    return NotificationMessage(
+        message_id=create_notification_message_id(),
+        timestamp_utc=_now_str(),
+        notification_type=NotificationType.SANDBOX_SAFETY_WARNING,
+        priority=NotificationPriority.HIGH,
+        channel=NotificationChannel.DRY_RUN,
+        title="Sandbox Safety Warning",
+        content=text,
+        metadata={"results_count": len(results)}
+    )
+
+def format_sandbox_blocked_warning_message(plans: List[SandboxActivationPlan]) -> NotificationMessage:
+    text = "🚨 SANDBOX BLOCKED WARNING 🚨\n\n"
+    for p in plans:
+        text += f"{sandbox_activation_plan_to_text(p)}\n"
+    return NotificationMessage(
+        message_id=create_notification_message_id(),
+        timestamp_utc=_now_str(),
+        notification_type=NotificationType.SANDBOX_BLOCKED_WARNING,
+        priority=NotificationPriority.HIGH,
+        channel=NotificationChannel.DRY_RUN,
+        title="Sandbox Blocked Warning",
+        content=text,
+        metadata={"plans_count": len(plans)}
+    )
+
+def notifications_from_release_sandbox_review(review: ReleaseSandboxReview) -> List[NotificationMessage]:
+    return [format_sandbox_preview_report_message(review)]
