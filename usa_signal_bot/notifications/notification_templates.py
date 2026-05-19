@@ -850,3 +850,17 @@ def format_release_candidate_warning_message(candidates: list[ReleaseCandidatePa
 
 def notifications_from_governance_review(review: GovernanceReview):
     return [format_governance_report_message(review)]
+
+from usa_signal_bot.release_packaging.packaging_models import ReleasePackagingReview, BundleValidationResult, FrozenArtifact
+
+def format_release_packaging_report_message(review: ReleasePackagingReview):
+    return f"Release packaging review required for {len(review.bundles)} bundles."
+
+def format_bundle_validation_warning_message(results: list[BundleValidationResult]):
+    return f"Bundle validation warning for {len(results)} bundles."
+
+def format_artifact_freeze_warning_message(artifacts: list[FrozenArtifact]):
+    return f"Artifact freeze warning for {len(artifacts)} artifacts."
+
+def notifications_from_release_packaging_review(review: ReleasePackagingReview):
+    return [format_release_packaging_report_message(review)]

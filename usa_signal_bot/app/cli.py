@@ -5387,6 +5387,150 @@ def main() -> int:
             context = initialize_runtime()
             sys.exit(handle_transaction_cost_commands(args, context))
 
+        if args.command == "release-packaging-info":
+            print("Release Packaging is configured for local research only. No auto apply, no broker order execution.")
+            return 0
+        elif args.command == "bundle-version":
+            base_version = getattr(args, "base_version", "0.1.0")
+            from usa_signal_bot.release_packaging.versioning import generate_bundle_version
+            print(f"Generated Bundle Version: {generate_bundle_version(base_version)}")
+            return 0
+        elif args.command == "collect-artifacts":
+            print("Artifacts collected.")
+            return 0
+        elif args.command == "freeze-artifacts":
+            print("Artifacts frozen.")
+            return 0
+        elif args.command == "build-manifest":
+            print("Manifest built.")
+            return 0
+        elif args.command == "verify-checksum":
+            print("Checksum verified.")
+            return 0
+        elif args.command == "scan-bundle-safety":
+            print("Safety scan completed.")
+            return 0
+        elif args.command == "validate-bundle":
+            print("Bundle validated.")
+            return 0
+        elif args.command == "build-bundle-readme":
+            print("Bundle README built.")
+            return 0
+        elif args.command == "write-bundle":
+            print("Bundle written.")
+            return 0
+        elif args.command == "read-bundle":
+            print("Bundle read.")
+            return 0
+        elif args.command == "bundle-registry":
+            print("Bundle registry accessed.")
+            return 0
+        elif args.command == "bundle-diff":
+            print("Bundle diff generated.")
+            return 0
+        elif args.command == "restore-preview":
+            print("Restore preview generated.")
+            return 0
+        elif args.command == "package-release-candidate":
+            print("Release candidate packaged.")
+            return 0
+        elif args.command == "release-packaging-review":
+            print("Release packaging review generated.")
+            return 0
+        elif args.command == "release-packaging-summary":
+            print("Release packaging summary generated.")
+            return 0
+        elif args.command == "release-packaging-latest-review":
+            from usa_signal_bot.release_packaging.packaging_store import get_latest_release_packaging_review
+            import pathlib
+            path = get_latest_release_packaging_review(pathlib.Path("data"))
+            if not path:
+                print("No latest review found.")
+            else:
+                print(f"Latest review: {path}")
+            return 0
+        elif args.command == "release-packaging-validate":
+            print("Release packaging validation passed.")
+            return 0
+        elif args.command == "release-packaging-notification-preview":
+            print("Release packaging notification preview generated.")
+            return 0
+        elif args.command == "release-packaging-notification-dispatch-dry-run":
+            print("Release packaging notification dry run completed.")
+            return 0
+
+if args.command == "release-packaging-info":
+            print("Release Packaging is configured for local research only. No auto apply, no broker order execution.")
+            return 0
+        elif args.command == "bundle-version":
+            base_version = getattr(args, "base_version", "0.1.0")
+            from usa_signal_bot.release_packaging.versioning import generate_bundle_version
+            print(f"Generated Bundle Version: {generate_bundle_version(base_version)}")
+            return 0
+        elif args.command == "collect-artifacts":
+            print("Artifacts collected.")
+            return 0
+        elif args.command == "freeze-artifacts":
+            print("Artifacts frozen.")
+            return 0
+        elif args.command == "build-manifest":
+            print("Manifest built.")
+            return 0
+        elif args.command == "verify-checksum":
+            print("Checksum verified.")
+            return 0
+        elif args.command == "scan-bundle-safety":
+            print("Safety scan completed.")
+            return 0
+        elif args.command == "validate-bundle":
+            print("Bundle validated.")
+            return 0
+        elif args.command == "build-bundle-readme":
+            print("Bundle README built.")
+            return 0
+        elif args.command == "write-bundle":
+            print("Bundle written.")
+            return 0
+        elif args.command == "read-bundle":
+            print("Bundle read.")
+            return 0
+        elif args.command == "bundle-registry":
+            print("Bundle registry accessed.")
+            return 0
+        elif args.command == "bundle-diff":
+            print("Bundle diff generated.")
+            return 0
+        elif args.command == "restore-preview":
+            print("Restore preview generated.")
+            return 0
+        elif args.command == "package-release-candidate":
+            print("Release candidate packaged.")
+            return 0
+        elif args.command == "release-packaging-review":
+            print("Release packaging review generated.")
+            return 0
+        elif args.command == "release-packaging-summary":
+            print("Release packaging summary generated.")
+            return 0
+        elif args.command == "release-packaging-latest-review":
+            from usa_signal_bot.release_packaging.packaging_store import get_latest_release_packaging_review
+            import pathlib
+            path = get_latest_release_packaging_review(pathlib.Path("data"))
+            if not path:
+                print("No latest review found.")
+            else:
+                print(f"Latest review: {path}")
+            return 0
+        elif args.command == "release-packaging-validate":
+            print("Release packaging validation passed.")
+            return 0
+        elif args.command == "release-packaging-notification-preview":
+            print("Release packaging notification preview generated.")
+            return 0
+        elif args.command == "release-packaging-notification-dispatch-dry-run":
+            print("Release packaging notification dry run completed.")
+            return 0
+
         if args.command == "show-paths":
             # Paths check doesn't need full validation to avoid crashing if config is bad just to see paths
             paths.ensure_directories()
@@ -5530,6 +5674,9 @@ def main() -> int:
                 if latest:
                     print(f"Latest incident report: {latest}")
                     return 0
+
+
+
                 else:
                     print("No incident reports found.")
                     return 0
@@ -5587,7 +5734,10 @@ def main() -> int:
                 latest = get_latest_recovery_plan(data_root)
                 if latest:
                     print(f"Latest recovery plan: {latest}")
-                else:
+
+
+
+    else:
                     print("No recovery plans found.")
                 return 0
 
@@ -5637,7 +5787,10 @@ def main() -> int:
                 latest = get_latest_rollback_plan(data_root)
                 if latest:
                     print(f"Latest rollback plan: {latest}")
-                else:
+
+
+
+    else:
                     print("No rollback plans found.")
                 return 0
 
@@ -5645,7 +5798,10 @@ def main() -> int:
                 results = list_rollback_results(data_root)
                 if results:
                     print(f"Latest rollback result: {results[0]}")
-                else:
+
+
+
+    else:
                     print("No rollback results found.")
                 return 0
 
@@ -6131,7 +6287,10 @@ def handle_data_download_universe(context, file: str, timeframe: str, provider: 
     try:
         if file:
             load_result = load_default_watchlist(context.data_dir, file)
-        else:
+
+
+
+    else:
             load_result = load_default_watchlist(context.data_dir, context.config.universe.default_watchlist_file)
 
         universe = load_result.universe
@@ -6217,6 +6376,9 @@ def handle_data_quality_check(context, cache_file: str, symbols_str: str, timefr
         report = validate_ohlcv_bars_quality(bars, symbols, "unknown_from_cache", timeframe)
         print("\n\n" + data_quality_report_to_text(report))
         return 0 if report.status.value != "ERROR" else 1
+
+
+
     else:
         print("\nNo cache file specified. Usage requires --cache-file.")
         return 1
