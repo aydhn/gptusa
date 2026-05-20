@@ -30,3 +30,58 @@ class ShadowGovernanceAuditError(PaperShadowGovernanceError): pass
 class ShadowGovernanceStorageError(PaperShadowGovernanceError): pass
 class ShadowGovernanceValidationError(PaperShadowGovernanceError): pass
 class ShadowGovernanceReportingError(PaperShadowGovernanceError): pass
+
+
+class PaperQuarantineError(Exception):
+    pass
+
+class ShadowGovernanceIngestionError(PaperQuarantineError):
+    pass
+
+class QuarantineEligibilityError(PaperQuarantineError):
+    pass
+
+class QuarantinePolicyError(PaperQuarantineError):
+    pass
+
+class PaperSnapshotRefError(PaperQuarantineError):
+    pass
+
+class PromotionTicketError(PaperQuarantineError):
+    pass
+
+class SupervisedDryRunBridgeError(PaperQuarantineError):
+    pass
+
+class BridgeOperationGuardError(PaperQuarantineError):
+    pass
+
+class QuarantineOutputIsolationError(PaperQuarantineError):
+    pass
+
+class ManualReviewGateError(PaperQuarantineError):
+    pass
+
+class QuarantineReviewWindowError(PaperQuarantineError):
+    pass
+
+class QuarantineRegistryError(PaperQuarantineError):
+    pass
+
+class PromotionTicketRegistryError(PaperQuarantineError):
+    pass
+
+class BridgeValidationError(PaperQuarantineError):
+    pass
+
+class QuarantineEnrollmentSafetyError(PaperQuarantineError):
+    pass
+
+class QuarantineStorageError(PaperQuarantineError):
+    pass
+
+class QuarantineValidationError(PaperQuarantineError):
+    pass
+
+class QuarantineReportingError(PaperQuarantineError):
+    pass
