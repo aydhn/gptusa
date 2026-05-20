@@ -1,3 +1,20 @@
+import os
+import pathlib
+
+def write_file(path, content):
+    p = pathlib.Path(path)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    with open(p, 'w', encoding='utf-8') as f:
+        f.write(content.strip() + "\n")
+
+def append_file(path, content):
+    p = pathlib.Path(path)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    mode = 'a' if p.exists() else 'w'
+    with open(p, mode, encoding='utf-8') as f:
+        f.write("\n" + content.strip() + "\n")
+
+append_file("usa_signal_bot/app/cli.py", """
 import sys
 
 def parse_args():
@@ -28,9 +45,6 @@ def parse_args():
         if cmd in cmds:
             print(f"Executed: {cmd}")
             sys.exit(0)
+""")
 
-def main():
-    parse_args()
-
-if __name__ == "__main__":
-    main()
+print("CLI updated successfully.")

@@ -14,3 +14,19 @@ class ShadowRehearsalRunnerError(PaperShadowError): pass
 class ShadowSessionRegistryError(PaperShadowError): pass
 class ShadowStorageError(PaperShadowError): pass
 class ShadowReportingError(PaperShadowError): pass
+
+class PaperShadowGovernanceError(Exception): pass
+class ShadowSessionIngestionError(PaperShadowGovernanceError): pass
+class ShadowMetricExtractionError(PaperShadowGovernanceError): pass
+class ShadowSessionComparisonError(PaperShadowGovernanceError): pass
+class ShadowRiskDeltaError(PaperShadowGovernanceError): pass
+class ShadowSafetyDeltaError(PaperShadowGovernanceError): pass
+class ShadowLedgerCompletenessError(PaperShadowGovernanceError): pass
+class ShadowAcceptanceGateError(PaperShadowGovernanceError): pass
+class ShadowAcceptanceScoringError(PaperShadowGovernanceError): pass
+class ShadowDecisionBoardError(PaperShadowGovernanceError): pass
+class ShadowEvidencePackError(PaperShadowGovernanceError): pass
+class ShadowGovernanceAuditError(PaperShadowGovernanceError): pass
+class ShadowGovernanceStorageError(PaperShadowGovernanceError): pass
+class ShadowGovernanceValidationError(PaperShadowGovernanceError): pass
+class ShadowGovernanceReportingError(PaperShadowGovernanceError): pass
