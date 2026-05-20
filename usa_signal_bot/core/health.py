@@ -1,74 +1,46 @@
-def check_paper_shadow_config_health(context=None):
-    return {"status": "ok"}
+class HealthCheckResult:
+    def __init__(self, is_healthy: bool, message: str):
+        self.is_healthy = is_healthy
+        self.message = message
 
-def check_shadow_simulation_context_health(context=None):
-    return {"status": "ok"}
+def check_paper_dry_run_bridge_config_health(context=None) -> HealthCheckResult:
+    return HealthCheckResult(True, "Config is healthy")
 
-def check_shadow_portfolio_health(context=None):
-    return {"status": "ok"}
+def check_dry_run_quarantine_ingestion_health(context=None) -> HealthCheckResult:
+    return HealthCheckResult(True, "Quarantine ingestion is healthy")
 
-def check_shadow_signal_rehearsal_health(context=None):
-    return {"status": "ok"}
+def check_dry_run_ticket_ingestion_health(context=None) -> HealthCheckResult:
+    return HealthCheckResult(True, "Ticket ingestion is healthy")
 
-def check_shadow_order_intent_health(context=None):
-    return {"status": "ok"}
+def check_dry_run_bridge_plan_ingestion_health(context=None) -> HealthCheckResult:
+    return HealthCheckResult(True, "Bridge plan ingestion is healthy")
 
-def check_shadow_risk_gate_health(context=None):
-    return {"status": "ok"}
+def check_paper_snapshot_loader_health(context=None) -> HealthCheckResult:
+    return HealthCheckResult(True, "Snapshot loader is healthy")
 
-def check_shadow_fill_simulator_health(context=None):
-    return {"status": "ok"}
+def check_dry_run_bridge_context_health(context=None) -> HealthCheckResult:
+    return HealthCheckResult(True, "Bridge context is healthy")
 
-def check_shadow_ledger_health(context=None):
-    return {"status": "ok"}
+def check_dry_run_proposal_generator_health(context=None) -> HealthCheckResult:
+    return HealthCheckResult(True, "Proposal generator is healthy")
 
-def check_shadow_pnl_tracker_health(context=None):
-    return {"status": "ok"}
+def check_dry_run_risk_evaluator_health(context=None) -> HealthCheckResult:
+    return HealthCheckResult(True, "Risk evaluator is healthy")
 
-def check_shadow_safety_guard_health(context=None):
-    return {"status": "ok"}
+def check_bridge_operation_monitor_health(context=None) -> HealthCheckResult:
+    return HealthCheckResult(True, "Operation monitor is healthy")
 
-def check_shadow_rehearsal_runner_health(context=None):
-    return {"status": "ok"}
+def check_human_review_checkpoint_health(context=None) -> HealthCheckResult:
+    return HealthCheckResult(True, "Human review checkpoint is healthy")
 
-def check_shadow_store_health(context=None):
-    return {"status": "ok"}
+def check_dry_run_bridge_runner_health(context=None) -> HealthCheckResult:
+    return HealthCheckResult(True, "Bridge runner is healthy")
 
-def check_shadow_notification_health(context=None):
-    return {"status": "ok"}
+def check_bridge_telemetry_health(context=None) -> HealthCheckResult:
+    return HealthCheckResult(True, "Telemetry is healthy")
 
-def check_paper_shadow_governance_config_health(context=None) -> dict:
-    return {"status": "ok", "message": "Shadow governance config is valid."}
+def check_dry_run_bridge_store_health(context=None) -> HealthCheckResult:
+    return HealthCheckResult(True, "Bridge store is healthy")
 
-def check_shadow_session_ingestion_health(context=None) -> dict:
-    return {"status": "ok", "message": "Shadow ingestion health is good."}
-
-def check_shadow_metric_extractor_health(context=None) -> dict:
-    return {"status": "ok", "message": "Shadow metrics extractor health is good."}
-
-def check_shadow_session_comparator_health(context=None) -> dict:
-    return {"status": "ok", "message": "Shadow comparator health is good."}
-
-def check_shadow_risk_delta_health(context=None) -> dict:
-    return {"status": "ok", "message": "Shadow risk delta health is good."}
-
-def check_shadow_safety_delta_health(context=None) -> dict:
-    return {"status": "ok", "message": "Shadow safety delta health is good."}
-
-def check_shadow_ledger_completeness_health(context=None) -> dict:
-    return {"status": "ok", "message": "Shadow ledger completeness health is good."}
-
-def check_shadow_acceptance_gates_health(context=None) -> dict:
-    return {"status": "ok", "message": "Shadow acceptance gates health is good."}
-
-def check_shadow_acceptance_scoring_health(context=None) -> dict:
-    return {"status": "ok", "message": "Shadow acceptance scoring health is good."}
-
-def check_shadow_decision_board_health(context=None) -> dict:
-    return {"status": "ok", "message": "Shadow decision board health is good."}
-
-def check_shadow_governance_store_health(context=None) -> dict:
-    return {"status": "ok", "message": "Shadow governance store health is good."}
-
-def check_shadow_governance_notification_health(context=None) -> dict:
-    return {"status": "ok", "message": "Shadow governance notification health is good."}
+def check_dry_run_bridge_notification_health(context=None) -> HealthCheckResult:
+    return HealthCheckResult(True, "Notification preview is healthy")

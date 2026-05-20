@@ -1,141 +1,78 @@
-from dataclasses import dataclass
-
-@dataclass
-class PaperShadowConfig:
-    enabled: bool
-    default_runtime_mode: str
-    write_shadow_reports: bool
-    warn_not_investment_advice: bool
-    warn_no_broker_execution: bool
-    warn_no_real_paper_mutation: bool
-    warn_shadow_orders_are_not_orders: bool
-    warn_shadow_fills_are_simulated: bool
-
-@dataclass
-class ShadowSimulationConfig:
-    enabled: bool
-    starting_equity_usd: float
-    deterministic_simulation: bool
-    use_mock_signals_by_default: bool
-    allow_real_orders: bool
-    allow_broker_calls: bool
-    allow_paper_state_mutation: bool
-    allow_telegram_real_send: bool
-    allow_production_config_write: bool
-
-@dataclass
-class ShadowOrderIntentsConfig:
-    enabled: bool
-    default_notional_usd: float
-    max_notional_pct_equity_warning: float
-    block_real_order_like_fields: bool
-    broker_destination_must_be_null: bool
-
-@dataclass
-class ShadowFillSimulationConfig:
-    enabled: bool
-    default_fill_price: float
-    default_slippage_bps: float
-    default_cost_bps: float
-    deterministic_fills: bool
-    real_fill_forbidden: bool
-
-@dataclass
-class ShadowLedgerConfig:
-    enabled: bool
-    write_ledger_events: bool
-    require_session_started_event: bool
-    require_session_completed_event: bool
-    record_blocked_operations: bool
-
-@dataclass
-class ShadowSafetyConfig:
-    enabled: bool
-    block_on_real_order_risk: bool
-    block_on_broker_field_risk: bool
-    block_on_paper_state_mutation_risk: bool
-    block_on_telegram_real_send_risk: bool
-    block_on_production_config_write_risk: bool
-    block_on_secret_risk: bool
-
-@dataclass
-class PaperShadowNotificationsConfig:
-    enabled: bool
-    dry_run: bool
-    notify_shadow_report: bool
-    notify_shadow_safety_warning: bool
-    notify_shadow_rehearsal_warning: bool
-    default_channel: str
-    warn_no_real_send_default: bool
-
 from dataclasses import dataclass, field
 from typing import List
 
 @dataclass
-class PaperShadowGovernanceConfig:
+class PaperDryRunBridgeConfig:
     enabled: bool = True
-    write_shadow_governance_reports: bool = True
+    default_mode: str = "full_supervised_dry_run"
+    write_dry_run_reports: bool = True
     warn_not_investment_advice: bool = True
     warn_no_broker_execution: bool = True
     warn_no_real_paper_mutation: bool = True
-    warn_shadow_acceptance_is_not_approval: bool = True
-    warn_shadow_pnl_is_simulated: bool = True
+    warn_dry_run_proposals_are_not_orders: bool = True
+    warn_human_checkpoint_is_not_deployment_approval: bool = True
 
 @dataclass
-class ShadowComparisonConfig:
+class DryRunBridgeContextConfig:
     enabled: bool = True
-    require_baseline_session: bool = True
-    require_candidate_session: bool = True
-    required_metrics: List[str] = field(default_factory=lambda: [
-        "signal_count", "candidate_count", "intent_count",
-        "risk_approved_intent_count", "blocked_intent_count",
-        "simulated_fill_count", "simulated_total_cost_usd",
-        "simulated_slippage_usd", "simulated_pnl_usd",
-        "return_pct", "max_drawdown_pct", "safety_flag_count",
-        "ledger_event_count", "notification_warning_count"
-    ])
-
-@dataclass
-class ShadowAcceptanceConfig:
-    enabled: bool = True
-    min_acceptance_score: float = 70.0
-    block_on_real_order_risk: bool = True
-    block_on_paper_mutation_risk: bool = True
-    block_on_telegram_real_send_risk: bool = True
-    block_on_production_config_write_risk: bool = True
-    request_retest_on_incomplete_ledger: bool = True
-    warn_on_cost_regression: bool = True
-    warn_on_risk_regression: bool = True
-    warn_on_safety_flags_increased: bool = True
-
-@dataclass
-class ShadowRehearsalGovernanceConfig:
-    enabled: bool = True
-    conservative_decision_board: bool = True
-    allow_real_orders: bool = False
+    require_quarantine_candidate: bool = True
+    require_promotion_ticket: bool = True
+    require_bridge_plan: bool = True
+    require_read_only_paper_snapshot: bool = True
     allow_paper_state_mutation: bool = False
+    allow_paper_orders: bool = False
+    allow_broker_orders: bool = False
     allow_telegram_real_send: bool = False
     allow_production_config_write: bool = False
-    accepted_status_means_sandboxed_candidate_only: bool = True
-    require_manual_review: bool = True
+    allow_active_paper_enable: bool = False
 
 @dataclass
-class ShadowEvidencePackConfig:
+class DryRunProposalsConfig:
     enabled: bool = True
-    required_items: List[str] = field(default_factory=lambda: [
-        "baseline_shadow_session", "candidate_shadow_session",
-        "metric_comparisons", "acceptance_gates", "safety_delta",
-        "risk_delta", "ledger_completeness", "notification_review",
-        "shadow_pnl_snapshot"
-    ])
-    request_more_data_on_missing_evidence: bool = True
+    deterministic_proposals: bool = True
+    default_symbols: List[str] = field(default_factory=lambda: ["SPY", "QQQ", "AAPL"])
+    default_notional_usd: float = 1000.0
+    real_order_forbidden: bool = True
+    paper_mutation_forbidden: bool = True
+    broker_send_forbidden: bool = True
 
 @dataclass
-class PaperShadowGovernanceNotificationsConfig:
+class BridgeTelemetryConfig:
+    enabled: bool = True
+    local_only: bool = True
+    record_session_events: bool = True
+    record_blocked_operations: bool = True
+    record_checkpoint_events: bool = True
+    external_telemetry_enabled: bool = False
+
+@dataclass
+class HumanReviewCheckpointConfig:
+    enabled: bool = True
+    required: bool = True
+    reviewer_notes_required_for_reviewed_status: bool = True
+    allows_active_paper: bool = False
+    allows_broker_execution: bool = False
+    allows_config_patch: bool = False
+    max_checkpoint_age_days: int = 7
+
+@dataclass
+class DryRunBridgeSafetyConfig:
+    enabled: bool = True
+    block_on_real_order_risk: bool = True
+    block_on_paper_order_risk: bool = True
+    block_on_broker_order_risk: bool = True
+    block_on_paper_state_mutation_risk: bool = True
+    block_on_telegram_real_send_risk: bool = True
+    block_on_production_config_write_risk: bool = True
+    block_on_active_paper_enable_risk: bool = True
+    block_on_secret_risk: bool = True
+
+@dataclass
+class PaperDryRunBridgeNotificationsConfig:
     enabled: bool = True
     dry_run: bool = True
-    notify_shadow_governance_report: bool = True
-    notify_shadow_acceptance_warning: bool = True
-    notify_shadow_decision_warning: bool = True
+    notify_dry_run_report: bool = True
+    notify_dry_run_safety_warning: bool = True
+    notify_human_checkpoint_warning: bool = True
     default_channel: str = "dry_run"
     warn_no_real_send_default: bool = True

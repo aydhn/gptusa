@@ -1,106 +1,42 @@
-from typing import Any, Dict, List
-from usa_signal_bot.paper_shadow.shadow_models import ShadowRehearsalReview, ShadowRehearsalSession
+from typing import Any, List
+from usa_signal_bot.paper_dry_run_bridge.dry_run_models import DryRunBridgeReview, DryRunBridgeSession, HumanReviewCheckpoint
+from usa_signal_bot.paper_dry_run_bridge.dry_run_reporting import dry_run_bridge_limitations_text
 
 class NotificationMessage:
-    def __init__(self, message: str, is_real_send: bool):
-        self.message = message
-        self.is_real_send = is_real_send
+    def __init__(self, channel: str, text: str):
+        self.channel = channel
+        self.text = text
 
-def format_paper_shadow_report_message(review: ShadowRehearsalReview) -> NotificationMessage:
-    return NotificationMessage(f"Paper-shadow review required: {review.review_id}", False)
-
-def format_shadow_safety_warning_message(sessions: List[ShadowRehearsalSession]) -> NotificationMessage:
-    return NotificationMessage("Shadow safety warning detected.", False)
-
-def format_shadow_rehearsal_warning_message(sessions: List[ShadowRehearsalSession]) -> NotificationMessage:
-    return NotificationMessage("Shadow rehearsal warning detected.", False)
-
-def notifications_from_shadow_rehearsal_review(review: ShadowRehearsalReview) -> List[NotificationMessage]:
-    return [format_paper_shadow_report_message(review)]
-
-from usa_signal_bot.paper_shadow_governance.shadow_governance_models import ShadowGovernanceReview, ShadowAcceptanceScorecard, ShadowDecisionBoardResult
-
-def format_shadow_governance_report_message(review: ShadowGovernanceReview) -> str:
-    return f"[SHADOW GOVERNANCE] Review ID: {review.review_id}"
-
-def format_shadow_acceptance_warning_message(scorecards: list[ShadowAcceptanceScorecard]) -> str:
-    return f"[SHADOW WARNING] High risk scorecard detected."
-
-def format_shadow_decision_warning_message(decisions: list[ShadowDecisionBoardResult]) -> str:
-    return f"[SHADOW WARNING] Decision board issued a warning."
-
-def notifications_from_shadow_governance_review(review: ShadowGovernanceReview) -> list[str]:
-    return [format_shadow_governance_report_message(review)]
-
-
-def format_quarantine_report_message(review: 'QuarantineEnrollmentReview') -> NotificationMessage:
-    from usa_signal_bot.paper_quarantine.enrollment_report import quarantine_review_summary, quarantine_limitations_text
-    summary = quarantine_review_summary(review)
-
+def format_dry_run_bridge_report_message(review: DryRunBridgeReview) -> NotificationMessage:
     lines = [
-        "🛡️ Quarantine Enrollment Review 🛡️",
+        "🧪 DRY-RUN BRIDGE REVIEW",
         f"Review ID: {review.review_id}",
-        f"Candidates Enrolled: {summary['candidate_count']}",
-        f"Errors: {summary['error_count']}",
+        f"Sessions: {len(review.sessions)}",
+        f"Total Telemetry Events: {len(review.telemetry_events)}",
         "",
-        "Note: Quarantine review required.",
-        "Local governance metadata only.",
-        quarantine_limitations_text()
+        dry_run_bridge_limitations_text()
     ]
-    return NotificationMessage(
-        title="Quarantine Review",
-        body="\n".join(lines),
-        notification_type=NotificationType.QUARANTINE_REPORT,
-        level="INFO" if summary['error_count'] == 0 else "WARNING",
-        metadata={"review_id": review.review_id}
-    )
+    return NotificationMessage("dry_run", "\n".join(lines))
 
-def format_promotion_ticket_warning_message(tickets: list['ReadOnlyPromotionTicket']) -> NotificationMessage:
-    from usa_signal_bot.paper_quarantine.enrollment_report import quarantine_limitations_text
-    count = len(tickets)
-
+def format_dry_run_bridge_safety_warning_message(sessions: List[DryRunBridgeSession]) -> NotificationMessage:
+    blocked_sessions = [s for s in sessions if s.status == "blocked"]
     lines = [
-        f"⚠️ Promotion Ticket Warning ⚠️",
-        f"{count} tickets require attention.",
+        "⚠️ DRY-RUN BRIDGE SAFETY WARNING",
+        f"Blocked Sessions: {len(blocked_sessions)}",
         "",
-        quarantine_limitations_text()
+        dry_run_bridge_limitations_text()
     ]
-    return NotificationMessage(
-        title="Promotion Ticket Warning",
-        body="\n".join(lines),
-        notification_type=NotificationType.PROMOTION_TICKET_WARNING,
-        level="WARNING",
-        metadata={"count": count}
-    )
+    return NotificationMessage("dry_run", "\n".join(lines))
 
-def format_dry_run_bridge_warning_message(plans: list['SupervisedDryRunBridgePlan']) -> NotificationMessage:
-    from usa_signal_bot.paper_quarantine.enrollment_report import quarantine_limitations_text
-    count = len(plans)
-
+def format_human_review_checkpoint_warning_message(checkpoints: List[HumanReviewCheckpoint]) -> NotificationMessage:
+    waiting = [c for c in checkpoints if c.status == "waiting_review"]
     lines = [
-        f"⚠️ Dry Run Bridge Warning ⚠️",
-        f"{count} bridge plans require attention.",
+        "⚠️ HUMAN REVIEW CHECKPOINT REQUIRED",
+        f"Waiting Checkpoints: {len(waiting)}",
         "",
-        quarantine_limitations_text()
+        dry_run_bridge_limitations_text()
     ]
-    return NotificationMessage(
-        title="Dry Run Bridge Warning",
-        body="\n".join(lines),
-        notification_type=NotificationType.DRY_RUN_BRIDGE_WARNING,
-        level="WARNING",
-        metadata={"count": count}
-    )
+    return NotificationMessage("dry_run", "\n".join(lines))
 
-def notifications_from_quarantine_review(review: 'QuarantineEnrollmentReview') -> list[NotificationMessage]:
-    messages = []
-    messages.append(format_quarantine_report_message(review))
-
-    problem_tickets = [t for t in review.tickets if t.status.value == "blocked" or not t.read_only]
-    if problem_tickets:
-         messages.append(format_promotion_ticket_warning_message(problem_tickets))
-
-    problem_plans = [p for p in review.bridge_plans if p.status.value == "blocked" or p.paper_state_mutation_enabled]
-    if problem_plans:
-         messages.append(format_dry_run_bridge_warning_message(problem_plans))
-
-    return messages
+def notifications_from_dry_run_bridge_review(review: DryRunBridgeReview) -> List[NotificationMessage]:
+    return [format_dry_run_bridge_report_message(review)]
