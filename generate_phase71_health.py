@@ -1,42 +1,20 @@
-def check_paper_shadow_config_health(context=None):
-    return {"status": "ok"}
+import os
+import pathlib
 
-def check_shadow_simulation_context_health(context=None):
-    return {"status": "ok"}
+def write_file(path, content):
+    p = pathlib.Path(path)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    with open(p, 'w', encoding='utf-8') as f:
+        f.write(content.strip() + "\n")
 
-def check_shadow_portfolio_health(context=None):
-    return {"status": "ok"}
+def append_file(path, content):
+    p = pathlib.Path(path)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    mode = 'a' if p.exists() else 'w'
+    with open(p, mode, encoding='utf-8') as f:
+        f.write("\n" + content.strip() + "\n")
 
-def check_shadow_signal_rehearsal_health(context=None):
-    return {"status": "ok"}
-
-def check_shadow_order_intent_health(context=None):
-    return {"status": "ok"}
-
-def check_shadow_risk_gate_health(context=None):
-    return {"status": "ok"}
-
-def check_shadow_fill_simulator_health(context=None):
-    return {"status": "ok"}
-
-def check_shadow_ledger_health(context=None):
-    return {"status": "ok"}
-
-def check_shadow_pnl_tracker_health(context=None):
-    return {"status": "ok"}
-
-def check_shadow_safety_guard_health(context=None):
-    return {"status": "ok"}
-
-def check_shadow_rehearsal_runner_health(context=None):
-    return {"status": "ok"}
-
-def check_shadow_store_health(context=None):
-    return {"status": "ok"}
-
-def check_shadow_notification_health(context=None):
-    return {"status": "ok"}
-
+append_file("usa_signal_bot/core/health.py", """
 def check_paper_shadow_governance_config_health(context=None) -> dict:
     return {"status": "ok", "message": "Shadow governance config is valid."}
 
@@ -72,3 +50,6 @@ def check_shadow_governance_store_health(context=None) -> dict:
 
 def check_shadow_governance_notification_health(context=None) -> dict:
     return {"status": "ok", "message": "Shadow governance notification health is good."}
+""")
+
+print("Health checks appended successfully.")

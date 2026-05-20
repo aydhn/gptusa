@@ -10,3 +10,7 @@ def collect_paper_shadow_metrics():
         "latest_shadow_pnl_usd": 0.0,
         "paper_shadow_warning_count": 0
     }
+
+def update_shadow_governance_metrics(metrics: dict):
+    # Dummy integration for observability
+    pass
