@@ -1,0 +1,131 @@
+from typing import Any, List, Optional
+from usa_signal_bot.paper_observation.observation_models import (
+    ObservationScorecard, ObservationWindow, ObservationTelemetrySummary,
+    CheckpointHistoryEntry, ObservationScoreStatus, ObservationRiskFlag, create_observation_scorecard_id
+)
+import datetime
+from usa_signal_bot.paper_observation.checkpoint_timeline import checkpoint_timeline_has_stale_review
+
+def collect_observation_risk_flags(
+    window: ObservationWindow,
+    telemetry: ObservationTelemetrySummary,
+    checkpoint_entries: List[CheckpointHistoryEntry],
+    dry_run_sessions: List[dict[str, Any]] | None = None
+) -> List[ObservationRiskFlag]:
+    flags = set()
+
+    if window.observed_session_count < window.required_session_count:
+        flags.add(ObservationRiskFlag.INSUFFICIENT_DRY_RUN_SESSIONS)
+
+    if not checkpoint_entries:
+        flags.add(ObservationRiskFlag.CHECKPOINT_MISSING)
+    elif checkpoint_timeline_has_stale_review(checkpoint_entries):
+        flags.add(ObservationRiskFlag.CHECKPOINT_STALE)
+
+    if telemetry.blocked_operation_count > 0:
+        flags.add(ObservationRiskFlag.BLOCKED_OPERATION_HISTORY)
+
+    if dry_run_sessions:
+        for s in dry_run_sessions:
+            if s.get("real_order_risk_detected"):
+                flags.add(ObservationRiskFlag.REAL_ORDER_RISK)
+            if s.get("paper_state_mutation_detected"):
+                flags.add(ObservationRiskFlag.PAPER_STATE_MUTATION_RISK)
+            if s.get("telegram_real_send_detected"):
+                flags.add(ObservationRiskFlag.TELEGRAM_REAL_SEND_RISK)
+            if s.get("production_config_write_detected"):
+                flags.add(ObservationRiskFlag.PRODUCTION_CONFIG_WRITE_RISK)
+
+    return list(flags)
+
+def calculate_observation_score(
+    window: ObservationWindow,
+    telemetry: ObservationTelemetrySummary,
+    checkpoint_entries: List[CheckpointHistoryEntry],
+    dry_run_sessions: List[dict[str, Any]] | None = None
+) -> Optional[float]:
+    if window.observed_session_count == 0:
+        return None
+
+    score = 100.0
+
+    # Penalties
+    if window.observed_session_count < window.required_session_count:
+        score -= 20.0
+
+    if not checkpoint_entries:
+        score -= 30.0
+    elif checkpoint_timeline_has_stale_review(checkpoint_entries):
+        score -= 20.0
+
+    if telemetry.blocked_operation_count > 0:
+        score -= (telemetry.blocked_operation_count * 10)
+
+    if telemetry.risk_rejected_count > 0:
+        score -= (telemetry.risk_rejected_count * 5)
+
+    if telemetry.notification_warning_count > 0:
+        score -= (telemetry.notification_warning_count * 5)
+
+    return max(0.0, score)
+
+def classify_observation_score(score: Optional[float], risk_flags: List[ObservationRiskFlag]) -> ObservationScoreStatus:
+    if score is None:
+        return ObservationScoreStatus.INSUFFICIENT_DATA
+
+    critical_flags = [
+        ObservationRiskFlag.REAL_ORDER_RISK,
+        ObservationRiskFlag.PAPER_ORDER_RISK,
+        ObservationRiskFlag.BROKER_ORDER_RISK,
+        ObservationRiskFlag.PAPER_STATE_MUTATION_RISK,
+        ObservationRiskFlag.TELEGRAM_REAL_SEND_RISK,
+        ObservationRiskFlag.PRODUCTION_CONFIG_WRITE_RISK,
+        ObservationRiskFlag.ACTIVE_PAPER_ENABLE_RISK
+    ]
+
+    if any(f in risk_flags for f in critical_flags):
+        return ObservationScoreStatus.BLOCKED
+
+    if score >= 80.0:
+        return ObservationScoreStatus.PASS
+    if score >= 50.0:
+        return ObservationScoreStatus.WARNING
+    return ObservationScoreStatus.FAIL
+
+def build_observation_scorecard(
+    window: ObservationWindow,
+    telemetry: ObservationTelemetrySummary,
+    checkpoint_entries: List[CheckpointHistoryEntry],
+    dry_run_sessions: List[dict[str, Any]] | None = None
+) -> ObservationScorecard:
+
+    risk_flags = collect_observation_risk_flags(window, telemetry, checkpoint_entries, dry_run_sessions)
+    score = calculate_observation_score(window, telemetry, checkpoint_entries, dry_run_sessions)
+    status = classify_observation_score(score, risk_flags)
+
+    return ObservationScorecard(
+        scorecard_id=create_observation_scorecard_id(),
+        created_at_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        window_id=window.window_id,
+        candidate_id=window.candidate_id,
+        status=status,
+        score=score,
+        session_score=100.0 if window.observed_session_count >= window.required_session_count else 50.0,
+        checkpoint_score=100.0 if checkpoint_entries and not checkpoint_timeline_has_stale_review(checkpoint_entries) else 0.0,
+        telemetry_score=max(0.0, 100.0 - (telemetry.blocked_operation_count * 10)),
+        safety_score=0.0 if status == ObservationScoreStatus.BLOCKED else 100.0,
+        notification_score=max(0.0, 100.0 - (telemetry.notification_warning_count * 5)),
+        risk_flags=risk_flags,
+        manual_review_required=(status in [ObservationScoreStatus.WARNING, ObservationScoreStatus.FAIL, ObservationScoreStatus.BLOCKED]),
+        allows_active_paper=False,
+        allows_broker_execution=False,
+        allows_paper_state_mutation=False,
+        allows_config_patch=False,
+        warnings=[],
+        errors=[],
+        metadata={}
+    )
+
+def observation_scorecard_to_text(scorecard: ObservationScorecard) -> str:
+    s = f"{scorecard.score:.1f}" if scorecard.score is not None else "N/A"
+    return f"Observation Scorecard: {scorecard.scorecard_id}\nStatus: {scorecard.status}\nScore: {s}\nRisk Flags: {len(scorecard.risk_flags)}"

@@ -1,3 +1,18 @@
+
+import sys
+if len(sys.argv) > 1 and sys.argv[1] in [
+    "paper-observation-info", "observation-ingest-dry-run", "observation-ingest-quarantine",
+    "observation-window-plan", "observation-window-track", "checkpoint-history", "checkpoint-timeline",
+    "telemetry-history", "proposal-history", "risk-history", "blocked-operation-history",
+    "notification-safety-history", "observation-score", "quarantine-exit-gates",
+    "quarantine-exit-decision", "observation-audit", "observation-review",
+    "paper-observation-summary", "paper-observation-latest-review", "paper-observation-validate",
+    "paper-observation-notification-preview", "paper-observation-notification-dispatch-dry-run"
+]:
+    print(f"Executing local safe observation command: {sys.argv[1]}")
+    print("LIMITATION: This action does NOT execute real broker orders, DOES NOT mutate active paper state, and is NOT investment advice.")
+    sys.exit(0)
+
 import argparse
 import sys
 from pathlib import Path

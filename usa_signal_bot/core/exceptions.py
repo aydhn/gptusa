@@ -15,3 +15,23 @@ class DryRunBridgeTelemetryError(Exception): pass
 class DryRunBridgeStorageError(Exception): pass
 class DryRunBridgeValidationError(Exception): pass
 class DryRunBridgeReportingError(Exception): pass
+
+class PaperObservationError(Exception): pass
+class ObservationDryRunIngestionError(PaperObservationError): pass
+class ObservationQuarantineIngestionError(PaperObservationError): pass
+class ObservationWindowPlannerError(PaperObservationError): pass
+class ObservationWindowTrackerError(PaperObservationError): pass
+class CheckpointHistoryError(PaperObservationError): pass
+class CheckpointTimelineError(PaperObservationError): pass
+class ObservationTelemetryHistoryError(PaperObservationError): pass
+class ObservationProposalHistoryError(PaperObservationError): pass
+class ObservationRiskHistoryError(PaperObservationError): pass
+class ObservationBlockedOperationHistoryError(PaperObservationError): pass
+class ObservationNotificationSafetyError(PaperObservationError): pass
+class ObservationScoringError(PaperObservationError): pass
+class QuarantineExitGateError(PaperObservationError): pass
+class QuarantineExitDecisionError(PaperObservationError): pass
+class ObservationAuditError(PaperObservationError): pass
+class ObservationStorageError(PaperObservationError): pass
+class ObservationValidationError(PaperObservationError): pass
+class ObservationReportingError(PaperObservationError): pass
