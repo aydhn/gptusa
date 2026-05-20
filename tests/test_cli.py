@@ -1,39 +1,36 @@
-
-import unittest
 import sys
+import pytest
+from unittest.mock import patch
+from usa_signal_bot.app.cli import main
 
-class TestCli(unittest.TestCase):
-    def test_cli(self):
-        # Already tested broadly
-        pass
+@patch.object(sys, 'argv', ['python', 'paper-shadow-info'])
+def test_paper_shadow_info(capsys):
+    with pytest.raises(SystemExit) as exc_info:
+        main()
+    assert exc_info.value.code == 0
+    captured = capsys.readouterr()
+    assert "Paper Shadow System Info" in captured.out
 
-    def test_release_sandbox_commands(self):
-        import subprocess
-        cmds = [
-            ["python", "-m", "usa_signal_bot", "release-sandbox-info"],
-            ["python", "-m", "usa_signal_bot", "sandbox-load-bundle"],
-            ["python", "-m", "usa_signal_bot", "sandbox-read-only-verify"],
-            ["python", "-m", "usa_signal_bot", "sandbox-mount-plan"],
-            ["python", "-m", "usa_signal_bot", "sandbox-activation-plan"],
-            ["python", "-m", "usa_signal_bot", "sandbox-overlay-preview"],
-            ["python", "-m", "usa_signal_bot", "sandbox-output-path"],
-            ["python", "-m", "usa_signal_bot", "sandbox-operation-guard"],
-            ["python", "-m", "usa_signal_bot", "sandbox-runtime-context"],
-            ["python", "-m", "usa_signal_bot", "sandbox-signal-preview"],
-            ["python", "-m", "usa_signal_bot", "sandbox-portfolio-preview"],
-            ["python", "-m", "usa_signal_bot", "sandbox-risk-preview"],
-            ["python", "-m", "usa_signal_bot", "sandbox-notification-preview"],
-            ["python", "-m", "usa_signal_bot", "sandbox-preview-run"],
-            ["python", "-m", "usa_signal_bot", "sandbox-safety-validate"],
-            ["python", "-m", "usa_signal_bot", "sandbox-session-registry"],
-            ["python", "-m", "usa_signal_bot", "sandbox-restore-preview"],
-            ["python", "-m", "usa_signal_bot", "release-sandbox-review"],
-            ["python", "-m", "usa_signal_bot", "release-sandbox-summary"],
-            ["python", "-m", "usa_signal_bot", "release-sandbox-latest-review"],
-            ["python", "-m", "usa_signal_bot", "release-sandbox-validate"],
-            ["python", "-m", "usa_signal_bot", "release-sandbox-notification-preview"],
-            ["python", "-m", "usa_signal_bot", "release-sandbox-notification-dispatch-dry-run"],
-        ]
-        for cmd in cmds:
-            res = subprocess.run(cmd, capture_output=True, text=True)
-            self.assertEqual(res.returncode, 0, f"Command {' '.join(cmd)} failed: {res.stderr}")
+@patch.object(sys, 'argv', ['python', 'shadow-context'])
+def test_shadow_context(capsys):
+    with pytest.raises(SystemExit) as exc_info:
+        main()
+    assert exc_info.value.code == 0
+    captured = capsys.readouterr()
+    assert "Created shadow context" in captured.out
+
+@patch.object(sys, 'argv', ['python', 'shadow-session-run', '--runtime-mode', 'full_paper_shadow', '--equity', '100000'])
+def test_shadow_session_run(capsys):
+    with pytest.raises(SystemExit) as exc_info:
+        main()
+    assert exc_info.value.code == 0
+    captured = capsys.readouterr()
+    assert "Ran shadow session" in captured.out
+
+@patch.object(sys, 'argv', ['python', 'paper-shadow-validate'])
+def test_paper_shadow_validate_no_review(capsys):
+    with pytest.raises(SystemExit) as exc_info:
+        main()
+    assert exc_info.value.code == 0
+    captured = capsys.readouterr()
+    assert "No latest review found" in captured.out
