@@ -80,11 +80,17 @@ class ShadowReportType(str, Enum):
     FULL_SHADOW_REHEARSAL_REVIEW = "FULL_SHADOW_REHEARSAL_REVIEW"
 
 class NotificationType(str, Enum):
+    QUARANTINE_REPORT = "quarantine_report"
+    PROMOTION_TICKET_WARNING = "promotion_ticket_warning"
+    DRY_RUN_BRIDGE_WARNING = "dry_run_bridge_warning"
     PAPER_SHADOW_REPORT = "PAPER_SHADOW_REPORT"
     SHADOW_SAFETY_WARNING = "SHADOW_SAFETY_WARNING"
     SHADOW_REHEARSAL_WARNING = "SHADOW_REHEARSAL_WARNING"
 
 class AlertType(str, Enum):
+    QUARANTINE_ENROLLMENT_BLOCKED = "quarantine_enrollment_blocked"
+    PROMOTION_TICKET_BLOCKED = "promotion_ticket_blocked"
+    DRY_RUN_BRIDGE_BLOCKED = "dry_run_bridge_blocked"
     PAPER_SHADOW_BLOCKED = "PAPER_SHADOW_BLOCKED"
     SHADOW_REAL_ORDER_RISK = "SHADOW_REAL_ORDER_RISK"
     SHADOW_SESSION_FAILED = "SHADOW_SESSION_FAILED"
@@ -174,11 +180,114 @@ class ShadowGovernanceReportType(str, Enum):
     FULL_SHADOW_GOVERNANCE_REVIEW = "FULL_SHADOW_GOVERNANCE_REVIEW"
 
 class NotificationType(str, Enum):
+    QUARANTINE_REPORT = "quarantine_report"
+    PROMOTION_TICKET_WARNING = "promotion_ticket_warning"
+    DRY_RUN_BRIDGE_WARNING = "dry_run_bridge_warning"
     SHADOW_GOVERNANCE_REPORT = "SHADOW_GOVERNANCE_REPORT"
     SHADOW_ACCEPTANCE_WARNING = "SHADOW_ACCEPTANCE_WARNING"
     SHADOW_DECISION_WARNING = "SHADOW_DECISION_WARNING"
 
 class AlertType(str, Enum):
+    QUARANTINE_ENROLLMENT_BLOCKED = "quarantine_enrollment_blocked"
+    PROMOTION_TICKET_BLOCKED = "promotion_ticket_blocked"
+    DRY_RUN_BRIDGE_BLOCKED = "dry_run_bridge_blocked"
     SHADOW_GOVERNANCE_BLOCKED = "SHADOW_GOVERNANCE_BLOCKED"
     SHADOW_ACCEPTANCE_FAILED = "SHADOW_ACCEPTANCE_FAILED"
     SHADOW_COMPARISON_INCONCLUSIVE = "SHADOW_COMPARISON_INCONCLUSIVE"
+
+
+class QuarantineCandidateStatus(str, Enum):
+    DRAFT = "draft"
+    ELIGIBLE = "eligible"
+    ENROLLED = "enrolled"
+    WAITING_MANUAL_REVIEW = "waiting_manual_review"
+    READY_FOR_SUPERVISED_DRY_RUN = "ready_for_supervised_dry_run"
+    BLOCKED = "blocked"
+    REJECTED = "rejected"
+    EXPIRED = "expired"
+    ARCHIVED = "archived"
+    UNKNOWN = "unknown"
+
+class QuarantineEnrollmentDecision(str, Enum):
+    ENROLL_AS_QUARANTINED_CANDIDATE = "enroll_as_quarantined_candidate"
+    REQUEST_MANUAL_REVIEW = "request_manual_review"
+    REQUEST_MORE_SHADOW_DATA = "request_more_shadow_data"
+    REQUEST_REHEARSAL_RETEST = "request_rehearsal_retest"
+    REJECT = "reject"
+    BLOCK = "block"
+    INCONCLUSIVE = "inconclusive"
+    UNKNOWN = "unknown"
+
+class PromotionTicketStatus(str, Enum):
+    DRAFT = "draft"
+    READ_ONLY_CREATED = "read_only_created"
+    WAITING_REVIEW = "waiting_review"
+    APPROVED_FOR_SUPERVISED_DRY_RUN_PLANNING = "approved_for_supervised_dry_run_planning"
+    BLOCKED = "blocked"
+    REJECTED = "rejected"
+    EXPIRED = "expired"
+    ARCHIVED = "archived"
+    UNKNOWN = "unknown"
+
+class BridgePlanStatus(str, Enum):
+    DRAFT = "draft"
+    READY = "ready"
+    VALIDATED = "validated"
+    BLOCKED = "blocked"
+    EXPIRED = "expired"
+    ARCHIVED = "archived"
+    UNKNOWN = "unknown"
+
+class BridgeMode(str, Enum):
+    READ_ONLY_PREVIEW = "read_only_preview"
+    SUPERVISED_DRY_RUN_PLANNING = "supervised_dry_run_planning"
+    SHADOW_TO_PAPER_SNAPSHOT_COMPARE = "shadow_to_paper_snapshot_compare"
+    QUARANTINE_OUTPUT_ONLY = "quarantine_output_only"
+    DISABLED = "disabled"
+    UNKNOWN = "unknown"
+
+class BridgeOperation(str, Enum):
+    READ_PROMOTION_TICKET = "read_promotion_ticket"
+    READ_CANDIDATE_BUNDLE = "read_candidate_bundle"
+    READ_SHADOW_GOVERNANCE = "read_shadow_governance"
+    READ_PAPER_SNAPSHOT = "read_paper_snapshot"
+    BUILD_DRY_RUN_PLAN = "build_dry_run_plan"
+    WRITE_QUARANTINE_OUTPUT = "write_quarantine_output"
+    GENERATE_NOTIFICATION_PREVIEW = "generate_notification_preview"
+    WRITE_PAPER_STATE = "write_paper_state"
+    SEND_PAPER_ORDER = "send_paper_order"
+    SEND_BROKER_ORDER = "send_broker_order"
+    SEND_TELEGRAM_REAL = "send_telegram_real"
+    WRITE_PRODUCTION_CONFIG = "write_production_config"
+    UNKNOWN = "unknown"
+
+class BridgeOperationDecision(str, Enum):
+    ALLOW = "allow"
+    DENY = "deny"
+    WARN = "warn"
+    REQUIRE_MANUAL_REVIEW = "require_manual_review"
+    UNKNOWN = "unknown"
+
+class QuarantineSafetyFlag(str, Enum):
+    REAL_ORDER_RISK = "real_order_risk"
+    BROKER_FIELD_RISK = "broker_field_risk"
+    PAPER_STATE_MUTATION_RISK = "paper_state_mutation_risk"
+    PAPER_ORDER_RISK = "paper_order_risk"
+    TELEGRAM_REAL_SEND_RISK = "telegram_real_send_risk"
+    PRODUCTION_CONFIG_WRITE_RISK = "production_config_write_risk"
+    AUTO_ENABLE_RISK = "auto_enable_risk"
+    UNSAFE_OUTPUT_PATH = "unsafe_output_path"
+    MISSING_MANUAL_REVIEW = "missing_manual_review"
+    MISSING_SHADOW_GOVERNANCE = "missing_shadow_governance"
+    LOW_SHADOW_ACCEPTANCE_SCORE = "low_shadow_acceptance_score"
+    BLOCKED_SHADOW_DECISION = "blocked_shadow_decision"
+    EXPIRED_REVIEW_WINDOW = "expired_review_window"
+    SECRET_RISK = "secret_risk"
+    UNKNOWN = "unknown"
+
+class QuarantineReportType(str, Enum):
+    ENROLLMENT_REVIEW = "enrollment_review"
+    PROMOTION_TICKET = "promotion_ticket"
+    BRIDGE_PLAN = "bridge_plan"
+    SAFETY_REVIEW = "safety_review"
+    FULL_QUARANTINE_REVIEW = "full_quarantine_review"
