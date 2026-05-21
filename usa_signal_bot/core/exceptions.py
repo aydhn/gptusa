@@ -117,3 +117,61 @@ class ObserverValidationError(PaperObserverError):
 
 class ObserverReportingError(PaperObserverError):
     pass
+
+
+class PaperObserverGovernanceError(Exception):
+    pass
+
+class ObserverGovernanceIngestionError(PaperObserverGovernanceError):
+    pass
+
+class ObserverPaperSnapshotIngestionError(PaperObserverGovernanceError):
+    pass
+
+class ObserverMetricExtractionError(PaperObserverGovernanceError):
+    pass
+
+class PaperMetricExtractionError(PaperObserverGovernanceError):
+    pass
+
+class ObserverPaperComparisonError(PaperObserverGovernanceError):
+    pass
+
+class ObserverSignalDeltaError(PaperObserverGovernanceError):
+    pass
+
+class ObserverProposalDeltaError(PaperObserverGovernanceError):
+    pass
+
+class ObserverRiskDeltaError(PaperObserverGovernanceError):
+    pass
+
+class ObserverDriftDeltaError(PaperObserverGovernanceError):
+    pass
+
+class ObserverSafetyComplianceError(PaperObserverGovernanceError):
+    pass
+
+class ObserverEvidenceCollectionError(PaperObserverGovernanceError):
+    pass
+
+class ObserverEvidenceFreshnessError(PaperObserverGovernanceError):
+    pass
+
+class ObserverGovernanceGateError(PaperObserverGovernanceError):
+    pass
+
+class ObserverGovernanceDecisionError(PaperObserverGovernanceError):
+    pass
+
+class ObserverGovernanceAuditError(PaperObserverGovernanceError):
+    pass
+
+class ObserverGovernanceStorageError(PaperObserverGovernanceError):
+    pass
+
+class ObserverGovernanceValidationError(PaperObserverGovernanceError):
+    pass
+
+class ObserverGovernanceReportingError(PaperObserverGovernanceError):
+    pass

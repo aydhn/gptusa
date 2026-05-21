@@ -63,3 +63,62 @@ research_notifications:
   notify_experiment_plan_warning: true
   default_channel: dry_run
   warn_no_real_send_default: true
+
+
+paper_observer_governance:
+  enabled: true
+  write_observer_governance_reports: true
+  warn_not_investment_advice: true
+  warn_no_broker_execution: true
+  warn_no_real_paper_mutation: true
+  warn_governance_is_non_executing: true
+  warn_governance_is_not_activation: true
+
+observer_paper_comparison:
+  enabled: true
+  require_paper_baseline: true
+  require_observer_output: true
+  max_acceptable_drift_event_count: 10
+  block_on_unsafe_drift: true
+  block_on_missing_locked_runtime: true
+
+promotion_evidence_refresh:
+  enabled: true
+  max_evidence_age_days: 14
+  require_observer_review: true
+  require_observer_comparison: true
+  require_controlled_planning_ticket: true
+  require_observation_exit_review: true
+  request_followup_on_missing_evidence: true
+  request_followup_on_stale_evidence: true
+
+observer_governance:
+  enabled: true
+  conservative_decision_board: true
+  eligible_decision_is_dossier_only: true
+  require_manual_review: true
+  allow_active_paper: false
+  allow_broker_execution: false
+  allow_paper_state_mutation: false
+  allow_config_patch: false
+
+observer_governance_safety:
+  enabled: true
+  block_on_real_order_risk: true
+  block_on_paper_order_risk: true
+  block_on_broker_order_risk: true
+  block_on_paper_state_mutation_risk: true
+  block_on_telegram_real_send_risk: true
+  block_on_production_config_write_risk: true
+  block_on_active_paper_enable_risk: true
+  block_on_observer_unlock_risk: true
+  block_on_secret_risk: true
+
+paper_observer_governance_notifications:
+  enabled: true
+  dry_run: true
+  notify_observer_governance_report: true
+  notify_observer_evidence_warning: true
+  notify_observer_comparison_warning: true
+  default_channel: "dry_run"
+  warn_no_real_send_default: true

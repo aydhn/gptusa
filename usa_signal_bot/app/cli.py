@@ -269,3 +269,42 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+# Phase 77: Observer Governance Commands
+def _register_observer_governance_commands(subparsers):
+    # Just generic stubs for argparse
+    if not hasattr(subparsers, 'add_parser'):
+        return
+
+    cmds = [
+        "observer-governance-info",
+        "observer-governance-ingest-observer",
+        "observer-governance-paper-snapshot",
+        "observer-metrics-extract",
+        "paper-metrics-extract",
+        "observer-paper-compare",
+        "observer-signal-delta",
+        "observer-proposal-delta",
+        "observer-risk-delta",
+        "observer-drift-delta",
+        "observer-safety-compliance",
+        "observer-notification-compare",
+        "observer-blocked-operation-compare",
+        "observer-evidence-collect",
+        "observer-evidence-freshness",
+        "observer-evidence-gaps",
+        "observer-governance-gates",
+        "observer-governance-decision",
+        "observer-governance-audit",
+        "observer-governance-review",
+        "observer-governance-summary",
+        "observer-governance-latest-review",
+        "observer-governance-validate",
+        "observer-governance-notification-preview",
+        "observer-governance-notification-dispatch-dry-run",
+    ]
+    for cmd in cmds:
+        p = subparsers.add_parser(cmd)
+        p.add_argument('--write', action='store_true')
+        p.add_argument('--file', type=str, required=False)
+        p.add_argument('--latest-review', action='store_true')
