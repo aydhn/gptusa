@@ -49,3 +49,17 @@ def format_quarantine_exit_review_warning_message(exit_reviews: List[Any]) -> No
 
 def notifications_from_observation_review(review: Any) -> List[NotificationMessage]:
     return [format_observation_window_report_message(review)]
+
+from typing import Any
+
+def format_observer_governance_report_message(review: Any) -> Any:
+    return {"message": f"Observer Governance Review {review.review_id} complete. Non-executing report.", "type": "OBSERVER_GOVERNANCE_REPORT"}
+
+def format_observer_evidence_warning_message(refreshes: list[Any]) -> Any:
+    return {"message": f"Observer Evidence Warning: {len(refreshes)} evidence refresh issues.", "type": "OBSERVER_EVIDENCE_WARNING"}
+
+def format_observer_comparison_warning_message(reports: list[Any]) -> Any:
+    return {"message": f"Observer Comparison Warning: {len(reports)} issues found.", "type": "OBSERVER_COMPARISON_WARNING"}
+
+def notifications_from_observer_governance_review(review: Any) -> list[Any]:
+    return [format_observer_governance_report_message(review)]

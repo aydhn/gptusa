@@ -76,3 +76,67 @@ class PaperDryRunBridgeNotificationsConfig:
     notify_human_checkpoint_warning: bool = True
     default_channel: str = "dry_run"
     warn_no_real_send_default: bool = True
+
+@dataclass
+class PaperObserverGovernanceConfig:
+    enabled: bool = True
+    write_observer_governance_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_no_broker_execution: bool = True
+    warn_no_real_paper_mutation: bool = True
+    warn_governance_is_non_executing: bool = True
+    warn_governance_is_not_activation: bool = True
+
+@dataclass
+class ObserverPaperComparisonConfig:
+    enabled: bool = True
+    require_paper_baseline: bool = True
+    require_observer_output: bool = True
+    max_acceptable_drift_event_count: int = 10
+    block_on_unsafe_drift: bool = True
+    block_on_missing_locked_runtime: bool = True
+
+@dataclass
+class PromotionEvidenceRefreshConfig:
+    enabled: bool = True
+    max_evidence_age_days: int = 14
+    require_observer_review: bool = True
+    require_observer_comparison: bool = True
+    require_controlled_planning_ticket: bool = True
+    require_observation_exit_review: bool = True
+    request_followup_on_missing_evidence: bool = True
+    request_followup_on_stale_evidence: bool = True
+
+@dataclass
+class ObserverGovernanceConfig:
+    enabled: bool = True
+    conservative_decision_board: bool = True
+    eligible_decision_is_dossier_only: bool = True
+    require_manual_review: bool = True
+    allow_active_paper: bool = False
+    allow_broker_execution: bool = False
+    allow_paper_state_mutation: bool = False
+    allow_config_patch: bool = False
+
+@dataclass
+class ObserverGovernanceSafetyConfig:
+    enabled: bool = True
+    block_on_real_order_risk: bool = True
+    block_on_paper_order_risk: bool = True
+    block_on_broker_order_risk: bool = True
+    block_on_paper_state_mutation_risk: bool = True
+    block_on_telegram_real_send_risk: bool = True
+    block_on_production_config_write_risk: bool = True
+    block_on_active_paper_enable_risk: bool = True
+    block_on_observer_unlock_risk: bool = True
+    block_on_secret_risk: bool = True
+
+@dataclass
+class PaperObserverGovernanceNotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    notify_observer_governance_report: bool = True
+    notify_observer_evidence_warning: bool = True
+    notify_observer_comparison_warning: bool = True
+    default_channel: str = "dry_run"
+    warn_no_real_send_default: bool = True
