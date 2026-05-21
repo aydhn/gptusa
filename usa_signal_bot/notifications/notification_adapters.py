@@ -32,3 +32,20 @@ def notifications_from_paper_observer_review(review: PaperObserverReview) -> Lis
         messages.append(format_observer_drift_warning_message(review.drift_events))
 
     return messages
+
+
+def format_readiness_rehearsal_report_message(review: Any) -> NotificationMessage:
+    msg = f"Readiness Rehearsal Review {getattr(review, 'review_id', 'UNKNOWN')} generated. No broker execution."
+    return NotificationMessage(type=NotificationType.READINESS_REHEARSAL_REPORT.value, message=msg, payload={"review_id": getattr(review, 'review_id', 'UNKNOWN')})
+
+def format_final_review_lock_warning_message(locks: List[Any]) -> NotificationMessage:
+    msg = f"Final Review Lock Warning: {len(locks)} locks blocked."
+    return NotificationMessage(type=NotificationType.FINAL_REVIEW_LOCK_WARNING.value, message=msg, payload={"count": len(locks)})
+
+def format_guarded_handoff_warning_message(entries: List[Any]) -> NotificationMessage:
+    msg = f"Guarded Handoff Warning: {len(entries)} handoffs blocked."
+    return NotificationMessage(type=NotificationType.GUARDED_HANDOFF_WARNING.value, message=msg, payload={"count": len(entries)})
+
+def notifications_from_readiness_rehearsal_review(review: Any) -> List[NotificationMessage]:
+    messages = [format_readiness_rehearsal_report_message(review)]
+    return messages

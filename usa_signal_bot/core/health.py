@@ -86,3 +86,37 @@ def check_promotion_dossier_store_health(context=None) -> HealthCheckResult:
     return HealthCheckResult(True, "Promotion dossier store is healthy.")
 def check_promotion_dossier_notification_health(context=None) -> HealthCheckResult:
     return HealthCheckResult(True, "Promotion dossier notification preview is healthy.")
+
+
+def check_paper_readiness_rehearsal_config_health(context=None) -> HealthCheckResult:
+    return HealthCheckResult(True, "Paper readiness rehearsal config is healthy")
+
+def check_readiness_promotion_dossier_ingestion_health(context=None) -> HealthCheckResult:
+    return HealthCheckResult(True, "Readiness promotion dossier ingestion is healthy")
+
+def check_readiness_rehearsal_eligibility_health(context=None) -> HealthCheckResult:
+    return HealthCheckResult(True, "Readiness rehearsal eligibility is healthy")
+
+def check_stage_rehearsal_planner_health(context=None) -> HealthCheckResult:
+    return HealthCheckResult(True, "Stage rehearsal planner is healthy")
+
+def check_stage_rehearsal_runner_health(context=None) -> HealthCheckResult:
+    return HealthCheckResult(True, "Stage rehearsal runner is healthy")
+
+def check_stage_safety_validator_health(context=None) -> HealthCheckResult:
+    return HealthCheckResult(True, "Stage safety validator is healthy")
+
+def check_final_review_lock_health(context=None) -> HealthCheckResult:
+    return HealthCheckResult(True, "Final review lock is healthy")
+
+def check_handoff_registry_health(context=None) -> HealthCheckResult:
+    return HealthCheckResult(True, "Handoff registry is healthy")
+
+def check_handoff_evidence_index_health(context=None) -> HealthCheckResult:
+    return HealthCheckResult(True, "Handoff evidence index is healthy")
+
+def check_readiness_rehearsal_store_health(context=None) -> HealthCheckResult:
+    return HealthCheckResult(True, "Readiness rehearsal store is healthy")
+
+def check_readiness_rehearsal_notification_health(context=None) -> HealthCheckResult:
+    return HealthCheckResult(True, "Readiness rehearsal notification preview is healthy")

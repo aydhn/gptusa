@@ -81,3 +81,35 @@ def format_readiness_package_warning_message(packages: List[Any]) -> Notificatio
 
 def notifications_from_promotion_dossier_review(review: Any) -> List[NotificationMessage]:
     return [format_promotion_dossier_report_message(review)]
+
+
+def format_readiness_rehearsal_report_message(review: Any) -> NotificationMessage:
+    from usa_signal_bot.core.enums import NotificationType
+    msg_str = (
+        f"Readiness Rehearsal Review [{getattr(review, 'review_id', 'UNKNOWN')}]:\n"
+        f"Runs: {len(getattr(review, 'rehearsal_runs', []))} | "
+        f"Locks: {len(getattr(review, 'final_locks', []))} | "
+        f"Handoffs: {len(getattr(review, 'handoff_entries', []))}\n"
+        "LIMITATIONS: No active paper enable, No broker execution, NOT investment advice."
+    )
+    return NotificationMessage(NotificationType.READINESS_REHEARSAL_REPORT, msg_str)
+
+def format_final_review_lock_warning_message(locks: List[Any]) -> NotificationMessage:
+    from usa_signal_bot.core.enums import NotificationType
+    msg_str = f"Final Review Lock Warning: {len(locks)} locks have issues or blocked state."
+    return NotificationMessage(NotificationType.FINAL_REVIEW_LOCK_WARNING, msg_str)
+
+def format_guarded_handoff_warning_message(entries: List[Any]) -> NotificationMessage:
+    from usa_signal_bot.core.enums import NotificationType
+    msg_str = f"Guarded Handoff Warning: {len(entries)} entries require attention."
+    return NotificationMessage(NotificationType.GUARDED_HANDOFF_WARNING, msg_str)
+
+def notifications_from_readiness_rehearsal_review(review: Any) -> List[NotificationMessage]:
+    msgs = [format_readiness_rehearsal_report_message(review)]
+    blocked_locks = [l for l in getattr(review, 'final_locks', []) if not getattr(l, 'locked', False)]
+    if blocked_locks:
+        msgs.append(format_final_review_lock_warning_message(blocked_locks))
+    blocked_handoffs = [e for e in getattr(review, 'handoff_entries', []) if getattr(e, 'status', None) in ["BLOCKED", "REJECTED"]]
+    if blocked_handoffs:
+        msgs.append(format_guarded_handoff_warning_message(blocked_handoffs))
+    return msgs

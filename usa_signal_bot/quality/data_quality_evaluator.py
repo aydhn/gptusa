@@ -35,3 +35,38 @@ def get_promotion_dossier_quality_dimensions(payload: Dict[str, Any]) -> Dict[st
         "evidence_index_quality_score": 100,
         "non_execution_compliance_score": 100
     }
+
+
+def get_readiness_rehearsal_quality_dimensions(payload: Dict[str, Any]) -> Dict[str, Any]:
+    dims = {
+        "readiness_rehearsal_quality_score": 100,
+        "stage_rehearsal_safety_score": 100,
+        "final_review_lock_quality_score": 100,
+        "guarded_handoff_registry_quality_score": 100,
+        "handoff_evidence_completeness_score": 100
+    }
+
+    if payload.get("failed_stage_count", 0) > 0 or payload.get("blocked_stage_count", 0) > 0:
+        dims["stage_rehearsal_safety_score"] -= 20
+        dims["readiness_rehearsal_quality_score"] -= 10
+
+    if payload.get("final_lock_valid") is True:
+        dims["final_review_lock_quality_score"] = 100
+    elif payload.get("final_lock_valid") is False:
+        dims["final_review_lock_quality_score"] = 0
+        dims["readiness_rehearsal_quality_score"] -= 20
+
+    if payload.get("missing_evidence_count", 0) > 0:
+        dims["handoff_evidence_completeness_score"] -= (10 * payload.get("missing_evidence_count", 1))
+
+    if payload.get("has_active_paper_risk") or payload.get("has_broker_risk") or payload.get("has_config_patch_risk"):
+        dims["stage_rehearsal_safety_score"] = 0
+        dims["readiness_rehearsal_quality_score"] = 0
+        dims["final_review_lock_quality_score"] = 0
+        dims["guarded_handoff_registry_quality_score"] = 0
+
+    return {k: max(0, min(100, v)) for k, v in dims.items()}
+
+def enrich_quality_scorecard_with_readiness_rehearsal_dims(scorecard: Dict[str, Any], payload: Dict[str, Any]) -> Dict[str, Any]:
+    scorecard.update(get_readiness_rehearsal_quality_dimensions(payload))
+    return scorecard
