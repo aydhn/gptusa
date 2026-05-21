@@ -1,27 +1,28 @@
-from typing import Any
+from typing import Any, Dict
 
-def collect_operational_metrics(payload: dict[str, Any]) -> dict[str, Any]:
-    metrics = {
-        "latest_dry_run_bridge_session_count": payload.get("session_count", 0),
-        "latest_dry_run_bridge_completed_count": payload.get("completed_count", 0),
-        "latest_dry_run_bridge_blocked_count": payload.get("blocked_count", 0),
-        "latest_dry_run_proposal_count": payload.get("proposal_count", 0),
-        "latest_dry_run_risk_warning_count": payload.get("risk_warning_count", 0),
-        "latest_dry_run_blocked_operation_count": payload.get("blocked_operation_count", 0),
-        "latest_human_checkpoint_required_count": payload.get("checkpoint_required_count", 0),
-        "latest_human_checkpoint_waiting_count": payload.get("checkpoint_waiting_count", 0),
-        "latest_dry_run_bridge_safety_flag_count": payload.get("safety_flag_count", 0),
-        "dry_run_bridge_warning_count": payload.get("warning_count", 0),
-        # Phase 74 Extensions
-        "latest_observation_window_count": payload.get("observation_window_count", 0),
-        "latest_observation_completed_count": payload.get("observation_completed_count", 0),
-        "latest_observation_blocked_count": payload.get("observation_blocked_count", 0),
-        "latest_observation_checkpoint_count": payload.get("observation_checkpoint_count", 0),
-        "latest_observation_stale_checkpoint_count": payload.get("observation_stale_checkpoint_count", 0),
-        "latest_observation_blocked_operation_count": payload.get("observation_blocked_operation_count", 0),
-        "latest_quarantine_exit_eligible_planning_count": payload.get("quarantine_exit_eligible_count", 0),
-        "latest_quarantine_exit_retest_count": payload.get("quarantine_exit_retest_count", 0),
-        "latest_observation_safety_flag_count": payload.get("observation_safety_flag_count", 0),
-        "observation_warning_count": payload.get("observation_warning_count", 0)
-    }
-    return metrics
+class PaperObserverMetricsCollector:
+    def __init__(self):
+        self.metrics = {
+            "latest_observer_enrollment_count": 0,
+            "latest_observer_enrolled_count": 0,
+            "latest_observer_blocked_count": 0,
+            "latest_observer_session_count": 0,
+            "latest_observer_output_count": 0,
+            "latest_observer_drift_event_count": 0,
+            "latest_observer_safety_flag_count": 0,
+            "latest_observer_locked_runtime_count": 0,
+            "paper_observer_warning_count": 0
+        }
+
+    def collect_from_observer_review(self, review: Any) -> None:
+        # Mock logic
+        self.metrics["latest_observer_session_count"] += len(review.sessions)
+        for s in review.sessions:
+            self.metrics["latest_observer_output_count"] += len(s.outputs)
+            self.metrics["latest_observer_drift_event_count"] += len(s.drift_events)
+            self.metrics["latest_observer_safety_flag_count"] += len(s.safety_flags)
+
+    def get_metrics(self) -> Dict[str, int]:
+        return self.metrics.copy()
+
+observer_metrics_collector = PaperObserverMetricsCollector()
