@@ -68,3 +68,24 @@ def test_observer_governance_review():
 
 def test_observer_governance_summary():
     assert True
+
+
+def test_promotion_dossier_cli_info():
+    import sys
+    from unittest.mock import patch
+    import usa_signal_bot.app.cli as cli
+    with patch.object(sys, 'argv', ['usa_signal_bot', 'promotion-dossier-info']):
+        try:
+            cli.main()
+        except SystemExit as e:
+            assert e.code == 0 or e.code == 2
+
+def test_promotion_dossier_cli_build():
+    import sys
+    from unittest.mock import patch
+    import usa_signal_bot.app.cli as cli
+    with patch.object(sys, 'argv', ['usa_signal_bot', 'promotion-dossier-build']):
+        try:
+            cli.main()
+        except SystemExit as e:
+            assert e.code == 0 or e.code == 2

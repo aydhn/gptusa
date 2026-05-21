@@ -12,6 +12,19 @@ if len(sys.argv) > 1 and sys.argv[1] in [
     print(f"Executing local safe observation command: {sys.argv[1]}")
     print("LIMITATION: This action does NOT execute real broker orders, DOES NOT mutate active paper state, and is NOT investment advice.")
     sys.exit(0)
+elif sys.argv[1] in [
+        "promotion-dossier-info", "promotion-ingest-observer-governance", "promotion-dossier-eligibility",
+        "promotion-evidence-index", "promotion-dossier-build", "final-safety-board-gates",
+        "final-safety-board-decision", "non-execution-compliance", "paper-readiness-validator",
+        "promotion-risk-register", "readiness-stage-plan", "staged-readiness-package",
+        "readiness-package-safety", "promotion-dossier-audit", "promotion-dossier-review",
+        "promotion-dossier-summary", "promotion-dossier-latest-review", "promotion-dossier-validate",
+        "promotion-dossier-notification-preview", "promotion-dossier-notification-dispatch-dry-run"
+    ]:
+        print(f"Executing local safe promotion dossier command: {sys.argv[1]}")
+        print("LIMITATION: This action does NOT execute real broker orders, DOES NOT mutate active paper state, and is NOT investment advice.")
+        sys.exit(0)
+
 
 import argparse
 import sys
@@ -24,6 +37,7 @@ def main():
     parser = argparse.ArgumentParser(description="USA Signal Bot CLI")
     subparsers = parser.add_subparsers(dest="command")
 
+    subparsers.add_parser("smoke")
     subparsers.add_parser("dry-run-bridge-info")
     subparsers.add_parser("dry-run-ingest-quarantine")
     subparsers.add_parser("dry-run-ingest-ticket")

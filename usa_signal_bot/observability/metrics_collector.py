@@ -26,3 +26,27 @@ class PaperObserverMetricsCollector:
         return self.metrics.copy()
 
 observer_metrics_collector = PaperObserverMetricsCollector()
+
+
+class PromotionDossierMetricsCollector:
+    def __init__(self):
+        self.metrics = {
+            "latest_promotion_dossier_count": 0,
+            "latest_promotion_dossier_blocked_count": 0,
+            "latest_safety_board_review_count": 0,
+            "latest_safety_board_blocked_count": 0,
+            "latest_readiness_package_count": 0,
+            "latest_readiness_package_blocked_count": 0,
+            "latest_promotion_evidence_missing_count": 0,
+            "latest_promotion_evidence_stale_count": 0,
+            "latest_promotion_safety_flag_count": 0,
+            "promotion_dossier_warning_count": 0
+        }
+
+    def collect(self) -> None:
+        pass
+
+    def get_metrics(self) -> Dict[str, int]:
+        return self.metrics.copy()
+
+promotion_dossier_metrics_collector = PromotionDossierMetricsCollector()
