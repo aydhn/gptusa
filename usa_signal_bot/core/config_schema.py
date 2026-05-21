@@ -214,3 +214,72 @@ class PaperPromotionDossierNotificationsConfig:
     notify_readiness_package_warning: bool = True
     default_channel: str = "dry_run"
     warn_no_real_send_default: bool = True
+
+
+@dataclass
+class PaperReadinessRehearsalConfig:
+    enabled: bool = True
+    write_rehearsal_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_no_broker_execution: bool = True
+    warn_no_real_paper_mutation: bool = True
+    warn_rehearsal_is_not_activation: bool = True
+    warn_final_lock_is_not_deployment_approval: bool = True
+    warn_handoff_registry_is_not_activation: bool = True
+
+@dataclass
+class ReadinessStageRehearsalConfig:
+    enabled: bool = True
+    deterministic_rehearsal: bool = True
+    require_readiness_package: bool = True
+    execution_enabled: bool = False
+    active_paper_enabled: bool = False
+    broker_execution_enabled: bool = False
+    paper_state_mutation_enabled: bool = False
+    config_patch_enabled: bool = False
+
+@dataclass
+class FinalReviewLockConfig:
+    enabled: bool = True
+    require_rehearsal_completed: bool = True
+    lock_is_metadata_only: bool = True
+    allow_active_paper: bool = False
+    allow_broker_execution: bool = False
+    allow_paper_state_mutation: bool = False
+    allow_config_patch: bool = False
+
+@dataclass
+class GuardedHandoffRegistryConfig:
+    enabled: bool = True
+    require_final_review_lock: bool = True
+    require_handoff_evidence_index: bool = True
+    register_is_next_review_only: bool = True
+    allow_active_paper: bool = False
+    allow_broker_execution: bool = False
+    allow_paper_state_mutation: bool = False
+    allow_config_patch: bool = False
+
+@dataclass
+class ReadinessRehearsalSafetyConfig:
+    enabled: bool = True
+    block_on_real_order_risk: bool = True
+    block_on_paper_order_risk: bool = True
+    block_on_broker_order_risk: bool = True
+    block_on_paper_state_mutation_risk: bool = True
+    block_on_telegram_real_send_risk: bool = True
+    block_on_production_config_write_risk: bool = True
+    block_on_active_paper_enable_risk: bool = True
+    block_on_package_activation_risk: bool = True
+    block_on_final_lock_auto_enable_risk: bool = True
+    block_on_handoff_auto_enable_risk: bool = True
+    block_on_secret_risk: bool = True
+
+@dataclass
+class PaperReadinessRehearsalNotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    notify_readiness_rehearsal_report: bool = True
+    notify_final_review_lock_warning: bool = True
+    notify_guarded_handoff_warning: bool = True
+    default_channel: str = "dry_run"
+    warn_no_real_send_default: bool = True

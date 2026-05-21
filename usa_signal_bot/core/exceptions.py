@@ -193,3 +193,22 @@ class PromotionDossierAuditError(PaperPromotionDossierError): pass
 class PromotionDossierStorageError(PaperPromotionDossierError): pass
 class PromotionDossierValidationError(PaperPromotionDossierError): pass
 class PromotionDossierReportingError(PaperPromotionDossierError): pass
+
+
+class PaperReadinessRehearsalError(Exception): pass
+class ReadinessPromotionDossierIngestionError(PaperReadinessRehearsalError): pass
+class ReadinessRehearsalEligibilityError(PaperReadinessRehearsalError): pass
+class StageRehearsalPlannerError(PaperReadinessRehearsalError): pass
+class StageRehearsalRunnerError(PaperReadinessRehearsalError): pass
+class StageSafetyValidatorError(PaperReadinessRehearsalError): pass
+class StageResultAnalyzerError(PaperReadinessRehearsalError): pass
+class FinalReviewLockError(PaperReadinessRehearsalError): pass
+class FinalLockValidatorError(PaperReadinessRehearsalError): pass
+class GuardedHandoffRegistryError(PaperReadinessRehearsalError): pass
+class HandoffRegistryValidationError(PaperReadinessRehearsalError): pass
+class HandoffEvidenceIndexError(PaperReadinessRehearsalError): pass
+class HandoffDecisionMetadataError(PaperReadinessRehearsalError): pass
+class ReadinessRehearsalAuditError(PaperReadinessRehearsalError): pass
+class ReadinessRehearsalStorageError(PaperReadinessRehearsalError): pass
+class ReadinessRehearsalValidationError(PaperReadinessRehearsalError): pass
+class ReadinessRehearsalReportingError(PaperReadinessRehearsalError): pass

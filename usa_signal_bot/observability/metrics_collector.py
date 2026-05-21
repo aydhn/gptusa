@@ -50,3 +50,30 @@ class PromotionDossierMetricsCollector:
         return self.metrics.copy()
 
 promotion_dossier_metrics_collector = PromotionDossierMetricsCollector()
+
+
+class ReadinessRehearsalMetricsCollector:
+    def __init__(self):
+        self.metrics = {
+            "latest_readiness_rehearsal_run_count": 0,
+            "latest_readiness_rehearsal_blocked_count": 0,
+            "latest_stage_rehearsal_completed_count": 0,
+            "latest_stage_rehearsal_failed_count": 0,
+            "latest_final_review_lock_count": 0,
+            "latest_final_review_lock_blocked_count": 0,
+            "latest_guarded_handoff_registered_count": 0,
+            "latest_guarded_handoff_blocked_count": 0,
+            "latest_handoff_evidence_missing_count": 0,
+            "readiness_rehearsal_warning_count": 0
+        }
+
+    def collect_from_review(self, review: Any) -> None:
+        self.metrics["latest_readiness_rehearsal_run_count"] += len(getattr(review, 'rehearsal_runs', []))
+        self.metrics["latest_final_review_lock_count"] += len(getattr(review, 'final_locks', []))
+        self.metrics["latest_guarded_handoff_registered_count"] += len(getattr(review, 'handoff_entries', []))
+        self.metrics["readiness_rehearsal_warning_count"] += len(getattr(review, 'warnings', []))
+
+    def get_metrics(self) -> Dict[str, int]:
+        return self.metrics.copy()
+
+readiness_rehearsal_metrics_collector = ReadinessRehearsalMetricsCollector()

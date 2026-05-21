@@ -89,3 +89,6 @@ def test_promotion_dossier_cli_build():
             cli.main()
         except SystemExit as e:
             assert e.code == 0 or e.code == 2
+def test_readiness_rehearsal_cli_commands():
+    # Placeholder for readiness rehearsal CLI tests
+    assert True

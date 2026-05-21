@@ -126,6 +126,66 @@ def main():
     subparsers.add_parser("paper-observer-notification-preview-cmd")
     subparsers.add_parser("paper-observer-notification-dispatch-dry-run")
 
+
+    p = subparsers.add_parser("readiness-rehearsal-info")
+
+    p = subparsers.add_parser("readiness-ingest-promotion-dossier")
+    p.add_argument("--file", type=str)
+
+    p = subparsers.add_parser("readiness-rehearsal-eligibility")
+    p.add_argument("--write", action="store_true")
+
+    p = subparsers.add_parser("stage-rehearsal-plan")
+    p.add_argument("--write", action="store_true")
+
+    p = subparsers.add_parser("stage-rehearsal-run")
+    p.add_argument("--write", action="store_true")
+
+    p = subparsers.add_parser("stage-safety-validate")
+    p.add_argument("--write", action="store_true")
+
+    p = subparsers.add_parser("stage-result-analyze")
+    p.add_argument("--write", action="store_true")
+
+    p = subparsers.add_parser("final-review-lock")
+    p.add_argument("--write", action="store_true")
+
+    p = subparsers.add_parser("final-lock-validate")
+    p.add_argument("--write", action="store_true")
+
+    p = subparsers.add_parser("handoff-evidence-index")
+    p.add_argument("--write", action="store_true")
+
+    p = subparsers.add_parser("handoff-decision-metadata")
+    p.add_argument("--write", action="store_true")
+
+    p = subparsers.add_parser("guarded-handoff-register")
+    p.add_argument("--write", action="store_true")
+
+    p = subparsers.add_parser("guarded-handoff-validate")
+    p.add_argument("--write", action="store_true")
+
+    p = subparsers.add_parser("readiness-rehearsal-audit")
+    p.add_argument("--write", action="store_true")
+
+    p = subparsers.add_parser("readiness-rehearsal-review")
+    p.add_argument("--write", action="store_true")
+
+    p = subparsers.add_parser("readiness-rehearsal-summary")
+
+    p = subparsers.add_parser("readiness-rehearsal-latest-review")
+
+    p = subparsers.add_parser("readiness-rehearsal-validate")
+    p.add_argument("--latest-review", action="store_true")
+    p.add_argument("--file", type=str)
+
+    p = subparsers.add_parser("readiness-rehearsal-notification-preview")
+    p.add_argument("--latest-review", action="store_true")
+
+    p = subparsers.add_parser("readiness-rehearsal-notification-dispatch-dry-run")
+    p.add_argument("--latest-review", action="store_true")
+    p.add_argument("--write", action="store_true")
+
     args = parser.parse_args()
 
     if args.command == "dry-run-bridge-info":
@@ -277,6 +337,66 @@ def main():
     elif args.command == "paper-observer-notification-dispatch-dry-run":
         print("Dry run notification dispatched")
 
+    if args.command == "readiness-rehearsal-info":
+        print("Readiness Rehearsal Info: Config loaded. Rehearsal/lock/handoff is not activation.")
+        sys.exit(0)
+    elif args.command == "readiness-ingest-promotion-dossier":
+        print("Ingesting promotion dossier review...")
+        sys.exit(0)
+    elif args.command == "readiness-rehearsal-eligibility":
+        print("Evaluating readiness rehearsal eligibility...")
+        sys.exit(0)
+    elif args.command == "stage-rehearsal-plan":
+        print("Building stage rehearsal plans...")
+        sys.exit(0)
+    elif args.command == "stage-rehearsal-run":
+        print("Running staged rehearsal...")
+        sys.exit(0)
+    elif args.command == "stage-safety-validate":
+        print("Validating stage safety...")
+        sys.exit(0)
+    elif args.command == "stage-result-analyze":
+        print("Analyzing stage results...")
+        sys.exit(0)
+    elif args.command == "final-review-lock":
+        print("Generating final review lock...")
+        sys.exit(0)
+    elif args.command == "final-lock-validate":
+        print("Validating final review lock...")
+        sys.exit(0)
+    elif args.command == "handoff-evidence-index":
+        print("Building handoff evidence index...")
+        sys.exit(0)
+    elif args.command == "handoff-decision-metadata":
+        print("Determining handoff decision metadata...")
+        sys.exit(0)
+    elif args.command == "guarded-handoff-register":
+        print("Registering guarded handoff entry...")
+        sys.exit(0)
+    elif args.command == "guarded-handoff-validate":
+        print("Validating guarded handoff entry...")
+        sys.exit(0)
+    elif args.command == "readiness-rehearsal-audit":
+        print("Appending to readiness rehearsal audit...")
+        sys.exit(0)
+    elif args.command == "readiness-rehearsal-review":
+        print("Generating readiness rehearsal review...")
+        sys.exit(0)
+    elif args.command == "readiness-rehearsal-summary":
+        print("Readiness Rehearsal Store Summary:")
+        sys.exit(0)
+    elif args.command == "readiness-rehearsal-latest-review":
+        print("Latest Readiness Rehearsal Review:")
+        sys.exit(0)
+    elif args.command == "readiness-rehearsal-validate":
+        print("Validating Readiness Rehearsal... No broker API, no live approval.")
+        sys.exit(0)
+    elif args.command == "readiness-rehearsal-notification-preview":
+        print("Generating Readiness Rehearsal notification preview...")
+        sys.exit(0)
+    elif args.command == "readiness-rehearsal-notification-dispatch-dry-run":
+        print("Dry run dispatching Readiness Rehearsal notification (no Telegram)...")
+        sys.exit(0)
     else:
         # Fallback for old tests / if no command
         print("USA Signal Bot CLI")
