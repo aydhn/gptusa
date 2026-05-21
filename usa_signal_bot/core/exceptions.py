@@ -35,3 +35,21 @@ class ObservationAuditError(PaperObservationError): pass
 class ObservationStorageError(PaperObservationError): pass
 class ObservationValidationError(PaperObservationError): pass
 class ObservationReportingError(PaperObservationError): pass
+
+# Phase 75: Controlled Paper-Observation Planning Exceptions
+class PaperControlledPlanningError(Exception): pass
+class ControlledPlanningObservationIngestionError(PaperControlledPlanningError): pass
+class ControlledPlanningEligibilityError(PaperControlledPlanningError): pass
+class ControlledPlanningTicketError(PaperControlledPlanningError): pass
+class PaperSnapshotComparatorError(PaperControlledPlanningError): pass
+class PaperAdjacentRehearsalContextError(PaperControlledPlanningError): pass
+class PaperAdjacentProposalError(PaperControlledPlanningError): pass
+class GuardedPaperAdjacentRehearsalError(PaperControlledPlanningError): pass
+class FinalHumanApprovalQueueError(PaperControlledPlanningError): pass
+class ApprovalQueueRegistryError(PaperControlledPlanningError): pass
+class ApprovalQueueValidationError(PaperControlledPlanningError): pass
+class ControlledPlanningSafetyError(PaperControlledPlanningError): pass
+class ControlledPlanningAuditError(PaperControlledPlanningError): pass
+class ControlledPlanningStorageError(PaperControlledPlanningError): pass
+class ControlledPlanningValidationError(PaperControlledPlanningError): pass
+class ControlledPlanningReportingError(PaperControlledPlanningError): pass
