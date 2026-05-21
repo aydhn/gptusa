@@ -1,43 +1,27 @@
-from typing import Any, List
+from typing import Any, Dict
 
-def calculate_quality_scorecard(payload: dict[str, Any]) -> dict[str, Any]:
-    scorecard = {
-        "overall_score": 100,
-        "dry_run_bridge_quality_score": 100,
-        "bridge_telemetry_completeness_score": 100,
-        "dry_run_proposal_safety_score": 100,
-        "human_checkpoint_quality_score": 100,
-        "paper_snapshot_read_only_score": 100,
-        # Phase 74 Extensions
-        "observation_window_quality_score": 100,
-        "checkpoint_history_quality_score": 100,
-        "telemetry_history_quality_score": 100,
-        "quarantine_exit_safety_score": 100,
-        "observation_decision_consistency_score": 100
+def get_paper_observer_quality_dimensions(payload: Dict[str, Any]) -> Dict[str, Any]:
+    dims = {
+        "paper_observer_enrollment_quality_score": 100,
+        "locked_observer_runtime_safety_score": 100,
+        "parallel_monitoring_quality_score": 100,
+        "observer_drift_detection_quality_score": 100,
+        "observer_non_execution_safety_score": 100
     }
 
-    if not payload.get("candidate_id"):
-        scorecard["dry_run_bridge_quality_score"] -= 10
-    if not payload.get("ticket_id"):
-        scorecard["dry_run_bridge_quality_score"] -= 10
+    # Mock integration logic
+    if not payload.get("controlled_planning_review"):
+        dims["paper_observer_enrollment_quality_score"] -= 20
 
-    if payload.get("checkpoint_required", False):
-        if not payload.get("checkpoint_has_notes", False):
-            scorecard["human_checkpoint_quality_score"] -= 20
+    if payload.get("allow_active_paper") is True:
+        dims["locked_observer_runtime_safety_score"] = 0
+        dims["observer_non_execution_safety_score"] = 0
 
-    blocked_count = payload.get("blocked_operation_count", 0)
-    if blocked_count > 0:
-        scorecard["bridge_telemetry_completeness_score"] = min(100, scorecard["bridge_telemetry_completeness_score"] + 10)
-        scorecard["dry_run_proposal_safety_score"] -= (blocked_count * 5)
-        scorecard["quarantine_exit_safety_score"] -= (blocked_count * 5)
+    if payload.get("drifts_detected", 0) > 0:
+        dims["observer_drift_detection_quality_score"] += 10 # completeness
 
-    if payload.get("missing_sessions_warning"):
-        scorecard["observation_window_quality_score"] -= 20
+    return dims
 
-    if payload.get("stale_checkpoint_warning"):
-        scorecard["checkpoint_history_quality_score"] -= 20
-
-    for k in scorecard:
-        scorecard[k] = max(0, scorecard[k])
-
+def enrich_quality_scorecard_with_observer_dims(scorecard: Dict[str, Any], observer_payload: Dict[str, Any]) -> Dict[str, Any]:
+    scorecard.update(get_paper_observer_quality_dimensions(observer_payload))
     return scorecard

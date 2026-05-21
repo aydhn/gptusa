@@ -53,3 +53,67 @@ class ControlledPlanningAuditError(PaperControlledPlanningError): pass
 class ControlledPlanningStorageError(PaperControlledPlanningError): pass
 class ControlledPlanningValidationError(PaperControlledPlanningError): pass
 class ControlledPlanningReportingError(PaperControlledPlanningError): pass
+
+# Phase 76: Paper Observer Exceptions
+class PaperObserverError(Exception):
+    pass
+
+class ObserverControlledPlanningIngestionError(PaperObserverError):
+    pass
+
+class ObserverEligibilityError(PaperObserverError):
+    pass
+
+class ObserverEnrollmentError(PaperObserverError):
+    pass
+
+class LockedObserverPolicyError(PaperObserverError):
+    pass
+
+class ObserverPaperSnapshotError(PaperObserverError):
+    pass
+
+class ObserverRuntimeContextError(PaperObserverError):
+    pass
+
+class ObserverSignalMirrorError(PaperObserverError):
+    pass
+
+class ObserverProposalError(PaperObserverError):
+    pass
+
+class ObserverRiskMirrorError(PaperObserverError):
+    pass
+
+class ObserverNotificationPreviewError(PaperObserverError):
+    pass
+
+class ObserverParallelMonitorError(PaperObserverError):
+    pass
+
+class ObserverDriftDetectionError(PaperObserverError):
+    pass
+
+class ObserverBlockedOperationError(PaperObserverError):
+    pass
+
+class ObserverRuntimeSafetyError(PaperObserverError):
+    pass
+
+class ObserverMonitoringAnalyzerError(PaperObserverError):
+    pass
+
+class ObserverSessionRegistryError(PaperObserverError):
+    pass
+
+class ObserverAuditError(PaperObserverError):
+    pass
+
+class ObserverStorageError(PaperObserverError):
+    pass
+
+class ObserverValidationError(PaperObserverError):
+    pass
+
+class ObserverReportingError(PaperObserverError):
+    pass
