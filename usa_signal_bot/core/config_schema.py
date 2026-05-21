@@ -140,3 +140,77 @@ class PaperObserverGovernanceNotificationsConfig:
     notify_observer_comparison_warning: bool = True
     default_channel: str = "dry_run"
     warn_no_real_send_default: bool = True
+
+@dataclass
+class PaperPromotionDossierConfig:
+    enabled: bool = True
+    write_dossier_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_no_broker_execution: bool = True
+    warn_no_real_paper_mutation: bool = True
+    warn_dossier_is_not_activation: bool = True
+    warn_safety_board_is_not_deployment_approval: bool = True
+    warn_readiness_package_is_metadata_only: bool = True
+
+@dataclass
+class PromotionDossierConfig:
+    enabled: bool = True
+    require_observer_governance_eligible: bool = True
+    require_evidence_index: bool = True
+    require_manual_review: bool = True
+    require_final_safety_board: bool = True
+    allow_active_paper: bool = False
+    allow_broker_execution: bool = False
+    allow_paper_state_mutation: bool = False
+    allow_config_patch: bool = False
+
+@dataclass
+class FinalSafetyBoardConfig:
+    enabled: bool = True
+    conservative_decision_engine: bool = True
+    require_all_safety_gates: bool = True
+    require_evidence_complete: bool = True
+    require_non_execution_compliance: bool = True
+    pass_is_non_executing_readiness_only: bool = True
+    allow_active_paper: bool = False
+    allow_broker_execution: bool = False
+    allow_paper_state_mutation: bool = False
+    allow_config_patch: bool = False
+
+@dataclass
+class StagedPaperReadinessPackageConfig:
+    enabled: bool = True
+    package_is_metadata_only: bool = True
+    execution_enabled: bool = False
+    active_paper_enabled: bool = False
+    broker_execution_enabled: bool = False
+    paper_state_mutation_enabled: bool = False
+    config_patch_enabled: bool = False
+    include_stage_0_dossier_only: bool = True
+    include_stage_1_non_executing_readiness_rehearsal: bool = True
+    include_stage_2_guarded_handoff_review: bool = True
+    include_stage_3_final_locked_review: bool = True
+
+@dataclass
+class PromotionDossierSafetyConfig:
+    enabled: bool = True
+    block_on_real_order_risk: bool = True
+    block_on_paper_order_risk: bool = True
+    block_on_broker_order_risk: bool = True
+    block_on_paper_state_mutation_risk: bool = True
+    block_on_telegram_real_send_risk: bool = True
+    block_on_production_config_write_risk: bool = True
+    block_on_active_paper_enable_risk: bool = True
+    block_on_dossier_auto_enable_risk: bool = True
+    block_on_readiness_package_activation_risk: bool = True
+    block_on_secret_risk: bool = True
+
+@dataclass
+class PaperPromotionDossierNotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    notify_promotion_dossier_report: bool = True
+    notify_final_safety_board_warning: bool = True
+    notify_readiness_package_warning: bool = True
+    default_channel: str = "dry_run"
+    warn_no_real_send_default: bool = True

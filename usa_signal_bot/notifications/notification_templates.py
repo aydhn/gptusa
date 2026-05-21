@@ -63,3 +63,21 @@ def format_observer_comparison_warning_message(reports: list[Any]) -> Any:
 
 def notifications_from_observer_governance_review(review: Any) -> list[Any]:
     return [format_observer_governance_report_message(review)]
+
+
+def format_promotion_dossier_report_message(review: Any) -> NotificationMessage:
+    lines = [
+        "📄 PROMOTION DOSSIER REPORT",
+        f"Review ID: {getattr(review, 'review_id', 'Unknown')}",
+        "LIMITATION: This is NOT an active paper enable or investment advice."
+    ]
+    return NotificationMessage("dry_run", "\n".join(lines))
+
+def format_final_safety_board_warning_message(board_reviews: List[Any]) -> NotificationMessage:
+    return NotificationMessage("dry_run", "FINAL SAFETY BOARD WARNING: Review required.")
+
+def format_readiness_package_warning_message(packages: List[Any]) -> NotificationMessage:
+    return NotificationMessage("dry_run", "READINESS PACKAGE WARNING: Review required.")
+
+def notifications_from_promotion_dossier_review(review: Any) -> List[NotificationMessage]:
+    return [format_promotion_dossier_report_message(review)]

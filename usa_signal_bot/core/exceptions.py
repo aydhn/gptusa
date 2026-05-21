@@ -175,3 +175,21 @@ class ObserverGovernanceValidationError(PaperObserverGovernanceError):
 
 class ObserverGovernanceReportingError(PaperObserverGovernanceError):
     pass
+
+class PaperPromotionDossierError(Exception): pass
+class PromotionDossierIngestionError(PaperPromotionDossierError): pass
+class PromotionDossierEligibilityError(PaperPromotionDossierError): pass
+class PromotionEvidenceIndexError(PaperPromotionDossierError): pass
+class PromotionDossierBuilderError(PaperPromotionDossierError): pass
+class FinalSafetyBoardGateError(PaperPromotionDossierError): pass
+class FinalSafetyBoardDecisionError(PaperPromotionDossierError): pass
+class NonExecutionComplianceError(PaperPromotionDossierError): pass
+class PaperReadinessValidatorError(PaperPromotionDossierError): pass
+class PromotionRiskRegisterError(PaperPromotionDossierError): pass
+class ReadinessStagePlanError(PaperPromotionDossierError): pass
+class StagedReadinessPackageError(PaperPromotionDossierError): pass
+class PromotionPackageSafetyError(PaperPromotionDossierError): pass
+class PromotionDossierAuditError(PaperPromotionDossierError): pass
+class PromotionDossierStorageError(PaperPromotionDossierError): pass
+class PromotionDossierValidationError(PaperPromotionDossierError): pass
+class PromotionDossierReportingError(PaperPromotionDossierError): pass
