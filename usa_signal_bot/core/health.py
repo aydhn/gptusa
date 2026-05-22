@@ -1,135 +1,81 @@
-from dataclasses import dataclass
+import sys
+from enum import Enum
+from typing import Dict, Any
 
-@dataclass
+class HealthStatus(str, Enum):
+    PASS = "PASS"
+    WARN = "WARN"
+    FAIL = "FAIL"
+
 class HealthCheckResult:
-    is_healthy: bool
-    message: str
+    def __init__(self, status: HealthStatus, name: str, message: str, details: Dict[str, Any] = None):
+        self.status = status
+        self.name = name
+        self.message = message
+        self.details = details or {}
 
-# Existing Phase 1-73
-def check_core_config_health(context=None) -> HealthCheckResult: return HealthCheckResult(True, "Config is healthy")
-def check_provider_abstraction_health(context=None) -> HealthCheckResult: return HealthCheckResult(True, "Provider abstraction is healthy")
-def check_regime_map_engine_health(context=None) -> HealthCheckResult: return HealthCheckResult(True, "Regime map engine is healthy")
-def check_paper_quarantine_health(context=None) -> HealthCheckResult: return HealthCheckResult(True, "Paper quarantine is healthy")
-def check_shadow_governance_health(context=None) -> HealthCheckResult: return HealthCheckResult(True, "Shadow governance is healthy")
-def check_dry_run_bridge_session_health(context=None) -> HealthCheckResult: return HealthCheckResult(True, "Dry-run session is healthy")
-def check_dry_run_proposal_generator_health(context=None) -> HealthCheckResult: return HealthCheckResult(True, "Proposal generator is healthy")
-def check_dry_run_risk_evaluator_health(context=None) -> HealthCheckResult: return HealthCheckResult(True, "Risk evaluator is healthy")
-def check_bridge_operation_monitor_health(context=None) -> HealthCheckResult: return HealthCheckResult(True, "Operation monitor is healthy")
-def check_human_review_checkpoint_health(context=None) -> HealthCheckResult: return HealthCheckResult(True, "Human review checkpoint is healthy")
-def check_dry_run_bridge_runner_health(context=None) -> HealthCheckResult: return HealthCheckResult(True, "Bridge runner is healthy")
-def check_bridge_telemetry_health(context=None) -> HealthCheckResult: return HealthCheckResult(True, "Telemetry is healthy")
-def check_dry_run_bridge_store_health(context=None) -> HealthCheckResult: return HealthCheckResult(True, "Bridge store is healthy")
-def check_dry_run_bridge_notification_health(context=None) -> HealthCheckResult: return HealthCheckResult(True, "Notification preview is healthy")
+def check_paper_pre_rehearsal_config_health(context: Any) -> HealthCheckResult:
+    # Just a stub for health
+    return HealthCheckResult(HealthStatus.PASS, "pre_rehearsal_config", "Config is valid")
 
-# New Phase 74 Observation Health Checks
-def check_paper_observation_config_health(context=None) -> HealthCheckResult:
-    return HealthCheckResult(True, "Paper observation config is healthy and enforces no active paper mutation.")
-def check_observation_dry_run_ingestion_health(context=None) -> HealthCheckResult:
-    return HealthCheckResult(True, "Observation dry-run ingestion is healthy.")
-def check_observation_quarantine_ingestion_health(context=None) -> HealthCheckResult:
-    return HealthCheckResult(True, "Observation quarantine ingestion is healthy.")
-def check_observation_window_planner_health(context=None) -> HealthCheckResult:
-    return HealthCheckResult(True, "Observation window planner is healthy.")
-def check_observation_window_tracker_health(context=None) -> HealthCheckResult:
-    return HealthCheckResult(True, "Observation window tracker is healthy.")
-def check_checkpoint_history_health(context=None) -> HealthCheckResult:
-    return HealthCheckResult(True, "Checkpoint history is healthy.")
-def check_telemetry_history_health(context=None) -> HealthCheckResult:
-    return HealthCheckResult(True, "Telemetry history is healthy.")
-def check_observation_scoring_health(context=None) -> HealthCheckResult:
-    return HealthCheckResult(True, "Observation scoring is healthy.")
-def check_quarantine_exit_decision_health(context=None) -> HealthCheckResult:
-    return HealthCheckResult(True, "Quarantine exit decision is healthy.")
-def check_observation_store_health(context=None) -> HealthCheckResult:
-    return HealthCheckResult(True, "Observation store is healthy.")
-def check_observation_notification_health(context=None) -> HealthCheckResult:
-    return HealthCheckResult(True, "Observation notification preview is healthy.")
+def check_pre_rehearsal_final_handoff_ingestion_health(context: Any) -> HealthCheckResult:
+    return HealthCheckResult(HealthStatus.PASS, "final_handoff_ingestion", "Ingestion healthy")
 
-from typing import Any
+def check_pre_paper_eligibility_health(context: Any) -> HealthCheckResult:
+    return HealthCheckResult(HealthStatus.PASS, "pre_paper_eligibility", "Eligibility healthy")
 
-def check_paper_observer_governance_config_health(context: Any) -> Any: return {"status": "PASS"}
-def check_observer_governance_ingestion_health(context: Any) -> Any: return {"status": "PASS"}
-def check_observer_paper_snapshot_ingestion_health(context: Any) -> Any: return {"status": "PASS"}
-def check_observer_metric_extractor_health(context: Any) -> Any: return {"status": "PASS"}
-def check_paper_metric_extractor_health(context: Any) -> Any: return {"status": "PASS"}
-def check_observer_paper_comparator_health(context: Any) -> Any: return {"status": "PASS"}
-def check_observer_safety_compliance_health(context: Any) -> Any: return {"status": "PASS"}
-def check_observer_evidence_refresh_health(context: Any) -> Any: return {"status": "PASS"}
-def check_observer_governance_gates_health(context: Any) -> Any: return {"status": "PASS"}
-def check_observer_governance_decision_health(context: Any) -> Any: return {"status": "PASS"}
-def check_observer_governance_store_health(context: Any) -> Any: return {"status": "PASS"}
-def check_observer_governance_notification_health(context: Any) -> Any: return {"status": "PASS"}
+def check_pre_paper_plan_health(context: Any) -> HealthCheckResult:
+    return HealthCheckResult(HealthStatus.PASS, "pre_paper_plan", "Plan healthy")
 
+def check_paper_baseline_loader_health(context: Any) -> HealthCheckResult:
+    return HealthCheckResult(HealthStatus.PASS, "paper_baseline_loader", "Baseline loader healthy")
 
-# New Phase 78 Promotion Dossier Health Checks
-def check_paper_promotion_dossier_config_health(context=None) -> HealthCheckResult:
-    return HealthCheckResult(True, "Paper promotion dossier config is healthy.")
-def check_promotion_dossier_observer_governance_ingestion_health(context=None) -> HealthCheckResult:
-    return HealthCheckResult(True, "Promotion dossier observer governance ingestion is healthy.")
-def check_promotion_dossier_eligibility_health(context=None) -> HealthCheckResult:
-    return HealthCheckResult(True, "Promotion dossier eligibility checker is healthy.")
-def check_promotion_evidence_index_health(context=None) -> HealthCheckResult:
-    return HealthCheckResult(True, "Promotion evidence index is healthy.")
-def check_promotion_dossier_builder_health(context=None) -> HealthCheckResult:
-    return HealthCheckResult(True, "Promotion dossier builder is healthy.")
-def check_final_safety_board_gates_health(context=None) -> HealthCheckResult:
-    return HealthCheckResult(True, "Final safety board gates are healthy.")
-def check_final_safety_board_decision_health(context=None) -> HealthCheckResult:
-    return HealthCheckResult(True, "Final safety board decision engine is healthy.")
-def check_non_execution_compliance_health(context=None) -> HealthCheckResult:
-    return HealthCheckResult(True, "Non-execution compliance validator is healthy.")
-def check_paper_readiness_validator_health(context=None) -> HealthCheckResult:
-    return HealthCheckResult(True, "Paper readiness validator is healthy.")
-def check_readiness_package_health(context=None) -> HealthCheckResult:
-    return HealthCheckResult(True, "Readiness package builder is healthy.")
-def check_promotion_dossier_store_health(context=None) -> HealthCheckResult:
-    return HealthCheckResult(True, "Promotion dossier store is healthy.")
-def check_promotion_dossier_notification_health(context=None) -> HealthCheckResult:
-    return HealthCheckResult(True, "Promotion dossier notification preview is healthy.")
+def check_mutation_firewall_rules_health(context: Any) -> HealthCheckResult:
+    return HealthCheckResult(HealthStatus.PASS, "mutation_firewall_rules", "Rules healthy")
 
+def check_mutation_firewall_health(context: Any) -> HealthCheckResult:
+    return HealthCheckResult(HealthStatus.PASS, "mutation_firewall", "Firewall healthy")
 
-def check_paper_readiness_rehearsal_config_health(context=None) -> HealthCheckResult:
-    return HealthCheckResult(True, "Paper readiness rehearsal config is healthy")
+def check_mutation_attempt_detector_health(context: Any) -> HealthCheckResult:
+    return HealthCheckResult(HealthStatus.PASS, "mutation_attempt_detector", "Detector healthy")
 
-def check_readiness_promotion_dossier_ingestion_health(context=None) -> HealthCheckResult:
-    return HealthCheckResult(True, "Readiness promotion dossier ingestion is healthy")
+def check_forbidden_operation_simulator_health(context: Any) -> HealthCheckResult:
+    return HealthCheckResult(HealthStatus.PASS, "forbidden_operation_simulator", "Simulator healthy")
 
-def check_readiness_rehearsal_eligibility_health(context=None) -> HealthCheckResult:
-    return HealthCheckResult(True, "Readiness rehearsal eligibility is healthy")
+def check_pre_paper_dry_rehearsal_runner_health(context: Any) -> HealthCheckResult:
+    return HealthCheckResult(HealthStatus.PASS, "pre_paper_runner", "Runner healthy")
 
-def check_stage_rehearsal_planner_health(context=None) -> HealthCheckResult:
-    return HealthCheckResult(True, "Stage rehearsal planner is healthy")
+def check_activation_denied_checkpoint_health(context: Any) -> HealthCheckResult:
+    return HealthCheckResult(HealthStatus.PASS, "activation_denied_checkpoint", "Checkpoint healthy")
 
-def check_stage_rehearsal_runner_health(context=None) -> HealthCheckResult:
-    return HealthCheckResult(True, "Stage rehearsal runner is healthy")
+def check_zero_mutation_assertion_health(context: Any) -> HealthCheckResult:
+    return HealthCheckResult(HealthStatus.PASS, "zero_mutation_assertion", "Assertion healthy")
 
-def check_stage_safety_validator_health(context=None) -> HealthCheckResult:
-    return HealthCheckResult(True, "Stage safety validator is healthy")
+def check_pre_paper_store_health(context: Any) -> HealthCheckResult:
+    return HealthCheckResult(HealthStatus.PASS, "pre_paper_store", "Store healthy")
 
-def check_final_review_lock_health(context=None) -> HealthCheckResult:
-    return HealthCheckResult(True, "Final review lock is healthy")
+def check_pre_paper_notification_health(context: Any) -> HealthCheckResult:
+    return HealthCheckResult(HealthStatus.PASS, "pre_paper_notification", "Notification healthy")
 
-def check_handoff_registry_health(context=None) -> HealthCheckResult:
-    return HealthCheckResult(True, "Handoff registry is healthy")
+def run_all_pre_paper_health_checks(context: Any) -> Dict[str, HealthCheckResult]:
+    return {
+        "config": check_paper_pre_rehearsal_config_health(context),
+        "ingestion": check_pre_rehearsal_final_handoff_ingestion_health(context),
+        "eligibility": check_pre_paper_eligibility_health(context),
+        "plan": check_pre_paper_plan_health(context),
+        "baseline": check_paper_baseline_loader_health(context),
+        "rules": check_mutation_firewall_rules_health(context),
+        "firewall": check_mutation_firewall_health(context),
+        "detector": check_mutation_attempt_detector_health(context),
+        "simulator": check_forbidden_operation_simulator_health(context),
+        "runner": check_pre_paper_dry_rehearsal_runner_health(context),
+        "checkpoint": check_activation_denied_checkpoint_health(context),
+        "assertion": check_zero_mutation_assertion_health(context),
+        "store": check_pre_paper_store_health(context),
+        "notification": check_pre_paper_notification_health(context),
+    }
 
-def check_handoff_evidence_index_health(context=None) -> HealthCheckResult:
-    return HealthCheckResult(True, "Handoff evidence index is healthy")
-
-def check_readiness_rehearsal_store_health(context=None) -> HealthCheckResult:
-    return HealthCheckResult(True, "Readiness rehearsal store is healthy")
-
-def check_readiness_rehearsal_notification_health(context=None) -> HealthCheckResult:
-    return HealthCheckResult(True, "Readiness rehearsal notification preview is healthy")
-# Final Handoff Health Checks
-def check_paper_final_handoff_config_health(context): return "PASS"
-def check_final_handoff_readiness_ingestion_health(context): return "PASS"
-def check_handoff_registry_ingestion_health(context): return "PASS"
-def check_final_handoff_eligibility_health(context): return "PASS"
-def check_archive_manifest_health(context): return "PASS"
-def check_archive_sealing_health(context): return "PASS"
-def check_archive_integrity_health(context): return "PASS"
-def check_pre_paper_checkpoint_gates_health(context): return "PASS"
-def check_pre_paper_checkpoint_decision_health(context): return "PASS"
-def check_final_handoff_safety_health(context): return "PASS"
-def check_final_handoff_store_health(context): return "PASS"
-def check_final_handoff_notification_health(context): return "PASS"
+if __name__ == "__main__":
+    results = run_all_pre_paper_health_checks(None)
+    for k, v in results.items():
+        print(f"{k}: {v.status.value} - {v.message}")

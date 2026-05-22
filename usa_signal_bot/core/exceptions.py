@@ -1,3 +1,6 @@
+class USASignalBotError(Exception):
+    pass
+
 class BaseProjectError(Exception):
     pass
 
@@ -260,4 +263,114 @@ class FinalHandoffValidationError(PaperFinalHandoffError):
     pass
 
 class FinalHandoffReportingError(PaperFinalHandoffError):
+    pass
+
+class PaperPreRehearsalError(USASignalBotError):
+    """Base exception for pre-paper dry rehearsal errors."""
+    pass
+
+class PreRehearsalFinalHandoffIngestionError(PaperPreRehearsalError):
+    pass
+
+class PrePaperEligibilityError(PaperPreRehearsalError):
+    pass
+
+class PrePaperDryRehearsalPlanError(PaperPreRehearsalError):
+    pass
+
+class PaperBaselineLoaderError(PaperPreRehearsalError):
+    pass
+
+class MutationFirewallRuleError(PaperPreRehearsalError):
+    pass
+
+class PaperStateMutationFirewallError(PaperPreRehearsalError):
+    pass
+
+class MutationAttemptDetectorError(PaperPreRehearsalError):
+    pass
+
+class ForbiddenOperationSimulatorError(PaperPreRehearsalError):
+    pass
+
+class PrePaperDryRehearsalRunnerError(PaperPreRehearsalError):
+    pass
+
+class RehearsalOutputAnalyzerError(PaperPreRehearsalError):
+    pass
+
+class ActivationDeniedCheckpointError(PaperPreRehearsalError):
+    pass
+
+class ActivationCheckpointValidationError(PaperPreRehearsalError):
+    pass
+
+class ZeroMutationAssertionError(PaperPreRehearsalError):
+    pass
+
+class PrePaperAuditError(PaperPreRehearsalError):
+    pass
+
+class PrePaperStorageError(PaperPreRehearsalError):
+    pass
+
+class PrePaperValidationError(PaperPreRehearsalError):
+    pass
+
+class PrePaperReportingError(PaperPreRehearsalError):
+    pass
+
+class PaperPreRehearsalError(USASignalBotError):
+    """Base exception for pre-paper dry rehearsal errors."""
+    pass
+
+class PreRehearsalFinalHandoffIngestionError(PaperPreRehearsalError):
+    pass
+
+class PrePaperEligibilityError(PaperPreRehearsalError):
+    pass
+
+class PrePaperDryRehearsalPlanError(PaperPreRehearsalError):
+    pass
+
+class PaperBaselineLoaderError(PaperPreRehearsalError):
+    pass
+
+class MutationFirewallRuleError(PaperPreRehearsalError):
+    pass
+
+class PaperStateMutationFirewallError(PaperPreRehearsalError):
+    pass
+
+class MutationAttemptDetectorError(PaperPreRehearsalError):
+    pass
+
+class ForbiddenOperationSimulatorError(PaperPreRehearsalError):
+    pass
+
+class PrePaperDryRehearsalRunnerError(PaperPreRehearsalError):
+    pass
+
+class RehearsalOutputAnalyzerError(PaperPreRehearsalError):
+    pass
+
+class ActivationDeniedCheckpointError(PaperPreRehearsalError):
+    pass
+
+class ActivationCheckpointValidationError(PaperPreRehearsalError):
+    pass
+
+class ZeroMutationAssertionError(PaperPreRehearsalError):
+    pass
+
+class PrePaperAuditError(PaperPreRehearsalError):
+    pass
+
+class PrePaperStorageError(PaperPreRehearsalError):
+    pass
+
+class PrePaperValidationError(PaperPreRehearsalError):
+    pass
+
+class PrePaperReportingError(PaperPreRehearsalError):
     pass

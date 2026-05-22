@@ -355,3 +355,80 @@ class PaperFinalHandoffNotificationsConfig:
     notify_pre_paper_checkpoint_warning: bool = True
     default_channel: str = "dry_run"
     warn_no_real_send_default: bool = True
+
+@dataclass
+class PaperPreRehearsalConfig:
+    enabled: bool = True
+    write_pre_rehearsal_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_no_broker_execution: bool = True
+    warn_no_real_paper_mutation: bool = True
+    warn_pre_paper_rehearsal_is_not_activation: bool = True
+    warn_firewall_is_metadata_only: bool = True
+    warn_activation_denied_checkpoint_is_not_activation: bool = True
+
+@dataclass
+class PrePaperDryRehearsalConfig:
+    enabled: bool = True
+    deterministic_rehearsal: bool = True
+    require_final_handoff_checkpoint: bool = True
+    require_sealed_archive: bool = True
+    require_mutation_firewall: bool = True
+    require_activation_denied_checkpoint: bool = True
+    execution_enabled: bool = False
+    active_paper_enabled: bool = False
+    broker_execution_enabled: bool = False
+    paper_state_mutation_enabled: bool = False
+    config_patch_enabled: bool = False
+    telegram_real_send_enabled: bool = False
+
+@dataclass
+class PaperStateMutationFirewallConfig:
+    enabled: bool = True
+    deny_paper_state_write: bool = True
+    deny_paper_order_create: bool = True
+    deny_position_mutation: bool = True
+    deny_portfolio_mutation: bool = True
+    deny_cash_mutation: bool = True
+    deny_equity_mutation: bool = True
+    deny_broker_order_send: bool = True
+    deny_telegram_real_send: bool = True
+    deny_config_patch: bool = True
+    deny_active_paper_enable: bool = True
+    deny_archive_unlock: bool = True
+    deny_final_lock_unlock: bool = True
+    simulate_forbidden_attempts: bool = True
+
+@dataclass
+class ActivationDeniedCheckpointConfig:
+    enabled: bool = True
+    activation_denied_by_default: bool = True
+    allow_active_paper: bool = False
+    allow_broker_execution: bool = False
+    allow_paper_state_mutation: bool = False
+    allow_config_patch: bool = False
+    allow_telegram_real_send: bool = False
+
+@dataclass
+class PrePaperRehearsalSafetyConfig:
+    enabled: bool = True
+    block_on_real_order_risk: bool = True
+    block_on_paper_order_risk: bool = True
+    block_on_broker_order_risk: bool = True
+    block_on_paper_state_mutation_risk: bool = True
+    block_on_telegram_real_send_risk: bool = True
+    block_on_production_config_write_risk: bool = True
+    block_on_active_paper_enable_risk: bool = True
+    block_on_firewall_disabled_risk: bool = True
+    block_on_activation_allowed_risk: bool = True
+    block_on_secret_risk: bool = True
+
+@dataclass
+class PaperPreRehearsalNotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    notify_pre_paper_rehearsal_report: bool = True
+    notify_mutation_firewall_warning: bool = True
+    notify_activation_denied_checkpoint_warning: bool = True
+    default_channel: str = "dry_run"
+    warn_no_real_send_default: bool = True

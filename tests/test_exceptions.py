@@ -1,3 +1,4 @@
+from usa_signal_bot.core.exceptions import USASignalBotError
 import pytest
 from usa_signal_bot.core.exceptions import (
     USASignalBotError, ConfigError, PathError, DataValidationError, UnsupportedOperationError,
