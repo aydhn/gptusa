@@ -1,3 +1,6 @@
+class BaseProjectError(Exception):
+    pass
+
 class PaperDryRunBridgeError(Exception): pass
 class DryRunQuarantineIngestionError(Exception): pass
 class DryRunTicketIngestionError(Exception): pass
@@ -212,3 +215,49 @@ class ReadinessRehearsalAuditError(PaperReadinessRehearsalError): pass
 class ReadinessRehearsalStorageError(PaperReadinessRehearsalError): pass
 class ReadinessRehearsalValidationError(PaperReadinessRehearsalError): pass
 class ReadinessRehearsalReportingError(PaperReadinessRehearsalError): pass
+
+
+class PaperFinalHandoffError(BaseProjectError):
+    pass
+
+class FinalHandoffReadinessIngestionError(PaperFinalHandoffError):
+    pass
+
+class HandoffRegistryIngestionError(PaperFinalHandoffError):
+    pass
+
+class FinalHandoffEligibilityError(PaperFinalHandoffError):
+    pass
+
+class ArchiveManifestError(PaperFinalHandoffError):
+    pass
+
+class ArchiveSealingError(PaperFinalHandoffError):
+    pass
+
+class ArchiveIntegrityError(PaperFinalHandoffError):
+    pass
+
+class PrePaperCheckpointGateError(PaperFinalHandoffError):
+    pass
+
+class PrePaperCheckpointDecisionError(PaperFinalHandoffError):
+    pass
+
+class FinalHandoffNonExecutionComplianceError(PaperFinalHandoffError):
+    pass
+
+class FinalHandoffSafetyError(PaperFinalHandoffError):
+    pass
+
+class FinalHandoffAuditError(PaperFinalHandoffError):
+    pass
+
+class FinalHandoffStorageError(PaperFinalHandoffError):
+    pass
+
+class FinalHandoffValidationError(PaperFinalHandoffError):
+    pass
+
+class FinalHandoffReportingError(PaperFinalHandoffError):
+    pass

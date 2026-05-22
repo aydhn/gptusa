@@ -283,3 +283,75 @@ class PaperReadinessRehearsalNotificationsConfig:
     notify_guarded_handoff_warning: bool = True
     default_channel: str = "dry_run"
     warn_no_real_send_default: bool = True
+
+@dataclass
+class PaperFinalHandoffConfig:
+    enabled: bool = True
+    write_final_handoff_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_no_broker_execution: bool = True
+    warn_no_real_paper_mutation: bool = True
+    warn_handoff_review_is_not_activation: bool = True
+    warn_sealed_archive_is_not_deployment_package: bool = True
+    warn_pre_paper_checkpoint_is_not_activation: bool = True
+
+@dataclass
+class FinalHandoffReviewConfig:
+    enabled: bool = True
+    require_guarded_handoff_entry: bool = True
+    require_final_review_lock: bool = True
+    require_rehearsal_run: bool = True
+    require_manual_review: bool = True
+    allow_active_paper: bool = False
+    allow_broker_execution: bool = False
+    allow_paper_state_mutation: bool = False
+    allow_config_patch: bool = False
+
+@dataclass
+class SealedReadinessArchiveConfig:
+    enabled: bool = True
+    require_archive_manifest: bool = True
+    require_archive_hash: bool = True
+    sealed_by_default: bool = True
+    immutable_by_default: bool = True
+    archive_is_metadata_only: bool = True
+    allow_active_paper: bool = False
+    allow_broker_execution: bool = False
+    allow_paper_state_mutation: bool = False
+    allow_config_patch: bool = False
+
+@dataclass
+class PrePaperGovernanceCheckpointConfig:
+    enabled: bool = True
+    conservative_decision_engine: bool = True
+    require_archive_integrity_pass: bool = True
+    require_all_safety_gates: bool = True
+    pass_is_guarded_pre_paper_dry_rehearsal_only: bool = True
+    allow_active_paper: bool = False
+    allow_broker_execution: bool = False
+    allow_paper_state_mutation: bool = False
+    allow_config_patch: bool = False
+
+@dataclass
+class FinalHandoffSafetyConfig:
+    enabled: bool = True
+    block_on_real_order_risk: bool = True
+    block_on_paper_order_risk: bool = True
+    block_on_broker_order_risk: bool = True
+    block_on_paper_state_mutation_risk: bool = True
+    block_on_telegram_real_send_risk: bool = True
+    block_on_production_config_write_risk: bool = True
+    block_on_active_paper_enable_risk: bool = True
+    block_on_archive_auto_enable_risk: bool = True
+    block_on_checkpoint_auto_enable_risk: bool = True
+    block_on_secret_risk: bool = True
+
+@dataclass
+class PaperFinalHandoffNotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    notify_final_handoff_report: bool = True
+    notify_sealed_archive_warning: bool = True
+    notify_pre_paper_checkpoint_warning: bool = True
+    default_channel: str = "dry_run"
+    warn_no_real_send_default: bool = True
