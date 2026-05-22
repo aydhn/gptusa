@@ -414,3 +414,60 @@ class PaperReadinessBoardAuditError(PaperReadinessBoardError): pass
 class PaperReadinessBoardStorageError(PaperReadinessBoardError): pass
 class PaperReadinessBoardValidationError(PaperReadinessBoardError): pass
 class PaperReadinessBoardReportingError(PaperReadinessBoardError): pass
+
+class PaperNoWriteAdmissionError(USASignalBotError):
+    pass
+
+class NoWriteBoardIngestionError(PaperNoWriteAdmissionError):
+    pass
+
+class NoWriteEligibilityError(PaperNoWriteAdmissionError):
+    pass
+
+class NoWriteContractClauseError(PaperNoWriteAdmissionError):
+    pass
+
+class NoWriteAdmissionContractError(PaperNoWriteAdmissionError):
+    pass
+
+class NoWriteContractValidationError(PaperNoWriteAdmissionError):
+    pass
+
+class ActivationReplayPlanError(PaperNoWriteAdmissionError):
+    pass
+
+class ActivationReplayEngineError(PaperNoWriteAdmissionError):
+    pass
+
+class ActivationReplayAnalyzerError(PaperNoWriteAdmissionError):
+    pass
+
+class PaperModePreflightPlanError(PaperNoWriteAdmissionError):
+    pass
+
+class PaperModeSimulationRunnerError(PaperNoWriteAdmissionError):
+    pass
+
+class PaperModeOutputAnalyzerError(PaperNoWriteAdmissionError):
+    pass
+
+class RuntimeWriteLockAssertionError(PaperNoWriteAdmissionError):
+    pass
+
+class NoWriteInvariantCheckerError(PaperNoWriteAdmissionError):
+    pass
+
+class PreflightSafetyValidatorError(PaperNoWriteAdmissionError):
+    pass
+
+class NoWriteAdmissionAuditError(PaperNoWriteAdmissionError):
+    pass
+
+class NoWriteAdmissionStorageError(PaperNoWriteAdmissionError):
+    pass
+
+class NoWriteAdmissionValidationError(PaperNoWriteAdmissionError):
+    pass
+
+class NoWriteAdmissionReportingError(PaperNoWriteAdmissionError):
+    pass
