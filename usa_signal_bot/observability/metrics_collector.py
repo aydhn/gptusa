@@ -77,3 +77,22 @@ class ReadinessRehearsalMetricsCollector:
         return self.metrics.copy()
 
 readiness_rehearsal_metrics_collector = ReadinessRehearsalMetricsCollector()
+
+class FinalHandoffMetrics:
+    pass # placeholder for integration
+
+class MetricsCollector:
+    def __init__(self):
+        self.metrics = {}
+    def record_final_handoff_metrics(self):
+        self.metrics.update({
+            "latest_final_handoff_review_count": 0,
+            "latest_final_handoff_blocked_count": 0,
+            "latest_sealed_archive_count": 0,
+            "latest_archive_integrity_failed_count": 0,
+            "latest_pre_paper_checkpoint_count": 0,
+            "latest_pre_paper_checkpoint_blocked_count": 0,
+            "latest_pre_paper_checkpoint_passed_count": 0,
+            "latest_final_handoff_safety_flag_count": 0,
+            "final_handoff_warning_count": 0
+        })
