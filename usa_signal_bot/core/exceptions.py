@@ -471,3 +471,21 @@ class NoWriteAdmissionValidationError(PaperNoWriteAdmissionError):
 
 class NoWriteAdmissionReportingError(PaperNoWriteAdmissionError):
     pass
+
+class PaperDryAdmissionError(USASignalBotError): pass
+class DryAdmissionNoWriteIngestionError(USASignalBotError): pass
+class DryAdmissionEligibilityError(USASignalBotError): pass
+class DryAdmissionPlanError(USASignalBotError): pass
+class DryAdmissionRunnerError(USASignalBotError): pass
+class DryAdmissionOutputAnalyzerError(USASignalBotError): pass
+class RuntimeWriteLockProofRefreshError(USASignalBotError): pass
+class WriteLockRefreshValidationError(USASignalBotError): pass
+class HumanApprovalLedgerError(USASignalBotError): pass
+class HumanApprovalValidationError(USASignalBotError): pass
+class ApprovalReconciliationError(USASignalBotError): pass
+class NoWriteContinuityError(USASignalBotError): pass
+class DryAdmissionSafetyValidatorError(USASignalBotError): pass
+class DryAdmissionAuditError(USASignalBotError): pass
+class DryAdmissionStorageError(USASignalBotError): pass
+class DryAdmissionValidationError(USASignalBotError): pass
+class DryAdmissionReportingError(USASignalBotError): pass

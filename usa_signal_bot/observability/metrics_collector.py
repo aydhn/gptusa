@@ -12,3 +12,17 @@ def collect_pre_paper_rehearsal_metrics() -> Dict[str, Any]:
         "latest_pre_paper_safety_flag_count": 0,
         "pre_paper_rehearsal_warning_count": 0
     }
+
+def collect_dry_admission_metrics(review_payload: dict) -> dict:
+    return {
+        "latest_dry_admission_run_count": len(review_payload.get("runs", [])),
+        "latest_dry_admission_blocked_count": sum(1 for r in review_payload.get("runs", []) if r.get("status") == "BLOCKED"),
+        "latest_dry_admission_write_attempt_count": 0,
+        "latest_write_lock_refresh_count": len(review_payload.get("write_lock_refreshes", [])),
+        "latest_write_lock_refresh_failed_count": sum(1 for w in review_payload.get("write_lock_refreshes", []) if w.get("status") == "FAILED"),
+        "latest_human_approval_ledger_count": len(review_payload.get("human_ledgers", [])),
+        "latest_human_ledger_activation_risk_count": sum(1 for l in review_payload.get("human_ledgers", []) if l.get("activation_allowed")),
+        "latest_no_write_continuity_failure_count": 0,
+        "latest_dry_admission_safety_flag_count": len(review_payload.get("warnings", [])),
+        "dry_admission_warning_count": len(review_payload.get("warnings", []))
+    }

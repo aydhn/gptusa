@@ -781,3 +781,86 @@ class Config:
 
     def validate(self) -> None:
         pass
+
+@dataclass
+class PaperDryAdmissionConfig:
+    enabled: bool = True
+    write_dry_admission_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_no_broker_execution: bool = True
+    warn_no_real_paper_mutation: bool = True
+    warn_dry_admission_is_not_activation: bool = True
+    warn_write_lock_refresh_is_metadata_only: bool = True
+    warn_human_approval_ledger_is_not_activation: bool = True
+
+@dataclass
+class PaperModeDryAdmissionRehearsalConfig:
+    enabled: bool = True
+    deterministic_rehearsal: bool = True
+    require_no_write_admission_review: bool = True
+    require_no_write_contract: bool = True
+    require_write_lock_refresh: bool = True
+    require_human_ledger: bool = True
+    require_activation_denied: bool = True
+    activation_allowed: bool = False
+    execution_enabled: bool = False
+    active_paper_enabled: bool = False
+    broker_execution_enabled: bool = False
+    paper_state_mutation_enabled: bool = False
+    config_patch_enabled: bool = False
+    telegram_real_send_enabled: bool = False
+
+@dataclass
+class RuntimeWriteLockProofRefreshConfig:
+    enabled: bool = True
+    refresh_is_metadata_only: bool = True
+    require_hash_unchanged: bool = True
+    require_all_writes_blocked: bool = True
+    require_unblocked_write_attempt_count_zero: bool = True
+    block_on_hash_changed: bool = True
+    block_on_mutation_detected: bool = True
+    block_on_unblocked_write_attempt: bool = True
+    allow_active_paper: bool = False
+    allow_broker_execution: bool = False
+    allow_paper_state_mutation: bool = False
+    allow_config_patch: bool = False
+    allow_telegram_real_send: bool = False
+
+@dataclass
+class HumanApprovalLedgerConfig:
+    enabled: bool = True
+    ledger_is_metadata_only: bool = True
+    require_no_write_acknowledgement: bool = True
+    require_not_activation_acknowledgement: bool = True
+    require_manual_review: bool = True
+    activation_allowed: bool = False
+    allow_active_paper: bool = False
+    allow_broker_execution: bool = False
+    allow_paper_state_mutation: bool = False
+    allow_config_patch: bool = False
+    allow_telegram_real_send: bool = False
+
+@dataclass
+class DryAdmissionSafetyConfig:
+    enabled: bool = True
+    block_on_real_order_risk: bool = True
+    block_on_paper_order_risk: bool = True
+    block_on_broker_order_risk: bool = True
+    block_on_paper_state_mutation_risk: bool = True
+    block_on_telegram_real_send_risk: bool = True
+    block_on_production_config_write_risk: bool = True
+    block_on_active_paper_enable_risk: bool = True
+    block_on_activation_allowed_risk: bool = True
+    block_on_write_lock_refresh_failed: bool = True
+    block_on_human_ledger_activation_risk: bool = True
+    block_on_secret_risk: bool = True
+
+@dataclass
+class PaperDryAdmissionNotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    notify_dry_admission_report: bool = True
+    notify_write_lock_refresh_warning: bool = True
+    notify_human_approval_ledger_warning: bool = True
+    default_channel: str = "dry_run"
+    warn_no_real_send_default: bool = True
