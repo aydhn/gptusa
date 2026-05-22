@@ -525,3 +525,78 @@ class PaperFirewallAuditNotificationsConfig:
     notify_readiness_evidence_refresh_warning: bool = True
     default_channel: str = "dry_run"
     warn_no_real_send_default: bool = True
+
+
+@dataclass
+class PaperReadinessConfirmationConfig:
+    enabled: bool = True
+    write_confirmation_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_no_broker_execution: bool = True
+    warn_no_real_paper_mutation: bool = True
+    warn_confirmation_is_not_activation: bool = True
+    warn_human_review_bundle_is_not_activation: bool = True
+    warn_activation_still_denied_registry_is_not_activation: bool = True
+
+@dataclass
+class ReadinessConfirmationQueueConfig:
+    enabled: bool = True
+    require_firewall_audit_review: bool = True
+    require_zero_mutation_audit: bool = True
+    require_activation_denied_checkpoint: bool = True
+    require_human_review: bool = True
+    activation_denied_required: bool = True
+    activation_allowed: bool = False
+    allow_active_paper: bool = False
+    allow_broker_execution: bool = False
+    allow_paper_state_mutation: bool = False
+    allow_config_patch: bool = False
+    allow_telegram_real_send: bool = False
+
+@dataclass
+class HumanReviewBundleConfig:
+    enabled: bool = True
+    require_checklist: bool = True
+    require_reviewer_notes_placeholder: bool = True
+    require_evidence_refs: bool = True
+    bundle_is_metadata_only: bool = True
+    allow_active_paper: bool = False
+    allow_broker_execution: bool = False
+    allow_paper_state_mutation: bool = False
+    allow_config_patch: bool = False
+    allow_telegram_real_send: bool = False
+
+@dataclass
+class ActivationStillDeniedRegistryConfig:
+    enabled: bool = True
+    activation_denied_by_default: bool = True
+    activation_allowed: bool = False
+    register_is_review_only: bool = True
+    allow_active_paper: bool = False
+    allow_broker_execution: bool = False
+    allow_paper_state_mutation: bool = False
+    allow_config_patch: bool = False
+    allow_telegram_real_send: bool = False
+
+@dataclass
+class ReadinessConfirmationSafetyConfig:
+    enabled: bool = True
+    block_on_real_order_risk: bool = True
+    block_on_paper_order_risk: bool = True
+    block_on_broker_order_risk: bool = True
+    block_on_paper_state_mutation_risk: bool = True
+    block_on_telegram_real_send_risk: bool = True
+    block_on_production_config_write_risk: bool = True
+    block_on_active_paper_enable_risk: bool = True
+    block_on_activation_allowed_risk: bool = True
+    block_on_secret_risk: bool = True
+
+@dataclass
+class PaperReadinessConfirmationNotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    notify_readiness_confirmation_report: bool = True
+    notify_human_review_bundle_warning: bool = True
+    notify_activation_still_denied_warning: bool = True
+    default_channel: str = "dry_run"
+    warn_no_real_send_default: bool = True
