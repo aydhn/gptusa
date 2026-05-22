@@ -287,3 +287,88 @@ staged_paper_readiness_package:
   include_stage_3_final_locked_review: true
   package_is_metadata_only: true
   paper_state_mutation_enabled: false
+
+paper_firewall_audit:
+  enabled: true
+  write_firewall_audit_reports: true
+  warn_not_investment_advice: true
+  warn_no_broker_execution: true
+  warn_no_real_paper_mutation: true
+  warn_firewall_replay_is_metadata_only: true
+  warn_zero_mutation_audit_is_not_activation: true
+  warn_evidence_refresh_is_not_activation: true
+
+paper_firewall_replay:
+  enabled: true
+  deterministic_replay: true
+  require_pre_rehearsal_review: true
+  require_firewall_events: true
+  require_all_dangerous_attempts_blocked: true
+  execution_enabled: false
+  active_paper_enabled: false
+  broker_execution_enabled: false
+  paper_state_mutation_enabled: false
+  config_patch_enabled: false
+  telegram_real_send_enabled: false
+
+zero_mutation_audit:
+  enabled: true
+  require_before_baseline: true
+  require_after_baseline: true
+  require_hash_unchanged: true
+  block_on_hash_changed: true
+  block_on_paper_state_committed: true
+  block_on_paper_order_executed: true
+  block_on_portfolio_state_mutated: true
+  block_on_position_mutated: true
+  block_on_cash_mutated: true
+  block_on_equity_mutated: true
+  block_on_config_patched: true
+  block_on_broker_order_sent: true
+  block_on_telegram_real_sent: true
+
+pre_paper_readiness_evidence_refresh:
+  enabled: true
+  max_evidence_age_days: 14
+  require_final_handoff_full_review: true
+  require_sealed_readiness_archive: true
+  require_pre_paper_governance_checkpoint: true
+  require_pre_paper_rehearsal_review: true
+  require_firewall_replay_result: true
+  require_zero_mutation_audit: true
+  require_activation_denied_checkpoint: true
+  request_followup_on_missing_evidence: true
+  request_followup_on_stale_evidence: true
+
+readiness_audit_checkpoint:
+  enabled: true
+  activation_denied_by_default: true
+  activation_allowed: false
+  allow_active_paper: false
+  allow_broker_execution: false
+  allow_paper_state_mutation: false
+  allow_config_patch: false
+  allow_telegram_real_send: false
+
+firewall_audit_safety:
+  enabled: true
+  block_on_real_order_risk: true
+  block_on_paper_order_risk: true
+  block_on_broker_order_risk: true
+  block_on_paper_state_mutation_risk: true
+  block_on_telegram_real_send_risk: true
+  block_on_production_config_write_risk: true
+  block_on_active_paper_enable_risk: true
+  block_on_firewall_bypass_risk: true
+  block_on_zero_mutation_failed: true
+  block_on_activation_allowed_risk: true
+  block_on_secret_risk: true
+
+paper_firewall_audit_notifications:
+  enabled: true
+  dry_run: true
+  notify_firewall_audit_report: true
+  notify_zero_mutation_audit_warning: true
+  notify_readiness_evidence_refresh_warning: true
+  default_channel: "dry_run"
+  warn_no_real_send_default: true
