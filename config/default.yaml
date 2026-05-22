@@ -1,251 +1,289 @@
-paper_shadow:
-  enabled: true
-  default_runtime_mode: "full_paper_shadow"
-  write_shadow_reports: true
-  warn_not_investment_advice: true
-  warn_no_broker_execution: true
-  warn_no_real_paper_mutation: true
-  warn_shadow_orders_are_not_orders: true
-  warn_shadow_fills_are_simulated: true
-
-shadow_simulation:
-  enabled: true
-  starting_equity_usd: 100000.0
-  deterministic_simulation: true
-  use_mock_signals_by_default: true
-  allow_real_orders: false
-  allow_broker_calls: false
+activation_denied_checkpoint:
+  activation_denied_by_default: true
+  allow_active_paper: false
+  allow_broker_execution: false
+  allow_config_patch: false
   allow_paper_state_mutation: false
   allow_telegram_real_send: false
-  allow_production_config_write: false
-
-shadow_order_intents:
   enabled: true
-  default_notional_usd: 1000.0
-  max_notional_pct_equity_warning: 5.0
-  block_real_order_like_fields: true
-  broker_destination_must_be_null: true
-
-shadow_fill_simulation:
-  enabled: true
-  default_fill_price: 100.0
-  default_slippage_bps: 10.0
-  default_cost_bps: 5.0
-  deterministic_fills: true
-  real_fill_forbidden: true
-
-shadow_ledger:
-  enabled: true
-  write_ledger_events: true
-  require_session_started_event: true
-  require_session_completed_event: true
-  record_blocked_operations: true
-
-shadow_safety:
-  enabled: true
-  block_on_real_order_risk: true
-  block_on_broker_field_risk: true
-  block_on_paper_state_mutation_risk: true
-  block_on_telegram_real_send_risk: true
-  block_on_production_config_write_risk: true
-  block_on_secret_risk: true
-
-paper_shadow_notifications:
-  enabled: true
-  dry_run: true
-  notify_shadow_report: true
-  notify_shadow_safety_warning: true
-  notify_shadow_rehearsal_warning: true
-  default_channel: "dry_run"
-  warn_no_real_send_default: true
-
-
-paper_observer_governance:
-  enabled: true
-  write_observer_governance_reports: true
-  warn_not_investment_advice: true
-  warn_no_broker_execution: true
-  warn_no_real_paper_mutation: true
-  warn_governance_is_non_executing: true
-  warn_governance_is_not_activation: true
-
-observer_paper_comparison:
-  enabled: true
-  require_paper_baseline: true
-  require_observer_output: true
-  max_acceptable_drift_event_count: 10
-  block_on_unsafe_drift: true
-  block_on_missing_locked_runtime: true
-
-promotion_evidence_refresh:
-  enabled: true
-  max_evidence_age_days: 14
-  require_observer_review: true
-  require_observer_comparison: true
-  require_controlled_planning_ticket: true
-  require_observation_exit_review: true
-  request_followup_on_missing_evidence: true
-  request_followup_on_stale_evidence: true
-
-observer_governance:
-  enabled: true
-  conservative_decision_board: true
-  eligible_decision_is_dossier_only: true
-  require_manual_review: true
+final_review_lock:
   allow_active_paper: false
   allow_broker_execution: false
-  allow_paper_state_mutation: false
   allow_config_patch: false
-
-observer_governance_safety:
-  enabled: true
-  block_on_real_order_risk: true
-  block_on_paper_order_risk: true
-  block_on_broker_order_risk: true
-  block_on_paper_state_mutation_risk: true
-  block_on_telegram_real_send_risk: true
-  block_on_production_config_write_risk: true
-  block_on_active_paper_enable_risk: true
-  block_on_observer_unlock_risk: true
-  block_on_secret_risk: true
-
-paper_observer_governance_notifications:
-  enabled: true
-  dry_run: true
-  notify_observer_governance_report: true
-  notify_observer_evidence_warning: true
-  notify_observer_comparison_warning: true
-  default_channel: "dry_run"
-  warn_no_real_send_default: true
-
-
-paper_promotion_dossier:
-  enabled: true
-  write_dossier_reports: true
-  warn_not_investment_advice: true
-  warn_no_broker_execution: true
-  warn_no_real_paper_mutation: true
-  warn_dossier_is_not_activation: true
-  warn_safety_board_is_not_deployment_approval: true
-  warn_readiness_package_is_metadata_only: true
-
-promotion_dossier:
-  enabled: true
-  require_observer_governance_eligible: true
-  require_evidence_index: true
-  require_manual_review: true
-  require_final_safety_board: true
-  allow_active_paper: false
-  allow_broker_execution: false
   allow_paper_state_mutation: false
-  allow_config_patch: false
-
+  enabled: true
+  lock_is_metadata_only: true
+  require_rehearsal_completed: true
 final_safety_board:
-  enabled: true
+  allow_active_paper: false
+  allow_broker_execution: false
+  allow_config_patch: false
+  allow_paper_state_mutation: false
   conservative_decision_engine: true
+  enabled: true
+  pass_is_non_executing_readiness_only: true
   require_all_safety_gates: true
   require_evidence_complete: true
   require_non_execution_compliance: true
-  pass_is_non_executing_readiness_only: true
+guarded_handoff_registry:
   allow_active_paper: false
   allow_broker_execution: false
-  allow_paper_state_mutation: false
   allow_config_patch: false
-
-staged_paper_readiness_package:
+  allow_paper_state_mutation: false
   enabled: true
-  package_is_metadata_only: true
-  execution_enabled: false
+  register_is_next_review_only: true
+  require_final_review_lock: true
+  require_handoff_evidence_index: true
+observer_governance:
+  allow_active_paper: false
+  allow_broker_execution: false
+  allow_config_patch: false
+  allow_paper_state_mutation: false
+  conservative_decision_board: true
+  eligible_decision_is_dossier_only: true
+  enabled: true
+  require_manual_review: true
+observer_governance_safety:
+  block_on_active_paper_enable_risk: true
+  block_on_broker_order_risk: true
+  block_on_observer_unlock_risk: true
+  block_on_paper_order_risk: true
+  block_on_paper_state_mutation_risk: true
+  block_on_production_config_write_risk: true
+  block_on_real_order_risk: true
+  block_on_secret_risk: true
+  block_on_telegram_real_send_risk: true
+  enabled: true
+observer_paper_comparison:
+  block_on_missing_locked_runtime: true
+  block_on_unsafe_drift: true
+  enabled: true
+  max_acceptable_drift_event_count: 10
+  require_observer_output: true
+  require_paper_baseline: true
+paper_observer_governance:
+  enabled: true
+  warn_governance_is_non_executing: true
+  warn_governance_is_not_activation: true
+  warn_no_broker_execution: true
+  warn_no_real_paper_mutation: true
+  warn_not_investment_advice: true
+  write_observer_governance_reports: true
+paper_observer_governance_notifications:
+  default_channel: dry_run
+  dry_run: true
+  enabled: true
+  notify_observer_comparison_warning: true
+  notify_observer_evidence_warning: true
+  notify_observer_governance_report: true
+  warn_no_real_send_default: true
+paper_pre_rehearsal:
+  enabled: true
+  warn_activation_denied_checkpoint_is_not_activation: true
+  warn_firewall_is_metadata_only: true
+  warn_no_broker_execution: true
+  warn_no_real_paper_mutation: true
+  warn_not_investment_advice: true
+  warn_pre_paper_rehearsal_is_not_activation: true
+  write_pre_rehearsal_reports: true
+paper_pre_rehearsal_notifications:
+  default_channel: dry_run
+  dry_run: true
+  enabled: true
+  notify_activation_denied_checkpoint_warning: true
+  notify_mutation_firewall_warning: true
+  notify_pre_paper_rehearsal_report: true
+  warn_no_real_send_default: true
+paper_promotion_dossier:
+  enabled: true
+  warn_dossier_is_not_activation: true
+  warn_no_broker_execution: true
+  warn_no_real_paper_mutation: true
+  warn_not_investment_advice: true
+  warn_readiness_package_is_metadata_only: true
+  warn_safety_board_is_not_deployment_approval: true
+  write_dossier_reports: true
+paper_promotion_dossier_notifications:
+  default_channel: dry_run
+  dry_run: true
+  enabled: true
+  notify_final_safety_board_warning: true
+  notify_promotion_dossier_report: true
+  notify_readiness_package_warning: true
+  warn_no_real_send_default: true
+paper_readiness_rehearsal:
+  enabled: true
+  warn_final_lock_is_not_deployment_approval: true
+  warn_handoff_registry_is_not_activation: true
+  warn_no_broker_execution: true
+  warn_no_real_paper_mutation: true
+  warn_not_investment_advice: true
+  warn_rehearsal_is_not_activation: true
+  write_rehearsal_reports: true
+paper_readiness_rehearsal_notifications:
+  default_channel: dry_run
+  dry_run: true
+  enabled: true
+  notify_final_review_lock_warning: true
+  notify_guarded_handoff_warning: true
+  notify_readiness_rehearsal_report: true
+  warn_no_real_send_default: true
+paper_shadow:
+  default_runtime_mode: full_paper_shadow
+  enabled: true
+  warn_no_broker_execution: true
+  warn_no_real_paper_mutation: true
+  warn_not_investment_advice: true
+  warn_shadow_fills_are_simulated: true
+  warn_shadow_orders_are_not_orders: true
+  write_shadow_reports: true
+paper_shadow_notifications:
+  default_channel: dry_run
+  dry_run: true
+  enabled: true
+  notify_shadow_rehearsal_warning: true
+  notify_shadow_report: true
+  notify_shadow_safety_warning: true
+  warn_no_real_send_default: true
+paper_state_mutation_firewall:
+  deny_active_paper_enable: true
+  deny_archive_unlock: true
+  deny_broker_order_send: true
+  deny_cash_mutation: true
+  deny_config_patch: true
+  deny_equity_mutation: true
+  deny_final_lock_unlock: true
+  deny_paper_order_create: true
+  deny_paper_state_write: true
+  deny_portfolio_mutation: true
+  deny_position_mutation: true
+  deny_telegram_real_send: true
+  enabled: true
+  simulate_forbidden_attempts: true
+pre_paper_dry_rehearsal:
   active_paper_enabled: false
   broker_execution_enabled: false
-  paper_state_mutation_enabled: false
   config_patch_enabled: false
+  deterministic_rehearsal: true
+  enabled: true
+  execution_enabled: false
+  paper_state_mutation_enabled: false
+  require_activation_denied_checkpoint: true
+  require_final_handoff_checkpoint: true
+  require_mutation_firewall: true
+  require_sealed_archive: true
+  telegram_real_send_enabled: false
+pre_paper_rehearsal_safety:
+  block_on_activation_allowed_risk: true
+  block_on_active_paper_enable_risk: true
+  block_on_broker_order_risk: true
+  block_on_firewall_disabled_risk: true
+  block_on_paper_order_risk: true
+  block_on_paper_state_mutation_risk: true
+  block_on_production_config_write_risk: true
+  block_on_real_order_risk: true
+  block_on_secret_risk: true
+  block_on_telegram_real_send_risk: true
+  enabled: true
+promotion_dossier:
+  allow_active_paper: false
+  allow_broker_execution: false
+  allow_config_patch: false
+  allow_paper_state_mutation: false
+  enabled: true
+  require_evidence_index: true
+  require_final_safety_board: true
+  require_manual_review: true
+  require_observer_governance_eligible: true
+promotion_dossier_safety:
+  block_on_active_paper_enable_risk: true
+  block_on_broker_order_risk: true
+  block_on_dossier_auto_enable_risk: true
+  block_on_paper_order_risk: true
+  block_on_paper_state_mutation_risk: true
+  block_on_production_config_write_risk: true
+  block_on_readiness_package_activation_risk: true
+  block_on_real_order_risk: true
+  block_on_secret_risk: true
+  block_on_telegram_real_send_risk: true
+  enabled: true
+promotion_evidence_refresh:
+  enabled: true
+  max_evidence_age_days: 14
+  request_followup_on_missing_evidence: true
+  request_followup_on_stale_evidence: true
+  require_controlled_planning_ticket: true
+  require_observation_exit_review: true
+  require_observer_comparison: true
+  require_observer_review: true
+readiness_rehearsal_safety:
+  block_on_active_paper_enable_risk: true
+  block_on_broker_order_risk: true
+  block_on_final_lock_auto_enable_risk: true
+  block_on_handoff_auto_enable_risk: true
+  block_on_package_activation_risk: true
+  block_on_paper_order_risk: true
+  block_on_paper_state_mutation_risk: true
+  block_on_production_config_write_risk: true
+  block_on_real_order_risk: true
+  block_on_secret_risk: true
+  block_on_telegram_real_send_risk: true
+  enabled: true
+readiness_stage_rehearsal:
+  active_paper_enabled: false
+  broker_execution_enabled: false
+  config_patch_enabled: false
+  deterministic_rehearsal: true
+  enabled: true
+  execution_enabled: false
+  paper_state_mutation_enabled: false
+  require_readiness_package: true
+shadow_fill_simulation:
+  default_cost_bps: 5.0
+  default_fill_price: 100.0
+  default_slippage_bps: 10.0
+  deterministic_fills: true
+  enabled: true
+  real_fill_forbidden: true
+shadow_ledger:
+  enabled: true
+  record_blocked_operations: true
+  require_session_completed_event: true
+  require_session_started_event: true
+  write_ledger_events: true
+shadow_order_intents:
+  block_real_order_like_fields: true
+  broker_destination_must_be_null: true
+  default_notional_usd: 1000.0
+  enabled: true
+  max_notional_pct_equity_warning: 5.0
+shadow_safety:
+  block_on_broker_field_risk: true
+  block_on_paper_state_mutation_risk: true
+  block_on_production_config_write_risk: true
+  block_on_real_order_risk: true
+  block_on_secret_risk: true
+  block_on_telegram_real_send_risk: true
+  enabled: true
+shadow_simulation:
+  allow_broker_calls: false
+  allow_paper_state_mutation: false
+  allow_production_config_write: false
+  allow_real_orders: false
+  allow_telegram_real_send: false
+  deterministic_simulation: true
+  enabled: true
+  starting_equity_usd: 100000.0
+  use_mock_signals_by_default: true
+staged_paper_readiness_package:
+  active_paper_enabled: false
+  broker_execution_enabled: false
+  config_patch_enabled: false
+  enabled: true
+  execution_enabled: false
   include_stage_0_dossier_only: true
   include_stage_1_non_executing_readiness_rehearsal: true
   include_stage_2_guarded_handoff_review: true
   include_stage_3_final_locked_review: true
-
-promotion_dossier_safety:
-  enabled: true
-  block_on_real_order_risk: true
-  block_on_paper_order_risk: true
-  block_on_broker_order_risk: true
-  block_on_paper_state_mutation_risk: true
-  block_on_telegram_real_send_risk: true
-  block_on_production_config_write_risk: true
-  block_on_active_paper_enable_risk: true
-  block_on_dossier_auto_enable_risk: true
-  block_on_readiness_package_activation_risk: true
-  block_on_secret_risk: true
-
-paper_promotion_dossier_notifications:
-  enabled: true
-  dry_run: true
-  notify_promotion_dossier_report: true
-  notify_final_safety_board_warning: true
-  notify_readiness_package_warning: true
-  default_channel: "dry_run"
-  warn_no_real_send_default: true
-
-
-paper_readiness_rehearsal:
-  enabled: true
-  write_rehearsal_reports: true
-  warn_not_investment_advice: true
-  warn_no_broker_execution: true
-  warn_no_real_paper_mutation: true
-  warn_rehearsal_is_not_activation: true
-  warn_final_lock_is_not_deployment_approval: true
-  warn_handoff_registry_is_not_activation: true
-
-readiness_stage_rehearsal:
-  enabled: true
-  deterministic_rehearsal: true
-  require_readiness_package: true
-  execution_enabled: false
-  active_paper_enabled: false
-  broker_execution_enabled: false
+  package_is_metadata_only: true
   paper_state_mutation_enabled: false
-  config_patch_enabled: false
-
-final_review_lock:
-  enabled: true
-  require_rehearsal_completed: true
-  lock_is_metadata_only: true
-  allow_active_paper: false
-  allow_broker_execution: false
-  allow_paper_state_mutation: false
-  allow_config_patch: false
-
-guarded_handoff_registry:
-  enabled: true
-  require_final_review_lock: true
-  require_handoff_evidence_index: true
-  register_is_next_review_only: true
-  allow_active_paper: false
-  allow_broker_execution: false
-  allow_paper_state_mutation: false
-  allow_config_patch: false
-
-readiness_rehearsal_safety:
-  enabled: true
-  block_on_real_order_risk: true
-  block_on_paper_order_risk: true
-  block_on_broker_order_risk: true
-  block_on_paper_state_mutation_risk: true
-  block_on_telegram_real_send_risk: true
-  block_on_production_config_write_risk: true
-  block_on_active_paper_enable_risk: true
-  block_on_package_activation_risk: true
-  block_on_final_lock_auto_enable_risk: true
-  block_on_handoff_auto_enable_risk: true
-  block_on_secret_risk: true
-
-paper_readiness_rehearsal_notifications:
-  enabled: true
-  dry_run: true
-  notify_readiness_rehearsal_report: true
-  notify_final_review_lock_warning: true
-  notify_guarded_handoff_warning: true
-  default_channel: "dry_run"
-  warn_no_real_send_default: true
