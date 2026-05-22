@@ -57,8 +57,8 @@ def rule_for_attempt_type(attempt_type: MutationAttemptType) -> MutationFirewall
         action = FirewallAction.DENY_AND_RECORD
 
     rule = MutationFirewallRule(
-        rule_id=create_mutation_firewall_rule_id(),
-        created_at_utc=datetime.datetime.utcnow().isoformat(),
+
+
         attempt_type=attempt_type,
         action=action,
         enabled=True,

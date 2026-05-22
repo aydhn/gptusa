@@ -28,8 +28,8 @@ def build_pre_paper_dry_rehearsal_plan(final_handoff_payload: Dict[str, Any]) ->
     source_archive_id = archive.get("archive_id") if archive else None
 
     plan = PrePaperDryRehearsalPlan(
-        plan_id=create_pre_paper_plan_id(),
-        created_at_utc=datetime.datetime.utcnow().isoformat(),
+
+
         candidate_id=candidate_id,
         source_checkpoint_id=source_checkpoint_id,
         source_archive_id=source_archive_id,
@@ -53,8 +53,8 @@ def build_pre_paper_dry_rehearsal_plan(final_handoff_payload: Dict[str, Any]) ->
 
 def build_default_pre_paper_dry_rehearsal_plan(candidate_id: str | None = None) -> PrePaperDryRehearsalPlan:
     plan = PrePaperDryRehearsalPlan(
-        plan_id=create_pre_paper_plan_id(),
-        created_at_utc=datetime.datetime.utcnow().isoformat(),
+
+
         candidate_id=candidate_id,
         source_checkpoint_id=None,
         source_archive_id=None,

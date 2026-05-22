@@ -489,3 +489,21 @@ class DryAdmissionAuditError(USASignalBotError): pass
 class DryAdmissionStorageError(USASignalBotError): pass
 class DryAdmissionValidationError(USASignalBotError): pass
 class DryAdmissionReportingError(USASignalBotError): pass
+
+class PaperAdmissionReviewError(USASignalBotError): pass
+class AdmissionDryAdmissionIngestionError(PaperAdmissionReviewError): pass
+class AdmissionReviewEligibilityError(PaperAdmissionReviewError): pass
+class AdmissionReviewGateError(PaperAdmissionReviewError): pass
+class LedgerReconciliationError(PaperAdmissionReviewError): pass
+class AdmissionNoWriteContinuityError(PaperAdmissionReviewError): pass
+class DryAdmissionEvidenceError(PaperAdmissionReviewError): pass
+class WriteLockIntegrationError(PaperAdmissionReviewError): pass
+class TransitionCheckpointError(PaperAdmissionReviewError): pass
+class TransitionCheckpointValidationError(TransitionCheckpointError): pass
+class AdmissionDecisionError(PaperAdmissionReviewError): pass
+class AdmissionEvidenceSealError(PaperAdmissionReviewError): pass
+class AdmissionSafetyValidatorError(PaperAdmissionReviewError): pass
+class AdmissionAuditError(PaperAdmissionReviewError): pass
+class AdmissionReviewStorageError(PaperAdmissionReviewError): pass
+class AdmissionReviewValidationError(PaperAdmissionReviewError): pass
+class AdmissionReviewReportingError(PaperAdmissionReviewError): pass
