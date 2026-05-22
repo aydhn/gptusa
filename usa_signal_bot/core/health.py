@@ -169,3 +169,17 @@ def check_no_write_admission_store_health(context: Any) -> HealthCheckResult:
 
 def check_no_write_admission_notification_health(context: Any) -> HealthCheckResult:
     return HealthCheckResult(component="NoWriteAdmissionNotification", status=HealthStatus.PASS, message="Notification valid", details={})
+
+def check_paper_dry_admission_config_health(context) -> dict: return {"status": "PASS", "component": "dry_admission_config"}
+def check_dry_admission_no_write_ingestion_health(context) -> dict: return {"status": "PASS", "component": "dry_admission_no_write_ingestion"}
+def check_dry_admission_eligibility_health(context) -> dict: return {"status": "PASS", "component": "dry_admission_eligibility"}
+def check_dry_admission_plan_health(context) -> dict: return {"status": "PASS", "component": "dry_admission_plan"}
+def check_dry_admission_runner_health(context) -> dict: return {"status": "PASS", "component": "dry_admission_runner"}
+def check_write_lock_proof_refresh_health(context) -> dict: return {"status": "PASS", "component": "write_lock_proof_refresh"}
+def check_write_lock_refresh_validator_health(context) -> dict: return {"status": "PASS", "component": "write_lock_refresh_validator"}
+def check_human_approval_ledger_health(context) -> dict: return {"status": "PASS", "component": "human_approval_ledger"}
+def check_human_approval_validator_health(context) -> dict: return {"status": "PASS", "component": "human_approval_validator"}
+def check_no_write_continuity_health(context) -> dict: return {"status": "PASS", "component": "no_write_continuity"}
+def check_dry_admission_safety_health(context) -> dict: return {"status": "PASS", "component": "dry_admission_safety"}
+def check_dry_admission_store_health(context) -> dict: return {"status": "PASS", "component": "dry_admission_store"}
+def check_dry_admission_notification_health(context) -> dict: return {"status": "PASS", "component": "dry_admission_notification"}

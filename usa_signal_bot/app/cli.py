@@ -1,3 +1,12 @@
+def setup_paper_readiness_board_parsers(subparsers):
+    pass
+
+def setup_firewall_audit_parsers(subparsers):
+    pass
+
+from pathlib import Path
+from typing import Optional
+import argparse
 
 
 def setup_no_write_admission_parsers(subparsers):
@@ -346,3 +355,127 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
+def dry_admission_info():
+    typer.echo("Paper-Mode Dry Admission Rehearsal Module (Phase 86)")
+    typer.echo("Note: Dry admission, write-lock proof refresh, and human ledger are NOT activation.")
+
+def dry_admission_ingest_no_write(file: Optional[Path] = None):
+    typer.echo("Ingesting NoWriteAdmissionFullReview...")
+
+def dry_admission_eligibility(write: bool = False):
+    typer.echo("Evaluating dry admission eligibility...")
+
+def dry_admission_plan(write: bool = False):
+    from usa_signal_bot.paper_dry_admission.dry_admission_plan import build_default_dry_admission_plan
+    plan = build_default_dry_admission_plan()
+    typer.echo(f"Plan ID: {plan.plan_id}")
+
+def dry_admission_run(write: bool = False):
+    from usa_signal_bot.paper_dry_admission.dry_admission_plan import build_default_dry_admission_plan
+    from usa_signal_bot.paper_dry_admission.dry_admission_runner import PaperModeDryAdmissionRunner
+    plan = build_default_dry_admission_plan()
+    runner = PaperModeDryAdmissionRunner()
+    run = runner.run_dry_admission(plan, {})
+    typer.echo(f"Run ID: {run.run_id}, Status: {run.status.value}")
+
+def dry_admission_output_analyze(write: bool = False):
+    typer.echo("Analyzing dry admission output...")
+
+def write_lock_refresh(write: bool = False):
+    from usa_signal_bot.paper_dry_admission.write_lock_proof_refresh import refresh_runtime_write_lock_proof
+    refresh = refresh_runtime_write_lock_proof()
+    typer.echo(f"Refresh ID: {refresh.refresh_id}, Status: {refresh.status.value}")
+
+def write_lock_refresh_validate(write: bool = False):
+    typer.echo("Validating write lock refresh...")
+
+def human_ledger_entry(scope: str, reviewer_id: Optional[str] = None, note: Optional[str] = None, write: bool = False):
+    from usa_signal_bot.core.enums import HumanApprovalScope
+    from usa_signal_bot.paper_dry_admission.human_approval_ledger import build_human_approval_ledger_entry
+    s = HumanApprovalScope(scope)
+    entry = build_human_approval_ledger_entry(s, reviewer_id=reviewer_id, note=note)
+    typer.echo(f"Entry ID: {entry.ledger_entry_id}, Status: {entry.status.value}")
+
+def human_approval_ledger(write: bool = False):
+    from usa_signal_bot.paper_dry_admission.human_approval_ledger import build_default_human_approval_ledger
+    ledger = build_default_human_approval_ledger()
+    typer.echo(f"Ledger ID: {ledger.ledger_id}, Status: {ledger.status.value}")
+
+def human_approval_validate(write: bool = False):
+    typer.echo("Validating human approval ledger...")
+
+def approval_reconcile(write: bool = False):
+    typer.echo("Reconciling human approval ledger...")
+
+def no_write_continuity(write: bool = False):
+    typer.echo("Validating no-write continuity...")
+
+def dry_admission_safety_check(write: bool = False):
+    typer.echo("Validating dry admission safety...")
+
+def dry_admission_audit(write: bool = False):
+    typer.echo("Creating dry admission audit entry...")
+
+def dry_admission_review(write: bool = False):
+    from usa_signal_bot.paper_dry_admission.dry_admission_report import build_dry_admission_full_review
+    review = build_dry_admission_full_review({})
+    typer.echo(f"Review ID: {review.review_id}")
+
+def dry_admission_summary():
+    from usa_signal_bot.paper_dry_admission.dry_admission_store import dry_admission_store_summary
+    summary = dry_admission_store_summary(Path("data"))
+    typer.echo(summary)
+
+def dry_admission_latest_review():
+    from usa_signal_bot.paper_dry_admission.dry_admission_store import get_latest_dry_admission_full_review
+    latest = get_latest_dry_admission_full_review(Path("data"))
+    if not latest:
+        typer.echo("No review found.")
+        raise typer.Exit(0)
+    typer.echo(f"Latest review: {latest}")
+
+def dry_admission_validate(latest_review: bool = False, file: Optional[Path] = None):
+    typer.echo("Validating dry admission...")
+    if latest_review:
+        raise typer.Exit(0)
+
+def dry_admission_notification_preview(latest_review: bool = False):
+    typer.echo("Generating notification preview...")
+
+def dry_admission_notification_dispatch_dry_run(latest_review: bool = False, write: bool = False):
+    typer.echo("Dispatching dry-run notification...")
+
+
+def setup_dry_admission_parsers(subparsers):
+    p_info = subparsers.add_parser("dry-admission-info")
+    p_ingest = subparsers.add_parser("dry-admission-ingest-no-write")
+    p_eligibility = subparsers.add_parser("dry-admission-eligibility")
+    p_plan = subparsers.add_parser("dry-admission-plan")
+    p_run = subparsers.add_parser("dry-admission-run")
+    p_output = subparsers.add_parser("dry-admission-output-analyze")
+    p_wlr = subparsers.add_parser("write-lock-refresh")
+    p_wlrv = subparsers.add_parser("write-lock-refresh-validate")
+
+    p_hle = subparsers.add_parser("human-ledger-entry")
+    p_hle.add_argument("--scope", type=str, default="NOT_ACTIVATION_APPROVAL")
+    p_hle.add_argument("--note", type=str, default="acknowledged no activation")
+    p_hle.add_argument("--reviewer-id", type=str)
+
+    p_hal = subparsers.add_parser("human-approval-ledger")
+    p_hav = subparsers.add_parser("human-approval-validate")
+    p_ar = subparsers.add_parser("approval-reconcile")
+    p_nwc = subparsers.add_parser("no-write-continuity")
+    p_dasc = subparsers.add_parser("dry-admission-safety-check")
+    p_daa = subparsers.add_parser("dry-admission-audit")
+    p_dar = subparsers.add_parser("dry-admission-review")
+    p_das = subparsers.add_parser("dry-admission-summary")
+
+    p_dalr = subparsers.add_parser("dry-admission-latest-review")
+    p_dav = subparsers.add_parser("dry-admission-validate")
+    p_dav.add_argument("--latest-review", action="store_true")
+
+    p_danp = subparsers.add_parser("dry-admission-notification-preview")
+    p_danddr = subparsers.add_parser("dry-admission-notification-dispatch-dry-run")

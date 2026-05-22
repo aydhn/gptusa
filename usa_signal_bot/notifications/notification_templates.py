@@ -26,3 +26,27 @@ def format_paper_mode_preflight_warning_message(preflights: list[PaperModePrefli
 
 def notifications_from_no_write_admission_review(review: NoWriteAdmissionFullReview) -> list[NotificationMessage]:
     return []
+
+def format_dry_admission_report_message(review: dict) -> dict:
+    return {
+        "title": "Dry Admission Report",
+        "message": "Dry admission review required. This is NOT a live activation.",
+        "urgency": "high",
+        "metadata": {"review_id": review.get("review_id")}
+    }
+def format_write_lock_refresh_warning_message(refreshes: list) -> dict:
+    return {
+        "title": "Write Lock Refresh Warning",
+        "message": "Write lock refresh warnings detected.",
+        "urgency": "medium",
+        "metadata": {"count": len(refreshes)}
+    }
+def format_human_approval_ledger_warning_message(ledgers: list) -> dict:
+    return {
+        "title": "Human Approval Ledger Warning",
+        "message": "Human approval ledger warnings detected.",
+        "urgency": "medium",
+        "metadata": {"count": len(ledgers)}
+    }
+def notifications_from_dry_admission_review(review: dict) -> list:
+    return [format_dry_admission_report_message(review)]
