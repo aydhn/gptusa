@@ -432,3 +432,96 @@ class PaperPreRehearsalNotificationsConfig:
     notify_activation_denied_checkpoint_warning: bool = True
     default_channel: str = "dry_run"
     warn_no_real_send_default: bool = True
+
+
+@dataclass
+class PaperFirewallAuditConfig:
+    enabled: bool = True
+    write_firewall_audit_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_no_broker_execution: bool = True
+    warn_no_real_paper_mutation: bool = True
+    warn_firewall_replay_is_metadata_only: bool = True
+    warn_zero_mutation_audit_is_not_activation: bool = True
+    warn_evidence_refresh_is_not_activation: bool = True
+
+@dataclass
+class PaperFirewallReplayConfig:
+    enabled: bool = True
+    deterministic_replay: bool = True
+    require_pre_rehearsal_review: bool = True
+    require_firewall_events: bool = True
+    require_all_dangerous_attempts_blocked: bool = True
+    execution_enabled: bool = False
+    active_paper_enabled: bool = False
+    broker_execution_enabled: bool = False
+    paper_state_mutation_enabled: bool = False
+    config_patch_enabled: bool = False
+    telegram_real_send_enabled: bool = False
+
+@dataclass
+class ZeroMutationAuditConfig:
+    enabled: bool = True
+    require_before_baseline: bool = True
+    require_after_baseline: bool = True
+    require_hash_unchanged: bool = True
+    block_on_hash_changed: bool = True
+    block_on_paper_state_committed: bool = True
+    block_on_paper_order_executed: bool = True
+    block_on_portfolio_state_mutated: bool = True
+    block_on_position_mutated: bool = True
+    block_on_cash_mutated: bool = True
+    block_on_equity_mutated: bool = True
+    block_on_config_patched: bool = True
+    block_on_broker_order_sent: bool = True
+    block_on_telegram_real_sent: bool = True
+
+@dataclass
+class PrePaperReadinessEvidenceRefreshConfig:
+    enabled: bool = True
+    max_evidence_age_days: int = 14
+    require_final_handoff_full_review: bool = True
+    require_sealed_readiness_archive: bool = True
+    require_pre_paper_governance_checkpoint: bool = True
+    require_pre_paper_rehearsal_review: bool = True
+    require_firewall_replay_result: bool = True
+    require_zero_mutation_audit: bool = True
+    require_activation_denied_checkpoint: bool = True
+    request_followup_on_missing_evidence: bool = True
+    request_followup_on_stale_evidence: bool = True
+
+@dataclass
+class ReadinessAuditCheckpointConfig:
+    enabled: bool = True
+    activation_denied_by_default: bool = True
+    activation_allowed: bool = False
+    allow_active_paper: bool = False
+    allow_broker_execution: bool = False
+    allow_paper_state_mutation: bool = False
+    allow_config_patch: bool = False
+    allow_telegram_real_send: bool = False
+
+@dataclass
+class FirewallAuditSafetyConfig:
+    enabled: bool = True
+    block_on_real_order_risk: bool = True
+    block_on_paper_order_risk: bool = True
+    block_on_broker_order_risk: bool = True
+    block_on_paper_state_mutation_risk: bool = True
+    block_on_telegram_real_send_risk: bool = True
+    block_on_production_config_write_risk: bool = True
+    block_on_active_paper_enable_risk: bool = True
+    block_on_firewall_bypass_risk: bool = True
+    block_on_zero_mutation_failed: bool = True
+    block_on_activation_allowed_risk: bool = True
+    block_on_secret_risk: bool = True
+
+@dataclass
+class PaperFirewallAuditNotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    notify_firewall_audit_report: bool = True
+    notify_zero_mutation_audit_warning: bool = True
+    notify_readiness_evidence_refresh_warning: bool = True
+    default_channel: str = "dry_run"
+    warn_no_real_send_default: bool = True

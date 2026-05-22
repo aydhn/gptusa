@@ -12,3 +12,4 @@ data/paper/
 data/backtests/
 data/reports/
 .pytest_cache/
+__pycache__/

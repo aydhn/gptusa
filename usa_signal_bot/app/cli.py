@@ -1,3 +1,4 @@
+from usa_signal_bot.paper_firewall_audit.firewall_audit_cli import setup_firewall_audit_parsers
 import argparse
 import sys
 from pathlib import Path
@@ -73,7 +74,16 @@ def main():
     cmd.add_argument("--latest-review", action="store_true", help="Use latest review")
     cmd.add_argument("--write", action="store_true", help="Write result")
 
+    setup_firewall_audit_parsers(subparsers)
     args = parser.parse_args()
+    if hasattr(args, 'func'):
+        args.func(args)
+        import sys
+        sys.exit(0)
+    else:
+        # Check if the command was handled manually before
+        pass
+
 
     # Pre-paper rehearsal commands
     if args.command == "pre-paper-rehearsal-info":

@@ -374,3 +374,23 @@ class PrePaperValidationError(PaperPreRehearsalError):
 
 class PrePaperReportingError(PaperPreRehearsalError):
     pass
+
+
+class PaperFirewallAuditError(USASignalBotError): pass
+class FirewallAuditPreRehearsalIngestionError(PaperFirewallAuditError): pass
+class FirewallEventIngestionError(PaperFirewallAuditError): pass
+class FirewallReplayPlanError(PaperFirewallAuditError): pass
+class FirewallReplayEngineError(PaperFirewallAuditError): pass
+class FirewallReplayAnalyzerError(PaperFirewallAuditError): pass
+class ZeroMutationBaselineError(PaperFirewallAuditError): pass
+class ZeroMutationAuditError(PaperFirewallAuditError): pass
+class MutationInvariantCheckerError(PaperFirewallAuditError): pass
+class BaselineHashComparisonError(PaperFirewallAuditError): pass
+class PrePaperEvidenceRefreshError(PaperFirewallAuditError): pass
+class PrePaperEvidenceGapError(PaperFirewallAuditError): pass
+class ReadinessAuditDecisionError(PaperFirewallAuditError): pass
+class FirewallAuditSafetyError(PaperFirewallAuditError): pass
+class FirewallAuditTrailError(PaperFirewallAuditError): pass
+class FirewallAuditStorageError(PaperFirewallAuditError): pass
+class FirewallAuditValidationError(PaperFirewallAuditError): pass
+class FirewallAuditReportingError(PaperFirewallAuditError): pass

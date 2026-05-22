@@ -1,1 +1,4 @@
-# Stub for readiness_rehearsal_models.py
+from dataclasses import dataclass
+@dataclass
+class ReadinessRehearsalReview:
+    review_id: str

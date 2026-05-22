@@ -1,1 +1,4 @@
-# Stub for final_handoff_models.py
+from dataclasses import dataclass
+@dataclass
+class FinalHandoffReview:
+    review_id: str
