@@ -394,3 +394,23 @@ class FirewallAuditTrailError(PaperFirewallAuditError): pass
 class FirewallAuditStorageError(PaperFirewallAuditError): pass
 class FirewallAuditValidationError(PaperFirewallAuditError): pass
 class FirewallAuditReportingError(PaperFirewallAuditError): pass
+
+
+class PaperReadinessBoardError(Exception): pass
+class PaperReadinessBoardConfirmationIngestionError(PaperReadinessBoardError): pass
+class PaperReadinessBoardEligibilityError(PaperReadinessBoardError): pass
+class PaperReadinessBoardGateError(PaperReadinessBoardError): pass
+class PaperReadinessBoardDecisionError(PaperReadinessBoardError): pass
+class WriteBlockedPaperRuntimeAdapterError(PaperReadinessBoardError): pass
+class RuntimeWriteDetectorError(PaperReadinessBoardError): pass
+class WriteDenyProofError(PaperReadinessBoardError): pass
+class ActivationFirewallRuleError(PaperReadinessBoardError): pass
+class FinalActivationFirewallError(PaperReadinessBoardError): pass
+class ActivationAttemptSimulatorError(PaperReadinessBoardError): pass
+class BoardActivationDenialContinuityError(PaperReadinessBoardError): pass
+class BoardSafetyValidatorError(PaperReadinessBoardError): pass
+class BoardConfidenceAnalyzerError(PaperReadinessBoardError): pass
+class PaperReadinessBoardAuditError(PaperReadinessBoardError): pass
+class PaperReadinessBoardStorageError(PaperReadinessBoardError): pass
+class PaperReadinessBoardValidationError(PaperReadinessBoardError): pass
+class PaperReadinessBoardReportingError(PaperReadinessBoardError): pass
