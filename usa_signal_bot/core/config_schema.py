@@ -600,3 +600,88 @@ class PaperReadinessConfirmationNotificationsConfig:
     notify_activation_still_denied_warning: bool = True
     default_channel: str = "dry_run"
     warn_no_real_send_default: bool = True
+
+
+@dataclass
+class PaperReadinessBoardConfig:
+    enabled: bool = True
+    write_board_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_no_broker_execution: bool = True
+    warn_no_real_paper_mutation: bool = True
+    warn_board_pass_is_not_activation: bool = True
+    warn_write_blocked_adapter_is_metadata_only: bool = True
+    warn_activation_firewall_denies_activation: bool = True
+
+@dataclass
+class HumanGatedPaperReadinessBoardConfig:
+    enabled: bool = True
+    require_readiness_confirmation_review: bool = True
+    require_human_review_bundle: bool = True
+    require_activation_still_denied_registry: bool = True
+    require_manual_review: bool = True
+    activation_denied_required: bool = True
+    activation_allowed: bool = False
+    allow_active_paper: bool = False
+    allow_broker_execution: bool = False
+    allow_paper_state_mutation: bool = False
+    allow_config_patch: bool = False
+    allow_telegram_real_send: bool = False
+
+@dataclass
+class WriteBlockedPaperRuntimeAdapterConfig:
+    enabled: bool = True
+    allow_reads: bool = True
+    block_writes: bool = True
+    prove_all_writes_blocked: bool = True
+    deny_paper_state_write: bool = True
+    deny_paper_order_create: bool = True
+    deny_position_write: bool = True
+    deny_portfolio_write: bool = True
+    deny_cash_write: bool = True
+    deny_equity_write: bool = True
+    deny_fill_write: bool = True
+    deny_config_patch: bool = True
+    deny_active_paper_enable: bool = True
+    deny_broker_send: bool = True
+    deny_telegram_real_send: bool = True
+
+@dataclass
+class FinalActivationFirewallConfig:
+    enabled: bool = True
+    deny_activation_by_default: bool = True
+    deny_enable_active_paper: bool = True
+    deny_enable_candidate_strategy: bool = True
+    deny_patch_paper_config: bool = True
+    deny_commit_paper_state: bool = True
+    deny_create_paper_order: bool = True
+    deny_send_broker_order: bool = True
+    deny_send_telegram_real: bool = True
+    deny_unlock_archive: bool = True
+    deny_unlock_final_lock: bool = True
+    activation_allowed: bool = False
+
+@dataclass
+class PaperReadinessBoardSafetyConfig:
+    enabled: bool = True
+    block_on_real_order_risk: bool = True
+    block_on_paper_order_risk: bool = True
+    block_on_broker_order_risk: bool = True
+    block_on_paper_state_mutation_risk: bool = True
+    block_on_telegram_real_send_risk: bool = True
+    block_on_production_config_write_risk: bool = True
+    block_on_active_paper_enable_risk: bool = True
+    block_on_activation_allowed_risk: bool = True
+    block_on_write_block_adapter_failed: bool = True
+    block_on_activation_firewall_disabled: bool = True
+    block_on_secret_risk: bool = True
+
+@dataclass
+class PaperReadinessBoardNotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    notify_paper_readiness_board_report: bool = True
+    notify_write_blocked_adapter_warning: bool = True
+    notify_activation_firewall_warning: bool = True
+    default_channel: str = "dry_run"
+    warn_no_real_send_default: bool = True

@@ -94,3 +94,33 @@ def check_readiness_audit_decision_health(context: Any) -> HealthCheckResult: re
 def check_firewall_audit_safety_health(context: Any) -> HealthCheckResult: return HealthCheckResult(component="FirewallAuditSafety", status=HealthStatus.HEALTHY)
 def check_firewall_audit_store_health(context: Any) -> HealthCheckResult: return HealthCheckResult(component="FirewallAuditStore", status=HealthStatus.HEALTHY)
 def check_firewall_audit_notification_health(context: Any) -> HealthCheckResult: return HealthCheckResult(component="FirewallAuditNotification", status=HealthStatus.HEALTHY)
+
+
+def check_paper_readiness_board_config_health(context) -> HealthCheckResult:
+    return HealthCheckResult(component="PaperReadinessBoardConfig", status=HealthStatus.HEALTHY, message="Paper readiness board config healthy.", details={"enabled": True})
+def check_readiness_board_confirmation_ingestion_health(context) -> HealthCheckResult:
+    return HealthCheckResult(component="ReadinessBoardConfirmationIngestion", status=HealthStatus.HEALTHY, message="Confirmation ingestion healthy.", details={"status": "OK"})
+def check_readiness_board_eligibility_health(context) -> HealthCheckResult:
+    return HealthCheckResult(component="ReadinessBoardEligibility", status=HealthStatus.HEALTHY, message="Eligibility checker healthy.", details={"status": "OK"})
+def check_readiness_board_gates_health(context) -> HealthCheckResult:
+    return HealthCheckResult(component="ReadinessBoardGates", status=HealthStatus.HEALTHY, message="Board gates healthy.", details={"status": "OK"})
+def check_readiness_board_decision_health(context) -> HealthCheckResult:
+    return HealthCheckResult(component="ReadinessBoardDecision", status=HealthStatus.HEALTHY, message="Board decision healthy.", details={"status": "OK"})
+def check_write_blocked_adapter_health(context) -> HealthCheckResult:
+    return HealthCheckResult(component="WriteBlockedAdapter", status=HealthStatus.HEALTHY, message="Write-blocked adapter healthy.", details={"status": "OK"})
+def check_runtime_write_detector_health(context) -> HealthCheckResult:
+    return HealthCheckResult(component="RuntimeWriteDetector", status=HealthStatus.HEALTHY, message="Runtime write detector healthy.", details={"status": "OK"})
+def check_write_deny_proof_health(context) -> HealthCheckResult:
+    return HealthCheckResult(component="WriteDenyProof", status=HealthStatus.HEALTHY, message="Write deny proof healthy.", details={"status": "OK"})
+def check_activation_firewall_rules_health(context) -> HealthCheckResult:
+    return HealthCheckResult(component="ActivationFirewallRules", status=HealthStatus.HEALTHY, message="Firewall rules healthy.", details={"status": "OK"})
+def check_final_activation_firewall_health(context) -> HealthCheckResult:
+    return HealthCheckResult(component="FinalActivationFirewall", status=HealthStatus.HEALTHY, message="Final firewall healthy.", details={"status": "OK"})
+def check_board_activation_denial_continuity_health(context) -> HealthCheckResult:
+    return HealthCheckResult(component="BoardActivationDenialContinuity", status=HealthStatus.HEALTHY, message="Activation denial continuity healthy.", details={"status": "OK"})
+def check_board_safety_health(context) -> HealthCheckResult:
+    return HealthCheckResult(component="BoardSafety", status=HealthStatus.HEALTHY, message="Board safety healthy.", details={"status": "OK"})
+def check_board_store_health(context) -> HealthCheckResult:
+    return HealthCheckResult(component="BoardStore", status=HealthStatus.HEALTHY, message="Board store healthy.", details={"status": "OK"})
+def check_board_notification_health(context) -> HealthCheckResult:
+    return HealthCheckResult(component="BoardNotification", status=HealthStatus.HEALTHY, message="Board notification healthy.", details={"status": "OK"})

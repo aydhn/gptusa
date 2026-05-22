@@ -372,3 +372,81 @@ paper_firewall_audit_notifications:
   notify_readiness_evidence_refresh_warning: true
   default_channel: "dry_run"
   warn_no_real_send_default: true
+
+paper_readiness_board:
+  enabled: true
+  write_board_reports: true
+  warn_not_investment_advice: true
+  warn_no_broker_execution: true
+  warn_no_real_paper_mutation: true
+  warn_board_pass_is_not_activation: true
+  warn_write_blocked_adapter_is_metadata_only: true
+  warn_activation_firewall_denies_activation: true
+
+human_gated_paper_readiness_board:
+  enabled: true
+  require_readiness_confirmation_review: true
+  require_human_review_bundle: true
+  require_activation_still_denied_registry: true
+  require_manual_review: true
+  activation_denied_required: true
+  activation_allowed: false
+  allow_active_paper: false
+  allow_broker_execution: false
+  allow_paper_state_mutation: false
+  allow_config_patch: false
+  allow_telegram_real_send: false
+
+write_blocked_paper_runtime_adapter:
+  enabled: true
+  allow_reads: true
+  block_writes: true
+  prove_all_writes_blocked: true
+  deny_paper_state_write: true
+  deny_paper_order_create: true
+  deny_position_write: true
+  deny_portfolio_write: true
+  deny_cash_write: true
+  deny_equity_write: true
+  deny_fill_write: true
+  deny_config_patch: true
+  deny_active_paper_enable: true
+  deny_broker_send: true
+  deny_telegram_real_send: true
+
+final_activation_firewall:
+  enabled: true
+  deny_activation_by_default: true
+  deny_enable_active_paper: true
+  deny_enable_candidate_strategy: true
+  deny_patch_paper_config: true
+  deny_commit_paper_state: true
+  deny_create_paper_order: true
+  deny_send_broker_order: true
+  deny_send_telegram_real: true
+  deny_unlock_archive: true
+  deny_unlock_final_lock: true
+  activation_allowed: false
+
+paper_readiness_board_safety:
+  enabled: true
+  block_on_real_order_risk: true
+  block_on_paper_order_risk: true
+  block_on_broker_order_risk: true
+  block_on_paper_state_mutation_risk: true
+  block_on_telegram_real_send_risk: true
+  block_on_production_config_write_risk: true
+  block_on_active_paper_enable_risk: true
+  block_on_activation_allowed_risk: true
+  block_on_write_block_adapter_failed: true
+  block_on_activation_firewall_disabled: true
+  block_on_secret_risk: true
+
+paper_readiness_board_notifications:
+  enabled: true
+  dry_run: true
+  notify_paper_readiness_board_report: true
+  notify_write_blocked_adapter_warning: true
+  notify_activation_firewall_warning: true
+  default_channel: "dry_run"
+  warn_no_real_send_default: true

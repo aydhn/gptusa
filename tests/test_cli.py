@@ -118,3 +118,35 @@ def test_firewall_audit_cli_direct():
     for cmd in cmds:
         result = subprocess.run(["python3", "-m", "usa_signal_bot.app.cli", cmd], capture_output=True, text=True)
         assert result.returncode in (0, 1), f"Command {cmd} failed: {result.stderr}"
+
+
+def test_paper_readiness_board_cli():
+    import subprocess
+    cmds = [
+        "python -m usa_signal_bot paper-readiness-board-info",
+        "python -m usa_signal_bot board-ingest-confirmation",
+        "python -m usa_signal_bot board-eligibility",
+        "python -m usa_signal_bot board-gates",
+        "python -m usa_signal_bot board-decision",
+        "python -m usa_signal_bot write-blocked-snapshot",
+        "python -m usa_signal_bot write-blocked-attempt --attempt-type paper_state_write",
+        "python -m usa_signal_bot write-deny-proof",
+        ["python", "-m", "usa_signal_bot", "runtime-write-detect", "--text", "aktif et"],
+        "python -m usa_signal_bot activation-firewall-rules",
+        "python -m usa_signal_bot activation-firewall-evaluate --attempt-type enable_active_paper",
+        "python -m usa_signal_bot activation-attempt-simulate",
+        "python -m usa_signal_bot board-activation-denial-continuity",
+        "python -m usa_signal_bot board-confidence-analyze",
+        "python -m usa_signal_bot board-safety-check",
+        "python -m usa_signal_bot board-audit",
+        "python -m usa_signal_bot paper-readiness-board-review",
+        "python -m usa_signal_bot paper-readiness-board-summary",
+        "python -m usa_signal_bot paper-readiness-board-latest-review",
+        "python -m usa_signal_bot paper-readiness-board-validate",
+        "python -m usa_signal_bot paper-readiness-board-notification-preview",
+        "python -m usa_signal_bot paper-readiness-board-notification-dispatch-dry-run"
+    ]
+    for cmd in cmds:
+        args = cmd if isinstance(cmd, list) else cmd.split()
+        res = subprocess.run(args, capture_output=True)
+        assert res.returncode == 0
