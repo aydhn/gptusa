@@ -1,3 +1,5 @@
+import sys
+import subprocess
 import subprocess
 import pytest
 
@@ -150,3 +152,32 @@ def test_paper_readiness_board_cli():
         args = cmd if isinstance(cmd, list) else cmd.split()
         res = subprocess.run(args, capture_output=True)
         assert res.returncode == 0
+
+def test_cli_no_write_admission_commands():
+    commands = [
+        "no-write-admission-info",
+        "no-write-ingest-board",
+        "no-write-eligibility",
+        "no-write-contract-clauses",
+        "no-write-contract",
+        "no-write-contract-validate",
+        "activation-replay-plan",
+        "activation-replay-run",
+        "activation-replay-analyze",
+        "paper-mode-preflight-plan",
+        "paper-mode-preflight-run",
+        "paper-mode-output-analyze",
+        "runtime-write-lock-assert",
+        "no-write-invariant-check",
+        "preflight-safety-check",
+        "no-write-audit",
+        "no-write-admission-review",
+        "no-write-admission-summary",
+        "no-write-admission-latest-review",
+        "no-write-admission-validate",
+        "no-write-admission-notification-preview",
+        "no-write-admission-notification-dispatch-dry-run"
+    ]
+    for cmd in commands:
+        result = subprocess.run([sys.executable, "-m", "usa_signal_bot", cmd], capture_output=True, text=True)
+        assert result.returncode == 0, f"Command {cmd} failed: {result.stderr}"

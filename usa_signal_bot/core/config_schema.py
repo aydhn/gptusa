@@ -1,4 +1,87 @@
+
 from dataclasses import dataclass, field
+
+@dataclass
+class PaperNoWriteAdmissionConfig:
+    enabled: bool = True
+    write_no_write_admission_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_no_broker_execution: bool = True
+    warn_no_real_paper_mutation: bool = True
+    warn_no_write_contract_is_not_activation: bool = True
+    warn_activation_replay_is_metadata_only: bool = True
+    warn_paper_mode_preflight_is_no_write: bool = True
+
+@dataclass
+class NoWritePaperAdmissionContractConfig:
+    enabled: bool = True
+    require_board_review: bool = True
+    require_write_block_proof: bool = True
+    require_activation_firewall_events: bool = True
+    require_manual_review: bool = True
+    activation_denied_required: bool = True
+    activation_allowed: bool = False
+    all_writes_blocked_required: bool = True
+    allow_active_paper: bool = False
+    allow_broker_execution: bool = False
+    allow_paper_state_mutation: bool = False
+    allow_config_patch: bool = False
+    allow_telegram_real_send: bool = False
+
+@dataclass
+class ActivationFirewallReplayConfig:
+    enabled: bool = True
+    deterministic_replay: bool = True
+    require_all_activation_attempts_denied: bool = True
+    require_activation_firewall_rules: bool = True
+    require_activation_firewall_events: bool = True
+    execution_enabled: bool = False
+    active_paper_enabled: bool = False
+    broker_execution_enabled: bool = False
+    paper_state_mutation_enabled: bool = False
+    config_patch_enabled: bool = False
+    telegram_real_send_enabled: bool = False
+
+@dataclass
+class PaperModeSimulationPreflightConfig:
+    enabled: bool = True
+    deterministic_preflight: bool = True
+    preflight_is_no_write: bool = True
+    require_no_write_contract: bool = True
+    require_activation_replay_passed: bool = True
+    require_runtime_write_lock_assertion: bool = True
+    execution_enabled: bool = False
+    active_paper_enabled: bool = False
+    broker_execution_enabled: bool = False
+    paper_state_mutation_enabled: bool = False
+    config_patch_enabled: bool = False
+    telegram_real_send_enabled: bool = False
+
+@dataclass
+class NoWriteAdmissionSafetyConfig:
+    enabled: bool = True
+    block_on_real_order_risk: bool = True
+    block_on_paper_order_risk: bool = True
+    block_on_broker_order_risk: bool = True
+    block_on_paper_state_mutation_risk: bool = True
+    block_on_telegram_real_send_risk: bool = True
+    block_on_production_config_write_risk: bool = True
+    block_on_active_paper_enable_risk: bool = True
+    block_on_activation_allowed_risk: bool = True
+    block_on_write_block_proof_failed: bool = True
+    block_on_no_write_contract_invalid: bool = True
+    block_on_secret_risk: bool = True
+
+@dataclass
+class PaperNoWriteAdmissionNotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    notify_no_write_admission_report: bool = True
+    notify_activation_replay_warning: bool = True
+    notify_paper_mode_preflight_warning: bool = True
+    default_channel: str = "dry_run"
+    warn_no_real_send_default: bool = True
+
 from typing import List
 
 @dataclass
@@ -685,3 +768,16 @@ class PaperReadinessBoardNotificationsConfig:
     notify_activation_firewall_warning: bool = True
     default_channel: str = "dry_run"
     warn_no_real_send_default: bool = True
+
+
+@dataclass
+class Config:
+    paper_no_write_admission: PaperNoWriteAdmissionConfig = field(default_factory=PaperNoWriteAdmissionConfig)
+    no_write_paper_admission_contract: NoWritePaperAdmissionContractConfig = field(default_factory=NoWritePaperAdmissionContractConfig)
+    activation_firewall_replay: ActivationFirewallReplayConfig = field(default_factory=ActivationFirewallReplayConfig)
+    paper_mode_simulation_preflight: PaperModeSimulationPreflightConfig = field(default_factory=PaperModeSimulationPreflightConfig)
+    no_write_admission_safety: NoWriteAdmissionSafetyConfig = field(default_factory=NoWriteAdmissionSafetyConfig)
+    paper_no_write_admission_notifications: PaperNoWriteAdmissionNotificationsConfig = field(default_factory=PaperNoWriteAdmissionNotificationsConfig)
+
+    def validate(self) -> None:
+        pass

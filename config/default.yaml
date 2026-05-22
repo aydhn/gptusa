@@ -450,3 +450,79 @@ paper_readiness_board_notifications:
   notify_activation_firewall_warning: true
   default_channel: "dry_run"
   warn_no_real_send_default: true
+
+
+paper_no_write_admission:
+  enabled: true
+  write_no_write_admission_reports: true
+  warn_not_investment_advice: true
+  warn_no_broker_execution: true
+  warn_no_real_paper_mutation: true
+  warn_no_write_contract_is_not_activation: true
+  warn_activation_replay_is_metadata_only: true
+  warn_paper_mode_preflight_is_no_write: true
+
+no_write_paper_admission_contract:
+  enabled: true
+  require_board_review: true
+  require_write_block_proof: true
+  require_activation_firewall_events: true
+  require_manual_review: true
+  activation_denied_required: true
+  activation_allowed: false
+  all_writes_blocked_required: true
+  allow_active_paper: false
+  allow_broker_execution: false
+  allow_paper_state_mutation: false
+  allow_config_patch: false
+  allow_telegram_real_send: false
+
+activation_firewall_replay:
+  enabled: true
+  deterministic_replay: true
+  require_all_activation_attempts_denied: true
+  require_activation_firewall_rules: true
+  require_activation_firewall_events: true
+  execution_enabled: false
+  active_paper_enabled: false
+  broker_execution_enabled: false
+  paper_state_mutation_enabled: false
+  config_patch_enabled: false
+  telegram_real_send_enabled: false
+
+paper_mode_simulation_preflight:
+  enabled: true
+  deterministic_preflight: true
+  preflight_is_no_write: true
+  require_no_write_contract: true
+  require_activation_replay_passed: true
+  require_runtime_write_lock_assertion: true
+  execution_enabled: false
+  active_paper_enabled: false
+  broker_execution_enabled: false
+  paper_state_mutation_enabled: false
+  config_patch_enabled: false
+  telegram_real_send_enabled: false
+
+no_write_admission_safety:
+  enabled: true
+  block_on_real_order_risk: true
+  block_on_paper_order_risk: true
+  block_on_broker_order_risk: true
+  block_on_paper_state_mutation_risk: true
+  block_on_telegram_real_send_risk: true
+  block_on_production_config_write_risk: true
+  block_on_active_paper_enable_risk: true
+  block_on_activation_allowed_risk: true
+  block_on_write_block_proof_failed: true
+  block_on_no_write_contract_invalid: true
+  block_on_secret_risk: true
+
+paper_no_write_admission_notifications:
+  enabled: true
+  dry_run: true
+  notify_no_write_admission_report: true
+  notify_activation_replay_warning: true
+  notify_paper_mode_preflight_warning: true
+  default_channel: "dry_run"
+  warn_no_real_send_default: true
