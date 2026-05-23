@@ -25,3 +25,10 @@ def evaluate_dry_admission_quality(run_payload: dict, refresh_payload: dict, led
         "no_write_continuity_score": 1.0 if not run_payload.get('mutation_detected') else 0.0,
         "dry_admission_non_execution_compliance_score": 1.0 if run_payload.get('activation_denied') else 0.0
     }
+
+# paper sandbox bridge dimensions added in Phase 89
+paper_sandbox_bridge_dry_run_quality_score = 0
+no_order_session_emulator_score = 0
+bridge_firewall_replay_score = 0
+bridge_route_guard_score = 0
+bridge_non_execution_compliance_score = 0

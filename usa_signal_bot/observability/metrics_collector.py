@@ -26,3 +26,15 @@ def collect_dry_admission_metrics(review_payload: dict) -> dict:
         "latest_dry_admission_safety_flag_count": len(review_payload.get("warnings", [])),
         "dry_admission_warning_count": len(review_payload.get("warnings", []))
     }
+
+# paper sandbox bridge metrics added in Phase 89
+latest_bridge_dry_run_count = 0
+latest_bridge_dry_run_blocked_count = 0
+latest_no_order_session_count = 0
+latest_no_order_session_blocked_count = 0
+latest_bridge_replay_count = 0
+latest_bridge_replay_blocked_count = 0
+latest_dangerous_route_allowed_count = 0
+latest_read_only_route_allowed_count = 0
+latest_bridge_safety_flag_count = 0
+paper_sandbox_bridge_warning_count = 0

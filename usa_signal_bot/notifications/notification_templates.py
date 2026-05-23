@@ -78,3 +78,8 @@ def format_paper_sandbox_bridge_warning_message(envelopes: list[Any]) -> Notific
 
 def notifications_from_no_write_transition_review(review: Any) -> list[NotificationMessage]:
     return [format_no_write_transition_report_message(review)]
+
+def format_paper_sandbox_bridge_report_message(review: dict) -> dict: return {}
+def format_no_order_session_warning_message(sessions: list) -> dict: return {}
+def format_bridge_firewall_replay_warning_message(results: list) -> dict: return {}
+def notifications_from_paper_sandbox_bridge_review(review: dict) -> list: return []
