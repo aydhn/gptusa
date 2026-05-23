@@ -49,3 +49,18 @@ def latest_admission_attempt_not_blocked_count() -> int: return 0
 def latest_admission_allowed_violation_count() -> int: return 0
 def latest_no_order_dossier_safety_flag_count() -> int: return 0
 def no_order_dossier_warning_count() -> int: return 0
+
+
+# --- Phase 92 Observability ---
+
+class PaperSafeGateMetrics:
+    latest_paper_safe_gate_count: int = 0
+    latest_paper_safe_gate_blocked_count: int = 0
+    latest_boundary_replay_count: int = 0
+    latest_boundary_replay_failed_count: int = 0
+    latest_frozen_integrity_audit_count: int = 0
+    latest_frozen_evidence_tamper_count: int = 0
+    latest_paper_safe_rule_failed_count: int = 0
+    latest_paper_safe_assertion_failed_count: int = 0
+    latest_paper_safe_safety_flag_count: int = 0
+    paper_safe_gate_warning_count: int = 0

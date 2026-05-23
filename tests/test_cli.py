@@ -147,3 +147,21 @@ def test_cli_no_order_dossier_commands():
     for cmd in cmds:
         result = run_command([cmd])
         assert result.returncode in [0, 1]  # some commands expect specific arguments or files to succeed completely, or at least they won't crash unhandled.
+
+
+
+def test_paper_safe_gate_cli_commands():
+    import subprocess
+    cmds = [
+        "paper-safe-gate-info", "paper-safe-ingest-boundary", "paper-safe-eligibility",
+        "boundary-replay-plan", "boundary-replay-run", "boundary-replay-analyze",
+        "frozen-evidence-integrity", "frozen-evidence-validate", "paper-safe-rules",
+        "paper-safe-assertions", "final-paper-safe-gate", "final-paper-safe-gate-validate",
+        "paper-safe-continuity", "paper-safe-safety-check", "paper-safe-audit",
+        "paper-safe-review", "paper-safe-summary", "paper-safe-latest-review",
+        "paper-safe-validate", "paper-safe-notification-preview",
+        "paper-safe-notification-dispatch-dry-run"
+    ]
+    for cmd in cmds:
+        res = subprocess.run(["python", "-m", "usa_signal_bot", cmd], capture_output=True, text=True)
+        assert res.returncode == 0, f"Command {cmd} failed: {res.stderr}"

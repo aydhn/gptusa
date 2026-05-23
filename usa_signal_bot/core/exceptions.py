@@ -685,3 +685,25 @@ class BoundaryValidationError(PaperBoundaryCertificateError):
 
 class BoundaryReportingError(PaperBoundaryCertificateError):
     pass
+
+
+# --- Phase 92 ---
+
+class PaperSafeGateError(Exception): pass
+class PaperSafeBoundaryIngestionError(PaperSafeGateError): pass
+class PaperSafeEligibilityError(PaperSafeGateError): pass
+class BoundaryReplayPlanError(PaperSafeGateError): pass
+class BoundaryReplayEngineError(PaperSafeGateError): pass
+class BoundaryReplayAnalyzerError(PaperSafeGateError): pass
+class FrozenEvidenceIntegrityError(PaperSafeGateError): pass
+class FrozenEvidenceValidationError(PaperSafeGateError): pass
+class PaperSafeRuleError(PaperSafeGateError): pass
+class PaperSafeAssertionError(PaperSafeGateError): pass
+class FinalPaperSafeGateError(PaperSafeGateError): pass
+class PaperSafeGateValidationError(PaperSafeGateError): pass
+class PaperSafeContinuityError(PaperSafeGateError): pass
+class PaperSafeSafetyValidatorError(PaperSafeGateError): pass
+class PaperSafeAuditError(PaperSafeGateError): pass
+class PaperSafeStorageError(PaperSafeGateError): pass
+class PaperSafeValidationError(PaperSafeGateError): pass
+class PaperSafeReportingError(PaperSafeGateError): pass
