@@ -759,3 +759,51 @@ class PaperSafeDossierValidationError(PaperSafeDossierError):
 
 class PaperSafeDossierReportingError(PaperSafeDossierError):
     pass
+
+class PaperReadinessNonExecutionBoardError(SignalBotError):
+    pass
+
+class NonExecutionBoardDossierIngestionError(PaperReadinessNonExecutionBoardError):
+    pass
+
+class NonExecutionBoardEligibilityError(PaperReadinessNonExecutionBoardError):
+    pass
+
+class RuntimeMapReplayPlanError(PaperReadinessNonExecutionBoardError):
+    pass
+
+class RuntimeMapReplayEngineError(PaperReadinessNonExecutionBoardError):
+    pass
+
+class RuntimeMapReplayAnalyzerError(PaperReadinessNonExecutionBoardError):
+    pass
+
+class NonExecutionSealIntegrityAuditError(PaperReadinessNonExecutionBoardError):
+    pass
+
+class SealIntegrityValidationError(PaperReadinessNonExecutionBoardError):
+    pass
+
+class NonExecutionBoardGateError(PaperReadinessNonExecutionBoardError):
+    pass
+
+class NonExecutionBoardAssertionError(PaperReadinessNonExecutionBoardError):
+    pass
+
+class NonExecutionBoardValidationError(PaperReadinessNonExecutionBoardError):
+    pass
+
+class NonExecutionBoardContinuityError(PaperReadinessNonExecutionBoardError):
+    pass
+
+class NonExecutionBoardSafetyValidatorError(PaperReadinessNonExecutionBoardError):
+    pass
+
+class NonExecutionBoardAuditError(PaperReadinessNonExecutionBoardError):
+    pass
+
+class NonExecutionBoardStorageError(PaperReadinessNonExecutionBoardError):
+    pass
+
+class NonExecutionBoardReportingError(PaperReadinessNonExecutionBoardError):
+    pass
