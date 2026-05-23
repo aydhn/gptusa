@@ -50,3 +50,31 @@ def format_human_approval_ledger_warning_message(ledgers: list) -> dict:
     }
 def notifications_from_dry_admission_review(review: dict) -> list:
     return [format_dry_admission_report_message(review)]
+
+
+def format_no_write_transition_report_message(review: Any) -> NotificationMessage:
+    return NotificationMessage(
+        type=NotificationType.NO_WRITE_TRANSITION_REPORT,
+        subject=f"No-Write Transition Review: {review.review_id}",
+        body=f"No-write transition review required. Dossiers: {len(review.dossiers)}",
+        metadata={"review_id": review.review_id}
+    )
+
+def format_evidence_seal_validation_warning_message(validations: list[Any]) -> NotificationMessage:
+    return NotificationMessage(
+        type=NotificationType.EVIDENCE_SEAL_VALIDATION_WARNING,
+        subject="Evidence Seal Validation Warning",
+        body=f"Found {len(validations)} warnings in seal validations.",
+        metadata={}
+    )
+
+def format_paper_sandbox_bridge_warning_message(envelopes: list[Any]) -> NotificationMessage:
+    return NotificationMessage(
+        type=NotificationType.PAPER_SANDBOX_BRIDGE_WARNING,
+        subject="Paper Sandbox Bridge Warning",
+        body=f"Found warnings in {len(envelopes)} sandbox bridges.",
+        metadata={}
+    )
+
+def notifications_from_no_write_transition_review(review: Any) -> list[NotificationMessage]:
+    return [format_no_write_transition_report_message(review)]

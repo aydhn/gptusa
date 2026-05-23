@@ -526,3 +526,85 @@ paper_no_write_admission_notifications:
   notify_paper_mode_preflight_warning: true
   default_channel: "dry_run"
   warn_no_real_send_default: true
+
+
+paper_no_write_transition:
+  enabled: true
+  write_transition_reports: true
+  warn_not_investment_advice: true
+  warn_no_broker_execution: true
+  warn_no_real_paper_mutation: true
+  warn_transition_dossier_is_not_activation: true
+  warn_evidence_seal_refresh_is_metadata_only: true
+  warn_sandbox_bridge_is_no_write_metadata: true
+
+paper_mode_no_write_transition_dossier:
+  enabled: true
+  deterministic_dossier: true
+  require_admission_review: true
+  require_transition_checkpoint: true
+  require_admission_evidence_seal: true
+  require_manual_review: true
+  require_activation_denied: true
+  activation_allowed: false
+  transition_allowed: false
+  all_writes_blocked_required: true
+  allow_active_paper: false
+  allow_broker_execution: false
+  allow_paper_state_mutation: false
+  allow_config_patch: false
+  allow_telegram_real_send: false
+
+admission_evidence_seal_validation:
+  enabled: true
+  require_existing_seal: true
+  require_hash_match: true
+  require_sealed: true
+  require_immutable: true
+  allow_metadata_refresh_only: true
+  block_on_hash_mismatch: true
+  block_on_missing_evidence: true
+  block_on_failed_seal: true
+
+final_paper_sandbox_bridge:
+  enabled: true
+  bridge_is_no_write: true
+  bridge_is_metadata_only: true
+  allow_read_only_routes: true
+  deny_write_routes: true
+  deny_order_routes: true
+  deny_broker_routes: true
+  deny_config_patch_routes: true
+  deny_activation_routes: true
+  deny_telegram_real_send_routes: true
+  activation_allowed: false
+  transition_allowed: false
+  allow_active_paper: false
+  allow_broker_execution: false
+  allow_paper_state_mutation: false
+  allow_config_patch: false
+  allow_telegram_real_send: false
+
+no_write_transition_safety:
+  enabled: true
+  block_on_real_order_risk: true
+  block_on_paper_order_risk: true
+  block_on_broker_order_risk: true
+  block_on_paper_state_mutation_risk: true
+  block_on_telegram_real_send_risk: true
+  block_on_production_config_write_risk: true
+  block_on_active_paper_enable_risk: true
+  block_on_activation_allowed_risk: true
+  block_on_transition_allowed_risk: true
+  block_on_bridge_route_risk: true
+  block_on_evidence_seal_failed: true
+  block_on_secret_risk: true
+
+paper_no_write_transition_notifications:
+  enabled: true
+  dry_run: true
+  notify_no_write_transition_report: true
+  notify_evidence_seal_validation_warning: true
+  notify_paper_sandbox_bridge_warning: true
+  default_channel: "dry_run"
+  warn_no_real_send_default: true

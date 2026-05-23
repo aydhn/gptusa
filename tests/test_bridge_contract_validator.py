@@ -1,0 +1,6 @@
+
+from usa_signal_bot.paper_no_write_transition.bridge_contract_validator import validate_bridge_against_no_write_contract
+from usa_signal_bot.paper_no_write_transition.sandbox_bridge_envelope import build_default_paper_sandbox_bridge_envelope
+def test_contract_validator():
+    env = build_default_paper_sandbox_bridge_envelope()
+    assert isinstance(validate_bridge_against_no_write_contract(env), list)
