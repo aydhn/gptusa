@@ -707,3 +707,55 @@ class PaperSafeAuditError(PaperSafeGateError): pass
 class PaperSafeStorageError(PaperSafeGateError): pass
 class PaperSafeValidationError(PaperSafeGateError): pass
 class PaperSafeReportingError(PaperSafeGateError): pass
+
+
+class PaperSafeDossierError(USASignalBotError):
+    pass
+
+class PaperSafeDossierIngestionError(PaperSafeDossierError):
+    pass
+
+class PaperSafeDossierEligibilityError(PaperSafeDossierError):
+    pass
+
+class PaperSafeDossierEvidenceError(PaperSafeDossierError):
+    pass
+
+class PaperSafeGateDossierError(PaperSafeDossierError):
+    pass
+
+class NonExecutionAcceptanceSealError(PaperSafeDossierError):
+    pass
+
+class NonExecutionSealValidationError(PaperSafeDossierError):
+    pass
+
+class PrePaperLocalRuntimeMapError(PaperSafeDossierError):
+    pass
+
+class RuntimeRouteMapError(PaperSafeDossierError):
+    pass
+
+class RuntimeMapValidationError(PaperSafeDossierError):
+    pass
+
+class RuntimeNonExecutionAssertionError(PaperSafeDossierError):
+    pass
+
+class PaperSafeDossierContinuityError(PaperSafeDossierError):
+    pass
+
+class PaperSafeDossierSafetyValidatorError(PaperSafeDossierError):
+    pass
+
+class PaperSafeDossierAuditError(PaperSafeDossierError):
+    pass
+
+class PaperSafeDossierStorageError(PaperSafeDossierError):
+    pass
+
+class PaperSafeDossierValidationError(PaperSafeDossierError):
+    pass
+
+class PaperSafeDossierReportingError(PaperSafeDossierError):
+    pass
