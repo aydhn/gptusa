@@ -37,3 +37,10 @@ def dataclass_to_json(obj: Any) -> str:
 
 def dict_to_json(data: dict) -> str:
     return json.dumps(serialize_value(data), sort_keys=True)
+
+def to_dict_clean(obj: Any) -> dict:
+    if not dataclasses.is_dataclass(obj):
+        return {}
+    res = dataclass_to_dict(obj)
+    # clean out None values
+    return {k: v for k, v in res.items() if v is not None}

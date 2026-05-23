@@ -770,8 +770,106 @@ class PaperReadinessBoardNotificationsConfig:
     warn_no_real_send_default: bool = True
 
 
+
+@dataclass
+class PaperBoundaryCertificateConfig:
+    enabled: bool = True
+    write_boundary_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_no_broker_execution: bool = True
+    warn_no_real_paper_mutation: bool = True
+    warn_blocker_replay_is_metadata_only: bool = True
+    warn_evidence_freeze_is_metadata_only: bool = True
+    warn_boundary_certificate_is_not_activation: bool = True
+
+@dataclass
+class PaperAdmissionBlockerReplayConfig:
+    enabled: bool = True
+    deterministic_replay: bool = True
+    require_all_attempts_blocked: bool = True
+    require_blocker_rules: bool = True
+    require_blocker_events: bool = True
+    execution_enabled: bool = False
+    active_paper_enabled: bool = False
+    paper_admission_enabled: bool = False
+    broker_execution_enabled: bool = False
+    paper_state_mutation_enabled: bool = False
+    config_patch_enabled: bool = False
+    telegram_real_send_enabled: bool = False
+
+@dataclass
+class NoOrderEvidenceFreezeConfig:
+    enabled: bool = True
+    freeze_is_metadata_only: bool = True
+    require_frozen: bool = True
+    require_immutable: bool = True
+    require_evidence_available: bool = True
+    block_on_missing_evidence: bool = True
+    block_on_stale_evidence: bool = True
+    block_on_freeze_failed: bool = True
+
+@dataclass
+class PaperSandboxBoundaryCertificateConfig:
+    enabled: bool = True
+    certificate_is_metadata_only: bool = True
+    require_no_order_dossier: bool = True
+    require_blocker_replay: bool = True
+    require_evidence_freeze: bool = True
+    require_boundary_rules: bool = True
+    require_boundary_assertions: bool = True
+    require_manual_review: bool = True
+    activation_allowed: bool = False
+    admission_allowed: bool = False
+    transition_allowed: bool = False
+    all_writes_blocked_required: bool = True
+    require_order_created_false: bool = True
+    require_mutation_detected_false: bool = True
+    allow_active_paper: bool = False
+    allow_broker_execution: bool = False
+    allow_paper_state_mutation: bool = False
+    allow_config_patch: bool = False
+    allow_telegram_real_send: bool = False
+
+@dataclass
+class PaperBoundarySafetyConfig:
+    enabled: bool = True
+    block_on_real_order_risk: bool = True
+    block_on_paper_order_risk: bool = True
+    block_on_broker_order_risk: bool = True
+    block_on_paper_state_mutation_risk: bool = True
+    block_on_telegram_real_send_risk: bool = True
+    block_on_production_config_write_risk: bool = True
+    block_on_active_paper_enable_risk: bool = True
+    block_on_admission_allowed_risk: bool = True
+    block_on_activation_allowed_risk: bool = True
+    block_on_transition_allowed_risk: bool = True
+    block_on_order_created_risk: bool = True
+    block_on_mutation_detected_risk: bool = True
+    block_on_blocker_replay_failed: bool = True
+    block_on_evidence_freeze_failed: bool = True
+    block_on_boundary_assertion_failed: bool = True
+    block_on_secret_risk: bool = True
+
+@dataclass
+class PaperBoundaryNotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    notify_boundary_certificate_report: bool = True
+    notify_blocker_replay_warning: bool = True
+    notify_evidence_freeze_warning: bool = True
+    default_channel: str = "dry_run"
+    warn_no_real_send_default: bool = True
+
 @dataclass
 class Config:
+
+    paper_boundary_certificate: PaperBoundaryCertificateConfig = field(default_factory=PaperBoundaryCertificateConfig)
+    paper_admission_blocker_replay: PaperAdmissionBlockerReplayConfig = field(default_factory=PaperAdmissionBlockerReplayConfig)
+    no_order_evidence_freeze: NoOrderEvidenceFreezeConfig = field(default_factory=NoOrderEvidenceFreezeConfig)
+    paper_sandbox_boundary_certificate: PaperSandboxBoundaryCertificateConfig = field(default_factory=PaperSandboxBoundaryCertificateConfig)
+    paper_boundary_safety: PaperBoundarySafetyConfig = field(default_factory=PaperBoundarySafetyConfig)
+    paper_boundary_notifications: PaperBoundaryNotificationsConfig = field(default_factory=PaperBoundaryNotificationsConfig)
+
     paper_no_write_admission: PaperNoWriteAdmissionConfig = field(default_factory=PaperNoWriteAdmissionConfig)
     no_write_paper_admission_contract: NoWritePaperAdmissionContractConfig = field(default_factory=NoWritePaperAdmissionContractConfig)
     activation_firewall_replay: ActivationFirewallReplayConfig = field(default_factory=ActivationFirewallReplayConfig)
