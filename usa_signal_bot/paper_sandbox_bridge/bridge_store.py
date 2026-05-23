@@ -23,3 +23,7 @@ def read_bridge_full_review_json(path: Path) -> dict[str, Any]: return {}
 def list_bridge_full_reviews(data_root: Path) -> list[Path]: return []
 def get_latest_bridge_full_review(data_root: Path) -> Path | None: return None
 def bridge_store_summary(data_root: Path) -> dict[str, Any]: return {}
+
+# Phase 90 integration stub
+
+# Phase 90 integration

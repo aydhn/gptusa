@@ -864,3 +864,92 @@ class PaperDryAdmissionNotificationsConfig:
     notify_human_approval_ledger_warning: bool = True
     default_channel: str = "dry_run"
     warn_no_real_send_default: bool = True
+
+@dataclass
+class PaperNoOrderDossierConfig:
+    enabled: bool = True
+    write_no_order_dossier_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_no_broker_execution: bool = True
+    warn_no_real_paper_mutation: bool = True
+    warn_no_order_dossier_is_not_activation: bool = True
+    warn_bridge_replay_audit_seal_is_metadata_only: bool = True
+    warn_admission_blocker_denies_admission: bool = True
+
+@dataclass
+class NoOrderPaperSessionDossierConfig:
+    enabled: bool = True
+    deterministic_dossier: bool = True
+    require_bridge_review: bool = True
+    require_bridge_dry_run: bool = True
+    require_no_order_session: bool = True
+    require_bridge_replay_result: bool = True
+    require_manual_review: bool = True
+    activation_allowed: bool = False
+    admission_allowed: bool = False
+    transition_allowed: bool = False
+    all_writes_blocked_required: bool = True
+    require_order_created_false: bool = True
+    require_mutation_detected_false: bool = True
+    allow_active_paper: bool = False
+    allow_broker_execution: bool = False
+    allow_paper_state_mutation: bool = False
+    allow_config_patch: bool = False
+    allow_telegram_real_send: bool = False
+
+@dataclass
+class BridgeReplayAuditSealConfig:
+    enabled: bool = True
+    seal_is_metadata_only: bool = True
+    require_replay_passed: bool = True
+    require_all_dangerous_routes_denied: bool = True
+    require_dangerous_allowed_count_zero: bool = True
+    require_sealed: bool = True
+    require_immutable: bool = True
+    block_on_dangerous_allowed_count: bool = True
+    block_on_missing_route: bool = True
+
+@dataclass
+class FinalPaperAdmissionBlockerConfig:
+    enabled: bool = True
+    blocker_is_metadata_only: bool = True
+    deny_paper_admission_by_default: bool = True
+    deny_enable_active_paper: bool = True
+    deny_enable_paper_runtime: bool = True
+    deny_admit_candidate_to_paper: bool = True
+    deny_create_paper_session: bool = True
+    deny_create_paper_order: bool = True
+    deny_commit_paper_state: bool = True
+    deny_patch_paper_config: bool = True
+    deny_send_broker_order: bool = True
+    deny_send_telegram_real: bool = True
+    admission_allowed: bool = False
+    active_paper_enabled: bool = False
+
+@dataclass
+class NoOrderDossierSafetyConfig:
+    enabled: bool = True
+    block_on_real_order_risk: bool = True
+    block_on_paper_order_risk: bool = True
+    block_on_broker_order_risk: bool = True
+    block_on_paper_state_mutation_risk: bool = True
+    block_on_telegram_real_send_risk: bool = True
+    block_on_production_config_write_risk: bool = True
+    block_on_active_paper_enable_risk: bool = True
+    block_on_admission_allowed_risk: bool = True
+    block_on_activation_allowed_risk: bool = True
+    block_on_transition_allowed_risk: bool = True
+    block_on_order_created_risk: bool = True
+    block_on_mutation_detected_risk: bool = True
+    block_on_admission_blocker_failed: bool = True
+    block_on_secret_risk: bool = True
+
+@dataclass
+class PaperNoOrderDossierNotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    notify_no_order_dossier_report: bool = True
+    notify_bridge_replay_audit_seal_warning: bool = True
+    notify_paper_admission_blocker_warning: bool = True
+    default_channel: str = "dry_run"
+    warn_no_real_send_default: bool = True

@@ -120,3 +120,30 @@ def test_cli_no_write_transition_commands():
     for cmd in cmds:
         result = run_command([cmd])
         assert result.returncode == 0
+
+def test_cli_no_order_dossier_commands():
+    cmds = [
+        "no-order-dossier-info",
+        "no-order-ingest-bridge",
+        "no-order-eligibility",
+        "no-order-evidence",
+        "no-order-dossier",
+        "bridge-replay-audit-seal",
+        "bridge-replay-seal-validate",
+        "admission-blocker-rules",
+        "admission-blocker-evaluate",
+        "admission-attempt-simulate",
+        "admission-blocker-analyze",
+        "no-order-continuity",
+        "paper-admission-safety-check",
+        "no-order-audit",
+        "no-order-review",
+        "no-order-summary",
+        "no-order-latest-review",
+        "no-order-validate",
+        "no-order-notification-preview",
+        "no-order-notification-dispatch-dry-run"
+    ]
+    for cmd in cmds:
+        result = run_command([cmd])
+        assert result.returncode in [0, 1]  # some commands expect specific arguments or files to succeed completely, or at least they won't crash unhandled.

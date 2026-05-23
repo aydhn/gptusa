@@ -616,3 +616,21 @@ class BridgeValidationError(PaperSandboxBridgeError):
 
 class BridgeReportingError(PaperSandboxBridgeError):
     pass
+
+class PaperNoOrderDossierError(Exception): pass
+class NoOrderDossierBridgeIngestionError(Exception): pass
+class NoOrderDossierEligibilityError(Exception): pass
+class NoOrderDossierEvidenceError(Exception): pass
+class NoOrderSessionDossierError(Exception): pass
+class BridgeReplayAuditSealError(Exception): pass
+class BridgeReplaySealValidationError(Exception): pass
+class AdmissionBlockerRuleError(Exception): pass
+class FinalPaperAdmissionBlockerError(Exception): pass
+class AdmissionAttemptSimulatorError(Exception): pass
+class AdmissionBlockerAnalyzerError(Exception): pass
+class NoOrderContinuityError(Exception): pass
+class PaperAdmissionSafetyValidatorError(Exception): pass
+class NoOrderDossierAuditError(Exception): pass
+class NoOrderDossierStorageError(Exception): pass
+class NoOrderDossierValidationError(Exception): pass
+class NoOrderDossierReportingError(Exception): pass
