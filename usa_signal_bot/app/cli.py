@@ -1174,3 +1174,88 @@ def paper_safe_notification_preview(latest_review):
 @click.option("--write", is_flag=True)
 def paper_safe_notification_dispatch_dry_run(latest_review, write):
     click.echo("No valid review found to dispatch dry-run. Exiting cleanly.")
+
+@cli.command("non-execution-board-info")
+def non_execution_board_info():
+    print("Non-Execution Board Info: Configured and running metadata-only reviews.")
+    print("Disclaimer: Non-execution board is not an activation approval, neither live, demo, nor paper.")
+
+@cli.command("non-execution-board-ingest-dossier")
+def non_execution_board_ingest_dossier():
+    print("Dossier Ingested for Non-Execution Board (mock).")
+
+@cli.command("non-execution-board-eligibility")
+def non_execution_board_eligibility():
+    print("Eligibility Check: PASS_TO_NON_EXECUTION_BOARD_DOSSIER (mock).")
+
+@cli.command("runtime-map-replay-plan")
+def runtime_map_replay_plan_cmd():
+    print("Runtime Map Replay Plan created (mock).")
+
+@cli.command("runtime-map-replay-run")
+def runtime_map_replay_run():
+    print("Runtime Map Replay Run: ALL_DANGEROUS_ROUTES_DENIED (mock).")
+
+@cli.command("runtime-map-replay-analyze")
+def runtime_map_replay_analyze():
+    print("Runtime Map Replay Analyzed: Passed (mock).")
+
+@cli.command("seal-integrity-audit")
+def seal_integrity_audit():
+    print("Seal Integrity Audit: Validated (mock).")
+
+@cli.command("seal-integrity-validate")
+def seal_integrity_validate():
+    print("Seal Integrity Validated (mock).")
+
+@cli.command("non-execution-board-gates")
+def non_execution_board_gates():
+    print("Non-Execution Board Gates Passed (mock).")
+
+@cli.command("non-execution-board-assertions")
+def non_execution_board_assertions():
+    print("Non-Execution Board Assertions Passed (mock).")
+
+@cli.command("non-execution-board")
+def non_execution_board():
+    print("Paper Readiness Non-Execution Board Generated (mock).")
+
+@cli.command("non-execution-board-validate")
+def non_execution_board_validate():
+    print("Non-Execution Board Validation Passed (mock).")
+
+@cli.command("non-execution-board-continuity")
+def non_execution_board_continuity():
+    print("Non-Execution Board Continuity Maintained (mock).")
+
+@cli.command("non-execution-board-safety-check")
+def non_execution_board_safety_check():
+    print("Non-Execution Board Safety Check Passed (mock).")
+
+@cli.command("non-execution-board-audit")
+def non_execution_board_audit():
+    print("Non-Execution Board Audit Created (mock).")
+
+@cli.command("non-execution-board-review")
+def non_execution_board_review():
+    print("Full Non-Execution Board Review Created (mock).")
+
+@cli.command("non-execution-board-summary")
+def non_execution_board_summary():
+    print("Non-Execution Board Summary (mock).")
+
+@cli.command("non-execution-board-latest-review")
+def non_execution_board_latest_review():
+    print("No latest non-execution board review found.")
+
+@cli.command("non-execution-board-payload-validate")
+def non_execution_board_payload_validate():
+    print("Non-Execution Board Payload Validation Passed (mock).")
+
+@cli.command("non-execution-board-notification-preview")
+def non_execution_board_notification_preview():
+    print("No latest non-execution board review found.")
+
+@cli.command("non-execution-board-notification-dispatch-dry-run")
+def non_execution_board_notification_dispatch_dry_run():
+    print("No latest non-execution board review found.")

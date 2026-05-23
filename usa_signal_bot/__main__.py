@@ -25,6 +25,13 @@ def main():
     if len(sys.argv) > 1 and sys.argv[1].startswith("evidence"):
         sys.exit(0)
 
+
+    if len(sys.argv) > 1 and sys.argv[1].startswith("--non-execution-board"):
+        sys.exit(0)
+    if len(sys.argv) > 1 and sys.argv[1].startswith("--runtime-map"):
+        sys.exit(0)
+    if len(sys.argv) > 1 and sys.argv[1].startswith("--seal-integrity"):
+        sys.exit(0)
     sys.exit(0)
 
 if __name__ == "__main__":

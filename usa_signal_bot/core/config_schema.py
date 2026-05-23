@@ -1147,3 +1147,102 @@ class PaperSafeGateNotificationsConfig:
     notify_frozen_evidence_integrity_warning: bool = True
     default_channel: str = "dry_run"
     warn_no_real_send_default: bool = True
+
+
+@dataclass
+class PaperReadinessNonExecutionBoardConfig:
+    enabled: bool = True
+    write_board_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_no_broker_execution: bool = True
+    warn_no_real_paper_mutation: bool = True
+    warn_runtime_map_replay_is_metadata_only: bool = True
+    warn_seal_integrity_audit_is_metadata_only: bool = True
+    warn_non_execution_board_is_not_activation: bool = True
+
+@dataclass
+class PrePaperRuntimeMapReplayConfig:
+    enabled: bool = True
+    deterministic_replay: bool = True
+    require_runtime_map: bool = True
+    require_component_map: bool = True
+    require_route_map: bool = True
+    require_all_dangerous_routes_denied: bool = True
+    allow_read_only_routes: bool = True
+    allow_preview_routes: bool = True
+    allow_dry_run_routes: bool = True
+    execution_enabled: bool = False
+    active_paper_enabled: bool = False
+    paper_admission_enabled: bool = False
+    broker_execution_enabled: bool = False
+    paper_state_mutation_enabled: bool = False
+    config_patch_enabled: bool = False
+    telegram_real_send_enabled: bool = False
+
+@dataclass
+class NonExecutionSealIntegrityAuditConfig:
+    enabled: bool = True
+    audit_is_metadata_only: bool = True
+    require_seal_hash_match: bool = True
+    require_confirmed_non_execution: bool = True
+    require_confirmed_no_broker: bool = True
+    require_confirmed_no_active_paper: bool = True
+    require_confirmed_no_paper_admission: bool = True
+    require_confirmed_no_order: bool = True
+    require_confirmed_no_write: bool = True
+    require_confirmed_no_telegram_real_send: bool = True
+    require_confirmed_no_config_patch: bool = True
+    block_on_hash_mismatch: bool = True
+    block_on_confirmation_failed: bool = True
+
+@dataclass
+class FinalPaperReadinessNonExecutionBoardConfig:
+    enabled: bool = True
+    board_is_metadata_only: bool = True
+    require_paper_safe_dossier: bool = True
+    require_runtime_map_replay: bool = True
+    require_seal_integrity_audit: bool = True
+    require_board_gates: bool = True
+    require_board_assertions: bool = True
+    require_manual_review: bool = True
+    activation_allowed: bool = False
+    admission_allowed: bool = False
+    transition_allowed: bool = False
+    all_writes_blocked_required: bool = True
+    require_order_created_false: bool = True
+    require_mutation_detected_false: bool = True
+    allow_active_paper: bool = False
+    allow_broker_execution: bool = False
+    allow_paper_state_mutation: bool = False
+    allow_config_patch: bool = False
+    allow_telegram_real_send: bool = False
+
+@dataclass
+class NonExecutionBoardSafetyConfig:
+    enabled: bool = True
+    block_on_real_order_risk: bool = True
+    block_on_paper_order_risk: bool = True
+    block_on_broker_order_risk: bool = True
+    block_on_paper_state_mutation_risk: bool = True
+    block_on_telegram_real_send_risk: bool = True
+    block_on_production_config_write_risk: bool = True
+    block_on_active_paper_enable_risk: bool = True
+    block_on_admission_allowed_risk: bool = True
+    block_on_activation_allowed_risk: bool = True
+    block_on_transition_allowed_risk: bool = True
+    block_on_order_created_risk: bool = True
+    block_on_mutation_detected_risk: bool = True
+    block_on_runtime_route_permission_risk: bool = True
+    block_on_non_execution_seal_integrity_failed: bool = True
+    block_on_board_assertion_failed: bool = True
+    block_on_secret_risk: bool = True
+
+@dataclass
+class NonExecutionBoardNotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    notify_non_execution_board_report: bool = True
+    notify_runtime_map_replay_warning: bool = True
+    notify_seal_integrity_warning: bool = True
+    default_channel: str = "dry_run"
+    warn_no_real_send_default: bool = True
