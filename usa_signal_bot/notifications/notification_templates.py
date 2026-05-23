@@ -83,3 +83,9 @@ def format_paper_sandbox_bridge_report_message(review: dict) -> dict: return {}
 def format_no_order_session_warning_message(sessions: list) -> dict: return {}
 def format_bridge_firewall_replay_warning_message(results: list) -> dict: return {}
 def notifications_from_paper_sandbox_bridge_review(review: dict) -> list: return []
+
+from typing import Any
+def format_no_order_dossier_report_message(review: Any) -> Any: return None
+def format_bridge_replay_audit_seal_warning_message(seals: list) -> Any: return None
+def format_paper_admission_blocker_warning_message(events: list) -> Any: return None
+def notifications_from_no_order_dossier_review(review: Any) -> list: return []

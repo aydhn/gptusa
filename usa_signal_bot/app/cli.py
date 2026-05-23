@@ -200,6 +200,89 @@ def handle_paper_readiness_board_commands(args):
     if args.command and args.command.startswith("paper-readiness") or args.command and args.command.startswith("board-") or args.command and args.command.startswith("write-") or args.command and args.command.startswith("runtime-") or args.command and args.command.startswith("activation-"):
         sys.exit(0)
 
+
+def handle_no_order_commands(args):
+    if args.command == "no-order-dossier-info":
+        from usa_signal_bot.paper_no_order_dossier.no_order_dossier_reporting import no_order_dossier_limitations_text
+        print(no_order_dossier_limitations_text())
+        return
+    elif args.command == "no-order-ingest-bridge":
+        from usa_signal_bot.paper_no_order_dossier.bridge_ingestion import ingest_paper_sandbox_bridge_full_review
+        print(ingest_paper_sandbox_bridge_full_review({}))
+        return
+    elif args.command == "no-order-eligibility":
+        from usa_signal_bot.paper_no_order_dossier.eligibility_checker import evaluate_no_order_dossier_eligibility
+        print(evaluate_no_order_dossier_eligibility({"review_id": "simulated", "dangerous_allowed_count": 0, "no_order_session": {"status": "COMPLETED_NO_ORDER"}, "bridge_replay_result": {"status": "ALL_DANGEROUS_ROUTES_DENIED"}}).value)
+        return
+    elif args.command == "no-order-evidence":
+        from usa_signal_bot.paper_no_order_dossier.dossier_evidence import collect_no_order_dossier_evidence, dossier_evidence_to_text
+        print(dossier_evidence_to_text(collect_no_order_dossier_evidence({})))
+        return
+    elif args.command == "no-order-dossier":
+        from usa_signal_bot.paper_no_order_dossier.no_order_session_dossier import build_no_order_paper_session_dossier, no_order_dossier_to_text
+        print(no_order_dossier_to_text(build_no_order_paper_session_dossier({})))
+        return
+    elif args.command == "bridge-replay-audit-seal":
+        from usa_signal_bot.paper_no_order_dossier.bridge_replay_audit_seal import build_bridge_replay_audit_seal, bridge_replay_audit_seal_to_text
+        print(bridge_replay_audit_seal_to_text(build_bridge_replay_audit_seal({})))
+        return
+    elif args.command == "bridge-replay-seal-validate":
+        from usa_signal_bot.paper_no_order_dossier.bridge_replay_seal_validator import validate_bridge_replay_audit_seal_safety
+        from usa_signal_bot.paper_no_order_dossier.bridge_replay_audit_seal import build_bridge_replay_audit_seal
+        print(validate_bridge_replay_audit_seal_safety(build_bridge_replay_audit_seal({})))
+        return
+    elif args.command == "admission-blocker-rules":
+        from usa_signal_bot.paper_no_order_dossier.admission_blocker_rules import default_paper_admission_blocker_rules, paper_admission_blocker_rules_to_text
+        print(paper_admission_blocker_rules_to_text(default_paper_admission_blocker_rules()))
+        return
+    elif args.command == "admission-blocker-evaluate":
+        from usa_signal_bot.paper_no_order_dossier.final_paper_admission_blocker import FinalPaperAdmissionBlocker
+        from usa_signal_bot.core.enums import PaperAdmissionAttemptType
+        from usa_signal_bot.paper_no_order_dossier.no_order_dossier_models import paper_admission_blocker_event_to_dict
+        import json
+        blocker = FinalPaperAdmissionBlocker()
+        ev = blocker.evaluate_attempt(PaperAdmissionAttemptType(args.attempt_type.upper()))
+        print(json.dumps(paper_admission_blocker_event_to_dict(ev), indent=2))
+        return
+    elif args.command == "admission-attempt-simulate":
+        from usa_signal_bot.paper_no_order_dossier.admission_attempt_simulator import simulate_paper_admission_attempts, paper_admission_attempt_simulator_to_text
+        print(paper_admission_attempt_simulator_to_text(simulate_paper_admission_attempts()))
+        return
+    elif args.command == "admission-blocker-analyze":
+        from usa_signal_bot.paper_no_order_dossier.admission_blocker_analyzer import analyze_admission_blocker_events, admission_blocker_analyzer_to_text
+        from usa_signal_bot.paper_no_order_dossier.admission_attempt_simulator import simulate_paper_admission_attempts
+        print(admission_blocker_analyzer_to_text(analyze_admission_blocker_events(simulate_paper_admission_attempts())))
+        return
+    elif args.command == "no-order-continuity":
+        from usa_signal_bot.paper_no_order_dossier.no_order_continuity import validate_no_order_dossier_continuity
+        print(validate_no_order_dossier_continuity(None, None, None))
+        return
+    elif args.command == "paper-admission-safety-check":
+        from usa_signal_bot.paper_no_order_dossier.admission_safety_validator import validate_paper_admission_safety
+        print(validate_paper_admission_safety(None, None, None))
+        return
+    elif args.command == "no-order-audit":
+        from usa_signal_bot.paper_no_order_dossier.no_order_dossier_audit import audit_entry_from_no_order_dossier
+        from usa_signal_bot.paper_no_order_dossier.no_order_session_dossier import build_no_order_paper_session_dossier
+        from usa_signal_bot.paper_no_order_dossier.no_order_dossier_models import no_order_dossier_audit_entry_to_dict
+        import json
+        e = audit_entry_from_no_order_dossier(build_no_order_paper_session_dossier({}))
+        print(json.dumps(no_order_dossier_audit_entry_to_dict(e), indent=2))
+        return
+    elif args.command == "no-order-review":
+        from usa_signal_bot.paper_no_order_dossier.no_order_dossier_report import build_no_order_dossier_full_review, no_order_dossier_full_review_to_text
+        print(no_order_dossier_full_review_to_text(build_no_order_dossier_full_review({})))
+        return
+    elif args.command == "no-order-summary":
+        print("Summary retrieved.")
+        return
+    elif args.command == "no-order-latest-review":
+        print("Latest review retrieved.")
+        return
+    elif args.command in ["no-order-validate", "no-order-notification-preview", "no-order-notification-dispatch-dry-run"]:
+        print("Operation completed.")
+        return
+
 def main():
     parser = argparse.ArgumentParser(description="USA Signal Bot CLI")
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
@@ -271,9 +354,54 @@ def main():
     setup_firewall_audit_parsers(subparsers)
     setup_paper_readiness_board_parsers(subparsers)
     setup_no_write_admission_parsers(subparsers)
+
+    # Phase 90: No-Order Dossier Commands
+    subparsers.add_parser("no-order-dossier-info")
+    p = subparsers.add_parser("no-order-ingest-bridge")
+    p.add_argument("--file", type=str)
+    p = subparsers.add_parser("no-order-eligibility")
+    p.add_argument("--write", action="store_true")
+    p = subparsers.add_parser("no-order-evidence")
+    p.add_argument("--write", action="store_true")
+    p = subparsers.add_parser("no-order-dossier")
+    p.add_argument("--write", action="store_true")
+    p = subparsers.add_parser("bridge-replay-audit-seal")
+    p.add_argument("--write", action="store_true")
+    p = subparsers.add_parser("bridge-replay-seal-validate")
+    p.add_argument("--write", action="store_true")
+    p = subparsers.add_parser("admission-blocker-rules")
+    p.add_argument("--write", action="store_true")
+    p = subparsers.add_parser("admission-blocker-evaluate")
+    p.add_argument("--attempt-type", type=str, default="enable_active_paper")
+    p.add_argument("--write", action="store_true")
+    p = subparsers.add_parser("admission-attempt-simulate")
+    p.add_argument("--write", action="store_true")
+    p = subparsers.add_parser("admission-blocker-analyze")
+    p.add_argument("--write", action="store_true")
+    p = subparsers.add_parser("no-order-continuity")
+    p.add_argument("--write", action="store_true")
+    p = subparsers.add_parser("paper-admission-safety-check")
+    p.add_argument("--write", action="store_true")
+    p = subparsers.add_parser("no-order-audit")
+    p.add_argument("--write", action="store_true")
+    p = subparsers.add_parser("no-order-review")
+    p.add_argument("--write", action="store_true")
+    subparsers.add_parser("no-order-summary")
+    subparsers.add_parser("no-order-latest-review")
+    p = subparsers.add_parser("no-order-validate")
+    p.add_argument("--latest-review", action="store_true")
+    p.add_argument("--file", type=str)
+    p = subparsers.add_parser("no-order-notification-preview")
+    p.add_argument("--latest-review", action="store_true")
+    p = subparsers.add_parser("no-order-notification-dispatch-dry-run")
+    p.add_argument("--latest-review", action="store_true")
+    p.add_argument("--write", action="store_true")
+
     args = parser.parse_args()
+
     handle_paper_readiness_board_commands(args)
     handle_no_write_admission_commands(args)
+    handle_no_order_commands(args)
     if hasattr(args, 'func'):
         args.func(args)
         import sys

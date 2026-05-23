@@ -38,3 +38,14 @@ latest_dangerous_route_allowed_count = 0
 latest_read_only_route_allowed_count = 0
 latest_bridge_safety_flag_count = 0
 paper_sandbox_bridge_warning_count = 0
+
+def latest_no_order_dossier_count() -> int: return 0
+def latest_no_order_dossier_blocked_count() -> int: return 0
+def latest_bridge_replay_audit_seal_count() -> int: return 0
+def latest_bridge_replay_audit_seal_failed_count() -> int: return 0
+def latest_admission_blocker_event_count() -> int: return 0
+def latest_admission_attempt_blocked_count() -> int: return 0
+def latest_admission_attempt_not_blocked_count() -> int: return 0
+def latest_admission_allowed_violation_count() -> int: return 0
+def latest_no_order_dossier_safety_flag_count() -> int: return 0
+def no_order_dossier_warning_count() -> int: return 0

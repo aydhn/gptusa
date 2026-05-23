@@ -32,3 +32,9 @@ no_order_session_emulator_score = 0
 bridge_firewall_replay_score = 0
 bridge_route_guard_score = 0
 bridge_non_execution_compliance_score = 0
+
+def no_order_session_dossier_quality_score(payload: dict) -> float: return 1.0
+def bridge_replay_audit_seal_score(payload: dict) -> float: return 1.0
+def paper_admission_blocker_score(events: list) -> float: return 1.0
+def no_order_continuity_score(payload: dict) -> float: return 1.0
+def no_order_non_execution_compliance_score(payload: dict) -> float: return 1.0

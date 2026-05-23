@@ -106,3 +106,7 @@ def admission_review_store_summary(data_root: Path) -> Dict[str, Any]:
     return {
         "full_reports_count": len(list_admission_full_reports(data_root))
     }
+
+# Phase 90 integration stub
+
+# Phase 90 integration
