@@ -608,3 +608,85 @@ paper_no_write_transition_notifications:
   notify_paper_sandbox_bridge_warning: true
   default_channel: "dry_run"
   warn_no_real_send_default: true
+
+paper_sandbox_bridge:
+  enabled: true
+  write_bridge_reports: true
+  warn_not_investment_advice: true
+  warn_no_broker_execution: true
+  warn_no_real_paper_mutation: true
+  warn_bridge_dry_run_is_not_activation: true
+  warn_no_order_session_is_not_paper_runtime: true
+  warn_bridge_replay_is_metadata_only: true
+
+paper_sandbox_bridge_dry_run:
+  enabled: true
+  deterministic_dry_run: true
+  require_no_write_transition_review: true
+  require_transition_dossier: true
+  require_bridge_envelope: true
+  require_route_guard: true
+  require_bridge_replay: true
+  require_no_order_session: true
+  activation_allowed: false
+  transition_allowed: false
+  execution_enabled: false
+  active_paper_enabled: false
+  broker_execution_enabled: false
+  paper_state_mutation_enabled: false
+  config_patch_enabled: false
+  telegram_real_send_enabled: false
+
+no_order_paper_session_emulator:
+  enabled: true
+  emulator_is_metadata_only: true
+  emulator_is_not_paper_runtime: true
+  require_no_order_created: true
+  require_no_mutation_detected: true
+  require_all_writes_blocked: true
+  activation_allowed: false
+  transition_allowed: false
+  allow_active_paper: false
+  allow_broker_execution: false
+  allow_paper_state_mutation: false
+  allow_config_patch: false
+  allow_telegram_real_send: false
+
+bridge_firewall_replay:
+  enabled: true
+  deterministic_replay: true
+  allow_read_only_routes: true
+  require_all_dangerous_routes_denied: true
+  block_on_dangerous_route_allowed: true
+  block_on_missing_route: true
+  activation_allowed: false
+  transition_allowed: false
+  allow_active_paper: false
+  allow_broker_execution: false
+  allow_paper_state_mutation: false
+  allow_config_patch: false
+  allow_telegram_real_send: false
+
+paper_sandbox_bridge_safety:
+  enabled: true
+  block_on_real_order_risk: true
+  block_on_paper_order_risk: true
+  block_on_broker_order_risk: true
+  block_on_paper_state_mutation_risk: true
+  block_on_telegram_real_send_risk: true
+  block_on_production_config_write_risk: true
+  block_on_active_paper_enable_risk: true
+  block_on_activation_allowed_risk: true
+  block_on_transition_allowed_risk: true
+  block_on_dangerous_route_allowed: true
+  block_on_no_order_session_write_attempt: true
+  block_on_secret_risk: true
+
+paper_sandbox_bridge_notifications:
+  enabled: true
+  dry_run: true
+  notify_bridge_report: true
+  notify_no_order_session_warning: true
+  notify_bridge_replay_warning: true
+  default_channel: "dry_run"
+  warn_no_real_send_default: true

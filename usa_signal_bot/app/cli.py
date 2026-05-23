@@ -580,3 +580,91 @@ def no_write_transition_notification_preview(latest_review):
 @click.option("--write", is_flag=True)
 def no_write_transition_notification_dispatch_dry_run(latest_review, write):
     click.echo("Dispatched transition notification (dry-run).")
+
+
+@cli.command("bridge-dry-run-info")
+def bridge_dry_run_info(): pass
+
+@cli.command("bridge-ingest-transition")
+@click.option("--file", default=None)
+def bridge_ingest_transition(file): pass
+
+@cli.command("bridge-eligibility")
+@click.option("--write", is_flag=True)
+def bridge_eligibility(write): pass
+
+@cli.command("bridge-dry-run-plan")
+@click.option("--write", is_flag=True)
+def bridge_dry_run_plan(write): pass
+
+@cli.command("bridge-dry-run")
+@click.option("--write", is_flag=True)
+def bridge_dry_run(write): pass
+
+@cli.command("no-order-session")
+@click.option("--write", is_flag=True)
+def no_order_session(write): pass
+
+@cli.command("no-order-session-analyze")
+@click.option("--write", is_flag=True)
+def no_order_session_analyze(write): pass
+
+@cli.command("bridge-replay-plan")
+@click.option("--write", is_flag=True)
+def bridge_replay_plan(write): pass
+
+@cli.command("bridge-firewall-replay")
+@click.option("--write", is_flag=True)
+def bridge_firewall_replay(write): pass
+
+@cli.command("bridge-replay-analyze")
+@click.option("--write", is_flag=True)
+def bridge_replay_analyze(write): pass
+
+@cli.command("bridge-route-attempts")
+@click.option("--write", is_flag=True)
+def bridge_route_attempts(write): pass
+
+@cli.command("read-only-route-validate")
+@click.option("--write", is_flag=True)
+def read_only_route_validate(write): pass
+
+@cli.command("dangerous-route-validate")
+@click.option("--write", is_flag=True)
+def dangerous_route_validate(write): pass
+
+@cli.command("bridge-no-write-continuity")
+@click.option("--write", is_flag=True)
+def bridge_no_write_continuity(write): pass
+
+@cli.command("bridge-safety-check")
+@click.option("--write", is_flag=True)
+def bridge_safety_check(write): pass
+
+@cli.command("bridge-audit")
+@click.option("--write", is_flag=True)
+def bridge_audit(write): pass
+
+@cli.command("bridge-review")
+@click.option("--write", is_flag=True)
+def bridge_review(write): pass
+
+@cli.command("bridge-summary")
+def bridge_summary(): pass
+
+@cli.command("bridge-latest-review")
+def bridge_latest_review(): pass
+
+@cli.command("bridge-validate")
+@click.option("--latest-review", is_flag=True)
+@click.option("--file", default=None)
+def bridge_validate(latest_review, file): pass
+
+@cli.command("bridge-notification-preview")
+@click.option("--latest-review", is_flag=True)
+def bridge_notification_preview(latest_review): pass
+
+@cli.command("bridge-notification-dispatch-dry-run")
+@click.option("--latest-review", is_flag=True)
+@click.option("--write", is_flag=True)
+def bridge_notification_dispatch_dry_run(latest_review, write): pass

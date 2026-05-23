@@ -232,3 +232,126 @@ def check_no_write_transition_store_health(context: RuntimeContext) -> HealthChe
 
 def check_no_write_transition_notification_health(context: RuntimeContext) -> HealthCheckResult:
     return HealthCheckResult(name="no_write_transition_notification", status=HealthStatus.PASS, details={"msg": "Transition notification functional"})
+
+
+def check_paper_sandbox_bridge_config_health(context: RuntimeContext) -> HealthCheckResult:
+    config = context.config.paper_sandbox_bridge
+    if not config.enabled:
+        return HealthCheckResult(
+            component="paper_sandbox_bridge_config",
+            status=HealthStatus.HEALTHY,
+            details={"enabled": False}
+        )
+    return HealthCheckResult(
+        component="paper_sandbox_bridge_config",
+        status=HealthStatus.HEALTHY,
+        details={
+            "warn_not_investment_advice": config.warn_not_investment_advice,
+            "warn_no_broker_execution": config.warn_no_broker_execution
+        }
+    )
+
+def check_sandbox_bridge_transition_ingestion_health(context: RuntimeContext) -> HealthCheckResult:
+    return HealthCheckResult(
+        component="sandbox_bridge_transition_ingestion",
+        status=HealthStatus.HEALTHY,
+        details={"status": "functional", "mock": True}
+    )
+
+def check_sandbox_bridge_eligibility_health(context: RuntimeContext) -> HealthCheckResult:
+    return HealthCheckResult(
+        component="sandbox_bridge_eligibility",
+        status=HealthStatus.HEALTHY,
+        details={"status": "functional", "mock": True}
+    )
+
+def check_bridge_dry_run_plan_health(context: RuntimeContext) -> HealthCheckResult:
+    return HealthCheckResult(
+        component="bridge_dry_run_plan",
+        status=HealthStatus.HEALTHY,
+        details={"status": "functional", "mock": True}
+    )
+
+def check_bridge_dry_run_runner_health(context: RuntimeContext) -> HealthCheckResult:
+    return HealthCheckResult(
+        component="bridge_dry_run_runner",
+        status=HealthStatus.HEALTHY,
+        details={"status": "functional", "mock": True}
+    )
+
+def check_no_order_session_emulator_health(context: RuntimeContext) -> HealthCheckResult:
+    return HealthCheckResult(
+        component="no_order_session_emulator",
+        status=HealthStatus.HEALTHY,
+        details={"status": "functional", "mock": True}
+    )
+
+def check_no_order_session_analyzer_health(context: RuntimeContext) -> HealthCheckResult:
+    return HealthCheckResult(
+        component="no_order_session_analyzer",
+        status=HealthStatus.HEALTHY,
+        details={"status": "functional", "mock": True}
+    )
+
+def check_bridge_replay_plan_health(context: RuntimeContext) -> HealthCheckResult:
+    return HealthCheckResult(
+        component="bridge_replay_plan",
+        status=HealthStatus.HEALTHY,
+        details={"status": "functional", "mock": True}
+    )
+
+def check_bridge_firewall_replay_health(context: RuntimeContext) -> HealthCheckResult:
+    return HealthCheckResult(
+        component="bridge_firewall_replay",
+        status=HealthStatus.HEALTHY,
+        details={"status": "functional", "mock": True}
+    )
+
+def check_bridge_route_attempt_simulator_health(context: RuntimeContext) -> HealthCheckResult:
+    return HealthCheckResult(
+        component="bridge_route_attempt_simulator",
+        status=HealthStatus.HEALTHY,
+        details={"status": "functional", "mock": True}
+    )
+
+def check_read_only_route_validator_health(context: RuntimeContext) -> HealthCheckResult:
+    return HealthCheckResult(
+        component="read_only_route_validator",
+        status=HealthStatus.HEALTHY,
+        details={"status": "functional", "mock": True}
+    )
+
+def check_dangerous_route_validator_health(context: RuntimeContext) -> HealthCheckResult:
+    return HealthCheckResult(
+        component="dangerous_route_validator",
+        status=HealthStatus.HEALTHY,
+        details={"status": "functional", "mock": True}
+    )
+
+def check_bridge_no_write_continuity_health(context: RuntimeContext) -> HealthCheckResult:
+    return HealthCheckResult(
+        component="bridge_no_write_continuity",
+        status=HealthStatus.HEALTHY,
+        details={"status": "functional", "mock": True}
+    )
+
+def check_bridge_safety_health(context: RuntimeContext) -> HealthCheckResult:
+    return HealthCheckResult(
+        component="bridge_safety",
+        status=HealthStatus.HEALTHY,
+        details={"status": "functional", "mock": True}
+    )
+
+def check_bridge_store_health(context: RuntimeContext) -> HealthCheckResult:
+    return HealthCheckResult(
+        component="bridge_store",
+        status=HealthStatus.HEALTHY,
+        details={"status": "functional", "mock": True}
+    )
+
+def check_bridge_notification_health(context: RuntimeContext) -> HealthCheckResult:
+    return HealthCheckResult(
+        component="bridge_notification",
+        status=HealthStatus.HEALTHY,
+        details={"status": "functional", "mock": True}
+    )

@@ -559,3 +559,60 @@ class NoWriteTransitionValidationError(PaperNoWriteTransitionError):
 
 class NoWriteTransitionReportingError(PaperNoWriteTransitionError):
     pass
+
+class PaperSandboxBridgeError(USASignalBotError):
+    pass
+
+class SandboxBridgeTransitionIngestionError(PaperSandboxBridgeError):
+    pass
+
+class SandboxBridgeEligibilityError(PaperSandboxBridgeError):
+    pass
+
+class BridgeDryRunPlanError(PaperSandboxBridgeError):
+    pass
+
+class BridgeDryRunRunnerError(PaperSandboxBridgeError):
+    pass
+
+class NoOrderSessionEmulatorError(PaperSandboxBridgeError):
+    pass
+
+class NoOrderSessionAnalyzerError(PaperSandboxBridgeError):
+    pass
+
+class BridgeReplayPlanError(PaperSandboxBridgeError):
+    pass
+
+class BridgeFirewallReplayError(PaperSandboxBridgeError):
+    pass
+
+class BridgeReplayAnalyzerError(PaperSandboxBridgeError):
+    pass
+
+class BridgeRouteAttemptSimulatorError(PaperSandboxBridgeError):
+    pass
+
+class ReadOnlyRouteValidatorError(PaperSandboxBridgeError):
+    pass
+
+class DangerousRouteValidatorError(PaperSandboxBridgeError):
+    pass
+
+class BridgeNoWriteContinuityError(PaperSandboxBridgeError):
+    pass
+
+class BridgeSafetyValidatorError(PaperSandboxBridgeError):
+    pass
+
+class BridgeAuditError(PaperSandboxBridgeError):
+    pass
+
+class BridgeStorageError(PaperSandboxBridgeError):
+    pass
+
+class BridgeValidationError(PaperSandboxBridgeError):
+    pass
+
+class BridgeReportingError(PaperSandboxBridgeError):
+    pass
