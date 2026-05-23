@@ -634,3 +634,54 @@ class NoOrderDossierAuditError(Exception): pass
 class NoOrderDossierStorageError(Exception): pass
 class NoOrderDossierValidationError(Exception): pass
 class NoOrderDossierReportingError(Exception): pass
+
+class PaperBoundaryCertificateError(USASignalBotError):
+    pass
+
+class BoundaryNoOrderIngestionError(PaperBoundaryCertificateError):
+    pass
+
+class BoundaryEligibilityError(PaperBoundaryCertificateError):
+    pass
+
+class AdmissionBlockerReplayPlanError(PaperBoundaryCertificateError):
+    pass
+
+class AdmissionBlockerReplayEngineError(PaperBoundaryCertificateError):
+    pass
+
+class AdmissionBlockerReplayAnalyzerError(PaperBoundaryCertificateError):
+    pass
+
+class NoOrderEvidenceFreezeError(PaperBoundaryCertificateError):
+    pass
+
+class EvidenceFreezeValidationError(PaperBoundaryCertificateError):
+    pass
+
+class BoundaryRuleError(PaperBoundaryCertificateError):
+    pass
+
+class BoundaryAssertionError(PaperBoundaryCertificateError):
+    pass
+
+class BoundaryCertificateValidationError(PaperBoundaryCertificateError):
+    pass
+
+class BoundaryContinuityError(PaperBoundaryCertificateError):
+    pass
+
+class BoundarySafetyValidatorError(PaperBoundaryCertificateError):
+    pass
+
+class BoundaryAuditError(PaperBoundaryCertificateError):
+    pass
+
+class BoundaryStorageError(PaperBoundaryCertificateError):
+    pass
+
+class BoundaryValidationError(PaperBoundaryCertificateError):
+    pass
+
+class BoundaryReportingError(PaperBoundaryCertificateError):
+    pass

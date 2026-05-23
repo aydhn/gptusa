@@ -89,3 +89,15 @@ def format_no_order_dossier_report_message(review: Any) -> Any: return None
 def format_bridge_replay_audit_seal_warning_message(seals: list) -> Any: return None
 def format_paper_admission_blocker_warning_message(events: list) -> Any: return None
 def notifications_from_no_order_dossier_review(review: Any) -> list: return []
+
+def format_boundary_certificate_report_message(review: Any) -> Any:
+    return {"message": "Boundary Certificate Review Required. Not investment advice. No active paper enable. No broker order."}
+
+def format_admission_blocker_replay_warning_message(results: list) -> Any:
+    return {"message": "Admission Blocker Replay Warning"}
+
+def format_no_order_evidence_freeze_warning_message(freezes: list) -> Any:
+    return {"message": "No Order Evidence Freeze Warning"}
+
+def notifications_from_boundary_certificate_review(review: Any) -> list:
+    return [format_boundary_certificate_report_message(review)]

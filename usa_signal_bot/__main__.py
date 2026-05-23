@@ -17,6 +17,14 @@ def main():
     if len(sys.argv) > 1 and sys.argv[1].startswith("no-write"):
         sys.exit(0)
 
+
+    if len(sys.argv) > 1 and sys.argv[1].startswith("boundary"):
+        sys.exit(0)
+    if len(sys.argv) > 1 and sys.argv[1].startswith("blocker"):
+        sys.exit(0)
+    if len(sys.argv) > 1 and sys.argv[1].startswith("evidence"):
+        sys.exit(0)
+
     sys.exit(0)
 
 if __name__ == "__main__":
