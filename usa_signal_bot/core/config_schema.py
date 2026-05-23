@@ -1051,3 +1051,99 @@ class PaperNoOrderDossierNotificationsConfig:
     notify_paper_admission_blocker_warning: bool = True
     default_channel: str = "dry_run"
     warn_no_real_send_default: bool = True
+
+
+# --- Phase 92 ---
+
+from dataclasses import dataclass
+
+@dataclass
+class PaperSafeGateConfig:
+    enabled: bool = True
+    write_paper_safe_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_no_broker_execution: bool = True
+    warn_no_real_paper_mutation: bool = True
+    warn_boundary_replay_is_metadata_only: bool = True
+    warn_frozen_evidence_integrity_is_metadata_only: bool = True
+    warn_final_paper_safe_gate_is_not_activation: bool = True
+
+@dataclass
+class BoundaryCertificateReplayConfig:
+    enabled: bool = True
+    deterministic_replay: bool = True
+    require_all_rules_pass: bool = True
+    require_all_assertions_pass: bool = True
+    require_boundary_certificate: bool = True
+    require_boundary_rules: bool = True
+    require_boundary_assertions: bool = True
+    execution_enabled: bool = False
+    active_paper_enabled: bool = False
+    paper_admission_enabled: bool = False
+    broker_execution_enabled: bool = False
+    paper_state_mutation_enabled: bool = False
+    config_patch_enabled: bool = False
+    telegram_real_send_enabled: bool = False
+
+@dataclass
+class FrozenEvidenceIntegrityAuditConfig:
+    enabled: bool = True
+    audit_is_metadata_only: bool = True
+    require_frozen: bool = True
+    require_immutable: bool = True
+    require_hash_match: bool = True
+    require_no_tamper: bool = True
+    block_on_tamper: bool = True
+    block_on_missing_evidence: bool = True
+    block_on_stale_evidence: bool = True
+
+@dataclass
+class FinalPaperSafeGateConfig:
+    enabled: bool = True
+    gate_is_metadata_only: bool = True
+    require_boundary_replay: bool = True
+    require_frozen_evidence_integrity: bool = True
+    require_paper_safe_rules: bool = True
+    require_paper_safe_assertions: bool = True
+    require_manual_review: bool = True
+    activation_allowed: bool = False
+    admission_allowed: bool = False
+    transition_allowed: bool = False
+    all_writes_blocked_required: bool = True
+    require_order_created_false: bool = True
+    require_mutation_detected_false: bool = True
+    allow_active_paper: bool = False
+    allow_broker_execution: bool = False
+    allow_paper_state_mutation: bool = False
+    allow_config_patch: bool = False
+    allow_telegram_real_send: bool = False
+
+@dataclass
+class PaperSafeGateSafetyConfig:
+    enabled: bool = True
+    block_on_real_order_risk: bool = True
+    block_on_paper_order_risk: bool = True
+    block_on_broker_order_risk: bool = True
+    block_on_paper_state_mutation_risk: bool = True
+    block_on_telegram_real_send_risk: bool = True
+    block_on_production_config_write_risk: bool = True
+    block_on_active_paper_enable_risk: bool = True
+    block_on_admission_allowed_risk: bool = True
+    block_on_activation_allowed_risk: bool = True
+    block_on_transition_allowed_risk: bool = True
+    block_on_order_created_risk: bool = True
+    block_on_mutation_detected_risk: bool = True
+    block_on_boundary_replay_failed: bool = True
+    block_on_frozen_evidence_tamper: bool = True
+    block_on_paper_safe_assertion_failed: bool = True
+    block_on_secret_risk: bool = True
+
+@dataclass
+class PaperSafeGateNotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    notify_paper_safe_gate_report: bool = True
+    notify_boundary_replay_warning: bool = True
+    notify_frozen_evidence_integrity_warning: bool = True
+    default_channel: str = "dry_run"
+    warn_no_real_send_default: bool = True

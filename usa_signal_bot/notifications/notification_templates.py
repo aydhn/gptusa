@@ -101,3 +101,20 @@ def format_no_order_evidence_freeze_warning_message(freezes: list) -> Any:
 
 def notifications_from_boundary_certificate_review(review: Any) -> list:
     return [format_boundary_certificate_report_message(review)]
+
+
+# --- Phase 92 Notifications ---
+
+from typing import Any, Dict, List
+
+def format_paper_safe_gate_report_message(review: Any) -> Dict[str, Any]:
+    return {"message": "Paper safe gate review required"}
+
+def format_boundary_replay_warning_message(results: List[Any]) -> Dict[str, Any]:
+    return {"message": "Boundary replay warning"}
+
+def format_frozen_evidence_integrity_warning_message(audits: List[Any]) -> Dict[str, Any]:
+    return {"message": "Frozen evidence integrity warning"}
+
+def notifications_from_paper_safe_gate_review(review: Any) -> List[Dict[str, Any]]:
+    return [format_paper_safe_gate_report_message(review)]

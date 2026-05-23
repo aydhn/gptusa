@@ -774,3 +774,91 @@ paper_no_order_dossier_notifications:
   notify_paper_admission_blocker_warning: true
   default_channel: "dry_run"
   warn_no_real_send_default: true
+
+
+# --- Phase 92 ---
+
+paper_safe_gate:
+  enabled: true
+  write_paper_safe_reports: true
+  warn_not_investment_advice: true
+  warn_no_broker_execution: true
+  warn_no_real_paper_mutation: true
+  warn_boundary_replay_is_metadata_only: true
+  warn_frozen_evidence_integrity_is_metadata_only: true
+  warn_final_paper_safe_gate_is_not_activation: true
+
+boundary_certificate_replay:
+  enabled: true
+  deterministic_replay: true
+  require_all_rules_pass: true
+  require_all_assertions_pass: true
+  require_boundary_certificate: true
+  require_boundary_rules: true
+  require_boundary_assertions: true
+  execution_enabled: false
+  active_paper_enabled: false
+  paper_admission_enabled: false
+  broker_execution_enabled: false
+  paper_state_mutation_enabled: false
+  config_patch_enabled: false
+  telegram_real_send_enabled: false
+
+frozen_evidence_integrity_audit:
+  enabled: true
+  audit_is_metadata_only: true
+  require_frozen: true
+  require_immutable: true
+  require_hash_match: true
+  require_no_tamper: true
+  block_on_tamper: true
+  block_on_missing_evidence: true
+  block_on_stale_evidence: true
+
+final_paper_safe_gate:
+  enabled: true
+  gate_is_metadata_only: true
+  require_boundary_replay: true
+  require_frozen_evidence_integrity: true
+  require_paper_safe_rules: true
+  require_paper_safe_assertions: true
+  require_manual_review: true
+  activation_allowed: false
+  admission_allowed: false
+  transition_allowed: false
+  all_writes_blocked_required: true
+  require_order_created_false: true
+  require_mutation_detected_false: true
+  allow_active_paper: false
+  allow_broker_execution: false
+  allow_paper_state_mutation: false
+  allow_config_patch: false
+  allow_telegram_real_send: false
+
+paper_safe_gate_safety:
+  enabled: true
+  block_on_real_order_risk: true
+  block_on_paper_order_risk: true
+  block_on_broker_order_risk: true
+  block_on_paper_state_mutation_risk: true
+  block_on_telegram_real_send_risk: true
+  block_on_production_config_write_risk: true
+  block_on_active_paper_enable_risk: true
+  block_on_admission_allowed_risk: true
+  block_on_activation_allowed_risk: true
+  block_on_transition_allowed_risk: true
+  block_on_order_created_risk: true
+  block_on_mutation_detected_risk: true
+  block_on_boundary_replay_failed: true
+  block_on_frozen_evidence_tamper: true
+  block_on_paper_safe_assertion_failed: true
+  block_on_secret_risk: true
+
+paper_safe_gate_notifications:
+  enabled: true
+  dry_run: true
+  notify_paper_safe_gate_report: true
+  notify_boundary_replay_warning: true
+  notify_frozen_evidence_integrity_warning: true
+  default_channel: "dry_run"
+  warn_no_real_send_default: true
