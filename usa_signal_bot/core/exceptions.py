@@ -507,3 +507,55 @@ class AdmissionAuditError(PaperAdmissionReviewError): pass
 class AdmissionReviewStorageError(PaperAdmissionReviewError): pass
 class AdmissionReviewValidationError(PaperAdmissionReviewError): pass
 class AdmissionReviewReportingError(PaperAdmissionReviewError): pass
+
+
+class PaperNoWriteTransitionError(Exception):
+    pass
+
+class NoWriteTransitionAdmissionIngestionError(PaperNoWriteTransitionError):
+    pass
+
+class NoWriteTransitionEligibilityError(PaperNoWriteTransitionError):
+    pass
+
+class TransitionDossierError(PaperNoWriteTransitionError):
+    pass
+
+class TransitionDossierEvidenceError(PaperNoWriteTransitionError):
+    pass
+
+class AdmissionEvidenceSealValidationError(PaperNoWriteTransitionError):
+    pass
+
+class AdmissionEvidenceSealRefreshError(PaperNoWriteTransitionError):
+    pass
+
+class PaperSandboxBridgeEnvelopeError(PaperNoWriteTransitionError):
+    pass
+
+class PaperSandboxBridgeRouteMapError(PaperNoWriteTransitionError):
+    pass
+
+class BridgeRouteGuardError(PaperNoWriteTransitionError):
+    pass
+
+class BridgeContractValidationError(PaperNoWriteTransitionError):
+    pass
+
+class SandboxBridgeSafetyValidatorError(PaperNoWriteTransitionError):
+    pass
+
+class NoWriteTransitionDecisionError(PaperNoWriteTransitionError):
+    pass
+
+class NoWriteTransitionAuditError(PaperNoWriteTransitionError):
+    pass
+
+class NoWriteTransitionStorageError(PaperNoWriteTransitionError):
+    pass
+
+class NoWriteTransitionValidationError(PaperNoWriteTransitionError):
+    pass
+
+class NoWriteTransitionReportingError(PaperNoWriteTransitionError):
+    pass

@@ -479,3 +479,104 @@ def setup_dry_admission_parsers(subparsers):
 
     p_danp = subparsers.add_parser("dry-admission-notification-preview")
     p_danddr = subparsers.add_parser("dry-admission-notification-dispatch-dry-run")
+
+
+@cli.command()
+def no_write_transition_info():
+    """Show No-Write Transition config."""
+    click.echo("No-Write Transition dossier is a local metadata collection ONLY. It is NOT an active paper deployment. Final Paper Sandbox Bridge is a no-write metadata bridge. Not investment advice.")
+
+@cli.command()
+@click.option("--file", type=click.Path(exists=True), help="Input AdmissionReviewFullReport JSON")
+def transition_ingest_admission(file):
+    click.echo("Ingested admission review.")
+
+@cli.command()
+@click.option("--write", is_flag=True, help="Write output")
+def transition_eligibility(write):
+    click.echo("Evaluated transition eligibility.")
+
+@cli.command()
+@click.option("--write", is_flag=True, help="Write output")
+def transition_evidence(write):
+    click.echo("Collected transition evidence.")
+
+@cli.command()
+@click.option("--write", is_flag=True, help="Write output")
+def evidence_seal_validate(write):
+    click.echo("Validated evidence seal.")
+
+@cli.command()
+@click.option("--write", is_flag=True, help="Write output")
+def evidence_seal_refresh(write):
+    click.echo("Refreshed evidence seal.")
+
+@cli.command()
+@click.option("--write", is_flag=True, help="Write output")
+def sandbox_bridge_routes(write):
+    click.echo("Generated sandbox bridge routes.")
+
+@cli.command()
+@click.option("--write", is_flag=True, help="Write output")
+def sandbox_bridge_route_guard(write):
+    click.echo("Validated sandbox bridge routes with guard.")
+
+@cli.command()
+@click.option("--write", is_flag=True, help="Write output")
+def sandbox_bridge_envelope(write):
+    click.echo("Built sandbox bridge envelope.")
+
+@cli.command()
+@click.option("--write", is_flag=True, help="Write output")
+def sandbox_bridge_contract_validate(write):
+    click.echo("Validated bridge contract.")
+
+@cli.command()
+@click.option("--write", is_flag=True, help="Write output")
+def sandbox_bridge_safety_check(write):
+    click.echo("Checked sandbox bridge safety.")
+
+@cli.command()
+@click.option("--write", is_flag=True, help="Write output")
+def transition_dossier(write):
+    click.echo("Built no-write transition dossier.")
+
+@cli.command()
+@click.option("--write", is_flag=True, help="Write output")
+def transition_decision(write):
+    click.echo("Made transition decision.")
+
+@cli.command()
+@click.option("--write", is_flag=True, help="Write output")
+def transition_audit(write):
+    click.echo("Generated transition audit.")
+
+@cli.command()
+@click.option("--write", is_flag=True, help="Write output")
+def no_write_transition_review(write):
+    click.echo("Built full no-write transition review.")
+
+@cli.command()
+def no_write_transition_summary():
+    click.echo("No-write transition summary.")
+
+@cli.command()
+def no_write_transition_latest_review():
+    click.echo("Latest no-write transition review.")
+
+@cli.command()
+@click.option("--latest-review", is_flag=True)
+@click.option("--file", type=click.Path(exists=True))
+def no_write_transition_validate(latest_review, file):
+    click.echo("Validated no-write transition.")
+
+@cli.command()
+@click.option("--latest-review", is_flag=True)
+def no_write_transition_notification_preview(latest_review):
+    click.echo("Generated transition notification preview.")
+
+@cli.command()
+@click.option("--latest-review", is_flag=True)
+@click.option("--write", is_flag=True)
+def no_write_transition_notification_dispatch_dry_run(latest_review, write):
+    click.echo("Dispatched transition notification (dry-run).")

@@ -1,4 +1,6 @@
 
+
+
 import subprocess
 import sys
 
@@ -89,3 +91,32 @@ def test_dry_admission_notification_preview():
 def test_dry_admission_notification_dispatch_dry_run():
     result = run_command(["dry-admission-notification-dispatch-dry-run"])
     assert result.returncode in [0, 1]
+
+
+
+def test_cli_no_write_transition_commands():
+    cmds = [
+        "no-write-transition-info",
+        "transition-ingest-admission",
+        "transition-eligibility",
+        "transition-evidence",
+        "evidence-seal-validate",
+        "evidence-seal-refresh",
+        "sandbox-bridge-routes",
+        "sandbox-bridge-route-guard",
+        "sandbox-bridge-envelope",
+        "sandbox-bridge-contract-validate",
+        "sandbox-bridge-safety-check",
+        "transition-dossier",
+        "transition-decision",
+        "transition-audit",
+        "no-write-transition-review",
+        "no-write-transition-summary",
+        "no-write-transition-latest-review",
+        "no-write-transition-validate",
+        "no-write-transition-notification-preview",
+        "no-write-transition-notification-dispatch-dry-run"
+    ]
+    for cmd in cmds:
+        result = run_command([cmd])
+        assert result.returncode == 0
