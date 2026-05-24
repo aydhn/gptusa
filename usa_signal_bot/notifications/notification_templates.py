@@ -152,3 +152,16 @@ def notifications_from_handoff_freeze_review(review: Any) -> List[NotificationMe
         msgs.append(format_simulator_evidence_freeze_warning_message(freeze_warnings))
 
     return msgs
+
+
+def format_runtime_registry_report_message(review: Any) -> NotificationMessage:
+    content = f"Runtime Registry Normalized: {review.review_id}\n"
+    content += "Status: " + ("VALIDATED_NON_EXECUTION" if not review.errors else "BLOCKED")
+    content += "\nNote: Phase 102 runtime registry. Not an activation. No live execution."
+    return NotificationMessage(content=content)
+
+def notifications_from_runtime_registry_review(review: Any) -> list[NotificationMessage]:
+    msgs = [format_runtime_registry_report_message(review)]
+    if review.warnings:
+        msgs.append(NotificationMessage(content="Warnings detected in runtime registry."))
+    return msgs
