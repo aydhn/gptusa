@@ -1429,3 +1429,66 @@ def handle_dry_admission_dossier_notification_preview(args):
 
 def handle_dry_admission_dossier_notification_dispatch_dry_run(args):
     print("Notification dispatch dry-run: Success. (No real telegram send)")
+
+def simulator_gate_info():
+    pass
+
+def simulator_ingest_dry_admission_dossier():
+    pass
+
+def simulator_eligibility():
+    pass
+
+def rehearsal_replay_plan():
+    pass
+
+def rehearsal_replay_run():
+    pass
+
+def rehearsal_replay_analyze():
+    pass
+
+def dry_admission_evidence_freeze():
+    pass
+
+def dry_admission_evidence_freeze_validate():
+    pass
+
+def simulator_gate_rules():
+    pass
+
+def simulator_gate_assertions():
+    pass
+
+def final_simulator_gate():
+    pass
+
+def final_simulator_gate_validate():
+    pass
+
+def simulator_continuity():
+    pass
+
+def simulator_safety_check():
+    pass
+
+def simulator_audit():
+    pass
+
+def simulator_review():
+    pass
+
+def simulator_summary():
+    pass
+
+def simulator_latest_review():
+    pass
+
+def simulator_validate():
+    pass
+
+def simulator_notification_preview():
+    pass
+
+def simulator_notification_dispatch_dry_run():
+    pass
