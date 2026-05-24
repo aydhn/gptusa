@@ -1,16 +1,10 @@
-from typing import Any
-from usa_signal_bot.quality.quality_models import QualityScorecard
+import re
 
-def evaluate_board_dossier_quality(review: Any) -> QualityScorecard:
-    scorecard = QualityScorecard(scorecard_id="qs_1")
-    if not review.errors:
-        scorecard.paper_readiness_board_dossier_quality_score = 100.0
-        scorecard.acceptance_board_seal_score = 100.0
-        scorecard.shadow_launch_blocker_score = 100.0
-        scorecard.board_dossier_continuity_score = 100.0
-        scorecard.board_dossier_non_execution_compliance_score = 100.0
-    return scorecard
+def update_quality_evaluator():
+    with open('usa_signal_bot/quality/data_quality_evaluator.py', 'r') as f:
+        content = f.read()
 
+    new_eval_func = """
 def score_pre_paper_handoff_freeze_quality(artifacts: Dict[str, Any]) -> Tuple[float, List[QualityIssue]]:
     issues = []
     handoff_data = artifacts.get("pre_paper_handoff_freeze", {})
@@ -38,3 +32,10 @@ def score_pre_paper_handoff_freeze_quality(artifacts: Dict[str, Any]) -> Tuple[f
         ))
 
     return score, issues
+"""
+    if "score_pre_paper_handoff_freeze_quality" not in content:
+        content += new_eval_func
+        with open('usa_signal_bot/quality/data_quality_evaluator.py', 'w') as f:
+            f.write(content)
+
+update_quality_evaluator()

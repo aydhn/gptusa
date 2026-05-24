@@ -986,3 +986,57 @@ class SimulatorValidationError(LocalPaperAdmissionSimulatorGateError):
 
 class SimulatorReportingError(LocalPaperAdmissionSimulatorGateError):
     pass
+
+class PrePaperHandoffFreezeGateError(USASignalBotError):
+    pass
+
+class HandoffFreezeSimulatorDossierIngestionError(USASignalBotError):
+    pass
+
+class HandoffFreezeEligibilityError(USASignalBotError):
+    pass
+
+class SandboxRuntimeAdmissionReplayPlanError(USASignalBotError):
+    pass
+
+class SandboxRuntimeAdmissionReplayEngineError(USASignalBotError):
+    pass
+
+class SandboxRuntimeAdmissionReplayAnalyzerError(USASignalBotError):
+    pass
+
+class SimulatorEvidenceFreezeError(USASignalBotError):
+    pass
+
+class SimulatorEvidenceFreezeValidationError(USASignalBotError):
+    pass
+
+class HandoffFreezeRuleError(USASignalBotError):
+    pass
+
+class HandoffFreezeAssertionError(USASignalBotError):
+    pass
+
+class FinalHandoffFreezeGateError(USASignalBotError):
+    pass
+
+class HandoffFreezeGateValidationError(USASignalBotError):
+    pass
+
+class HandoffFreezeContinuityError(USASignalBotError):
+    pass
+
+class HandoffFreezeSafetyValidatorError(USASignalBotError):
+    pass
+
+class HandoffFreezeAuditError(USASignalBotError):
+    pass
+
+class HandoffFreezeStorageError(USASignalBotError):
+    pass
+
+class HandoffFreezeValidationError(USASignalBotError):
+    pass
+
+class HandoffFreezeReportingError(USASignalBotError):
+    pass
