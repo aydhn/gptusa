@@ -1087,3 +1087,114 @@ dry_admission_gate_notifications:
   notify_board_evidence_freeze_warning: true
   default_channel: "dry_run"
   warn_no_real_send_default: true
+
+paper_mode_dry_admission_dossier:
+  enabled: true
+  write_dry_admission_dossier_reports: true
+  warn_not_investment_advice: true
+  warn_no_broker_execution: true
+  warn_no_real_paper_mutation: true
+  warn_dry_admission_dossier_is_not_activation: true
+  warn_dry_admission_acceptance_seal_is_metadata_only: true
+  warn_rehearsal_blocker_denies_rehearsal: true
+
+dry_admission_gate_dossier:
+  enabled: true
+  deterministic_dossier: true
+  require_dry_admission_gate_review: true
+  require_final_dry_admission_gate: true
+  require_shadow_replay_result: true
+  require_board_evidence_freeze: true
+  require_dry_admission_acceptance_seal: true
+  require_rehearsal_blocker: true
+  require_manual_review: true
+  activation_allowed: false
+  admission_allowed: false
+  transition_allowed: false
+  shadow_launch_allowed: false
+  paper_mode_launch_allowed: false
+  rehearsal_allowed: false
+  paper_mode_rehearsal_allowed: false
+  all_writes_blocked_required: true
+  require_order_created_false: true
+  require_mutation_detected_false: true
+  allow_active_paper: false
+  allow_broker_execution: false
+  allow_paper_state_mutation: false
+  allow_config_patch: false
+  allow_telegram_real_send: false
+
+dry_admission_acceptance_seal:
+  enabled: true
+  seal_is_metadata_only: true
+  require_dry_admission_gate_passed: true
+  require_shadow_replay_passed: true
+  require_board_evidence_freeze_valid: true
+  require_no_shadow_launch_confirmed: true
+  require_no_paper_mode_launch_confirmed: true
+  require_no_rehearsal_confirmed: true
+  require_no_admission_confirmed: true
+  require_no_order_confirmed: true
+  require_no_write_confirmed: true
+  require_no_broker_confirmed: true
+  require_no_config_patch_confirmed: true
+  require_no_telegram_real_send_confirmed: true
+  require_sealed: true
+  require_immutable: true
+  allow_rehearsal: false
+  allow_paper_mode_rehearsal: false
+  allow_shadow_launch: false
+  allow_paper_mode_launch: false
+  allow_active_paper: false
+  allow_broker_execution: false
+  allow_paper_state_mutation: false
+  allow_config_patch: false
+  allow_telegram_real_send: false
+
+final_paper_mode_rehearsal_blocker:
+  enabled: true
+  blocker_is_metadata_only: true
+  deny_rehearsal_by_default: true
+  deny_start_paper_mode_rehearsal: true
+  deny_start_local_paper_rehearsal_runtime: true
+  deny_rehearse_candidate: true
+  deny_admit_candidate_to_rehearsal: true
+  deny_create_rehearsal_session: true
+  deny_create_paper_session: true
+  deny_create_paper_order: true
+  deny_commit_paper_state: true
+  deny_patch_paper_config: true
+  deny_send_broker_order: true
+  deny_send_telegram_real: true
+  rehearsal_allowed: false
+  paper_mode_rehearsal_allowed: false
+  active_paper_enabled: false
+
+dry_admission_dossier_safety:
+  enabled: true
+  block_on_real_order_risk: true
+  block_on_paper_order_risk: true
+  block_on_broker_order_risk: true
+  block_on_paper_state_mutation_risk: true
+  block_on_telegram_real_send_risk: true
+  block_on_production_config_write_risk: true
+  block_on_active_paper_enable_risk: true
+  block_on_shadow_launch_risk: true
+  block_on_paper_mode_launch_risk: true
+  block_on_rehearsal_risk: true
+  block_on_admission_allowed_risk: true
+  block_on_activation_allowed_risk: true
+  block_on_transition_allowed_risk: true
+  block_on_order_created_risk: true
+  block_on_mutation_detected_risk: true
+  block_on_rehearsal_blocker_failed: true
+  block_on_secret_risk: true
+
+dry_admission_dossier_notifications:
+  enabled: true
+  dry_run: true
+  notify_dry_admission_dossier_report: true
+  notify_dry_admission_acceptance_seal_warning: true
+  notify_rehearsal_blocker_warning: true
+  default_channel: "dry_run"
+  warn_no_real_send_default: true
