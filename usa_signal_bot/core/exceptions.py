@@ -1040,3 +1040,54 @@ class HandoffFreezeValidationError(USASignalBotError):
 
 class HandoffFreezeReportingError(USASignalBotError):
     pass
+
+class AdvancedTransitionError(UsaSignalBotError):
+    pass
+
+class HandoffFreezeIngestionError(UsaSignalBotError):
+    pass
+
+class AdvancedTransitionContextError(UsaSignalBotError):
+    pass
+
+class ModuleInventoryError(UsaSignalBotError):
+    pass
+
+class RuntimeBoundaryManifestError(UsaSignalBotError):
+    pass
+
+class CapabilityMatrixError(UsaSignalBotError):
+    pass
+
+class ConfigConsolidationError(UsaSignalBotError):
+    pass
+
+class StorageRegistryError(UsaSignalBotError):
+    pass
+
+class ValidationRegistryError(UsaSignalBotError):
+    pass
+
+class HealthRegistryError(UsaSignalBotError):
+    pass
+
+class CliRegistryError(UsaSignalBotError):
+    pass
+
+class ObservabilityRegistryError(UsaSignalBotError):
+    pass
+
+class NotificationBoundaryError(UsaSignalBotError):
+    pass
+
+class AdvancedPhaseRoadmapError(UsaSignalBotError):
+    pass
+
+class AdvancedTransitionStorageError(UsaSignalBotError):
+    pass
+
+class AdvancedTransitionValidationError(UsaSignalBotError):
+    pass
+
+class AdvancedTransitionReportingError(UsaSignalBotError):
+    pass

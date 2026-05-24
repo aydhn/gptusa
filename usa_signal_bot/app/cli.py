@@ -1709,3 +1709,40 @@ def setup_pre_paper_handoff_freeze_gate_parsers(subparsers):
     cmd = subparsers.add_parser("handoff-freeze-notification-dispatch-dry-run", help="Dry run handoff freeze notification")
     cmd.add_argument("--latest-review", action="store_true", help="Use latest review")
     cmd.add_argument("--write", action="store_true", help="Write result")
+
+def setup_advanced_transition_parsers(subparsers):
+    cmd = subparsers.add_parser("advanced-transition-info", help="Show advanced transition info (Phase 101 is NOT activation)")
+
+    cmd = subparsers.add_parser("advanced-transition-ingest-handoff", help="Ingest handoff freeze")
+    cmd.add_argument("--write", action="store_true", help="Write result to local data folder")
+
+    cmd = subparsers.add_parser("advanced-transition-roadmap", help="Show roadmap")
+    cmd.add_argument("--write", action="store_true", help="Write result")
+
+    cmd = subparsers.add_parser("advanced-transition-capabilities", help="Show capabilities")
+    cmd.add_argument("--write", action="store_true", help="Write result")
+
+    cmd = subparsers.add_parser("advanced-transition-runtime-boundary", help="Show runtime boundary")
+    cmd.add_argument("--write", action="store_true", help="Write result")
+
+    cmd = subparsers.add_parser("advanced-transition-module-inventory", help="Show module inventory")
+    cmd.add_argument("--write", action="store_true", help="Write result")
+
+    cmd = subparsers.add_parser("advanced-transition-config-check", help="Check config")
+    cmd.add_argument("--write", action="store_true", help="Write result")
+
+    cmd = subparsers.add_parser("advanced-transition-storage-registry", help="Show storage registry")
+    cmd.add_argument("--write", action="store_true", help="Write result")
+
+    cmd = subparsers.add_parser("advanced-transition-validation-registry", help="Show validation registry")
+    cmd.add_argument("--write", action="store_true", help="Write result")
+
+    cmd = subparsers.add_parser("advanced-transition-health-registry", help="Show health registry")
+    cmd.add_argument("--write", action="store_true", help="Write result")
+
+    cmd = subparsers.add_parser("advanced-transition-review", help="Run full review")
+    cmd.add_argument("--write", action="store_true", help="Write result")
+
+    cmd = subparsers.add_parser("advanced-transition-summary", help="Show summary")
+
+    cmd = subparsers.add_parser("advanced-transition-validate", help="Validate setup")

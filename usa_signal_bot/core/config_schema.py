@@ -1554,3 +1554,44 @@ class HandoffFreezeNotificationsConfig:
     notify_simulator_evidence_freeze_warning: bool = True
     default_channel: str = "dry_run"
     warn_no_real_send_default: bool = True
+
+
+@dataclass
+class AdvancedTransitionConfig:
+    enabled: bool = True
+    current_phase: int = 101
+    final_phase: int = 160
+    require_phase100_handoff: bool = True
+    require_handoff_frozen: bool = True
+    require_handoff_immutable: bool = True
+    require_handoff_metadata_only: bool = True
+    allow_activation: bool = False
+    allow_active_paper: bool = False
+    allow_broker_execution: bool = False
+    allow_paper_state_mutation: bool = False
+    allow_telegram_real_send: bool = False
+    allow_scraping: bool = False
+    allow_dashboard: bool = False
+    write_transition_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_phase101_is_not_activation: bool = True
+
+@dataclass
+class Phase101RuntimeBoundaryConfig:
+    all_execution_blocked: bool = True
+    active_paper_blocked: bool = True
+    broker_execution_blocked: bool = True
+    paper_state_mutation_blocked: bool = True
+    telegram_real_send_blocked: bool = True
+    scraping_blocked: bool = True
+    dashboard_blocked: bool = True
+    metadata_outputs_allowed: bool = True
+    test_artifacts_allowed: bool = True
+    local_read_only_allowed: bool = True
+
+@dataclass
+class Phase101NotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    preview_only: bool = True
+    telegram_real_send: bool = False

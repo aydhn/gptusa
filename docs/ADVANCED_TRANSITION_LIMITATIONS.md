@@ -1,0 +1,1 @@
+# ADVANCED_TRANSITION_LIMITATIONS\nNo broker execution. No active paper orders. No Telegram real sends.

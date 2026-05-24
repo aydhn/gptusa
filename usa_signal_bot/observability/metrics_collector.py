@@ -17,6 +17,16 @@ class MetricsCollector:
 
     def __init__(self):
         self.metrics = {
+            "latest_advanced_transition_context_count": 0,
+            "latest_advanced_transition_ready_count": 0,
+            "latest_handoff_freeze_ingestion_valid_count": 0,
+            "latest_runtime_boundary_manifest_count": 0,
+            "latest_blocked_runtime_capability_count": 0,
+            "latest_module_inventory_record_count": 0,
+            "latest_phase101_config_issue_count": 0,
+            "latest_phase101_validation_issue_count": 0,
+            "latest_phase101_execution_violation_count": 0,
+
             "latest_board_dossier_count": 0,
             "latest_board_dossier_blocked_count": 0,
             "latest_acceptance_board_seal_count": 0,
@@ -36,3 +46,14 @@ class MetricsCollector:
         self.metrics["latest_shadow_launch_blocker_event_count"] = len(review.shadow_launch_blocker_events)
         self.metrics["latest_shadow_launch_attempt_blocked_count"] = sum(1 for e in review.shadow_launch_blocker_events if e.blocked)
         self.metrics["latest_shadow_launch_attempt_not_blocked_count"] = sum(1 for e in review.shadow_launch_blocker_events if not e.blocked)
+
+    def update_advanced_transition_metrics(self, payload: dict):
+        self.metrics["latest_advanced_transition_context_count"] = self.metrics.get("latest_advanced_transition_context_count", 0) + 1
+        self.metrics["latest_advanced_transition_ready_count"] = self.metrics.get("latest_advanced_transition_ready_count", 0) + payload.get("ready_count", 0)
+        self.metrics["latest_handoff_freeze_ingestion_valid_count"] = self.metrics.get("latest_handoff_freeze_ingestion_valid_count", 0) + payload.get("valid_handoff_count", 0)
+        self.metrics["latest_runtime_boundary_manifest_count"] = self.metrics.get("latest_runtime_boundary_manifest_count", 0) + 1
+        self.metrics["latest_blocked_runtime_capability_count"] = self.metrics.get("latest_blocked_runtime_capability_count", 0) + payload.get("blocked_capability_count", 0)
+        self.metrics["latest_module_inventory_record_count"] = self.metrics.get("latest_module_inventory_record_count", 0) + payload.get("module_count", 0)
+        self.metrics["latest_phase101_config_issue_count"] = self.metrics.get("latest_phase101_config_issue_count", 0) + payload.get("config_issue_count", 0)
+        self.metrics["latest_phase101_validation_issue_count"] = self.metrics.get("latest_phase101_validation_issue_count", 0) + payload.get("validation_issue_count", 0)
+        self.metrics["latest_phase101_execution_violation_count"] = self.metrics.get("latest_phase101_execution_violation_count", 0) + payload.get("execution_violation_count", 0)

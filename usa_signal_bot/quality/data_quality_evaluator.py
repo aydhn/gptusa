@@ -38,3 +38,16 @@ def score_pre_paper_handoff_freeze_quality(artifacts: Dict[str, Any]) -> Tuple[f
         ))
 
     return score, issues
+
+def evaluate_advanced_transition_quality(context: Any) -> QualityScorecard:
+    scorecard = QualityScorecard(scorecard_id="qs_advanced_transition")
+    if getattr(context, 'activation_allowed', False) or getattr(context, 'active_paper_enabled', False) or getattr(context, 'broker_execution_enabled', False) or getattr(context, 'paper_state_mutation_enabled', False) or getattr(context, 'telegram_real_send_enabled', False) or getattr(context, 'scraping_enabled', False) or getattr(context, 'dashboard_enabled', False):
+        scorecard.phase101_non_execution_compliance_score = 0.0
+    else:
+        scorecard.phase101_non_execution_compliance_score = 100.0
+        scorecard.advanced_transition_context_score = 100.0
+        scorecard.handoff_freeze_ingestion_score = 100.0
+        scorecard.runtime_boundary_score = 100.0
+        scorecard.module_inventory_score = 100.0
+        scorecard.config_consolidation_score = 100.0
+    return scorecard

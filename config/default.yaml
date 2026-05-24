@@ -1361,3 +1361,40 @@ zero_mutation_audit:
   require_after_baseline: true
   require_before_baseline: true
   require_hash_unchanged: true
+
+advanced_transition:
+  enabled: true
+  current_phase: 101
+  final_phase: 160
+  require_phase100_handoff: true
+  require_handoff_frozen: true
+  require_handoff_immutable: true
+  require_handoff_metadata_only: true
+  allow_activation: false
+  allow_active_paper: false
+  allow_broker_execution: false
+  allow_paper_state_mutation: false
+  allow_telegram_real_send: false
+  allow_scraping: false
+  allow_dashboard: false
+  write_transition_reports: true
+  warn_not_investment_advice: true
+  warn_phase101_is_not_activation: true
+
+phase101_runtime_boundary:
+  all_execution_blocked: true
+  active_paper_blocked: true
+  broker_execution_blocked: true
+  paper_state_mutation_blocked: true
+  telegram_real_send_blocked: true
+  scraping_blocked: true
+  dashboard_blocked: true
+  metadata_outputs_allowed: true
+  test_artifacts_allowed: true
+  local_read_only_allowed: true
+
+phase101_notifications:
+  enabled: true
+  dry_run: true
+  preview_only: true
+  telegram_real_send: false
