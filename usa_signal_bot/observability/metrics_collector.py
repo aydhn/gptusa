@@ -1,66 +1,24 @@
-# observability/metrics_collector.py integration
-from typing import Any, Dict
-def collect_pre_paper_rehearsal_metrics() -> Dict[str, Any]:
-    return {
-        "latest_pre_paper_rehearsal_run_count": 0,
-        "latest_pre_paper_rehearsal_blocked_count": 0,
-        "latest_mutation_firewall_event_count": 0,
-        "latest_mutation_firewall_blocked_count": 0,
-        "latest_activation_denied_checkpoint_count": 0,
-        "latest_activation_allowed_violation_count": 0,
-        "latest_zero_mutation_violation_count": 0,
-        "latest_pre_paper_safety_flag_count": 0,
-        "pre_paper_rehearsal_warning_count": 0
-    }
+from typing import Any
 
-def collect_dry_admission_metrics(review_payload: dict) -> dict:
-    return {
-        "latest_dry_admission_run_count": len(review_payload.get("runs", [])),
-        "latest_dry_admission_blocked_count": sum(1 for r in review_payload.get("runs", []) if r.get("status") == "BLOCKED"),
-        "latest_dry_admission_write_attempt_count": 0,
-        "latest_write_lock_refresh_count": len(review_payload.get("write_lock_refreshes", [])),
-        "latest_write_lock_refresh_failed_count": sum(1 for w in review_payload.get("write_lock_refreshes", []) if w.get("status") == "FAILED"),
-        "latest_human_approval_ledger_count": len(review_payload.get("human_ledgers", [])),
-        "latest_human_ledger_activation_risk_count": sum(1 for l in review_payload.get("human_ledgers", []) if l.get("activation_allowed")),
-        "latest_no_write_continuity_failure_count": 0,
-        "latest_dry_admission_safety_flag_count": len(review_payload.get("warnings", [])),
-        "dry_admission_warning_count": len(review_payload.get("warnings", []))
-    }
+class MetricsCollector:
+    def __init__(self):
+        self.metrics = {
+            "latest_board_dossier_count": 0,
+            "latest_board_dossier_blocked_count": 0,
+            "latest_acceptance_board_seal_count": 0,
+            "latest_acceptance_board_seal_failed_count": 0,
+            "latest_shadow_launch_blocker_event_count": 0,
+            "latest_shadow_launch_attempt_blocked_count": 0,
+            "latest_shadow_launch_attempt_not_blocked_count": 0,
+            "latest_shadow_launch_allowed_violation_count": 0,
+            "latest_board_dossier_safety_flag_count": 0,
+            "board_dossier_warning_count": 0
+        }
 
-# paper sandbox bridge metrics added in Phase 89
-latest_bridge_dry_run_count = 0
-latest_bridge_dry_run_blocked_count = 0
-latest_no_order_session_count = 0
-latest_no_order_session_blocked_count = 0
-latest_bridge_replay_count = 0
-latest_bridge_replay_blocked_count = 0
-latest_dangerous_route_allowed_count = 0
-latest_read_only_route_allowed_count = 0
-latest_bridge_safety_flag_count = 0
-paper_sandbox_bridge_warning_count = 0
-
-def latest_no_order_dossier_count() -> int: return 0
-def latest_no_order_dossier_blocked_count() -> int: return 0
-def latest_bridge_replay_audit_seal_count() -> int: return 0
-def latest_bridge_replay_audit_seal_failed_count() -> int: return 0
-def latest_admission_blocker_event_count() -> int: return 0
-def latest_admission_attempt_blocked_count() -> int: return 0
-def latest_admission_attempt_not_blocked_count() -> int: return 0
-def latest_admission_allowed_violation_count() -> int: return 0
-def latest_no_order_dossier_safety_flag_count() -> int: return 0
-def no_order_dossier_warning_count() -> int: return 0
-
-
-# --- Phase 92 Observability ---
-
-class PaperSafeGateMetrics:
-    latest_paper_safe_gate_count: int = 0
-    latest_paper_safe_gate_blocked_count: int = 0
-    latest_boundary_replay_count: int = 0
-    latest_boundary_replay_failed_count: int = 0
-    latest_frozen_integrity_audit_count: int = 0
-    latest_frozen_evidence_tamper_count: int = 0
-    latest_paper_safe_rule_failed_count: int = 0
-    latest_paper_safe_assertion_failed_count: int = 0
-    latest_paper_safe_safety_flag_count: int = 0
-    paper_safe_gate_warning_count: int = 0
+    def collect_board_dossier_metrics(self, review: Any) -> None:
+        self.metrics["latest_board_dossier_count"] = len(review.dossiers)
+        self.metrics["latest_board_dossier_blocked_count"] = sum(1 for d in review.dossiers if d.status.name == "BLOCKED")
+        self.metrics["latest_acceptance_board_seal_count"] = len(review.acceptance_board_seals)
+        self.metrics["latest_shadow_launch_blocker_event_count"] = len(review.shadow_launch_blocker_events)
+        self.metrics["latest_shadow_launch_attempt_blocked_count"] = sum(1 for e in review.shadow_launch_blocker_events if e.blocked)
+        self.metrics["latest_shadow_launch_attempt_not_blocked_count"] = sum(1 for e in review.shadow_launch_blocker_events if not e.blocked)

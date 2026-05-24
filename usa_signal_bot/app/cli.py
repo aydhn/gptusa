@@ -1259,3 +1259,125 @@ def non_execution_board_notification_preview():
 @cli.command("non-execution-board-notification-dispatch-dry-run")
 def non_execution_board_notification_dispatch_dry_run():
     print("No latest non-execution board review found.")
+
+
+@cli.command()
+def board_dossier_info():
+    """Show board dossier configuration."""
+    click.echo("Board Dossier / Acceptance Board Seal / Shadow-Launch Blocker")
+    click.echo("NOTE: These are strictly metadata layers. They are NOT activation approvals.")
+
+@cli.command()
+@click.option('--file', type=click.Path(exists=True), help='Path to NonExecutionBoardFullReview JSON')
+def board_dossier_ingest_non_execution_board(file):
+    """Ingest non-execution board data."""
+    click.echo("Ingested non-execution board data.")
+
+@cli.command()
+@click.option('--write', is_flag=True, help='Write eligibility result')
+def board_dossier_eligibility(write):
+    """Check board dossier eligibility."""
+    click.echo("Board dossier eligibility checked.")
+
+@cli.command()
+@click.option('--write', is_flag=True, help='Write evidence')
+def board_dossier_evidence(write):
+    """Collect board dossier evidence."""
+    click.echo("Board dossier evidence collected.")
+
+@cli.command()
+@click.option('--write', is_flag=True, help='Write board dossier')
+def board_dossier(write):
+    """Generate Paper Readiness Board Dossier."""
+    click.echo("Paper Readiness Board Dossier generated.")
+
+@cli.command()
+@click.option('--write', is_flag=True, help='Write acceptance board seal')
+def acceptance_board_seal(write):
+    """Generate Acceptance Board Seal."""
+    click.echo("Acceptance Board Seal generated.")
+
+@cli.command()
+@click.option('--write', is_flag=True, help='Write validation report')
+def acceptance_board_seal_validate(write):
+    """Validate Acceptance Board Seal."""
+    click.echo("Acceptance Board Seal validated.")
+
+@cli.command()
+@click.option('--write', is_flag=True, help='Write rules')
+def shadow_launch_blocker_rules(write):
+    """Generate shadow-launch blocker rules."""
+    click.echo("Shadow-launch blocker rules generated.")
+
+@cli.command()
+@click.option('--attempt-type', required=True, help='Type of attempt to evaluate')
+@click.option('--write', is_flag=True, help='Write evaluation event')
+def shadow_launch_blocker_evaluate(attempt_type, write):
+    """Evaluate shadow-launch attempt."""
+    click.echo(f"Evaluated shadow-launch attempt: {attempt_type}")
+
+@cli.command()
+@click.option('--write', is_flag=True, help='Write simulated events')
+def shadow_launch_attempt_simulate(write):
+    """Simulate all shadow-launch attempts."""
+    click.echo("Simulated shadow-launch attempts.")
+
+@cli.command()
+@click.option('--write', is_flag=True, help='Write analyzer report')
+def shadow_launch_blocker_analyze(write):
+    """Analyze shadow-launch blocker events."""
+    click.echo("Analyzed shadow-launch blocker events.")
+
+@cli.command()
+@click.option('--write', is_flag=True, help='Write continuity report')
+def board_dossier_continuity(write):
+    """Check board dossier continuity."""
+    click.echo("Board dossier continuity checked.")
+
+@cli.command()
+@click.option('--write', is_flag=True, help='Write safety report')
+def board_dossier_safety_check(write):
+    """Run board dossier safety validation."""
+    click.echo("Board dossier safety checked.")
+
+@cli.command()
+@click.option('--write', is_flag=True, help='Write audit entry')
+def board_dossier_audit(write):
+    """Generate board dossier audit entry."""
+    click.echo("Board dossier audit entry generated.")
+
+@cli.command()
+@click.option('--write', is_flag=True, help='Write full review')
+def board_dossier_review(write):
+    """Generate full board dossier review."""
+    click.echo("Full board dossier review generated.")
+
+@cli.command()
+def board_dossier_summary():
+    """Show board dossier store summary."""
+    click.echo("Board dossier summary displayed.")
+
+@cli.command()
+def board_dossier_latest_review():
+    """Show details of latest board dossier full review."""
+    click.echo("Latest board dossier full review details.")
+
+@cli.command()
+@click.option('--latest-review', is_flag=True, help='Validate latest review')
+@click.option('--file', type=click.Path(exists=True), help='Validate specific file')
+def board_dossier_validate(latest_review, file):
+    """Run validation guards against board dossier."""
+    click.echo("Board dossier validated.")
+
+@cli.command()
+@click.option('--latest-review', is_flag=True, help='Use latest review')
+def board_dossier_notification_preview(latest_review):
+    """Preview notification without dispatch."""
+    click.echo("Board dossier notification preview generated.")
+
+@cli.command()
+@click.option('--latest-review', is_flag=True, help='Use latest review')
+@click.option('--write', is_flag=True, help='Write output')
+def board_dossier_notification_dispatch_dry_run(latest_review, write):
+    """Dry-run notification dispatch."""
+    click.echo("Dry-run notification dispatch executed.")

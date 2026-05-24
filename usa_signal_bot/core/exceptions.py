@@ -760,7 +760,7 @@ class PaperSafeDossierValidationError(PaperSafeDossierError):
 class PaperSafeDossierReportingError(PaperSafeDossierError):
     pass
 
-class PaperReadinessNonExecutionBoardError(SignalBotError):
+class PaperReadinessNonExecutionBoardError(USASignalBotError):
     pass
 
 class NonExecutionBoardDossierIngestionError(PaperReadinessNonExecutionBoardError):
@@ -806,4 +806,56 @@ class NonExecutionBoardStorageError(PaperReadinessNonExecutionBoardError):
     pass
 
 class NonExecutionBoardReportingError(PaperReadinessNonExecutionBoardError):
+    pass
+
+
+class PaperReadinessBoardDossierError(USASignalBotError):
+    pass
+
+class BoardDossierIngestionError(PaperReadinessBoardDossierError):
+    pass
+
+class BoardDossierEligibilityError(PaperReadinessBoardDossierError):
+    pass
+
+class BoardDossierEvidenceError(PaperReadinessBoardDossierError):
+    pass
+
+class BoardDossierBuilderError(PaperReadinessBoardDossierError):
+    pass
+
+class AcceptanceBoardSealError(PaperReadinessBoardDossierError):
+    pass
+
+class AcceptanceBoardSealValidationError(AcceptanceBoardSealError):
+    pass
+
+class ShadowLaunchBlockerRuleError(PaperReadinessBoardDossierError):
+    pass
+
+class FinalShadowLaunchBlockerError(PaperReadinessBoardDossierError):
+    pass
+
+class ShadowLaunchAttemptSimulatorError(FinalShadowLaunchBlockerError):
+    pass
+
+class ShadowLaunchBlockerAnalyzerError(FinalShadowLaunchBlockerError):
+    pass
+
+class BoardDossierContinuityError(PaperReadinessBoardDossierError):
+    pass
+
+class BoardDossierSafetyValidatorError(PaperReadinessBoardDossierError):
+    pass
+
+class BoardDossierAuditError(PaperReadinessBoardDossierError):
+    pass
+
+class BoardDossierStorageError(PaperReadinessBoardDossierError):
+    pass
+
+class BoardDossierValidationError(PaperReadinessBoardDossierError):
+    pass
+
+class BoardDossierReportingError(PaperReadinessBoardDossierError):
     pass
