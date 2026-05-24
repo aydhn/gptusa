@@ -1656,3 +1656,72 @@ class Phase102NotificationsConfig:
     dry_run: bool = True
     preview_only: bool = True
     telegram_real_send: bool = False
+
+
+@dataclass
+class RuntimeServiceGraphConfig:
+    enabled: bool = True
+    current_phase: int = 103
+    final_phase: int = 160
+    require_phase102_runtime_registry: bool = True
+    build_service_graph: bool = True
+    validate_dependency_contracts: bool = True
+    detect_cycles: bool = True
+    write_service_graph_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_phase103_is_not_activation: bool = True
+
+    def __post_init__(self):
+        if self.current_phase != 103:
+            raise ValueError("current_phase must be 103")
+
+@dataclass
+class Phase103OrchestrationConfig:
+    enabled: bool = True
+    dry_run_only: bool = True
+    metadata_only_default: bool = True
+    read_only_allowed: bool = True
+    local_compute_validation_allowed: bool = True
+    network_allowed: bool = False
+    execution_allowed: bool = False
+    broker_allowed: bool = False
+    order_allowed: bool = False
+    paper_mutation_allowed: bool = False
+    telegram_real_send_allowed: bool = False
+    scraping_allowed: bool = False
+    dashboard_allowed: bool = False
+
+    def __post_init__(self):
+        if not self.dry_run_only:
+            raise ValueError("dry_run_only must be true")
+        if self.execution_allowed:
+            raise ValueError("execution_allowed must be false")
+        if self.broker_allowed:
+            raise ValueError("broker_allowed must be false")
+
+@dataclass
+class Phase103DependencyPolicyConfig:
+    require_no_cycles: bool = True
+    require_no_missing_dependencies: bool = True
+    require_no_execution_routes: bool = True
+    require_no_broker_routes: bool = True
+    require_no_order_routes: bool = True
+    require_no_paper_mutation_routes: bool = True
+    require_no_telegram_real_send_routes: bool = True
+    require_no_scraping_routes: bool = True
+    require_no_dashboard_routes: bool = True
+
+    def __post_init__(self):
+        if not self.require_no_cycles:
+            raise ValueError("require_no_cycles must be true")
+
+@dataclass
+class Phase103NotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    preview_only: bool = True
+    telegram_real_send: bool = False
+
+    def __post_init__(self):
+        if self.telegram_real_send:
+            raise ValueError("telegram_real_send must be false")

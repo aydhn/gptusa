@@ -165,3 +165,14 @@ def notifications_from_runtime_registry_review(review: Any) -> list[Notification
     if review.warnings:
         msgs.append(NotificationMessage(content="Warnings detected in runtime registry."))
     return msgs
+
+from usa_signal_bot.runtime_service_graph.phase103_models import RuntimeServiceGraphFullReview, OrchestrationDryRunResult
+
+def format_runtime_service_graph_report_message(review: RuntimeServiceGraphFullReview) -> NotificationMessage:
+    return NotificationMessage()
+
+def format_orchestration_dry_run_warning_message(result: OrchestrationDryRunResult) -> NotificationMessage:
+    return NotificationMessage()
+
+def notifications_from_runtime_service_graph_review(review: RuntimeServiceGraphFullReview) -> list:
+    return []
