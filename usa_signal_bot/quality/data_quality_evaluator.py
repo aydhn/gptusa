@@ -1,60 +1,12 @@
-# quality/data_quality_evaluator.py integration
-from typing import Any, Dict
-def evaluate_pre_paper_rehearsal_quality(review: Any) -> Dict[str, Any]:
-    return {
-        "pre_paper_rehearsal_quality_score": 100,
-        "mutation_firewall_coverage_score": 100,
-        "zero_mutation_assertion_score": 100,
-        "activation_denied_checkpoint_quality_score": 100,
-        "pre_paper_non_execution_compliance_score": 100
-    }
+from typing import Any
+from usa_signal_bot.quality.quality_models import QualityScorecard
 
-def evaluate_dry_admission_quality(run_payload: dict, refresh_payload: dict, ledger_payload: dict) -> dict:
-    score = 1.0
-    if run_payload.get('status') == 'COMPLETED_NO_WRITE': score += 0.2
-    if run_payload.get('mutation_detected', True): score = 0.0
-    if refresh_payload.get('status') == 'VALIDATED': score += 0.2
-    if refresh_payload.get('unblocked_write_attempt_count', 1) > 0: score = 0.0
-    if ledger_payload.get('acknowledged_not_activation', False): score += 0.2
-    if ledger_payload.get('activation_allowed', True): score = 0.0
-
-    return {
-        "paper_mode_dry_admission_quality_score": min(score, 1.0),
-        "runtime_write_lock_refresh_score": 1.0 if refresh_payload.get('all_writes_blocked') else 0.0,
-        "human_approval_ledger_completeness_score": 1.0 if not ledger_payload.get('missing_scopes') else 0.0,
-        "no_write_continuity_score": 1.0 if not run_payload.get('mutation_detected') else 0.0,
-        "dry_admission_non_execution_compliance_score": 1.0 if run_payload.get('activation_denied') else 0.0
-    }
-
-# paper sandbox bridge dimensions added in Phase 89
-paper_sandbox_bridge_dry_run_quality_score = 0
-no_order_session_emulator_score = 0
-bridge_firewall_replay_score = 0
-bridge_route_guard_score = 0
-bridge_non_execution_compliance_score = 0
-
-def no_order_session_dossier_quality_score(payload: dict) -> float: return 1.0
-def bridge_replay_audit_seal_score(payload: dict) -> float: return 1.0
-def paper_admission_blocker_score(events: list) -> float: return 1.0
-def no_order_continuity_score(payload: dict) -> float: return 1.0
-def no_order_non_execution_compliance_score(payload: dict) -> float: return 1.0
-
-def evaluate_paper_boundary_certificate_quality(certificate: Any, replay: Any, freeze: Any) -> Dict[str, Any]:
-    return {
-        "paper_sandbox_boundary_certificate_score": 1.0,
-        "admission_blocker_replay_score": 1.0,
-        "no_order_evidence_freeze_score": 1.0,
-        "boundary_assertion_score": 1.0,
-        "boundary_non_execution_compliance_score": 1.0
-    }
-
-
-# --- Phase 92 Quality ---
-
-class PaperSafeGateQualityScore:
-    def __init__(self):
-        self.final_paper_safe_gate_score = 100
-        self.boundary_certificate_replay_score = 100
-        self.frozen_evidence_integrity_score = 100
-        self.paper_safe_assertion_score = 100
-        self.paper_safe_non_execution_compliance_score = 100
+def evaluate_board_dossier_quality(review: Any) -> QualityScorecard:
+    scorecard = QualityScorecard(scorecard_id="qs_1")
+    if not review.errors:
+        scorecard.paper_readiness_board_dossier_quality_score = 100.0
+        scorecard.acceptance_board_seal_score = 100.0
+        scorecard.shadow_launch_blocker_score = 100.0
+        scorecard.board_dossier_continuity_score = 100.0
+        scorecard.board_dossier_non_execution_compliance_score = 100.0
+    return scorecard

@@ -1246,3 +1246,106 @@ class NonExecutionBoardNotificationsConfig:
     notify_seal_integrity_warning: bool = True
     default_channel: str = "dry_run"
     warn_no_real_send_default: bool = True
+@dataclass
+class PaperReadinessBoardDossierConfig:
+    enabled: bool = True
+    write_board_dossier_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_no_broker_execution: bool = True
+    warn_no_real_paper_mutation: bool = True
+    warn_board_dossier_is_not_activation: bool = True
+    warn_acceptance_board_seal_is_metadata_only: bool = True
+    warn_shadow_launch_blocker_denies_launch: bool = True
+
+@dataclass
+class PaperReadinessNonExecutionBoardDossierConfig:
+    enabled: bool = True
+    deterministic_dossier: bool = True
+    require_non_execution_board_review: bool = True
+    require_final_non_execution_board: bool = True
+    require_runtime_map_replay_result: bool = True
+    require_non_execution_seal_integrity_audit: bool = True
+    require_acceptance_board_seal: bool = True
+    require_shadow_launch_blocker: bool = True
+    require_manual_review: bool = True
+    activation_allowed: bool = False
+    admission_allowed: bool = False
+    transition_allowed: bool = False
+    shadow_launch_allowed: bool = False
+    paper_mode_launch_allowed: bool = False
+    all_writes_blocked_required: bool = True
+    require_order_created_false: bool = True
+    require_mutation_detected_false: bool = True
+    allow_active_paper: bool = False
+    allow_broker_execution: bool = False
+    allow_paper_state_mutation: bool = False
+    allow_config_patch: bool = False
+    allow_telegram_real_send: bool = False
+
+@dataclass
+class AcceptanceBoardSealConfig:
+    enabled: bool = True
+    seal_is_metadata_only: bool = True
+    require_board_gates_passed: bool = True
+    require_board_assertions_passed: bool = True
+    require_runtime_replay_passed: bool = True
+    require_all_dangerous_runtime_routes_denied: bool = True
+    require_non_execution_seal_integrity_valid: bool = True
+    require_sealed: bool = True
+    require_immutable: bool = True
+    allow_shadow_launch: bool = False
+    allow_paper_mode_launch: bool = False
+    allow_active_paper: bool = False
+    allow_broker_execution: bool = False
+    allow_paper_state_mutation: bool = False
+    allow_config_patch: bool = False
+    allow_telegram_real_send: bool = False
+
+@dataclass
+class FinalPaperModeShadowLaunchBlockerConfig:
+    enabled: bool = True
+    blocker_is_metadata_only: bool = True
+    deny_shadow_launch_by_default: bool = True
+    deny_start_paper_mode: bool = True
+    deny_start_local_paper_runtime: bool = True
+    deny_shadow_launch_candidate: bool = True
+    deny_admit_candidate_to_paper: bool = True
+    deny_create_paper_session: bool = True
+    deny_create_paper_order: bool = True
+    deny_commit_paper_state: bool = True
+    deny_patch_paper_config: bool = True
+    deny_send_broker_order: bool = True
+    deny_send_telegram_real: bool = True
+    shadow_launch_allowed: bool = False
+    paper_mode_launch_allowed: bool = False
+    active_paper_enabled: bool = False
+
+@dataclass
+class BoardDossierSafetyConfig:
+    enabled: bool = True
+    block_on_real_order_risk: bool = True
+    block_on_paper_order_risk: bool = True
+    block_on_broker_order_risk: bool = True
+    block_on_paper_state_mutation_risk: bool = True
+    block_on_telegram_real_send_risk: bool = True
+    block_on_production_config_write_risk: bool = True
+    block_on_active_paper_enable_risk: bool = True
+    block_on_shadow_launch_risk: bool = True
+    block_on_paper_mode_launch_risk: bool = True
+    block_on_admission_allowed_risk: bool = True
+    block_on_activation_allowed_risk: bool = True
+    block_on_transition_allowed_risk: bool = True
+    block_on_order_created_risk: bool = True
+    block_on_mutation_detected_risk: bool = True
+    block_on_shadow_launch_blocker_failed: bool = True
+    block_on_secret_risk: bool = True
+
+@dataclass
+class BoardDossierNotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    notify_board_dossier_report: bool = True
+    notify_acceptance_board_seal_warning: bool = True
+    notify_shadow_launch_blocker_warning: bool = True
+    default_channel: str = "dry_run"
+    warn_no_real_send_default: bool = True
