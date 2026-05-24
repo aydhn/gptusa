@@ -36,7 +36,18 @@ class MetricsCollector:
             "latest_shadow_launch_attempt_not_blocked_count": 0,
             "latest_shadow_launch_allowed_violation_count": 0,
             "latest_board_dossier_safety_flag_count": 0,
-            "board_dossier_warning_count": 0
+            "board_dossier_warning_count": 0,
+
+            "latest_runtime_registry_count": 0,
+            "latest_runtime_registry_valid_count": 0,
+            "latest_config_surface_record_count": 0,
+            "latest_config_surface_conflict_count": 0,
+            "latest_provider_capability_manifest_count": 0,
+            "latest_provider_safety_manifest_count": 0,
+            "latest_provider_safety_violation_count": 0,
+            "latest_runtime_capability_policy_count": 0,
+            "latest_phase102_execution_violation_count": 0,
+
         }
 
     def collect_board_dossier_metrics(self, review: Any) -> None:
@@ -57,3 +68,15 @@ class MetricsCollector:
         self.metrics["latest_phase101_config_issue_count"] = self.metrics.get("latest_phase101_config_issue_count", 0) + payload.get("config_issue_count", 0)
         self.metrics["latest_phase101_validation_issue_count"] = self.metrics.get("latest_phase101_validation_issue_count", 0) + payload.get("validation_issue_count", 0)
         self.metrics["latest_phase101_execution_violation_count"] = self.metrics.get("latest_phase101_execution_violation_count", 0) + payload.get("execution_violation_count", 0)
+
+
+    def update_phase102_advanced_runtime_metrics(self, payload: dict):
+        self.metrics["latest_runtime_registry_count"] = self.metrics.get("latest_runtime_registry_count", 0) + 1
+        self.metrics["latest_runtime_registry_valid_count"] = self.metrics.get("latest_runtime_registry_valid_count", 0) + payload.get("valid_registry_count", 0)
+        self.metrics["latest_config_surface_record_count"] = self.metrics.get("latest_config_surface_record_count", 0) + payload.get("config_surface_record_count", 0)
+        self.metrics["latest_config_surface_conflict_count"] = self.metrics.get("latest_config_surface_conflict_count", 0) + payload.get("config_surface_conflict_count", 0)
+        self.metrics["latest_provider_capability_manifest_count"] = self.metrics.get("latest_provider_capability_manifest_count", 0) + payload.get("provider_capability_manifest_count", 0)
+        self.metrics["latest_provider_safety_manifest_count"] = self.metrics.get("latest_provider_safety_manifest_count", 0) + payload.get("provider_safety_manifest_count", 0)
+        self.metrics["latest_provider_safety_violation_count"] = self.metrics.get("latest_provider_safety_violation_count", 0) + payload.get("provider_safety_violation_count", 0)
+        self.metrics["latest_runtime_capability_policy_count"] = self.metrics.get("latest_runtime_capability_policy_count", 0) + payload.get("runtime_capability_policy_count", 0)
+        self.metrics["latest_phase102_execution_violation_count"] = self.metrics.get("latest_phase102_execution_violation_count", 0) + payload.get("execution_violation_count", 0)

@@ -1119,3 +1119,7 @@ phase101_notifications:
   dry_run: true
   preview_only: true
   telegram_real_send: false
+
+
+advanced_runtime:
+  enabled: true
