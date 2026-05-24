@@ -6,7 +6,7 @@ from dataclasses import asdict
 from typing import Optional
 
 
-from usa_signal_bot.core.config_schema import Config as AppConfig
+from usa_signal_bot.core.config_schema import Config as AppConfig, CoreRuntimeAcceptanceConfig, AdvancedFoundationFreezeConfig, DataProviderExpansionKickoffGateConfig, Phase105NotificationsConfig
 
 from usa_signal_bot.core.exceptions import ConfigError
 from usa_signal_bot.utils.dict_utils import deep_merge_dicts
@@ -204,16 +204,28 @@ def load_app_config(config_dir: Optional[Path] = None) -> AppConfig:
         else:
             pass
 
-        from usa_signal_bot.core.config_schema import RuntimeLifecycleConfig, Phase104StartupChecksConfig, Phase104ReadinessGateConfig, Phase104NotificationsConfig
+        from usa_signal_bot.core.config_schema import RuntimeLifecycleConfig, Phase104StartupChecksConfig, Phase104ReadinessGateConfig, Phase104NotificationsConfig, CoreRuntimeAcceptanceConfig, AdvancedFoundationFreezeConfig, DataProviderExpansionKickoffGateConfig, Phase105NotificationsConfig
         config.runtime_lifecycle = RuntimeLifecycleConfig(**merged_cfg_dict.get('runtime_lifecycle', {}))
         config.phase104_startup_checks = Phase104StartupChecksConfig(**merged_cfg_dict.get('phase104_startup_checks', {}))
         config.phase104_readiness_gate = Phase104ReadinessGateConfig(**merged_cfg_dict.get('phase104_readiness_gate', {}))
         config.phase104_notifications = Phase104NotificationsConfig(**merged_cfg_dict.get('phase104_notifications', {}))
-        from usa_signal_bot.core.config_schema import RuntimeLifecycleConfig, Phase104StartupChecksConfig, Phase104ReadinessGateConfig, Phase104NotificationsConfig
+        from usa_signal_bot.core.config_schema import RuntimeLifecycleConfig, Phase104StartupChecksConfig, Phase104ReadinessGateConfig, Phase104NotificationsConfig, CoreRuntimeAcceptanceConfig, AdvancedFoundationFreezeConfig, DataProviderExpansionKickoffGateConfig, Phase105NotificationsConfig
         config.runtime_lifecycle = RuntimeLifecycleConfig(**merged_cfg_dict.get('runtime_lifecycle', {}))
         config.phase104_startup_checks = Phase104StartupChecksConfig(**merged_cfg_dict.get('phase104_startup_checks', {}))
         config.phase104_readiness_gate = Phase104ReadinessGateConfig(**merged_cfg_dict.get('phase104_readiness_gate', {}))
         config.phase104_notifications = Phase104NotificationsConfig(**merged_cfg_dict.get('phase104_notifications', {}))
+
+
+
+        if 'core_runtime_acceptance' in merged_cfg_dict:
+            config.core_runtime_acceptance = CoreRuntimeAcceptanceConfig(**merged_cfg_dict['core_runtime_acceptance'])
+        if 'advanced_foundation_freeze' in merged_cfg_dict:
+            config.advanced_foundation_freeze = AdvancedFoundationFreezeConfig(**merged_cfg_dict['advanced_foundation_freeze'])
+        if 'data_provider_expansion_kickoff_gate' in merged_cfg_dict:
+            config.data_provider_expansion_kickoff_gate = DataProviderExpansionKickoffGateConfig(**merged_cfg_dict['data_provider_expansion_kickoff_gate'])
+        if 'phase105_notifications' in merged_cfg_dict:
+            config.phase105_notifications = Phase105NotificationsConfig(**merged_cfg_dict['phase105_notifications'])
+
         return config
 
     except Exception as e:

@@ -92,3 +92,15 @@ class MetricsCollector:
 # latest_orchestration_dry_run_pass_count
 # latest_orchestration_blocked_step_count
 # latest_phase103_execution_violation_count
+
+    def update_core_runtime_acceptance_metrics(self, payload: dict):
+        self.metrics["latest_core_runtime_acceptance_report_count"] = self.metrics.get("latest_core_runtime_acceptance_report_count", 0) + 1
+        self.metrics["latest_core_runtime_accepted_count"] = self.metrics.get("latest_core_runtime_accepted_count", 0) + payload.get("accepted_count", 0)
+        self.metrics["latest_foundation_freeze_count"] = self.metrics.get("latest_foundation_freeze_count", 0) + 1
+        self.metrics["latest_foundation_freeze_valid_count"] = self.metrics.get("latest_foundation_freeze_valid_count", 0) + payload.get("freeze_valid_count", 0)
+        self.metrics["latest_provider_kickoff_gate_count"] = self.metrics.get("latest_provider_kickoff_gate_count", 0) + 1
+        self.metrics["latest_provider_kickoff_gate_pass_count"] = self.metrics.get("latest_provider_kickoff_gate_pass_count", 0) + payload.get("gate_pass_count", 0)
+        self.metrics["latest_phase106_ready_count"] = self.metrics.get("latest_phase106_ready_count", 0) + payload.get("ready_count", 0)
+        self.metrics["latest_phase105_missing_evidence_count"] = self.metrics.get("latest_phase105_missing_evidence_count", 0) + payload.get("missing_evidence_count", 0)
+        self.metrics["latest_phase105_stale_evidence_count"] = self.metrics.get("latest_phase105_stale_evidence_count", 0) + payload.get("stale_evidence_count", 0)
+        self.metrics["latest_phase105_execution_violation_count"] = self.metrics.get("latest_phase105_execution_violation_count", 0) + payload.get("execution_violation_count", 0)

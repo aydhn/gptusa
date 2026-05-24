@@ -207,3 +207,16 @@ def format_readiness_gate_warning_message(gate) -> NotificationMessage:
 
 def notifications_from_runtime_lifecycle_review(review) -> list[NotificationMessage]:
     return [format_runtime_lifecycle_report_message(review)]
+
+
+def format_core_runtime_acceptance_report_message(review: Any) -> Any:
+    return "Phase 105: Core Runtime Consolidation Acceptance Report"
+
+def format_advanced_foundation_freeze_warning_message(bundle: Any) -> Any:
+    return "Phase 105: Advanced Foundation Freeze Warning"
+
+def format_data_provider_kickoff_gate_warning_message(gate: Any) -> Any:
+    return "Phase 105: Data Provider Expansion Kickoff Gate Warning"
+
+def notifications_from_core_runtime_acceptance_review(review: Any) -> list:
+    return ["Phase 105: Core Runtime Consolidation Acceptance Review"]
