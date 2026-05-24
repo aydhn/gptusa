@@ -176,3 +176,34 @@ def format_orchestration_dry_run_warning_message(result: OrchestrationDryRunResu
 
 def notifications_from_runtime_service_graph_review(review: RuntimeServiceGraphFullReview) -> list:
     return []
+
+
+def format_runtime_lifecycle_report_message(review) -> NotificationMessage:
+    return NotificationMessage(
+        subject="Phase 104 Lifecycle Review",
+        body=f"Review completed. Gate Decision: {review.readiness_gate.decision.value}",
+        metadata={"review_id": review.review_id},
+        message_type=NotificationType.RUNTIME_LIFECYCLE_REPORT,
+        priority=NotificationPriority.INFO
+    )
+
+def format_startup_check_warning_message(report) -> NotificationMessage:
+    return NotificationMessage(
+        subject="Startup Check Warning",
+        body=f"Startup checks resulted in status {report.status.value}",
+        metadata={"report_id": report.report_id},
+        message_type=NotificationType.STARTUP_CHECK_WARNING,
+        priority=NotificationPriority.WARNING
+    )
+
+def format_readiness_gate_warning_message(gate) -> NotificationMessage:
+    return NotificationMessage(
+        subject="Readiness Gate Warning",
+        body=f"Readiness gate decision: {gate.decision.value}",
+        metadata={"gate_id": gate.gate_id},
+        message_type=NotificationType.READINESS_GATE_WARNING,
+        priority=NotificationPriority.WARNING
+    )
+
+def notifications_from_runtime_lifecycle_review(review) -> list[NotificationMessage]:
+    return [format_runtime_lifecycle_report_message(review)]

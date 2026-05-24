@@ -1,3 +1,4 @@
+import click
 
 class MockClick:
     def echo(self, msg): print(msg)
@@ -1910,3 +1911,50 @@ def service_graph_summary():
 @cli.command()
 def service_graph_validate():
     pass
+
+
+
+
+@cli.command()
+def lifecycle_info():
+    """Show information about the Phase 104 Runtime Lifecycle."""
+    click.echo("=== PHASE 104 RUNTIME LIFECYCLE INFO ===")
+    click.echo("This is STRICTLY a local metadata readiness evaluation phase.")
+    click.echo("It does NOT perform broker API calls, network fetches, live trades, or actual active paper runs.")
+    click.echo("Any 'READY' status is strictly a local metadata state and is NOT a financial investment advice or live execution approval.")
+
+@cli.command()
+@click.option("--write", is_flag=True, help="Write output to disk")
+def lifecycle_review(write):
+    """Run a full lifecycle review and print/write the report."""
+    from usa_signal_bot.runtime_lifecycle.lifecycle_report import build_runtime_lifecycle_full_review
+    from usa_signal_bot.runtime_lifecycle.lifecycle_reporting import runtime_lifecycle_full_review_to_text
+    from usa_signal_bot.runtime_lifecycle.lifecycle_store import write_runtime_lifecycle_full_review_json, lifecycle_reviews_dir
+    from pathlib import Path
+
+    review = build_runtime_lifecycle_full_review()
+    click.echo(runtime_lifecycle_full_review_to_text(review))
+
+    if write:
+        path = lifecycle_reviews_dir(Path("data")) / f"{review.review_id}.json"
+        write_runtime_lifecycle_full_review_json(path, review)
+        click.echo(f"\nWrote full review to {path}")
+
+@cli.command()
+@click.option("--write", is_flag=True, help="Write output to disk")
+def startup_checks(write):
+    """Run the startup checks."""
+    from usa_signal_bot.runtime_lifecycle.startup_check_runner import StartupCheckRunner
+    from usa_signal_bot.runtime_lifecycle.lifecycle_reporting import startup_check_report_to_text
+    runner = StartupCheckRunner()
+    report = runner.run_all_checks()
+    click.echo(startup_check_report_to_text(report))
+
+@cli.command()
+@click.option("--write", is_flag=True, help="Write output to disk")
+def readiness_gate(write):
+    """Evaluate the readiness gate."""
+    from usa_signal_bot.runtime_lifecycle.lifecycle_manager import RuntimeLifecycleManager
+    manager = RuntimeLifecycleManager()
+    ctx = manager.run_lifecycle_dry_run()
+    click.echo(f"Gate Decision: {ctx.decision.value}")

@@ -1041,55 +1041,55 @@ class HandoffFreezeValidationError(USASignalBotError):
 class HandoffFreezeReportingError(USASignalBotError):
     pass
 
-class AdvancedTransitionError(UsaSignalBotError):
+class AdvancedTransitionError(USASignalBotError):
     pass
 
-class HandoffFreezeIngestionError(UsaSignalBotError):
+class HandoffFreezeIngestionError(USASignalBotError):
     pass
 
-class AdvancedTransitionContextError(UsaSignalBotError):
+class AdvancedTransitionContextError(USASignalBotError):
     pass
 
-class ModuleInventoryError(UsaSignalBotError):
+class ModuleInventoryError(USASignalBotError):
     pass
 
-class RuntimeBoundaryManifestError(UsaSignalBotError):
+class RuntimeBoundaryManifestError(USASignalBotError):
     pass
 
-class CapabilityMatrixError(UsaSignalBotError):
+class CapabilityMatrixError(USASignalBotError):
     pass
 
-class ConfigConsolidationError(UsaSignalBotError):
+class ConfigConsolidationError(USASignalBotError):
     pass
 
-class StorageRegistryError(UsaSignalBotError):
+class StorageRegistryError(USASignalBotError):
     pass
 
-class ValidationRegistryError(UsaSignalBotError):
+class ValidationRegistryError(USASignalBotError):
     pass
 
-class HealthRegistryError(UsaSignalBotError):
+class HealthRegistryError(USASignalBotError):
     pass
 
-class CliRegistryError(UsaSignalBotError):
+class CliRegistryError(USASignalBotError):
     pass
 
-class ObservabilityRegistryError(UsaSignalBotError):
+class ObservabilityRegistryError(USASignalBotError):
     pass
 
-class NotificationBoundaryError(UsaSignalBotError):
+class NotificationBoundaryError(USASignalBotError):
     pass
 
-class AdvancedPhaseRoadmapError(UsaSignalBotError):
+class AdvancedPhaseRoadmapError(USASignalBotError):
     pass
 
-class AdvancedTransitionStorageError(UsaSignalBotError):
+class AdvancedTransitionStorageError(USASignalBotError):
     pass
 
-class AdvancedTransitionValidationError(UsaSignalBotError):
+class AdvancedTransitionValidationError(USASignalBotError):
     pass
 
-class AdvancedTransitionReportingError(UsaSignalBotError):
+class AdvancedTransitionReportingError(USASignalBotError):
     pass
 
 
@@ -1116,7 +1116,7 @@ class RuntimeRegistryStorageError(Exception): pass
 class RuntimeRegistryValidationError(Exception): pass
 class RuntimeRegistryReportingError(Exception): pass
 
-class RuntimeServiceGraphError(UsaSignalBotError):
+class RuntimeServiceGraphError(USASignalBotError):
     pass
 
 class RuntimeRegistryIngestionError(RuntimeServiceGraphError):
@@ -1171,4 +1171,91 @@ class ServiceGraphValidationError(RuntimeServiceGraphError):
     pass
 
 class ServiceGraphReportingError(RuntimeServiceGraphError):
+    pass
+
+
+class RuntimeLifecycleError(USASignalBotError):
+    pass
+
+
+class ServiceGraphIngestionError(USASignalBotError):
+    pass
+
+
+class LifecyclePolicyError(USASignalBotError):
+    pass
+
+
+class LifecycleStateMachineError(USASignalBotError):
+    pass
+
+
+class LifecycleManagerError(USASignalBotError):
+    pass
+
+
+class StartupCheckRegistryError(USASignalBotError):
+    pass
+
+
+class StartupCheckRunnerError(USASignalBotError):
+    pass
+
+
+class StartupCheckError(USASignalBotError):
+    pass
+
+
+class ServiceReadinessMatrixError(USASignalBotError):
+    pass
+
+
+class ReadinessGateBuilderError(USASignalBotError):
+    pass
+
+
+class ReadinessGateEvaluatorError(USASignalBotError):
+    pass
+
+
+class DependencyReadinessValidationError(USASignalBotError):
+    pass
+
+
+class ConfigReadinessValidationError(USASignalBotError):
+    pass
+
+
+class ProviderReadinessValidationError(USASignalBotError):
+    pass
+
+
+class ObservabilityReadinessValidationError(USASignalBotError):
+    pass
+
+
+class NotificationReadinessValidationError(USASignalBotError):
+    pass
+
+
+class NoExecutionReadinessValidationError(USASignalBotError):
+    pass
+
+
+class LifecycleDryRunValidationError(USASignalBotError):
+    pass
+
+
+class LifecycleStorageError(USASignalBotError):
+    pass
+
+
+class LifecycleValidationError(USASignalBotError):
+    pass
+
+
+class LifecycleReportingError(USASignalBotError):
+    pass
+
+class ConfigError(USASignalBotError):
     pass
