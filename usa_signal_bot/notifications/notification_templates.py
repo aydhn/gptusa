@@ -75,3 +75,21 @@ def notifications_from_dry_admission_gate_review(review: dict) -> list['Notifica
     messages = []
     messages.append(format_dry_admission_gate_report_message(review))
     return messages
+
+def format_dry_admission_dossier_report_message(review: Any) -> Any:
+    msg = NotificationMessage()
+    msg.text = f"Dry-Admission Dossier Review Required. Review ID: {review.review_id}"
+    return msg
+
+def format_dry_admission_acceptance_seal_warning_message(seals: list) -> Any:
+    msg = NotificationMessage()
+    msg.text = f"Dry-Admission Acceptance Seal Warning: {len(seals)} seals evaluated."
+    return msg
+
+def format_rehearsal_blocker_warning_message(events: list) -> Any:
+    msg = NotificationMessage()
+    msg.text = f"Rehearsal Blocker Warning: {len(events)} attempts evaluated."
+    return msg
+
+def notifications_from_dry_admission_dossier_review(review: Any) -> list:
+    return [format_dry_admission_dossier_report_message(review)]
