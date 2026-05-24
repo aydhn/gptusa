@@ -931,3 +931,58 @@ class DryAdmissionDossierAuditError(PaperModeDryAdmissionDossierError): pass
 class DryAdmissionDossierStorageError(PaperModeDryAdmissionDossierError): pass
 class DryAdmissionDossierValidationError(PaperModeDryAdmissionDossierError): pass
 class DryAdmissionDossierReportingError(PaperModeDryAdmissionDossierError): pass
+
+
+class LocalPaperAdmissionSimulatorGateError(AppError):
+    pass
+
+class SimulatorDryAdmissionDossierIngestionError(LocalPaperAdmissionSimulatorGateError):
+    pass
+
+class SimulatorGateEligibilityError(LocalPaperAdmissionSimulatorGateError):
+    pass
+
+class RehearsalReplayPlanError(LocalPaperAdmissionSimulatorGateError):
+    pass
+
+class RehearsalReplayEngineError(LocalPaperAdmissionSimulatorGateError):
+    pass
+
+class RehearsalReplayAnalyzerError(LocalPaperAdmissionSimulatorGateError):
+    pass
+
+class DryAdmissionEvidenceFreezeError(LocalPaperAdmissionSimulatorGateError):
+    pass
+
+class DryAdmissionEvidenceFreezeValidationError(LocalPaperAdmissionSimulatorGateError):
+    pass
+
+class SimulatorGateRuleError(LocalPaperAdmissionSimulatorGateError):
+    pass
+
+class SimulatorGateAssertionError(LocalPaperAdmissionSimulatorGateError):
+    pass
+
+class FinalSimulatorGateError(LocalPaperAdmissionSimulatorGateError):
+    pass
+
+class SimulatorGateValidationError(LocalPaperAdmissionSimulatorGateError):
+    pass
+
+class SimulatorContinuityError(LocalPaperAdmissionSimulatorGateError):
+    pass
+
+class SimulatorSafetyValidatorError(LocalPaperAdmissionSimulatorGateError):
+    pass
+
+class SimulatorAuditError(LocalPaperAdmissionSimulatorGateError):
+    pass
+
+class SimulatorStorageError(LocalPaperAdmissionSimulatorGateError):
+    pass
+
+class SimulatorValidationError(LocalPaperAdmissionSimulatorGateError):
+    pass
+
+class SimulatorReportingError(LocalPaperAdmissionSimulatorGateError):
+    pass

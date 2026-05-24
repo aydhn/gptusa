@@ -617,3 +617,51 @@ def check_dry_admission_dossier_store_health(context: Any) -> Any:
 
 def check_dry_admission_dossier_notification_health(context: Any) -> Any:
     return {"status": "pass", "component": "dry_admission_dossier_notification"}
+
+def check_simulator_gate_config_health(context: Any) -> Any:
+    pass
+
+def check_simulator_dry_admission_dossier_ingestion_health(context: Any) -> Any:
+    pass
+
+def check_simulator_gate_eligibility_health(context: Any) -> Any:
+    pass
+
+def check_rehearsal_replay_plan_health(context: Any) -> Any:
+    pass
+
+def check_rehearsal_replay_engine_health(context: Any) -> Any:
+    pass
+
+def check_rehearsal_replay_analyzer_health(context: Any) -> Any:
+    pass
+
+def check_dry_admission_evidence_freeze_health(context: Any) -> Any:
+    pass
+
+def check_dry_admission_evidence_freeze_validator_health(context: Any) -> Any:
+    pass
+
+def check_simulator_gate_rules_health(context: Any) -> Any:
+    pass
+
+def check_simulator_gate_assertions_health(context: Any) -> Any:
+    pass
+
+def check_final_simulator_gate_health(context: Any) -> Any:
+    pass
+
+def check_simulator_gate_validator_health(context: Any) -> Any:
+    pass
+
+def check_simulator_continuity_health(context: Any) -> Any:
+    pass
+
+def check_simulator_safety_health(context: Any) -> Any:
+    pass
+
+def check_simulator_store_health(context: Any) -> Any:
+    pass
+
+def check_simulator_notification_health(context: Any) -> Any:
+    pass
