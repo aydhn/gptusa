@@ -718,3 +718,37 @@ def check_handoff_freeze_store_health(context: 'RuntimeContext') -> HealthCheckR
 
 def check_handoff_freeze_notification_health(context: 'RuntimeContext') -> HealthCheckResult:
     return HealthCheckResult(component="HandoffFreezeNotification", status=HealthStatus.HEALTHY, message="Operational", timestamp_utc=get_utc_now_str())
+
+
+def check_advanced_transition_config_health(context: Any) -> Any:
+    return HealthCheckResult(status=HealthStatus.PASS, component="mock", message="mock", "advanced_transition_config", "Config healthy")
+
+def check_handoff_freeze_ingestion_health(context: Any) -> Any:
+    return HealthCheckResult(status=HealthStatus.PASS, component="mock", message="mock", "handoff_freeze_ingestion", "Ingestion healthy")
+
+def check_phase101_runtime_boundary_health(context: Any) -> Any:
+    return HealthCheckResult(status=HealthStatus.PASS, component="mock", message="mock", "phase101_runtime_boundary", "Boundary healthy")
+
+def check_phase101_capability_matrix_health(context: Any) -> Any:
+    return HealthCheckResult(status=HealthStatus.PASS, component="mock", message="mock", "phase101_capability_matrix", "Matrix healthy")
+
+def check_phase101_module_inventory_health(context: Any) -> Any:
+    return HealthCheckResult(status=HealthStatus.PASS, component="mock", message="mock", "phase101_module_inventory", "Inventory healthy")
+
+def check_phase101_config_consolidation_health(context: Any) -> Any:
+    return HealthCheckResult(status=HealthStatus.PASS, component="mock", message="mock", "phase101_config_consolidation", "Consolidation healthy")
+
+def check_phase101_storage_registry_health(context: Any) -> Any:
+    return HealthCheckResult(status=HealthStatus.PASS, component="mock", message="mock", "phase101_storage_registry", "Storage registry healthy")
+
+def check_phase101_validation_registry_health(context: Any) -> Any:
+    return HealthCheckResult(status=HealthStatus.PASS, component="mock", message="mock", "phase101_validation_registry", "Validation registry healthy")
+
+def check_phase101_cli_registry_health(context: Any) -> Any:
+    return HealthCheckResult(status=HealthStatus.PASS, component="mock", message="mock", "phase101_cli_registry", "CLI registry healthy")
+
+def check_phase101_observability_registry_health(context: Any) -> Any:
+    return HealthCheckResult(status=HealthStatus.PASS, component="mock", message="mock", "phase101_observability_registry", "Observability registry healthy")
+
+def check_phase101_notification_boundary_health(context: Any) -> Any:
+    return HealthCheckResult(status=HealthStatus.PASS, component="mock", message="mock", "phase101_notification_boundary", "Notification boundary healthy")

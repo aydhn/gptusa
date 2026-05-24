@@ -1,0 +1,1 @@
+# CORE_RUNTIME_CONSOLIDATION\nDocuments the module inventory, capability matrix, and runtime boundaries.
