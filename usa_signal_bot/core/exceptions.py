@@ -1115,3 +1115,60 @@ class SafetyPolicyValidationError(Exception): pass
 class RuntimeRegistryStorageError(Exception): pass
 class RuntimeRegistryValidationError(Exception): pass
 class RuntimeRegistryReportingError(Exception): pass
+
+class RuntimeServiceGraphError(UsaSignalBotError):
+    pass
+
+class RuntimeRegistryIngestionError(RuntimeServiceGraphError):
+    pass
+
+class ServiceCatalogError(RuntimeServiceGraphError):
+    pass
+
+class ServiceGraphBuilderError(RuntimeServiceGraphError):
+    pass
+
+class DependencyContractError(RuntimeServiceGraphError):
+    pass
+
+class DependencyGraphError(RuntimeServiceGraphError):
+    pass
+
+class DependencyCycleDetectorError(RuntimeServiceGraphError):
+    pass
+
+class DependencyContractValidationError(RuntimeServiceGraphError):
+    pass
+
+class CapabilityServiceMappingError(RuntimeServiceGraphError):
+    pass
+
+class OrchestrationPolicyError(RuntimeServiceGraphError):
+    pass
+
+class SafeOrchestrationShellError(RuntimeServiceGraphError):
+    pass
+
+class OrchestrationPlanBuilderError(RuntimeServiceGraphError):
+    pass
+
+class OrchestrationDryRunError(RuntimeServiceGraphError):
+    pass
+
+class OrchestrationSafetyValidationError(RuntimeServiceGraphError):
+    pass
+
+class StartupOrderPlannerError(RuntimeServiceGraphError):
+    pass
+
+class ReadinessDependencyCheckerError(RuntimeServiceGraphError):
+    pass
+
+class ServiceGraphStorageError(RuntimeServiceGraphError):
+    pass
+
+class ServiceGraphValidationError(RuntimeServiceGraphError):
+    pass
+
+class ServiceGraphReportingError(RuntimeServiceGraphError):
+    pass

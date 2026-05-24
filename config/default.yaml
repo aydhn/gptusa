@@ -1454,3 +1454,47 @@ phase102_notifications:
   dry_run: true
   preview_only: true
   telegram_real_send: false
+
+runtime_service_graph:
+  enabled: true
+  current_phase: 103
+  final_phase: 160
+  require_phase102_runtime_registry: true
+  build_service_graph: true
+  validate_dependency_contracts: true
+  detect_cycles: true
+  write_service_graph_reports: true
+  warn_not_investment_advice: true
+  warn_phase103_is_not_activation: true
+
+phase103_orchestration:
+  enabled: true
+  dry_run_only: true
+  metadata_only_default: true
+  read_only_allowed: true
+  local_compute_validation_allowed: true
+  network_allowed: false
+  execution_allowed: false
+  broker_allowed: false
+  order_allowed: false
+  paper_mutation_allowed: false
+  telegram_real_send_allowed: false
+  scraping_allowed: false
+  dashboard_allowed: false
+
+phase103_dependency_policy:
+  require_no_cycles: true
+  require_no_missing_dependencies: true
+  require_no_execution_routes: true
+  require_no_broker_routes: true
+  require_no_order_routes: true
+  require_no_paper_mutation_routes: true
+  require_no_telegram_real_send_routes: true
+  require_no_scraping_routes: true
+  require_no_dashboard_routes: true
+
+phase103_notifications:
+  enabled: true
+  dry_run: true
+  preview_only: true
+  telegram_real_send: false
