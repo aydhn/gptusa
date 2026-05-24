@@ -860,32 +860,6 @@ class PaperBoundaryNotificationsConfig:
     default_channel: str = "dry_run"
     warn_no_real_send_default: bool = True
 
-@dataclass
-class Config:
-
-    pre_paper_handoff_freeze_gate: PrePaperHandoffFreezeGateConfig = field(default_factory=PrePaperHandoffFreezeGateConfig)
-    sandbox_runtime_admission_blocker_replay: SandboxRuntimeAdmissionBlockerReplayConfig = field(default_factory=SandboxRuntimeAdmissionBlockerReplayConfig)
-    simulator_evidence_freeze: SimulatorEvidenceFreezeConfig = field(default_factory=SimulatorEvidenceFreezeConfig)
-    final_pre_paper_handoff_freeze_gate: FinalPrePaperHandoffFreezeGateConfig = field(default_factory=FinalPrePaperHandoffFreezeGateConfig)
-    handoff_freeze_safety: HandoffFreezeSafetyConfig = field(default_factory=HandoffFreezeSafetyConfig)
-    handoff_freeze_notifications: HandoffFreezeNotificationsConfig = field(default_factory=HandoffFreezeNotificationsConfig)
-
-    paper_boundary_certificate: PaperBoundaryCertificateConfig = field(default_factory=PaperBoundaryCertificateConfig)
-    paper_admission_blocker_replay: PaperAdmissionBlockerReplayConfig = field(default_factory=PaperAdmissionBlockerReplayConfig)
-    no_order_evidence_freeze: NoOrderEvidenceFreezeConfig = field(default_factory=NoOrderEvidenceFreezeConfig)
-    paper_sandbox_boundary_certificate: PaperSandboxBoundaryCertificateConfig = field(default_factory=PaperSandboxBoundaryCertificateConfig)
-    paper_boundary_safety: PaperBoundarySafetyConfig = field(default_factory=PaperBoundarySafetyConfig)
-    paper_boundary_notifications: PaperBoundaryNotificationsConfig = field(default_factory=PaperBoundaryNotificationsConfig)
-
-    paper_no_write_admission: PaperNoWriteAdmissionConfig = field(default_factory=PaperNoWriteAdmissionConfig)
-    no_write_paper_admission_contract: NoWritePaperAdmissionContractConfig = field(default_factory=NoWritePaperAdmissionContractConfig)
-    activation_firewall_replay: ActivationFirewallReplayConfig = field(default_factory=ActivationFirewallReplayConfig)
-    paper_mode_simulation_preflight: PaperModeSimulationPreflightConfig = field(default_factory=PaperModeSimulationPreflightConfig)
-    no_write_admission_safety: NoWriteAdmissionSafetyConfig = field(default_factory=NoWriteAdmissionSafetyConfig)
-    paper_no_write_admission_notifications: PaperNoWriteAdmissionNotificationsConfig = field(default_factory=PaperNoWriteAdmissionNotificationsConfig)
-
-    def validate(self) -> None:
-        pass
 
 @dataclass
 class PaperDryAdmissionConfig:
@@ -1724,4 +1698,96 @@ class Phase103NotificationsConfig:
 
     def __post_init__(self):
         if self.telegram_real_send:
+
             raise ValueError("telegram_real_send must be false")
+
+
+
+@dataclass
+class RuntimeLifecycleConfig:
+    enabled: bool = True
+    current_phase: int = 104
+    final_phase: int = 160
+    require_phase103_service_graph: bool = True
+    run_startup_checks: bool = True
+    build_readiness_matrix: bool = True
+    build_readiness_gate: bool = True
+    lifecycle_dry_run_only: bool = True
+    ready_for_phase105_metadata_only: bool = True
+    allow_activation: bool = False
+    allow_active_paper: bool = False
+    allow_broker_execution: bool = False
+    allow_paper_state_mutation: bool = False
+    allow_telegram_real_send: bool = False
+    allow_scraping: bool = False
+    allow_dashboard: bool = False
+    write_lifecycle_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_phase104_is_not_activation: bool = True
+
+@dataclass
+class Phase104StartupChecksConfig:
+    enabled: bool = True
+    core_checks_enabled: bool = True
+    provider_checks_enabled: bool = True
+    observability_checks_enabled: bool = True
+    notification_checks_enabled: bool = True
+    no_execution_safety_check_enabled: bool = True
+    external_network_allowed: bool = False
+    destructive_file_ops_allowed: bool = False
+    provider_fetch_allowed: bool = False
+
+@dataclass
+class Phase104ReadinessGateConfig:
+    enabled: bool = True
+    metadata_only: bool = True
+    read_only: bool = True
+    require_startup_checks_passed: bool = True
+    require_service_readiness: bool = True
+    require_dependency_readiness: bool = True
+    require_config_readiness: bool = True
+    require_provider_readiness: bool = True
+    require_no_execution_readiness: bool = True
+    ready_for_phase105: bool = True
+    allow_activation: bool = False
+    allow_active_paper: bool = False
+    allow_broker_execution: bool = False
+    allow_order_creation: bool = False
+    allow_paper_state_mutation: bool = False
+    allow_telegram_real_send: bool = False
+    allow_scraping: bool = False
+    allow_dashboard: bool = False
+
+@dataclass
+class Phase104NotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    preview_only: bool = True
+    telegram_real_send: bool = False
+
+@dataclass
+class Config:
+
+    pre_paper_handoff_freeze_gate: PrePaperHandoffFreezeGateConfig = field(default_factory=PrePaperHandoffFreezeGateConfig)
+    sandbox_runtime_admission_blocker_replay: SandboxRuntimeAdmissionBlockerReplayConfig = field(default_factory=SandboxRuntimeAdmissionBlockerReplayConfig)
+    simulator_evidence_freeze: SimulatorEvidenceFreezeConfig = field(default_factory=SimulatorEvidenceFreezeConfig)
+    final_pre_paper_handoff_freeze_gate: FinalPrePaperHandoffFreezeGateConfig = field(default_factory=FinalPrePaperHandoffFreezeGateConfig)
+    handoff_freeze_safety: HandoffFreezeSafetyConfig = field(default_factory=HandoffFreezeSafetyConfig)
+    handoff_freeze_notifications: HandoffFreezeNotificationsConfig = field(default_factory=HandoffFreezeNotificationsConfig)
+
+    paper_boundary_certificate: PaperBoundaryCertificateConfig = field(default_factory=PaperBoundaryCertificateConfig)
+    paper_admission_blocker_replay: PaperAdmissionBlockerReplayConfig = field(default_factory=PaperAdmissionBlockerReplayConfig)
+    no_order_evidence_freeze: NoOrderEvidenceFreezeConfig = field(default_factory=NoOrderEvidenceFreezeConfig)
+    paper_sandbox_boundary_certificate: PaperSandboxBoundaryCertificateConfig = field(default_factory=PaperSandboxBoundaryCertificateConfig)
+    paper_boundary_safety: PaperBoundarySafetyConfig = field(default_factory=PaperBoundarySafetyConfig)
+    paper_boundary_notifications: PaperBoundaryNotificationsConfig = field(default_factory=PaperBoundaryNotificationsConfig)
+
+    paper_no_write_admission: PaperNoWriteAdmissionConfig = field(default_factory=PaperNoWriteAdmissionConfig)
+    no_write_paper_admission_contract: NoWritePaperAdmissionContractConfig = field(default_factory=NoWritePaperAdmissionContractConfig)
+    activation_firewall_replay: ActivationFirewallReplayConfig = field(default_factory=ActivationFirewallReplayConfig)
+    paper_mode_simulation_preflight: PaperModeSimulationPreflightConfig = field(default_factory=PaperModeSimulationPreflightConfig)
+    no_write_admission_safety: NoWriteAdmissionSafetyConfig = field(default_factory=NoWriteAdmissionSafetyConfig)
+    paper_no_write_admission_notifications: PaperNoWriteAdmissionNotificationsConfig = field(default_factory=PaperNoWriteAdmissionNotificationsConfig)
+
+    def validate(self) -> None:
+        pass

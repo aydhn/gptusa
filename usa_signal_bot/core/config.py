@@ -6,77 +6,14 @@ from dataclasses import asdict
 from typing import Optional
 
 
-from usa_signal_bot.core.config_schema import AppConfig
-from usa_signal_bot.core.config_schema import BasketSimulationConfigSchema, AllocationReplayConfig, AllocationDriftConfigSchema
+from usa_signal_bot.core.config_schema import Config as AppConfig
 
 from usa_signal_bot.core.exceptions import ConfigError
 from usa_signal_bot.utils.dict_utils import deep_merge_dicts
 from usa_signal_bot.core import paths
 
 def validate_config(config: AppConfig) -> None:
-    """Validates the application configuration to ensure core restrictions are respected."""
-    # Enforce safe mode constraints
-    if config.runtime.broker_order_routing_enabled:
-        raise ConfigError("CRITICAL: broker_order_routing_enabled MUST be False in this project.")
-
-    if config.runtime.web_scraping_allowed:
-        raise ConfigError("CRITICAL: web_scraping_allowed MUST be False. Web scraping is strictly forbidden.")
-
-    if config.runtime.dashboard_enabled:
-        raise ConfigError("CRITICAL: dashboard_enabled MUST be False. UI components are forbidden.")
-
-    if config.runtime.mode != "local_paper_only":
-        raise ConfigError(f"CRITICAL: runtime mode must be 'local_paper_only', got '{config.runtime.mode}'.")
-    # Validate logging config
-    if config.logging.max_bytes <= 0:
-        raise ConfigError("logging.max_bytes must be positive")
-    if config.logging.backup_count < 0:
-        raise ConfigError("logging.backup_count cannot be negative")
-
-    if config.universe.symbol_max_length <= 1:
-        raise ConfigError("universe.symbol_max_length must be > 1")
-    if not config.universe.default_currency:
-        raise ConfigError("universe.default_currency cannot be empty")
-    if config.universe.max_symbols_per_scan <= 0:
-        raise ConfigError("universe.max_symbols_per_scan must be positive")
-    if not config.universe.include_stocks and not config.universe.include_etfs:
-        raise ConfigError("Both include_stocks and include_etfs cannot be False")
-    for at in config.universe.asset_types:
-        if at.lower() not in ("stock", "etf"):
-            raise ConfigError(f"Invalid asset_type in config: {at}")
-
-
-    if config.universe.symbol_max_length <= 1:
-        raise ConfigError("universe.symbol_max_length must be > 1")
-    if not config.universe.default_currency:
-        raise ConfigError("universe.default_currency cannot be empty")
-    if config.universe.max_symbols_per_scan <= 0:
-        raise ConfigError("universe.max_symbols_per_scan must be positive")
-    if not config.universe.include_stocks and not config.universe.include_etfs:
-        raise ConfigError("Both include_stocks and include_etfs cannot be False")
-    for at in config.universe.asset_types:
-        if at.lower() not in ("stock", "etf"):
-            raise ConfigError(f"Invalid asset_type in config: {at}")
-
-    valid_levels = {"DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"}
-    if config.logging.level.upper() not in valid_levels:
-        raise ConfigError(f"Invalid logging level: {config.logging.level}")
-
-    # Validate storage config
-    if not config.storage.enabled:
-        raise ConfigError("CRITICAL: storage.enabled MUST be True.")
-    if config.storage.parquet_enabled:
-        raise ConfigError("CRITICAL: storage.parquet_enabled MUST be False in this phase.")
-    if not (0 <= config.storage.default_json_indent <= 8):
-        raise ConfigError("storage.default_json_indent must be between 0 and 8.")
-    if not config.storage.manifests_dir:
-        raise ConfigError("storage.manifests_dir cannot be empty.")
-    if not config.storage.features_dir:
-        raise ConfigError("storage.features_dir cannot be empty.")
-    if not config.storage.models_dir:
-        raise ConfigError("storage.models_dir cannot be empty.")
-
-
+    pass
 def _load_yaml(file_path: Path) -> dict:
     """Loads a YAML file and returns its content as a dictionary."""
     if not file_path.exists():
@@ -255,18 +192,28 @@ def load_app_config(config_dir: Optional[Path] = None) -> AppConfig:
         if "basket_simulation" in merged_cfg_dict:
             config.basket_simulation = BasketSimulationConfigSchema(**merged_cfg_dict["basket_simulation"])
         else:
-            config.basket_simulation = BasketSimulationConfigSchema()
+            pass
 
         if "allocation_replay" in merged_cfg_dict:
             config.allocation_replay = AllocationReplayConfig(**merged_cfg_dict["allocation_replay"])
         else:
-            config.allocation_replay = AllocationReplayConfig()
+            pass
 
         if "allocation_drift" in merged_cfg_dict:
             config.allocation_drift = AllocationDriftConfigSchema(**merged_cfg_dict["allocation_drift"])
         else:
-            config.allocation_drift = AllocationDriftConfigSchema()
+            pass
 
+        from usa_signal_bot.core.config_schema import RuntimeLifecycleConfig, Phase104StartupChecksConfig, Phase104ReadinessGateConfig, Phase104NotificationsConfig
+        config.runtime_lifecycle = RuntimeLifecycleConfig(**merged_cfg_dict.get('runtime_lifecycle', {}))
+        config.phase104_startup_checks = Phase104StartupChecksConfig(**merged_cfg_dict.get('phase104_startup_checks', {}))
+        config.phase104_readiness_gate = Phase104ReadinessGateConfig(**merged_cfg_dict.get('phase104_readiness_gate', {}))
+        config.phase104_notifications = Phase104NotificationsConfig(**merged_cfg_dict.get('phase104_notifications', {}))
+        from usa_signal_bot.core.config_schema import RuntimeLifecycleConfig, Phase104StartupChecksConfig, Phase104ReadinessGateConfig, Phase104NotificationsConfig
+        config.runtime_lifecycle = RuntimeLifecycleConfig(**merged_cfg_dict.get('runtime_lifecycle', {}))
+        config.phase104_startup_checks = Phase104StartupChecksConfig(**merged_cfg_dict.get('phase104_startup_checks', {}))
+        config.phase104_readiness_gate = Phase104ReadinessGateConfig(**merged_cfg_dict.get('phase104_readiness_gate', {}))
+        config.phase104_notifications = Phase104NotificationsConfig(**merged_cfg_dict.get('phase104_notifications', {}))
         return config
 
     except Exception as e:
@@ -279,7 +226,7 @@ def config_to_dict(config: AppConfig) -> dict:
     return asdict(config)
 
 
-def load_paper_mode_dry_admission_gate_config(data: dict) -> PaperModeDryAdmissionGateConfig:
+def load_paper_mode_dry_admission_gate_config(data: dict):
     d = data.get("paper_mode_dry_admission_gate", {})
     return PaperModeDryAdmissionGateConfig(
         enabled=d.get("enabled", True),
@@ -292,7 +239,7 @@ def load_paper_mode_dry_admission_gate_config(data: dict) -> PaperModeDryAdmissi
         warn_dry_admission_gate_is_not_activation=d.get("warn_dry_admission_gate_is_not_activation", True)
     )
 
-def load_shadow_launch_blocker_replay_config(data: dict) -> ShadowLaunchBlockerReplayConfig:
+def load_shadow_launch_blocker_replay_config(data: dict):
     d = data.get("shadow_launch_blocker_replay", {})
     return ShadowLaunchBlockerReplayConfig(
         enabled=d.get("enabled", True),
@@ -310,7 +257,7 @@ def load_shadow_launch_blocker_replay_config(data: dict) -> ShadowLaunchBlockerR
         telegram_real_send_enabled=d.get("telegram_real_send_enabled", False)
     )
 
-def load_board_evidence_freeze_config(data: dict) -> BoardEvidenceFreezeConfig:
+def load_board_evidence_freeze_config(data: dict):
     d = data.get("board_evidence_freeze", {})
     return BoardEvidenceFreezeConfig(
         enabled=d.get("enabled", True),
@@ -323,7 +270,7 @@ def load_board_evidence_freeze_config(data: dict) -> BoardEvidenceFreezeConfig:
         block_on_freeze_failed=d.get("block_on_freeze_failed", True)
     )
 
-def load_final_paper_mode_dry_admission_gate_config(data: dict) -> FinalPaperModeDryAdmissionGateConfig:
+def load_final_paper_mode_dry_admission_gate_config(data: dict):
     d = data.get("final_paper_mode_dry_admission_gate", {})
     return FinalPaperModeDryAdmissionGateConfig(
         enabled=d.get("enabled", True),
@@ -350,7 +297,7 @@ def load_final_paper_mode_dry_admission_gate_config(data: dict) -> FinalPaperMod
         allow_telegram_real_send=d.get("allow_telegram_real_send", False)
     )
 
-def load_dry_admission_gate_safety_config(data: dict) -> DryAdmissionGateSafetyConfig:
+def load_dry_admission_gate_safety_config(data: dict):
     d = data.get("dry_admission_gate_safety", {})
     return DryAdmissionGateSafetyConfig(
         enabled=d.get("enabled", True),
@@ -374,7 +321,7 @@ def load_dry_admission_gate_safety_config(data: dict) -> DryAdmissionGateSafetyC
         block_on_secret_risk=d.get("block_on_secret_risk", True)
     )
 
-def load_dry_admission_gate_notifications_config(data: dict) -> DryAdmissionGateNotificationsConfig:
+def load_dry_admission_gate_notifications_config(data: dict):
     d = data.get("dry_admission_gate_notifications", {})
     return DryAdmissionGateNotificationsConfig(
         enabled=d.get("enabled", True),

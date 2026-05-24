@@ -1167,3 +1167,62 @@ phase103_notifications:
   dry_run: true
   preview_only: true
   telegram_real_send: false
+
+
+runtime_lifecycle:
+  enabled: true
+  current_phase: 104
+  final_phase: 160
+  require_phase103_service_graph: true
+  run_startup_checks: true
+  build_readiness_matrix: true
+  build_readiness_gate: true
+  lifecycle_dry_run_only: true
+  ready_for_phase105_metadata_only: true
+  allow_activation: false
+  allow_active_paper: false
+  allow_broker_execution: false
+  allow_paper_state_mutation: false
+  allow_telegram_real_send: false
+  allow_scraping: false
+  allow_dashboard: false
+  write_lifecycle_reports: true
+  warn_not_investment_advice: true
+  warn_phase104_is_not_activation: true
+
+phase104_startup_checks:
+  enabled: true
+  core_checks_enabled: true
+  provider_checks_enabled: true
+  observability_checks_enabled: true
+  notification_checks_enabled: true
+  no_execution_safety_check_enabled: true
+  external_network_allowed: false
+  destructive_file_ops_allowed: false
+  provider_fetch_allowed: false
+
+phase104_readiness_gate:
+  enabled: true
+  metadata_only: true
+  read_only: true
+  require_startup_checks_passed: true
+  require_service_readiness: true
+  require_dependency_readiness: true
+  require_config_readiness: true
+  require_provider_readiness: true
+  require_no_execution_readiness: true
+  ready_for_phase105: true
+  allow_activation: false
+  allow_active_paper: false
+  allow_broker_execution: false
+  allow_order_creation: false
+  allow_paper_state_mutation: false
+  allow_telegram_real_send: false
+  allow_scraping: false
+  allow_dashboard: false
+
+phase104_notifications:
+  enabled: true
+  dry_run: true
+  preview_only: true
+  telegram_real_send: false
