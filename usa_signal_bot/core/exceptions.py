@@ -914,7 +914,7 @@ class DryAdmissionValidationError(PaperModeDryAdmissionGateError):
 class DryAdmissionReportingError(PaperModeDryAdmissionGateError):
     pass
 
-class PaperModeDryAdmissionDossierError(BaseAppError): pass
+class PaperModeDryAdmissionDossierError(USASignalBotError): pass
 class DryAdmissionDossierIngestionError(PaperModeDryAdmissionDossierError): pass
 class DryAdmissionDossierEligibilityError(PaperModeDryAdmissionDossierError): pass
 class DryAdmissionDossierEvidenceError(PaperModeDryAdmissionDossierError): pass
@@ -933,7 +933,7 @@ class DryAdmissionDossierValidationError(PaperModeDryAdmissionDossierError): pas
 class DryAdmissionDossierReportingError(PaperModeDryAdmissionDossierError): pass
 
 
-class LocalPaperAdmissionSimulatorGateError(AppError):
+class LocalPaperAdmissionSimulatorGateError(USASignalBotError):
     pass
 
 class SimulatorDryAdmissionDossierIngestionError(LocalPaperAdmissionSimulatorGateError):

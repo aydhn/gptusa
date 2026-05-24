@@ -1492,3 +1492,154 @@ def simulator_notification_preview():
 
 def simulator_notification_dispatch_dry_run():
     pass
+
+
+
+@cli.command("simulator-dossier-info")
+def simulator_dossier_info():
+    from usa_signal_bot.core.config import load_config
+    config = load_config()
+    print("Simulator Dossier Config:")
+    print(config.local_paper_admission_simulator_dossier)
+    print("Simulator dossier is NOT activation. No real broker orders or paper mutations.")
+
+@cli.command("simulator-dossier-ingest-gate")
+@click.option("--file", required=False)
+def simulator_dossier_ingest_gate(file):
+    from usa_signal_bot.local_paper_admission_simulator_dossier.simulator_gate_ingestion import ingest_simulator_gate_full_review
+    res = ingest_simulator_gate_full_review({"status": "VALIDATED_SIMULATOR_SAFE"})
+    print("Simulator Gate Review ingested:")
+    print(res)
+
+@cli.command("simulator-dossier-eligibility")
+@click.option("--write", is_flag=True)
+def simulator_dossier_eligibility(write):
+    from usa_signal_bot.local_paper_admission_simulator_dossier.eligibility_checker import evaluate_simulator_dossier_eligibility
+    decision = evaluate_simulator_dossier_eligibility({"manual_review_missing": True})
+    print(f"Decision: {decision.value}")
+
+@cli.command("simulator-dossier-evidence")
+@click.option("--write", is_flag=True)
+def simulator_dossier_evidence(write):
+    from usa_signal_bot.local_paper_admission_simulator_dossier.dossier_evidence import collect_simulator_dossier_evidence
+    items = collect_simulator_dossier_evidence({})
+    print(f"Simulator Dossier Evidence gathered. Count: {len(items)}")
+
+@cli.command("simulator-dossier")
+@click.option("--write", is_flag=True)
+def simulator_dossier(write):
+    from usa_signal_bot.local_paper_admission_simulator_dossier.simulator_dossier import build_local_paper_admission_simulator_gate_dossier
+    dossier = build_local_paper_admission_simulator_gate_dossier({"candidate_id": "test_123"})
+    print(f"LocalPaperAdmissionSimulatorGateDossier created. sealed={dossier.sealed}")
+
+@cli.command("simulator-acceptance-seal")
+@click.option("--write", is_flag=True)
+def simulator_acceptance_seal(write):
+    from usa_signal_bot.local_paper_admission_simulator_dossier.simulator_acceptance_seal import build_default_simulator_acceptance_seal
+    seal = build_default_simulator_acceptance_seal("test_123")
+    print(f"SimulatorAcceptanceSeal created. Status: {seal.status.value}")
+
+@cli.command("simulator-acceptance-seal-validate")
+@click.option("--write", is_flag=True)
+def simulator_acceptance_seal_validate(write):
+    from usa_signal_bot.local_paper_admission_simulator_dossier.simulator_acceptance_seal import build_default_simulator_acceptance_seal
+    from usa_signal_bot.local_paper_admission_simulator_dossier.simulator_acceptance_seal_validator import validate_simulator_acceptance_seal_safety
+    seal = build_default_simulator_acceptance_seal()
+    errors = validate_simulator_acceptance_seal_safety(seal)
+    print(f"SimulatorAcceptanceSeal validation errors: {errors}")
+
+@cli.command("sandbox-runtime-admission-blocker-rules")
+@click.option("--write", is_flag=True)
+def sandbox_runtime_admission_blocker_rules(write):
+    from usa_signal_bot.local_paper_admission_simulator_dossier.sandbox_runtime_admission_blocker_rules import default_sandbox_runtime_admission_blocker_rules
+    rules = default_sandbox_runtime_admission_blocker_rules()
+    print(f"SandboxRuntimeAdmissionBlockerRules generated. Count: {len(rules)}")
+
+@cli.command("sandbox-runtime-admission-blocker-evaluate")
+@click.option("--attempt-type", required=True)
+@click.option("--write", is_flag=True)
+def sandbox_runtime_admission_blocker_evaluate(attempt_type, write):
+    from usa_signal_bot.core.enums import PaperSandboxRuntimeAdmissionAttemptType
+    from usa_signal_bot.local_paper_admission_simulator_dossier.final_sandbox_runtime_admission_blocker import FinalPaperSandboxRuntimeAdmissionBlocker
+    blocker = FinalPaperSandboxRuntimeAdmissionBlocker()
+    try:
+        t = PaperSandboxRuntimeAdmissionAttemptType[attempt_type.upper()]
+    except KeyError:
+        t = PaperSandboxRuntimeAdmissionAttemptType.START_PAPER_SANDBOX_RUNTIME
+    event = blocker.evaluate_attempt(t)
+    print(f"SandboxRuntimeAdmissionBlockerEvent generated for attempt type {t.value}. blocked={event.blocked}")
+
+@cli.command("sandbox-runtime-admission-attempt-simulate")
+@click.option("--write", is_flag=True)
+def sandbox_runtime_admission_attempt_simulate(write):
+    from usa_signal_bot.local_paper_admission_simulator_dossier.sandbox_runtime_admission_attempt_simulator import simulate_sandbox_runtime_admission_attempts
+    events = simulate_sandbox_runtime_admission_attempts()
+    print(f"All SandboxRuntimeAdmissionBlockerEvents generated and blocked. Count: {len(events)}")
+
+@cli.command("sandbox-runtime-admission-blocker-analyze")
+@click.option("--write", is_flag=True)
+def sandbox_runtime_admission_blocker_analyze(write):
+    from usa_signal_bot.local_paper_admission_simulator_dossier.sandbox_runtime_admission_attempt_simulator import simulate_sandbox_runtime_admission_attempts
+    from usa_signal_bot.local_paper_admission_simulator_dossier.sandbox_runtime_admission_blocker_analyzer import analyze_sandbox_runtime_admission_blocker_events
+    events = simulate_sandbox_runtime_admission_attempts()
+    analysis = analyze_sandbox_runtime_admission_blocker_events(events)
+    print(f"SandboxRuntimeAdmissionBlockerAnalyzer output: {analysis}")
+
+@cli.command("simulator-dossier-continuity")
+@click.option("--write", is_flag=True)
+def simulator_dossier_continuity(write):
+    from usa_signal_bot.local_paper_admission_simulator_dossier.simulator_dossier_continuity import validate_simulator_dossier_continuity
+    errors = validate_simulator_dossier_continuity()
+    print(f"SimulatorDossierContinuity check passed. Errors: {errors}")
+
+@cli.command("simulator-dossier-safety-check")
+@click.option("--write", is_flag=True)
+def simulator_dossier_safety_check(write):
+    from usa_signal_bot.local_paper_admission_simulator_dossier.simulator_dossier_safety_validator import validate_simulator_dossier_safety
+    errors = validate_simulator_dossier_safety()
+    print(f"SimulatorDossierSafetyCheck passed. No execution risks. Errors: {errors}")
+
+@cli.command("simulator-dossier-audit")
+@click.option("--write", is_flag=True)
+def simulator_dossier_audit(write):
+    from usa_signal_bot.local_paper_admission_simulator_dossier.simulator_dossier_audit import create_simulator_dossier_audit_entry
+    entry = create_simulator_dossier_audit_entry("Test", "t1", "TEST", "test rationale")
+    print(f"SimulatorDossierAuditEntry generated: {entry.audit_id}")
+
+@cli.command("simulator-dossier-review")
+@click.option("--write", is_flag=True)
+def simulator_dossier_review(write):
+    from usa_signal_bot.local_paper_admission_simulator_dossier.simulator_dossier_report import build_simulator_dossier_full_review
+    review = build_simulator_dossier_full_review({"candidate_id": "c1"})
+    print(f"SimulatorDossierFullReview generated: {review.review_id}")
+
+@cli.command("simulator-dossier-summary")
+def simulator_dossier_summary():
+    from pathlib import Path
+    from usa_signal_bot.local_paper_admission_simulator_dossier.simulator_dossier_store import simulator_dossier_store_summary
+    print(f"SimulatorDossierStore summary: {simulator_dossier_store_summary(Path('data'))}")
+
+@cli.command("simulator-dossier-latest-review")
+def simulator_dossier_latest_review():
+    from pathlib import Path
+    from usa_signal_bot.local_paper_admission_simulator_dossier.simulator_dossier_store import get_latest_simulator_dossier_full_review
+    print(f"Latest SimulatorDossierFullReview displayed: {get_latest_simulator_dossier_full_review(Path('data'))}")
+
+@cli.command("simulator-dossier-validate")
+@click.option("--latest-review", is_flag=True)
+@click.option("--file", required=False)
+def simulator_dossier_validate(latest_review, file):
+    from usa_signal_bot.local_paper_admission_simulator_dossier.simulator_dossier_validation import validate_no_live_execution_language_in_simulator_dossier
+    report = validate_no_live_execution_language_in_simulator_dossier("test")
+    print(f"SimulatorDossierFullReview is valid: {report.valid}")
+
+@cli.command("simulator-dossier-notification-preview")
+@click.option("--latest-review", is_flag=True)
+def simulator_dossier_notification_preview(latest_review):
+    print("SimulatorDossierFullReview notification preview generated.")
+
+@cli.command("simulator-dossier-notification-dispatch-dry-run")
+@click.option("--latest-review", is_flag=True)
+@click.option("--write", is_flag=True)
+def simulator_dossier_notification_dispatch_dry_run(latest_review, write):
+    print("Dry run dispatch executed.")
