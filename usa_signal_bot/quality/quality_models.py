@@ -16,6 +16,12 @@ class QualityScorecard:
     config_consolidation_score: float = 0.0
     phase101_non_execution_compliance_score: float = 0.0
 
+    phase105_core_runtime_acceptance_score: float = 0.0
+    phase105_foundation_freeze_score: float = 0.0
+    phase105_provider_kickoff_gate_score: float = 0.0
+    phase105_phase106_readiness_score: float = 0.0
+    phase105_non_execution_compliance_score: float = 0.0
+
     phase102_runtime_registry_score: float = 0.0
     phase102_config_surface_score: float = 0.0
     phase102_provider_contract_score: float = 0.0

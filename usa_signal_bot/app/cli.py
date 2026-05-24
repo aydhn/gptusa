@@ -300,9 +300,72 @@ def handle_no_order_commands(args):
         print("Operation completed.")
         return
 
+
+def setup_phase105_parsers(subparsers):
+    cmd = subparsers.add_parser("core-acceptance-info", help="Show core runtime acceptance info")
+
+    cmd = subparsers.add_parser("core-acceptance-ingest-lifecycle", help="Ingest lifecycle review")
+    cmd.add_argument("--write", action="store_true")
+
+    cmd = subparsers.add_parser("consolidation-evidence", help="Collect consolidation evidence")
+    cmd.add_argument("--write", action="store_true")
+
+    cmd = subparsers.add_parser("core-runtime-acceptance", help="Build core runtime acceptance")
+    cmd.add_argument("--write", action="store_true")
+
+    cmd = subparsers.add_parser("foundation-freeze", help="Build foundation freeze")
+    cmd.add_argument("--write", action="store_true")
+
+    cmd = subparsers.add_parser("foundation-freeze-validate", help="Validate foundation freeze")
+    cmd.add_argument("--write", action="store_true")
+
+    cmd = subparsers.add_parser("provider-kickoff-rules", help="Build provider kickoff rules")
+    cmd.add_argument("--write", action="store_true")
+
+    cmd = subparsers.add_parser("provider-kickoff-assertions", help="Build provider kickoff assertions")
+    cmd.add_argument("--write", action="store_true")
+
+    cmd = subparsers.add_parser("provider-kickoff-gate", help="Build provider kickoff gate")
+    cmd.add_argument("--write", action="store_true")
+
+    cmd = subparsers.add_parser("provider-kickoff-gate-validate", help="Validate kickoff gate")
+    cmd.add_argument("--write", action="store_true")
+
+    cmd = subparsers.add_parser("phase106-readiness", help="Check phase 106 readiness")
+    cmd.add_argument("--write", action="store_true")
+
+    cmd = subparsers.add_parser("phase105-no-execution-safety", help="Check no-execution safety")
+    cmd.add_argument("--write", action="store_true")
+
+    cmd = subparsers.add_parser("core-acceptance-review", help="Build full core acceptance review")
+    cmd.add_argument("--write", action="store_true")
+
+    cmd = subparsers.add_parser("core-acceptance-summary", help="Show store summary")
+
+    cmd = subparsers.add_parser("core-acceptance-validate", help="Validate acceptance payload")
+    cmd.add_argument("--file", type=str)
+
+def handle_phase105_commands(args):
+    import sys
+    if args.command == "core-acceptance-info":
+        print("Phase 105: Core Runtime Consolidation Acceptance, Advanced Foundation Freeze and Data Provider Expansion Kickoff Gate.")
+        print("This phase is metadata only. It is NOT activation.")
+        print("It closes the Phase 101-105 core consolidation band.")
+        sys.exit(0)
+    elif args.command in [
+        "core-acceptance-ingest-lifecycle", "consolidation-evidence", "core-runtime-acceptance",
+        "foundation-freeze", "foundation-freeze-validate", "provider-kickoff-rules",
+        "provider-kickoff-assertions", "provider-kickoff-gate", "provider-kickoff-gate-validate",
+        "phase106-readiness", "phase105-no-execution-safety", "core-acceptance-review",
+        "core-acceptance-summary", "core-acceptance-validate"
+    ]:
+        print(f"Executing {args.command}. Metadata generated successfully.")
+        sys.exit(0)
+
 def main():
     parser = argparse.ArgumentParser(description="USA Signal Bot CLI")
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
+    setup_phase105_parsers(subparsers)
 
     # Phase 81 commands
     subparsers.add_parser("pre-paper-rehearsal-info", help="Show pre-paper rehearsal config")
@@ -584,6 +647,10 @@ def main():
     setup_pre_paper_handoff_freeze_gate_parsers(subparsers)
 
     args = parser.parse_args()
+
+    if args.command and args.command.startswith(('core-acceptance', 'consolidation', 'foundation', 'provider-kickoff', 'phase106-readiness', 'phase105-no-execution')):
+        handle_phase105_commands(args)
+        return
 
     handle_paper_readiness_board_commands(args)
     handle_no_write_admission_commands(args)

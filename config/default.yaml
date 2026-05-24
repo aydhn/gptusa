@@ -1557,3 +1557,57 @@ phase104_notifications:
   dry_run: true
   preview_only: true
   telegram_real_send: false
+
+
+core_runtime_acceptance:
+  enabled: true
+  current_phase: 105
+  final_phase: 160
+  require_phase104_lifecycle_review: true
+  require_lifecycle_ready: true
+  require_readiness_gate_passed: true
+  require_startup_checks_passed: true
+  require_foundation_freeze: true
+  write_acceptance_reports: true
+  warn_not_investment_advice: true
+  warn_phase105_is_not_activation: true
+  warn_phase105_closes_core_consolidation_band: true
+
+advanced_foundation_freeze:
+  enabled: true
+  phase_start: 101
+  phase_end: 105
+  next_phase: 106
+  final_phase: 160
+  freeze_is_metadata_only: true
+  require_frozen: true
+  require_immutable: true
+  require_phase101_evidence: true
+  require_phase102_evidence: true
+  require_phase103_evidence: true
+  require_phase104_evidence: true
+  block_on_missing_evidence: true
+  block_on_stale_evidence: true
+
+data_provider_expansion_kickoff_gate:
+  enabled: true
+  ready_for_phase106: true
+  metadata_only: true
+  provider_ready: true
+  provider_network_fetch_required: false
+  allow_activation: false
+  allow_active_paper: false
+  allow_broker_execution: false
+  allow_order_creation: false
+  allow_paper_state_mutation: false
+  allow_telegram_real_send: false
+  allow_scraping: false
+  allow_html_parsing: false
+  allow_dashboard: false
+  allow_paid_api: false
+
+phase105_notifications:
+  enabled: true
+  dry_run: true
+  preview_only: true
+  telegram_real_send: false

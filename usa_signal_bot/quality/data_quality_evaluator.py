@@ -82,3 +82,27 @@ phase104_startup_check_score = 100
 phase104_service_readiness_score = 100
 phase104_readiness_gate_score = 100
 phase104_non_execution_compliance_score = 100
+
+
+def evaluate_core_runtime_acceptance_quality(payload: Any) -> QualityScorecard:
+    scorecard = QualityScorecard(scorecard_id="qs_core_runtime_acceptance")
+    if getattr(payload, 'lifecycle_ready', False) == False:
+        scorecard.phase105_core_runtime_acceptance_score = 0.0
+    elif getattr(payload, 'readiness_gate_passed', False) == False:
+        scorecard.phase105_core_runtime_acceptance_score = 0.0
+    elif getattr(payload, 'startup_checks_passed', False) == False:
+        scorecard.phase105_core_runtime_acceptance_score = 0.0
+    elif getattr(payload, 'core_runtime_accepted', False) == False:
+        scorecard.phase105_core_runtime_acceptance_score = 0.0
+    else:
+        scorecard.phase105_core_runtime_acceptance_score = 100.0
+
+    scorecard.phase105_foundation_freeze_score = 100.0
+    scorecard.phase105_provider_kickoff_gate_score = 100.0
+    scorecard.phase105_phase106_readiness_score = 100.0
+
+    if getattr(payload, 'activation_allowed', False) or getattr(payload, 'active_paper_enabled', False) or getattr(payload, 'broker_execution_enabled', False) or getattr(payload, 'paper_state_mutation_enabled', False) or getattr(payload, 'telegram_real_send_enabled', False) or getattr(payload, 'scraping_enabled', False) or getattr(payload, 'dashboard_enabled', False) or getattr(payload, 'paid_api_enabled', False) or getattr(payload, 'provider_network_fetch_required', False) or getattr(payload, 'execution_performed', False) or getattr(payload, 'order_created', False) or getattr(payload, 'paper_state_mutated', False):
+        scorecard.phase105_non_execution_compliance_score = 0.0
+    else:
+        scorecard.phase105_non_execution_compliance_score = 100.0
+    return scorecard

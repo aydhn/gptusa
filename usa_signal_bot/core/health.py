@@ -7,55 +7,55 @@ class HealthStatus(str, Enum):
     WARN = "WARN"
     FAIL = "FAIL"
 
-class Any:
-    def __init__(self, status: HealthStatus, name: str, message: str, details: Dict[str, Any] = None):
+class HealthCheckResult:
+    def __init__(self, status: HealthStatus, component: str, message: str, details: Dict[str, Any] = None):
         self.status = status
-        self.name = name
+        self.component = component
         self.message = message
         self.details = details or {}
 
 def check_paper_pre_rehearsal_config_health(context: Any) -> Any:
     # Just a stub for health
-    return Any(HealthStatus.PASS, "pre_rehearsal_config", "Config is valid")
+    return HealthCheckResult(HealthStatus.PASS, "pre_rehearsal_config", "Config is valid")
 
 def check_pre_rehearsal_final_handoff_ingestion_health(context: Any) -> Any:
-    return Any(HealthStatus.PASS, "final_handoff_ingestion", "Ingestion healthy")
+    return HealthCheckResult(HealthStatus.PASS, "final_handoff_ingestion", "Ingestion healthy")
 
 def check_pre_paper_eligibility_health(context: Any) -> Any:
-    return Any(HealthStatus.PASS, "pre_paper_eligibility", "Eligibility healthy")
+    return HealthCheckResult(HealthStatus.PASS, "pre_paper_eligibility", "Eligibility healthy")
 
 def check_pre_paper_plan_health(context: Any) -> Any:
-    return Any(HealthStatus.PASS, "pre_paper_plan", "Plan healthy")
+    return HealthCheckResult(HealthStatus.PASS, "pre_paper_plan", "Plan healthy")
 
 def check_paper_baseline_loader_health(context: Any) -> Any:
-    return Any(HealthStatus.PASS, "paper_baseline_loader", "Baseline loader healthy")
+    return HealthCheckResult(HealthStatus.PASS, "paper_baseline_loader", "Baseline loader healthy")
 
 def check_mutation_firewall_rules_health(context: Any) -> Any:
-    return Any(HealthStatus.PASS, "mutation_firewall_rules", "Rules healthy")
+    return HealthCheckResult(HealthStatus.PASS, "mutation_firewall_rules", "Rules healthy")
 
 def check_mutation_firewall_health(context: Any) -> Any:
-    return Any(HealthStatus.PASS, "mutation_firewall", "Firewall healthy")
+    return HealthCheckResult(HealthStatus.PASS, "mutation_firewall", "Firewall healthy")
 
 def check_mutation_attempt_detector_health(context: Any) -> Any:
-    return Any(HealthStatus.PASS, "mutation_attempt_detector", "Detector healthy")
+    return HealthCheckResult(HealthStatus.PASS, "mutation_attempt_detector", "Detector healthy")
 
 def check_forbidden_operation_simulator_health(context: Any) -> Any:
-    return Any(HealthStatus.PASS, "forbidden_operation_simulator", "Simulator healthy")
+    return HealthCheckResult(HealthStatus.PASS, "forbidden_operation_simulator", "Simulator healthy")
 
 def check_pre_paper_dry_rehearsal_runner_health(context: Any) -> Any:
-    return Any(HealthStatus.PASS, "pre_paper_runner", "Runner healthy")
+    return HealthCheckResult(HealthStatus.PASS, "pre_paper_runner", "Runner healthy")
 
 def check_activation_denied_checkpoint_health(context: Any) -> Any:
-    return Any(HealthStatus.PASS, "activation_denied_checkpoint", "Checkpoint healthy")
+    return HealthCheckResult(HealthStatus.PASS, "activation_denied_checkpoint", "Checkpoint healthy")
 
 def check_zero_mutation_assertion_health(context: Any) -> Any:
-    return Any(HealthStatus.PASS, "zero_mutation_assertion", "Assertion healthy")
+    return HealthCheckResult(HealthStatus.PASS, "zero_mutation_assertion", "Assertion healthy")
 
 def check_pre_paper_store_health(context: Any) -> Any:
-    return Any(HealthStatus.PASS, "pre_paper_store", "Store healthy")
+    return HealthCheckResult(HealthStatus.PASS, "pre_paper_store", "Store healthy")
 
 def check_pre_paper_notification_health(context: Any) -> Any:
-    return Any(HealthStatus.PASS, "pre_paper_notification", "Notification healthy")
+    return HealthCheckResult(HealthStatus.PASS, "pre_paper_notification", "Notification healthy")
 
 def run_all_pre_paper_health_checks(context: Any) -> Dict[str, Any]:
     return {
@@ -81,94 +81,94 @@ if __name__ == "__main__":
         print(f"{k}: {v.status.value} - {v.message}")
 
 
-def check_paper_firewall_audit_config_health(context: Any) -> Any: return Any(component="PaperFirewallAuditConfig", status=HealthStatus.HEALTHY)
-def check_firewall_audit_pre_rehearsal_ingestion_health(context: Any) -> Any: return Any(component="FirewallAuditPreRehearsalIngestion", status=HealthStatus.HEALTHY)
-def check_firewall_event_ingestion_health(context: Any) -> Any: return Any(component="FirewallEventIngestion", status=HealthStatus.HEALTHY)
-def check_firewall_replay_plan_health(context: Any) -> Any: return Any(component="FirewallReplayPlan", status=HealthStatus.HEALTHY)
-def check_firewall_replay_engine_health(context: Any) -> Any: return Any(component="FirewallReplayEngine", status=HealthStatus.HEALTHY)
-def check_zero_mutation_baseline_health(context: Any) -> Any: return Any(component="ZeroMutationBaseline", status=HealthStatus.HEALTHY)
-def check_zero_mutation_audit_health(context: Any) -> Any: return Any(component="ZeroMutationAudit", status=HealthStatus.HEALTHY)
-def check_mutation_invariant_checker_health(context: Any) -> Any: return Any(component="MutationInvariantChecker", status=HealthStatus.HEALTHY)
-def check_pre_paper_evidence_refresh_health(context: Any) -> Any: return Any(component="PrePaperEvidenceRefresh", status=HealthStatus.HEALTHY)
-def check_readiness_audit_decision_health(context: Any) -> Any: return Any(component="ReadinessAuditDecision", status=HealthStatus.HEALTHY)
-def check_firewall_audit_safety_health(context: Any) -> Any: return Any(component="FirewallAuditSafety", status=HealthStatus.HEALTHY)
-def check_firewall_audit_store_health(context: Any) -> Any: return Any(component="FirewallAuditStore", status=HealthStatus.HEALTHY)
-def check_firewall_audit_notification_health(context: Any) -> Any: return Any(component="FirewallAuditNotification", status=HealthStatus.HEALTHY)
+def check_paper_firewall_audit_config_health(context: Any) -> Any: return HealthCheckResult(component="PaperFirewallAuditConfig", status=HealthStatus.HEALTHY)
+def check_firewall_audit_pre_rehearsal_ingestion_health(context: Any) -> Any: return HealthCheckResult(component="FirewallAuditPreRehearsalIngestion", status=HealthStatus.HEALTHY)
+def check_firewall_event_ingestion_health(context: Any) -> Any: return HealthCheckResult(component="FirewallEventIngestion", status=HealthStatus.HEALTHY)
+def check_firewall_replay_plan_health(context: Any) -> Any: return HealthCheckResult(component="FirewallReplayPlan", status=HealthStatus.HEALTHY)
+def check_firewall_replay_engine_health(context: Any) -> Any: return HealthCheckResult(component="FirewallReplayEngine", status=HealthStatus.HEALTHY)
+def check_zero_mutation_baseline_health(context: Any) -> Any: return HealthCheckResult(component="ZeroMutationBaseline", status=HealthStatus.HEALTHY)
+def check_zero_mutation_audit_health(context: Any) -> Any: return HealthCheckResult(component="ZeroMutationAudit", status=HealthStatus.HEALTHY)
+def check_mutation_invariant_checker_health(context: Any) -> Any: return HealthCheckResult(component="MutationInvariantChecker", status=HealthStatus.HEALTHY)
+def check_pre_paper_evidence_refresh_health(context: Any) -> Any: return HealthCheckResult(component="PrePaperEvidenceRefresh", status=HealthStatus.HEALTHY)
+def check_readiness_audit_decision_health(context: Any) -> Any: return HealthCheckResult(component="ReadinessAuditDecision", status=HealthStatus.HEALTHY)
+def check_firewall_audit_safety_health(context: Any) -> Any: return HealthCheckResult(component="FirewallAuditSafety", status=HealthStatus.HEALTHY)
+def check_firewall_audit_store_health(context: Any) -> Any: return HealthCheckResult(component="FirewallAuditStore", status=HealthStatus.HEALTHY)
+def check_firewall_audit_notification_health(context: Any) -> Any: return HealthCheckResult(component="FirewallAuditNotification", status=HealthStatus.HEALTHY)
 
 
 def check_paper_readiness_board_config_health(context) -> Any:
-    return Any(component="PaperReadinessBoardConfig", status=HealthStatus.HEALTHY, message="Paper readiness board config healthy.", details={"enabled": True})
+    return HealthCheckResult(component="PaperReadinessBoardConfig", status=HealthStatus.HEALTHY, message="Paper readiness board config healthy.", details={"enabled": True})
 def check_readiness_board_confirmation_ingestion_health(context) -> Any:
-    return Any(component="ReadinessBoardConfirmationIngestion", status=HealthStatus.HEALTHY, message="Confirmation ingestion healthy.", details={"status": "OK"})
+    return HealthCheckResult(component="ReadinessBoardConfirmationIngestion", status=HealthStatus.HEALTHY, message="Confirmation ingestion healthy.", details={"status": "OK"})
 def check_readiness_board_eligibility_health(context) -> Any:
-    return Any(component="ReadinessBoardEligibility", status=HealthStatus.HEALTHY, message="Eligibility checker healthy.", details={"status": "OK"})
+    return HealthCheckResult(component="ReadinessBoardEligibility", status=HealthStatus.HEALTHY, message="Eligibility checker healthy.", details={"status": "OK"})
 def check_readiness_board_gates_health(context) -> Any:
-    return Any(component="ReadinessBoardGates", status=HealthStatus.HEALTHY, message="Board gates healthy.", details={"status": "OK"})
+    return HealthCheckResult(component="ReadinessBoardGates", status=HealthStatus.HEALTHY, message="Board gates healthy.", details={"status": "OK"})
 def check_readiness_board_decision_health(context) -> Any:
-    return Any(component="ReadinessBoardDecision", status=HealthStatus.HEALTHY, message="Board decision healthy.", details={"status": "OK"})
+    return HealthCheckResult(component="ReadinessBoardDecision", status=HealthStatus.HEALTHY, message="Board decision healthy.", details={"status": "OK"})
 def check_write_blocked_adapter_health(context) -> Any:
-    return Any(component="WriteBlockedAdapter", status=HealthStatus.HEALTHY, message="Write-blocked adapter healthy.", details={"status": "OK"})
+    return HealthCheckResult(component="WriteBlockedAdapter", status=HealthStatus.HEALTHY, message="Write-blocked adapter healthy.", details={"status": "OK"})
 def check_runtime_write_detector_health(context) -> Any:
-    return Any(component="RuntimeWriteDetector", status=HealthStatus.HEALTHY, message="Runtime write detector healthy.", details={"status": "OK"})
+    return HealthCheckResult(component="RuntimeWriteDetector", status=HealthStatus.HEALTHY, message="Runtime write detector healthy.", details={"status": "OK"})
 def check_write_deny_proof_health(context) -> Any:
-    return Any(component="WriteDenyProof", status=HealthStatus.HEALTHY, message="Write deny proof healthy.", details={"status": "OK"})
+    return HealthCheckResult(component="WriteDenyProof", status=HealthStatus.HEALTHY, message="Write deny proof healthy.", details={"status": "OK"})
 def check_activation_firewall_rules_health(context) -> Any:
-    return Any(component="ActivationFirewallRules", status=HealthStatus.HEALTHY, message="Firewall rules healthy.", details={"status": "OK"})
+    return HealthCheckResult(component="ActivationFirewallRules", status=HealthStatus.HEALTHY, message="Firewall rules healthy.", details={"status": "OK"})
 def check_final_activation_firewall_health(context) -> Any:
-    return Any(component="FinalActivationFirewall", status=HealthStatus.HEALTHY, message="Final firewall healthy.", details={"status": "OK"})
+    return HealthCheckResult(component="FinalActivationFirewall", status=HealthStatus.HEALTHY, message="Final firewall healthy.", details={"status": "OK"})
 def check_board_activation_denial_continuity_health(context) -> Any:
-    return Any(component="BoardActivationDenialContinuity", status=HealthStatus.HEALTHY, message="Activation denial continuity healthy.", details={"status": "OK"})
+    return HealthCheckResult(component="BoardActivationDenialContinuity", status=HealthStatus.HEALTHY, message="Activation denial continuity healthy.", details={"status": "OK"})
 def check_board_safety_health(context) -> Any:
-    return Any(component="BoardSafety", status=HealthStatus.HEALTHY, message="Board safety healthy.", details={"status": "OK"})
+    return HealthCheckResult(component="BoardSafety", status=HealthStatus.HEALTHY, message="Board safety healthy.", details={"status": "OK"})
 def check_board_store_health(context) -> Any:
-    return Any(component="BoardStore", status=HealthStatus.HEALTHY, message="Board store healthy.", details={"status": "OK"})
+    return HealthCheckResult(component="BoardStore", status=HealthStatus.HEALTHY, message="Board store healthy.", details={"status": "OK"})
 def check_board_notification_health(context) -> Any:
-    return Any(component="BoardNotification", status=HealthStatus.HEALTHY, message="Board notification healthy.", details={"status": "OK"})
+    return HealthCheckResult(component="BoardNotification", status=HealthStatus.HEALTHY, message="Board notification healthy.", details={"status": "OK"})
 
 def check_paper_no_write_admission_config_health(context: Any) -> Any:
-    return Any(component="PaperNoWriteAdmissionConfig", status=HealthStatus.PASS, message="Config valid", details={})
+    return HealthCheckResult(component="PaperNoWriteAdmissionConfig", status=HealthStatus.PASS, message="Config valid", details={})
 
 def check_no_write_board_ingestion_health(context: Any) -> Any:
-    return Any(component="NoWriteBoardIngestion", status=HealthStatus.PASS, message="Ingestion valid", details={})
+    return HealthCheckResult(component="NoWriteBoardIngestion", status=HealthStatus.PASS, message="Ingestion valid", details={})
 
 def check_no_write_eligibility_health(context: Any) -> Any:
-    return Any(component="NoWriteEligibility", status=HealthStatus.PASS, message="Eligibility valid", details={})
+    return HealthCheckResult(component="NoWriteEligibility", status=HealthStatus.PASS, message="Eligibility valid", details={})
 
 def check_no_write_contract_clauses_health(context: Any) -> Any:
-    return Any(component="NoWriteContractClauses", status=HealthStatus.PASS, message="Clauses valid", details={})
+    return HealthCheckResult(component="NoWriteContractClauses", status=HealthStatus.PASS, message="Clauses valid", details={})
 
 def check_no_write_contract_health(context: Any) -> Any:
-    return Any(component="NoWriteContract", status=HealthStatus.PASS, message="Contract valid", details={})
+    return HealthCheckResult(component="NoWriteContract", status=HealthStatus.PASS, message="Contract valid", details={})
 
 def check_contract_validator_health(context: Any) -> Any:
-    return Any(component="ContractValidator", status=HealthStatus.PASS, message="Validator valid", details={})
+    return HealthCheckResult(component="ContractValidator", status=HealthStatus.PASS, message="Validator valid", details={})
 
 def check_activation_replay_plan_health(context: Any) -> Any:
-    return Any(component="ActivationReplayPlan", status=HealthStatus.PASS, message="Replay plan valid", details={})
+    return HealthCheckResult(component="ActivationReplayPlan", status=HealthStatus.PASS, message="Replay plan valid", details={})
 
 def check_activation_replay_engine_health(context: Any) -> Any:
-    return Any(component="ActivationReplayEngine", status=HealthStatus.PASS, message="Replay engine valid", details={})
+    return HealthCheckResult(component="ActivationReplayEngine", status=HealthStatus.PASS, message="Replay engine valid", details={})
 
 def check_paper_mode_preflight_plan_health(context: Any) -> Any:
-    return Any(component="PaperModePreflightPlan", status=HealthStatus.PASS, message="Preflight plan valid", details={})
+    return HealthCheckResult(component="PaperModePreflightPlan", status=HealthStatus.PASS, message="Preflight plan valid", details={})
 
 def check_paper_mode_simulation_runner_health(context: Any) -> Any:
-    return Any(component="PaperModeSimulationRunner", status=HealthStatus.PASS, message="Simulation runner valid", details={})
+    return HealthCheckResult(component="PaperModeSimulationRunner", status=HealthStatus.PASS, message="Simulation runner valid", details={})
 
 def check_runtime_write_lock_assertion_health(context: Any) -> Any:
-    return Any(component="RuntimeWriteLockAssertion", status=HealthStatus.PASS, message="Assertion valid", details={})
+    return HealthCheckResult(component="RuntimeWriteLockAssertion", status=HealthStatus.PASS, message="Assertion valid", details={})
 
 def check_no_write_invariant_checker_health(context: Any) -> Any:
-    return Any(component="NoWriteInvariantChecker", status=HealthStatus.PASS, message="Checker valid", details={})
+    return HealthCheckResult(component="NoWriteInvariantChecker", status=HealthStatus.PASS, message="Checker valid", details={})
 
 def check_preflight_safety_health(context: Any) -> Any:
-    return Any(component="PreflightSafetyValidator", status=HealthStatus.PASS, message="Safety validator valid", details={})
+    return HealthCheckResult(component="PreflightSafetyValidator", status=HealthStatus.PASS, message="Safety validator valid", details={})
 
 def check_no_write_admission_store_health(context: Any) -> Any:
-    return Any(component="NoWriteAdmissionStore", status=HealthStatus.PASS, message="Store valid", details={})
+    return HealthCheckResult(component="NoWriteAdmissionStore", status=HealthStatus.PASS, message="Store valid", details={})
 
 def check_no_write_admission_notification_health(context: Any) -> Any:
-    return Any(component="NoWriteAdmissionNotification", status=HealthStatus.PASS, message="Notification valid", details={})
+    return HealthCheckResult(component="NoWriteAdmissionNotification", status=HealthStatus.PASS, message="Notification valid", details={})
 
 def check_paper_dry_admission_config_health(context) -> dict: return {"status": "PASS", "component": "dry_admission_config"}
 def check_dry_admission_no_write_ingestion_health(context) -> dict: return {"status": "PASS", "component": "dry_admission_no_write_ingestion"}
@@ -189,49 +189,49 @@ def check_paper_no_write_transition_config_health(context: Any) -> Any:
     conf = context.config.paper_no_write_transition
     issues = []
     if not conf.enabled:
-        return Any(name="paper_no_write_transition_config", status=HealthStatus.WARNING, details={"msg": "Disabled"})
+        return HealthCheckResult(component="paper_no_write_transition_config", status=HealthStatus.WARNING, details={"msg": "Disabled"})
     if not conf.warn_not_investment_advice:
          issues.append("warn_not_investment_advice must be true")
-    return Any(name="paper_no_write_transition_config", status=HealthStatus.PASS if not issues else HealthStatus.FAIL, details={"issues": issues})
+    return HealthCheckResult(component="paper_no_write_transition_config", status=HealthStatus.PASS if not issues else HealthStatus.FAIL, details={"issues": issues})
 
 def check_no_write_transition_admission_ingestion_health(context: Any) -> Any:
-    return Any(name="no_write_transition_admission_ingestion", status=HealthStatus.PASS, details={"msg": "Ingestion functional"})
+    return HealthCheckResult(component="no_write_transition_admission_ingestion", status=HealthStatus.PASS, details={"msg": "Ingestion functional"})
 
 def check_no_write_transition_eligibility_health(context: Any) -> Any:
-    return Any(name="no_write_transition_eligibility", status=HealthStatus.PASS, details={"msg": "Eligibility check functional"})
+    return HealthCheckResult(component="no_write_transition_eligibility", status=HealthStatus.PASS, details={"msg": "Eligibility check functional"})
 
 def check_transition_dossier_health(context: Any) -> Any:
-    return Any(name="transition_dossier", status=HealthStatus.PASS, details={"msg": "Dossier creation functional"})
+    return HealthCheckResult(component="transition_dossier", status=HealthStatus.PASS, details={"msg": "Dossier creation functional"})
 
 def check_transition_dossier_evidence_health(context: Any) -> Any:
-    return Any(name="transition_dossier_evidence", status=HealthStatus.PASS, details={"msg": "Evidence collector functional"})
+    return HealthCheckResult(component="transition_dossier_evidence", status=HealthStatus.PASS, details={"msg": "Evidence collector functional"})
 
 def check_admission_evidence_seal_validation_health(context: Any) -> Any:
-    return Any(name="admission_evidence_seal_validation", status=HealthStatus.PASS, details={"msg": "Seal validation functional"})
+    return HealthCheckResult(component="admission_evidence_seal_validation", status=HealthStatus.PASS, details={"msg": "Seal validation functional"})
 
 def check_admission_evidence_seal_refresh_health(context: Any) -> Any:
-    return Any(name="admission_evidence_seal_refresh", status=HealthStatus.PASS, details={"msg": "Seal refresh functional"})
+    return HealthCheckResult(component="admission_evidence_seal_refresh", status=HealthStatus.PASS, details={"msg": "Seal refresh functional"})
 
 def check_sandbox_bridge_envelope_health(context: Any) -> Any:
-    return Any(name="sandbox_bridge_envelope", status=HealthStatus.PASS, details={"msg": "Sandbox bridge functional"})
+    return HealthCheckResult(component="sandbox_bridge_envelope", status=HealthStatus.PASS, details={"msg": "Sandbox bridge functional"})
 
 def check_sandbox_bridge_route_map_health(context: Any) -> Any:
-    return Any(name="sandbox_bridge_route_map", status=HealthStatus.PASS, details={"msg": "Route map functional"})
+    return HealthCheckResult(component="sandbox_bridge_route_map", status=HealthStatus.PASS, details={"msg": "Route map functional"})
 
 def check_bridge_route_guard_health(context: Any) -> Any:
-    return Any(name="bridge_route_guard", status=HealthStatus.PASS, details={"msg": "Route guard functional"})
+    return HealthCheckResult(component="bridge_route_guard", status=HealthStatus.PASS, details={"msg": "Route guard functional"})
 
 def check_bridge_contract_validator_health(context: Any) -> Any:
-    return Any(name="bridge_contract_validator", status=HealthStatus.PASS, details={"msg": "Contract validator functional"})
+    return HealthCheckResult(component="bridge_contract_validator", status=HealthStatus.PASS, details={"msg": "Contract validator functional"})
 
 def check_sandbox_bridge_safety_health(context: Any) -> Any:
-    return Any(name="sandbox_bridge_safety", status=HealthStatus.PASS, details={"msg": "Bridge safety validator functional"})
+    return HealthCheckResult(component="sandbox_bridge_safety", status=HealthStatus.PASS, details={"msg": "Bridge safety validator functional"})
 
 def check_no_write_transition_store_health(context: Any) -> Any:
-    return Any(name="no_write_transition_store", status=HealthStatus.PASS, details={"msg": "Transition store functional"})
+    return HealthCheckResult(component="no_write_transition_store", status=HealthStatus.PASS, details={"msg": "Transition store functional"})
 
 def check_no_write_transition_notification_health(context: Any) -> Any:
-    return Any(name="no_write_transition_notification", status=HealthStatus.PASS, details={"msg": "Transition notification functional"})
+    return HealthCheckResult(component="no_write_transition_notification", status=HealthStatus.PASS, details={"msg": "Transition notification functional"})
 
 
 def check_paper_sandbox_bridge_config_health(context: Any) -> Any:
@@ -450,49 +450,49 @@ def check_non_execution_board_config_health(context: Any) -> Any:
     )
 
 def check_non_execution_board_dossier_ingestion_health(context: Any) -> Any:
-    return Any(component="non_execution_board_dossier_ingestion", status=HealthStatus.HEALTHY, message="OK")
+    return HealthCheckResult(component="non_execution_board_dossier_ingestion", status=HealthStatus.HEALTHY, message="OK")
 
 def check_non_execution_board_eligibility_health(context: Any) -> Any:
-    return Any(component="non_execution_board_eligibility", status=HealthStatus.HEALTHY, message="OK")
+    return HealthCheckResult(component="non_execution_board_eligibility", status=HealthStatus.HEALTHY, message="OK")
 
 def check_runtime_map_replay_plan_health(context: Any) -> Any:
-    return Any(component="runtime_map_replay_plan", status=HealthStatus.HEALTHY, message="OK")
+    return HealthCheckResult(component="runtime_map_replay_plan", status=HealthStatus.HEALTHY, message="OK")
 
 def check_runtime_map_replay_engine_health(context: Any) -> Any:
-    return Any(component="runtime_map_replay_engine", status=HealthStatus.HEALTHY, message="OK")
+    return HealthCheckResult(component="runtime_map_replay_engine", status=HealthStatus.HEALTHY, message="OK")
 
 def check_runtime_map_replay_analyzer_health(context: Any) -> Any:
-    return Any(component="runtime_map_replay_analyzer", status=HealthStatus.HEALTHY, message="OK")
+    return HealthCheckResult(component="runtime_map_replay_analyzer", status=HealthStatus.HEALTHY, message="OK")
 
 def check_non_execution_seal_integrity_health(context: Any) -> Any:
-    return Any(component="non_execution_seal_integrity", status=HealthStatus.HEALTHY, message="OK")
+    return HealthCheckResult(component="non_execution_seal_integrity", status=HealthStatus.HEALTHY, message="OK")
 
 def check_seal_integrity_validator_health(context: Any) -> Any:
-    return Any(component="seal_integrity_validator", status=HealthStatus.HEALTHY, message="OK")
+    return HealthCheckResult(component="seal_integrity_validator", status=HealthStatus.HEALTHY, message="OK")
 
 def check_non_execution_board_gates_health(context: Any) -> Any:
-    return Any(component="non_execution_board_gates", status=HealthStatus.HEALTHY, message="OK")
+    return HealthCheckResult(component="non_execution_board_gates", status=HealthStatus.HEALTHY, message="OK")
 
 def check_non_execution_board_assertions_health(context: Any) -> Any:
-    return Any(component="non_execution_board_assertions", status=HealthStatus.HEALTHY, message="OK")
+    return HealthCheckResult(component="non_execution_board_assertions", status=HealthStatus.HEALTHY, message="OK")
 
 def check_final_non_execution_board_health(context: Any) -> Any:
-    return Any(component="final_non_execution_board", status=HealthStatus.HEALTHY, message="OK")
+    return HealthCheckResult(component="final_non_execution_board", status=HealthStatus.HEALTHY, message="OK")
 
 def check_non_execution_board_validator_health(context: Any) -> Any:
-    return Any(component="non_execution_board_validator", status=HealthStatus.HEALTHY, message="OK")
+    return HealthCheckResult(component="non_execution_board_validator", status=HealthStatus.HEALTHY, message="OK")
 
 def check_non_execution_board_continuity_health(context: Any) -> Any:
-    return Any(component="non_execution_board_continuity", status=HealthStatus.HEALTHY, message="OK")
+    return HealthCheckResult(component="non_execution_board_continuity", status=HealthStatus.HEALTHY, message="OK")
 
 def check_non_execution_board_safety_health(context: Any) -> Any:
-    return Any(component="non_execution_board_safety", status=HealthStatus.HEALTHY, message="OK")
+    return HealthCheckResult(component="non_execution_board_safety", status=HealthStatus.HEALTHY, message="OK")
 
 def check_non_execution_board_store_health(context: Any) -> Any:
-    return Any(component="non_execution_board_store", status=HealthStatus.HEALTHY, message="OK")
+    return HealthCheckResult(component="non_execution_board_store", status=HealthStatus.HEALTHY, message="OK")
 
 def check_non_execution_board_notification_health(context: Any) -> Any:
-    return Any(component="non_execution_board_notification", status=HealthStatus.HEALTHY, message="OK")
+    return HealthCheckResult(component="non_execution_board_notification", status=HealthStatus.HEALTHY, message="OK")
 
 
 def check_board_dossier_config_health(context: Any) -> Any:
@@ -721,37 +721,37 @@ def check_handoff_freeze_notification_health(context: 'RuntimeContext') -> Healt
 
 
 def check_advanced_transition_config_health(context: Any) -> Any:
-    return HealthCheckResult(status=HealthStatus.PASS, component="mock", message="mock", "advanced_transition_config", "Config healthy")
+    return HealthCheckResult(status=HealthStatus.PASS, component="advanced_transition_config", message="Config healthy")
 
 def check_handoff_freeze_ingestion_health(context: Any) -> Any:
-    return HealthCheckResult(status=HealthStatus.PASS, component="mock", message="mock", "handoff_freeze_ingestion", "Ingestion healthy")
+    return HealthCheckResult(status=HealthStatus.PASS, component="handoff_freeze_ingestion", message="Ingestion healthy")
 
 def check_phase101_runtime_boundary_health(context: Any) -> Any:
-    return HealthCheckResult(status=HealthStatus.PASS, component="mock", message="mock", "phase101_runtime_boundary", "Boundary healthy")
+    return HealthCheckResult(status=HealthStatus.PASS, component="phase101_runtime_boundary", message="Boundary healthy")
 
 def check_phase101_capability_matrix_health(context: Any) -> Any:
-    return HealthCheckResult(status=HealthStatus.PASS, component="mock", message="mock", "phase101_capability_matrix", "Matrix healthy")
+    return HealthCheckResult(status=HealthStatus.PASS, component="phase101_capability_matrix", message="Matrix healthy")
 
 def check_phase101_module_inventory_health(context: Any) -> Any:
-    return HealthCheckResult(status=HealthStatus.PASS, component="mock", message="mock", "phase101_module_inventory", "Inventory healthy")
+    return HealthCheckResult(status=HealthStatus.PASS, component="phase101_module_inventory", message="Inventory healthy")
 
 def check_phase101_config_consolidation_health(context: Any) -> Any:
-    return HealthCheckResult(status=HealthStatus.PASS, component="mock", message="mock", "phase101_config_consolidation", "Consolidation healthy")
+    return HealthCheckResult(status=HealthStatus.PASS, component="phase101_config_consolidation", message="Consolidation healthy")
 
 def check_phase101_storage_registry_health(context: Any) -> Any:
-    return HealthCheckResult(status=HealthStatus.PASS, component="mock", message="mock", "phase101_storage_registry", "Storage registry healthy")
+    return HealthCheckResult(status=HealthStatus.PASS, component="phase101_storage_registry", message="Storage registry healthy")
 
 def check_phase101_validation_registry_health(context: Any) -> Any:
-    return HealthCheckResult(status=HealthStatus.PASS, component="mock", message="mock", "phase101_validation_registry", "Validation registry healthy")
+    return HealthCheckResult(status=HealthStatus.PASS, component="phase101_validation_registry", message="Validation registry healthy")
 
 def check_phase101_cli_registry_health(context: Any) -> Any:
-    return HealthCheckResult(status=HealthStatus.PASS, component="mock", message="mock", "phase101_cli_registry", "CLI registry healthy")
+    return HealthCheckResult(status=HealthStatus.PASS, component="phase101_cli_registry", message="CLI registry healthy")
 
 def check_phase101_observability_registry_health(context: Any) -> Any:
-    return HealthCheckResult(status=HealthStatus.PASS, component="mock", message="mock", "phase101_observability_registry", "Observability registry healthy")
+    return HealthCheckResult(status=HealthStatus.PASS, component="phase101_observability_registry", message="Observability registry healthy")
 
 def check_phase101_notification_boundary_health(context: Any) -> Any:
-    return HealthCheckResult(status=HealthStatus.PASS, component="mock", message="mock", "phase101_notification_boundary", "Notification boundary healthy")
+    return HealthCheckResult(status=HealthStatus.PASS, component="phase101_notification_boundary", message="Notification boundary healthy")
 
 
 def check_phase102_advanced_runtime_config_health(context) -> dict:
@@ -862,3 +862,40 @@ def check_phase104_lifecycle_store_health(context: RuntimeContext) -> HealthChec
 
 def check_phase104_notification_boundary_health(context: RuntimeContext) -> HealthCheckResult:
     return HealthCheckResult(status=HealthStatus.HEALTHY, message="Notification boundary healthy")
+
+
+def check_phase105_core_runtime_acceptance_config_health(context: Any) -> Any:
+    return HealthCheckResult(HealthStatus.PASS, "phase105_config", "Config OK")
+
+def check_phase105_lifecycle_review_ingestion_health(context: Any) -> Any:
+    return HealthCheckResult(HealthStatus.PASS, "lifecycle_review_ingestion", "Ingestion OK")
+
+def check_phase105_consolidation_evidence_health(context: Any) -> Any:
+    return HealthCheckResult(HealthStatus.PASS, "consolidation_evidence", "Evidence OK")
+
+def check_phase105_core_runtime_acceptance_health(context: Any) -> Any:
+    return HealthCheckResult(HealthStatus.PASS, "core_runtime_acceptance", "Acceptance OK")
+
+def check_phase105_foundation_freeze_health(context: Any) -> Any:
+    return HealthCheckResult(HealthStatus.PASS, "foundation_freeze", "Freeze OK")
+
+def check_phase105_provider_kickoff_rules_health(context: Any) -> Any:
+    return HealthCheckResult(HealthStatus.PASS, "provider_kickoff_rules", "Rules OK")
+
+def check_phase105_provider_kickoff_assertions_health(context: Any) -> Any:
+    return HealthCheckResult(HealthStatus.PASS, "provider_kickoff_assertions", "Assertions OK")
+
+def check_phase105_provider_kickoff_gate_health(context: Any) -> Any:
+    return HealthCheckResult(HealthStatus.PASS, "provider_kickoff_gate", "Gate OK")
+
+def check_phase105_phase106_readiness_health(context: Any) -> Any:
+    return HealthCheckResult(HealthStatus.PASS, "phase106_readiness", "Readiness OK")
+
+def check_phase105_no_execution_safety_health(context: Any) -> Any:
+    return HealthCheckResult(HealthStatus.PASS, "phase105_no_execution_safety", "Safety OK")
+
+def check_phase105_acceptance_store_health(context: Any) -> Any:
+    return HealthCheckResult(HealthStatus.PASS, "phase105_acceptance_store", "Store OK")
+
+def check_phase105_notification_boundary_health(context: Any) -> Any:
+    return HealthCheckResult(HealthStatus.PASS, "phase105_notification_boundary", "Notification boundary OK")

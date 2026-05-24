@@ -1791,3 +1791,61 @@ class Config:
 
     def validate(self) -> None:
         pass
+
+
+@dataclass
+class CoreRuntimeAcceptanceConfig:
+    enabled: bool = False
+    current_phase: int = 105
+    final_phase: int = 160
+    require_phase104_lifecycle_review: bool = True
+    require_lifecycle_ready: bool = True
+    require_readiness_gate_passed: bool = True
+    require_startup_checks_passed: bool = True
+    require_foundation_freeze: bool = True
+    write_acceptance_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_phase105_is_not_activation: bool = True
+    warn_phase105_closes_core_consolidation_band: bool = True
+
+@dataclass
+class AdvancedFoundationFreezeConfig:
+    enabled: bool = False
+    phase_start: int = 101
+    phase_end: int = 105
+    next_phase: int = 106
+    final_phase: int = 160
+    freeze_is_metadata_only: bool = True
+    require_frozen: bool = True
+    require_immutable: bool = True
+    require_phase101_evidence: bool = True
+    require_phase102_evidence: bool = True
+    require_phase103_evidence: bool = True
+    require_phase104_evidence: bool = True
+    block_on_missing_evidence: bool = True
+    block_on_stale_evidence: bool = True
+
+@dataclass
+class DataProviderExpansionKickoffGateConfig:
+    enabled: bool = False
+    ready_for_phase106: bool = True
+    metadata_only: bool = True
+    provider_ready: bool = True
+    provider_network_fetch_required: bool = False
+    allow_activation: bool = False
+    allow_active_paper: bool = False
+    allow_broker_execution: bool = False
+    allow_order_creation: bool = False
+    allow_paper_state_mutation: bool = False
+    allow_telegram_real_send: bool = False
+    allow_scraping: bool = False
+    allow_html_parsing: bool = False
+    allow_dashboard: bool = False
+    allow_paid_api: bool = False
+
+@dataclass
+class Phase105NotificationsConfig:
+    enabled: bool = False
+    dry_run: bool = True
+    preview_only: bool = True
+    telegram_real_send: bool = False

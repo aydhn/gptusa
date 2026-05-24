@@ -1259,3 +1259,19 @@ class LifecycleReportingError(USASignalBotError):
 
 class ConfigError(USASignalBotError):
     pass
+
+
+class CoreRuntimeAcceptanceError(USASignalBotError): pass
+class LifecycleReviewIngestionError(CoreRuntimeAcceptanceError): pass
+class ConsolidationEvidenceError(CoreRuntimeAcceptanceError): pass
+class FoundationFreezeError(CoreRuntimeAcceptanceError): pass
+class FoundationFreezeValidationError(CoreRuntimeAcceptanceError): pass
+class ProviderKickoffRuleError(CoreRuntimeAcceptanceError): pass
+class ProviderKickoffAssertionError(CoreRuntimeAcceptanceError): pass
+class ProviderExpansionKickoffGateError(CoreRuntimeAcceptanceError): pass
+class ProviderKickoffGateValidationError(CoreRuntimeAcceptanceError): pass
+class Phase106ReadinessValidationError(CoreRuntimeAcceptanceError): pass
+class CoreRuntimeAcceptanceSafetyError(CoreRuntimeAcceptanceError): pass
+class CoreRuntimeAcceptanceStorageError(CoreRuntimeAcceptanceError): pass
+class CoreRuntimeAcceptanceValidationError(CoreRuntimeAcceptanceError): pass
+class CoreRuntimeAcceptanceReportingError(CoreRuntimeAcceptanceError): pass
