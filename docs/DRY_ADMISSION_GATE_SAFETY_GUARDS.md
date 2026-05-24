@@ -1,0 +1,23 @@
+# Dry Admission Gate Safety Guards
+- No active paper enable.
+- No paper admission.
+- No shadow launch.
+- No paper-mode launch.
+- No paper state mutation.
+- No paper order.
+- No broker order.
+- No Telegram real send.
+- No production config patch.
+- Shadow replay allowed attempt varsa block.
+- Board evidence freeze failed/stale ise block.
+- Dry-admission assertion failed ise block.
+- shadow_launch_allowed true ise block.
+- paper_mode_launch_allowed true ise block.
+- admission_allowed true ise block.
+- activation_allowed true ise block.
+- order_created true ise block.
+- mutation_detected true ise block.
+- CLI örnekleri:
+  - python -m usa_signal_bot dry-admission-continuity --write
+  - python -m usa_signal_bot dry-admission-safety-check --write
+  - python -m usa_signal_bot dry-admission-validate --latest-review

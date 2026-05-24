@@ -859,3 +859,57 @@ class BoardDossierValidationError(PaperReadinessBoardDossierError):
 
 class BoardDossierReportingError(PaperReadinessBoardDossierError):
     pass
+
+class PaperModeDryAdmissionGateError(USASignalBotError):
+    pass
+
+class DryAdmissionBoardDossierIngestionError(PaperModeDryAdmissionGateError):
+    pass
+
+class DryAdmissionEligibilityError(PaperModeDryAdmissionGateError):
+    pass
+
+class ShadowReplayPlanError(PaperModeDryAdmissionGateError):
+    pass
+
+class ShadowReplayEngineError(PaperModeDryAdmissionGateError):
+    pass
+
+class ShadowReplayAnalyzerError(PaperModeDryAdmissionGateError):
+    pass
+
+class BoardEvidenceFreezeError(PaperModeDryAdmissionGateError):
+    pass
+
+class BoardEvidenceFreezeValidationError(PaperModeDryAdmissionGateError):
+    pass
+
+class DryAdmissionRuleError(PaperModeDryAdmissionGateError):
+    pass
+
+class DryAdmissionAssertionError(PaperModeDryAdmissionGateError):
+    pass
+
+class FinalDryAdmissionGateError(PaperModeDryAdmissionGateError):
+    pass
+
+class DryAdmissionGateValidationError(PaperModeDryAdmissionGateError):
+    pass
+
+class DryAdmissionContinuityError(PaperModeDryAdmissionGateError):
+    pass
+
+class DryAdmissionSafetyValidatorError(PaperModeDryAdmissionGateError):
+    pass
+
+class DryAdmissionAuditError(PaperModeDryAdmissionGateError):
+    pass
+
+class DryAdmissionStorageError(PaperModeDryAdmissionGateError):
+    pass
+
+class DryAdmissionValidationError(PaperModeDryAdmissionGateError):
+    pass
+
+class DryAdmissionReportingError(PaperModeDryAdmissionGateError):
+    pass

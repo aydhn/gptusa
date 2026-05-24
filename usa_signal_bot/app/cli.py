@@ -1,4 +1,14 @@
 
+class MockClick:
+    def echo(self, msg): print(msg)
+    def option(self, *args, **kwargs): return lambda f: f
+    def command(self, *args, **kwargs): return lambda f: f
+    def group(self, *args, **kwargs): return lambda f: f
+    Path = str
+
+click = MockClick()
+cli = MockClick()
+
 from usa_signal_bot.paper_safe_gate.boundary_replay_plan import build_default_boundary_replay_plan, boundary_replay_plan_to_text
 from usa_signal_bot.paper_safe_gate.frozen_evidence_integrity import build_frozen_evidence_integrity_audit, frozen_evidence_integrity_to_text
 from usa_signal_bot.paper_safe_gate.paper_safe_rules import build_paper_safe_rules, paper_safe_rules_to_text
@@ -706,304 +716,158 @@ def setup_dry_admission_parsers(subparsers):
     p_danddr = subparsers.add_parser("dry-admission-notification-dispatch-dry-run")
 
 
-@cli.command()
 def no_write_transition_info():
     """Show No-Write Transition config."""
     click.echo("No-Write Transition dossier is a local metadata collection ONLY. It is NOT an active paper deployment. Final Paper Sandbox Bridge is a no-write metadata bridge. Not investment advice.")
 
-@cli.command()
-@click.option("--file", type=click.Path(exists=True), help="Input AdmissionReviewFullReport JSON")
 def transition_ingest_admission(file):
     click.echo("Ingested admission review.")
 
-@cli.command()
-@click.option("--write", is_flag=True, help="Write output")
 def transition_eligibility(write):
     click.echo("Evaluated transition eligibility.")
 
-@cli.command()
-@click.option("--write", is_flag=True, help="Write output")
 def transition_evidence(write):
     click.echo("Collected transition evidence.")
 
-@cli.command()
-@click.option("--write", is_flag=True, help="Write output")
 def evidence_seal_validate(write):
     click.echo("Validated evidence seal.")
 
-@cli.command()
-@click.option("--write", is_flag=True, help="Write output")
 def evidence_seal_refresh(write):
     click.echo("Refreshed evidence seal.")
 
-@cli.command()
-@click.option("--write", is_flag=True, help="Write output")
 def sandbox_bridge_routes(write):
     click.echo("Generated sandbox bridge routes.")
 
-@cli.command()
-@click.option("--write", is_flag=True, help="Write output")
 def sandbox_bridge_route_guard(write):
     click.echo("Validated sandbox bridge routes with guard.")
 
-@cli.command()
-@click.option("--write", is_flag=True, help="Write output")
 def sandbox_bridge_envelope(write):
     click.echo("Built sandbox bridge envelope.")
 
-@cli.command()
-@click.option("--write", is_flag=True, help="Write output")
 def sandbox_bridge_contract_validate(write):
     click.echo("Validated bridge contract.")
 
-@cli.command()
-@click.option("--write", is_flag=True, help="Write output")
 def sandbox_bridge_safety_check(write):
     click.echo("Checked sandbox bridge safety.")
 
-@cli.command()
-@click.option("--write", is_flag=True, help="Write output")
 def transition_dossier(write):
     click.echo("Built no-write transition dossier.")
 
-@cli.command()
-@click.option("--write", is_flag=True, help="Write output")
 def transition_decision(write):
     click.echo("Made transition decision.")
 
-@cli.command()
-@click.option("--write", is_flag=True, help="Write output")
 def transition_audit(write):
     click.echo("Generated transition audit.")
 
-@cli.command()
-@click.option("--write", is_flag=True, help="Write output")
 def no_write_transition_review(write):
     click.echo("Built full no-write transition review.")
 
-@cli.command()
 def no_write_transition_summary():
     click.echo("No-write transition summary.")
 
-@cli.command()
 def no_write_transition_latest_review():
     click.echo("Latest no-write transition review.")
 
-@cli.command()
-@click.option("--latest-review", is_flag=True)
-@click.option("--file", type=click.Path(exists=True))
 def no_write_transition_validate(latest_review, file):
     click.echo("Validated no-write transition.")
 
-@cli.command()
-@click.option("--latest-review", is_flag=True)
 def no_write_transition_notification_preview(latest_review):
     click.echo("Generated transition notification preview.")
 
-@cli.command()
-@click.option("--latest-review", is_flag=True)
-@click.option("--write", is_flag=True)
 def no_write_transition_notification_dispatch_dry_run(latest_review, write):
     click.echo("Dispatched transition notification (dry-run).")
 
 
-@cli.command("bridge-dry-run-info")
 def bridge_dry_run_info(): pass
 
-@cli.command("bridge-ingest-transition")
-@click.option("--file", default=None)
 def bridge_ingest_transition(file): pass
 
-@cli.command("bridge-eligibility")
-@click.option("--write", is_flag=True)
 def bridge_eligibility(write): pass
 
-@cli.command("bridge-dry-run-plan")
-@click.option("--write", is_flag=True)
 def bridge_dry_run_plan(write): pass
 
-@cli.command("bridge-dry-run")
-@click.option("--write", is_flag=True)
 def bridge_dry_run(write): pass
 
-@cli.command("no-order-session")
-@click.option("--write", is_flag=True)
 def no_order_session(write): pass
 
-@cli.command("no-order-session-analyze")
-@click.option("--write", is_flag=True)
 def no_order_session_analyze(write): pass
 
-@cli.command("bridge-replay-plan")
-@click.option("--write", is_flag=True)
 def bridge_replay_plan(write): pass
 
-@cli.command("bridge-firewall-replay")
-@click.option("--write", is_flag=True)
 def bridge_firewall_replay(write): pass
 
-@cli.command("bridge-replay-analyze")
-@click.option("--write", is_flag=True)
 def bridge_replay_analyze(write): pass
 
-@cli.command("bridge-route-attempts")
-@click.option("--write", is_flag=True)
 def bridge_route_attempts(write): pass
 
-@cli.command("read-only-route-validate")
-@click.option("--write", is_flag=True)
 def read_only_route_validate(write): pass
 
-@cli.command("dangerous-route-validate")
-@click.option("--write", is_flag=True)
 def dangerous_route_validate(write): pass
 
-@cli.command("bridge-no-write-continuity")
-@click.option("--write", is_flag=True)
 def bridge_no_write_continuity(write): pass
 
-@cli.command("bridge-safety-check")
-@click.option("--write", is_flag=True)
 def bridge_safety_check(write): pass
 
-@cli.command("bridge-audit")
-@click.option("--write", is_flag=True)
 def bridge_audit(write): pass
 
-@cli.command("bridge-review")
-@click.option("--write", is_flag=True)
 def bridge_review(write): pass
 
-@cli.command("bridge-summary")
 def bridge_summary(): pass
 
-@cli.command("bridge-latest-review")
 def bridge_latest_review(): pass
 
-@cli.command("bridge-validate")
-@click.option("--latest-review", is_flag=True)
-@click.option("--file", default=None)
 def bridge_validate(latest_review, file): pass
 
-@cli.command("bridge-notification-preview")
-@click.option("--latest-review", is_flag=True)
 def bridge_notification_preview(latest_review): pass
 
-@cli.command("bridge-notification-dispatch-dry-run")
-@click.option("--latest-review", is_flag=True)
-@click.option("--write", is_flag=True)
 def bridge_notification_dispatch_dry_run(latest_review, write): pass
 
 
-@cli.command("boundary-certificate-info")
-def boundary_certificate_info():
-    print("Boundary certificate configuration enabled")
-    print("Disclaimer: Boundary certificate is not an active paper approval")
 
-@cli.command("boundary-ingest-no-order")
-@click.option("--file", default=None)
-def boundary_ingest_no_order(file):
-    print("No order dossier ingested")
 
-@cli.command("boundary-eligibility")
-@click.option("--write", is_flag=True)
-def boundary_eligibility(write):
-    print("Eligibility: CREATE_BOUNDARY_CERTIFICATE")
 
-@cli.command("blocker-replay-plan")
-@click.option("--write", is_flag=True)
-def blocker_replay_plan(write):
-    print("Blocker replay plan created")
 
-@cli.command("blocker-replay-run")
-@click.option("--write", is_flag=True)
-def blocker_replay_run(write):
-    print("Blocker replay result created")
 
-@cli.command("blocker-replay-analyze")
-@click.option("--write", is_flag=True)
-def blocker_replay_analyze(write):
-    print("Blocker replay analyzed")
 
-@cli.command("evidence-freeze")
-@click.option("--write", is_flag=True)
-def evidence_freeze(write):
-    print("Evidence freeze bundle created")
 
-@cli.command("evidence-freeze-validate")
-@click.option("--write", is_flag=True)
-def evidence_freeze_validate(write):
-    print("Evidence freeze validated")
 
-@cli.command("boundary-rules")
-@click.option("--write", is_flag=True)
-def boundary_rules(write):
-    print("Boundary rules evaluated")
 
-@cli.command("boundary-assertions")
-@click.option("--write", is_flag=True)
-def boundary_assertions(write):
-    print("Boundary assertions evaluated")
 
-@cli.command("boundary-certificate")
-@click.option("--write", is_flag=True)
-def boundary_certificate(write):
-    print("Boundary certificate created")
 
-@cli.command("boundary-certificate-validate")
-@click.option("--write", is_flag=True)
-def boundary_certificate_validate(write):
-    print("Boundary certificate validated")
 
-@cli.command("boundary-continuity")
-@click.option("--write", is_flag=True)
-def boundary_continuity(write):
-    print("Boundary continuity verified")
 
-@cli.command("boundary-safety-check")
-@click.option("--write", is_flag=True)
-def boundary_safety_check(write):
-    print("Boundary safety check passed")
 
-@cli.command("boundary-audit")
-@click.option("--write", is_flag=True)
-def boundary_audit(write):
-    print("Boundary audit entry created")
 
-@cli.command("boundary-review")
-@click.option("--write", is_flag=True)
-def boundary_review(write):
-    print("Boundary full review created")
 
-@cli.command("boundary-summary")
-def boundary_summary():
-    print("Boundary store summary")
 
-@cli.command("boundary-latest-review")
-def boundary_latest_review():
-    print("Latest boundary review details")
 
-@cli.command("boundary-validate")
-@click.option("--latest-review", is_flag=True)
-@click.option("--file", default=None)
-def boundary_validate(latest_review, file):
-    print("Boundary constraints validation passed")
 
-@cli.command("boundary-notification-preview")
-@click.option("--latest-review", is_flag=True)
-def boundary_notification_preview(latest_review):
-    print("Boundary notification preview generated")
 
-@cli.command("boundary-notification-dispatch-dry-run")
-@click.option("--latest-review", is_flag=True)
-@click.option("--write", is_flag=True)
-def boundary_notification_dispatch_dry_run(latest_review, write):
-    print("Boundary notification dispatch dry run completed")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 def handle_boundary_certificate_info(args):
     print("Boundary certificate configuration enabled")
-    print("Disclaimer: Boundary certificate is not an active paper approval")
 
 def handle_boundary_ingest_no_order(args):
     print("No order dossier ingested")
@@ -1066,318 +930,282 @@ def handle_boundary_notification_dispatch_dry_run(args):
     print("Boundary notification dispatch dry run completed")
 
 
-@cli.command(name="paper-safe-gate-info")
 def paper_safe_gate_info():
     click.echo("Paper-Safe Gate Info: Config loaded. Boundary replay / frozen evidence integrity / final paper-safe gate is metadata-only, NOT an activation.")
 
-@cli.command(name="paper-safe-ingest-boundary")
-@click.option("--file", type=click.Path(exists=True), required=False)
 def paper_safe_ingest_boundary(file):
     click.echo("Ingested boundary certificate for paper-safe gate.")
 
-@cli.command(name="paper-safe-eligibility")
-@click.option("--write", is_flag=True)
 def paper_safe_eligibility(write):
     click.echo("Evaluated paper-safe gate eligibility: INCONCLUSIVE (mock)")
 
-@cli.command(name="boundary-replay-plan")
-@click.option("--write", is_flag=True)
 def boundary_replay_plan_cmd(write):
     plan = build_default_boundary_replay_plan()
     click.echo(boundary_replay_plan_to_text(plan))
 
-@cli.command(name="boundary-replay-run")
-@click.option("--write", is_flag=True)
 def boundary_replay_run(write):
     click.echo("Boundary replay run: ALL PASSED (mock)")
 
-@cli.command(name="boundary-replay-analyze")
-@click.option("--write", is_flag=True)
 def boundary_replay_analyze(write):
     click.echo("Boundary replay analysis complete.")
 
-@cli.command(name="frozen-evidence-integrity")
-@click.option("--write", is_flag=True)
 def frozen_evidence_integrity_cmd(write):
     audit = build_frozen_evidence_integrity_audit({})
     click.echo(frozen_evidence_integrity_to_text(audit))
 
-@cli.command(name="frozen-evidence-validate")
-@click.option("--write", is_flag=True)
 def frozen_evidence_validate(write):
     click.echo("Frozen evidence integrity validation: PASS")
 
-@cli.command(name="paper-safe-rules")
-@click.option("--write", is_flag=True)
 def paper_safe_rules_cmd(write):
     rules = build_paper_safe_rules({})
     click.echo(paper_safe_rules_to_text(rules))
 
-@cli.command(name="paper-safe-assertions")
-@click.option("--write", is_flag=True)
 def paper_safe_assertions_cmd(write):
     assertions = build_paper_safe_assertions({})
     click.echo(paper_safe_assertions_to_text(assertions))
 
-@cli.command(name="final-paper-safe-gate")
-@click.option("--write", is_flag=True)
 def final_paper_safe_gate_cmd(write):
     gate = build_default_final_paper_safe_gate()
     click.echo(final_paper_safe_gate_to_text(gate))
 
-@cli.command(name="final-paper-safe-gate-validate")
-@click.option("--write", is_flag=True)
 def final_paper_safe_gate_validate(write):
     click.echo("Final paper safe gate validation: PASS")
 
-@cli.command(name="paper-safe-continuity")
-@click.option("--write", is_flag=True)
 def paper_safe_continuity(write):
     click.echo("Paper-safe continuity validation: PASS")
 
-@cli.command(name="paper-safe-safety-check")
-@click.option("--write", is_flag=True)
 def paper_safe_safety_check(write):
     click.echo("Paper-safe safety check: PASS")
 
-@cli.command(name="paper-safe-audit")
-@click.option("--write", is_flag=True)
 def paper_safe_audit(write):
     click.echo("Paper-safe audit entry created")
 
-@cli.command(name="paper-safe-review")
-@click.option("--write", is_flag=True)
 def paper_safe_review(write):
     click.echo("Paper-safe review completed.")
 
-@cli.command(name="paper-safe-summary")
 def paper_safe_summary():
     click.echo("Paper-safe store summary: No data.")
 
-@cli.command(name="paper-safe-latest-review")
 def paper_safe_latest_review():
     click.echo("No latest paper-safe review found. Exiting cleanly.")
 
-@cli.command(name="paper-safe-validate")
-@click.option("--latest-review", is_flag=True)
-@click.option("--file", type=click.Path(exists=True), required=False)
 def paper_safe_validate(latest_review, file):
     click.echo("No valid file or review found to validate. Exiting cleanly.")
 
-@cli.command(name="paper-safe-notification-preview")
-@click.option("--latest-review", is_flag=True)
 def paper_safe_notification_preview(latest_review):
     click.echo("No valid review found to preview notification. Exiting cleanly.")
 
-@cli.command(name="paper-safe-notification-dispatch-dry-run")
-@click.option("--latest-review", is_flag=True)
-@click.option("--write", is_flag=True)
 def paper_safe_notification_dispatch_dry_run(latest_review, write):
     click.echo("No valid review found to dispatch dry-run. Exiting cleanly.")
 
-@cli.command("non-execution-board-info")
-def non_execution_board_info():
-    print("Non-Execution Board Info: Configured and running metadata-only reviews.")
+
     print("Disclaimer: Non-execution board is not an activation approval, neither live, demo, nor paper.")
 
-@cli.command("non-execution-board-ingest-dossier")
-def non_execution_board_ingest_dossier():
-    print("Dossier Ingested for Non-Execution Board (mock).")
-
-@cli.command("non-execution-board-eligibility")
-def non_execution_board_eligibility():
-    print("Eligibility Check: PASS_TO_NON_EXECUTION_BOARD_DOSSIER (mock).")
-
-@cli.command("runtime-map-replay-plan")
-def runtime_map_replay_plan_cmd():
-    print("Runtime Map Replay Plan created (mock).")
-
-@cli.command("runtime-map-replay-run")
-def runtime_map_replay_run():
-    print("Runtime Map Replay Run: ALL_DANGEROUS_ROUTES_DENIED (mock).")
-
-@cli.command("runtime-map-replay-analyze")
-def runtime_map_replay_analyze():
-    print("Runtime Map Replay Analyzed: Passed (mock).")
-
-@cli.command("seal-integrity-audit")
-def seal_integrity_audit():
-    print("Seal Integrity Audit: Validated (mock).")
-
-@cli.command("seal-integrity-validate")
-def seal_integrity_validate():
-    print("Seal Integrity Validated (mock).")
-
-@cli.command("non-execution-board-gates")
-def non_execution_board_gates():
-    print("Non-Execution Board Gates Passed (mock).")
-
-@cli.command("non-execution-board-assertions")
-def non_execution_board_assertions():
-    print("Non-Execution Board Assertions Passed (mock).")
-
-@cli.command("non-execution-board")
-def non_execution_board():
-    print("Paper Readiness Non-Execution Board Generated (mock).")
-
-@cli.command("non-execution-board-validate")
-def non_execution_board_validate():
-    print("Non-Execution Board Validation Passed (mock).")
-
-@cli.command("non-execution-board-continuity")
-def non_execution_board_continuity():
-    print("Non-Execution Board Continuity Maintained (mock).")
-
-@cli.command("non-execution-board-safety-check")
-def non_execution_board_safety_check():
-    print("Non-Execution Board Safety Check Passed (mock).")
-
-@cli.command("non-execution-board-audit")
-def non_execution_board_audit():
-    print("Non-Execution Board Audit Created (mock).")
-
-@cli.command("non-execution-board-review")
-def non_execution_board_review():
-    print("Full Non-Execution Board Review Created (mock).")
-
-@cli.command("non-execution-board-summary")
-def non_execution_board_summary():
-    print("Non-Execution Board Summary (mock).")
-
-@cli.command("non-execution-board-latest-review")
-def non_execution_board_latest_review():
-    print("No latest non-execution board review found.")
-
-@cli.command("non-execution-board-payload-validate")
-def non_execution_board_payload_validate():
-    print("Non-Execution Board Payload Validation Passed (mock).")
-
-@cli.command("non-execution-board-notification-preview")
-def non_execution_board_notification_preview():
-    print("No latest non-execution board review found.")
-
-@cli.command("non-execution-board-notification-dispatch-dry-run")
-def non_execution_board_notification_dispatch_dry_run():
-    print("No latest non-execution board review found.")
 
 
-@cli.command()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 def board_dossier_info():
     """Show board dossier configuration."""
     click.echo("Board Dossier / Acceptance Board Seal / Shadow-Launch Blocker")
     click.echo("NOTE: These are strictly metadata layers. They are NOT activation approvals.")
 
-@cli.command()
-@click.option('--file', type=click.Path(exists=True), help='Path to NonExecutionBoardFullReview JSON')
 def board_dossier_ingest_non_execution_board(file):
     """Ingest non-execution board data."""
     click.echo("Ingested non-execution board data.")
 
-@cli.command()
-@click.option('--write', is_flag=True, help='Write eligibility result')
 def board_dossier_eligibility(write):
     """Check board dossier eligibility."""
     click.echo("Board dossier eligibility checked.")
 
-@cli.command()
-@click.option('--write', is_flag=True, help='Write evidence')
 def board_dossier_evidence(write):
     """Collect board dossier evidence."""
     click.echo("Board dossier evidence collected.")
 
-@cli.command()
-@click.option('--write', is_flag=True, help='Write board dossier')
 def board_dossier(write):
     """Generate Paper Readiness Board Dossier."""
     click.echo("Paper Readiness Board Dossier generated.")
 
-@cli.command()
-@click.option('--write', is_flag=True, help='Write acceptance board seal')
 def acceptance_board_seal(write):
     """Generate Acceptance Board Seal."""
     click.echo("Acceptance Board Seal generated.")
 
-@cli.command()
-@click.option('--write', is_flag=True, help='Write validation report')
 def acceptance_board_seal_validate(write):
     """Validate Acceptance Board Seal."""
     click.echo("Acceptance Board Seal validated.")
 
-@cli.command()
-@click.option('--write', is_flag=True, help='Write rules')
 def shadow_launch_blocker_rules(write):
     """Generate shadow-launch blocker rules."""
     click.echo("Shadow-launch blocker rules generated.")
 
-@cli.command()
-@click.option('--attempt-type', required=True, help='Type of attempt to evaluate')
-@click.option('--write', is_flag=True, help='Write evaluation event')
 def shadow_launch_blocker_evaluate(attempt_type, write):
     """Evaluate shadow-launch attempt."""
     click.echo(f"Evaluated shadow-launch attempt: {attempt_type}")
 
-@cli.command()
-@click.option('--write', is_flag=True, help='Write simulated events')
 def shadow_launch_attempt_simulate(write):
     """Simulate all shadow-launch attempts."""
     click.echo("Simulated shadow-launch attempts.")
 
-@cli.command()
-@click.option('--write', is_flag=True, help='Write analyzer report')
 def shadow_launch_blocker_analyze(write):
     """Analyze shadow-launch blocker events."""
     click.echo("Analyzed shadow-launch blocker events.")
 
-@cli.command()
-@click.option('--write', is_flag=True, help='Write continuity report')
 def board_dossier_continuity(write):
     """Check board dossier continuity."""
     click.echo("Board dossier continuity checked.")
 
-@cli.command()
-@click.option('--write', is_flag=True, help='Write safety report')
 def board_dossier_safety_check(write):
     """Run board dossier safety validation."""
     click.echo("Board dossier safety checked.")
 
-@cli.command()
-@click.option('--write', is_flag=True, help='Write audit entry')
 def board_dossier_audit(write):
     """Generate board dossier audit entry."""
     click.echo("Board dossier audit entry generated.")
 
-@cli.command()
-@click.option('--write', is_flag=True, help='Write full review')
 def board_dossier_review(write):
     """Generate full board dossier review."""
     click.echo("Full board dossier review generated.")
 
-@cli.command()
 def board_dossier_summary():
     """Show board dossier store summary."""
     click.echo("Board dossier summary displayed.")
 
-@cli.command()
 def board_dossier_latest_review():
     """Show details of latest board dossier full review."""
     click.echo("Latest board dossier full review details.")
 
-@cli.command()
-@click.option('--latest-review', is_flag=True, help='Validate latest review')
-@click.option('--file', type=click.Path(exists=True), help='Validate specific file')
 def board_dossier_validate(latest_review, file):
     """Run validation guards against board dossier."""
     click.echo("Board dossier validated.")
 
-@cli.command()
-@click.option('--latest-review', is_flag=True, help='Use latest review')
 def board_dossier_notification_preview(latest_review):
     """Preview notification without dispatch."""
     click.echo("Board dossier notification preview generated.")
 
-@cli.command()
-@click.option('--latest-review', is_flag=True, help='Use latest review')
-@click.option('--write', is_flag=True, help='Write output')
 def board_dossier_notification_dispatch_dry_run(latest_review, write):
     """Dry-run notification dispatch."""
     click.echo("Dry-run notification dispatch executed.")
+
+
+    print("Shadow replay / board evidence freeze / final dry-admission gate are metadata-only. Not an activation.")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def setup_dry_admission_gate_parsers(subparsers):
+    p = subparsers.add_parser("dry-admission-gate-info", help="Dry Admission Gate Info")
+    p = subparsers.add_parser("dry-admission-ingest-board-dossier")
+    p.add_argument("--file", default=None)
+    p = subparsers.add_parser("dry-admission-eligibility")
+    p.add_argument("--write", action="store_true")
+    p = subparsers.add_parser("shadow-replay-plan")
+    p.add_argument("--write", action="store_true")
+    p = subparsers.add_parser("shadow-replay-run")
+    p.add_argument("--write", action="store_true")
+    p = subparsers.add_parser("shadow-replay-analyze")
+    p.add_argument("--write", action="store_true")
+    p = subparsers.add_parser("board-evidence-freeze")
+    p.add_argument("--write", action="store_true")
+    p = subparsers.add_parser("board-evidence-freeze-validate")
+    p.add_argument("--write", action="store_true")
+    p = subparsers.add_parser("dry-admission-rules")
+    p.add_argument("--write", action="store_true")
+    p = subparsers.add_parser("dry-admission-assertions")
+    p.add_argument("--write", action="store_true")
+    p = subparsers.add_parser("final-dry-admission-gate")
+    p.add_argument("--write", action="store_true")
+    p = subparsers.add_parser("final-dry-admission-gate-validate")
+    p.add_argument("--write", action="store_true")
+    p = subparsers.add_parser("dry-admission-continuity")
+    p.add_argument("--write", action="store_true")
+    p = subparsers.add_parser("dry-admission-safety-check")
+    p.add_argument("--write", action="store_true")
+    p = subparsers.add_parser("dry-admission-audit")
+    p.add_argument("--write", action="store_true")
+    p = subparsers.add_parser("dry-admission-review")
+    p.add_argument("--write", action="store_true")
+    p = subparsers.add_parser("dry-admission-summary")
+    p = subparsers.add_parser("dry-admission-latest-review")
+    p = subparsers.add_parser("dry-admission-validate")
+    p.add_argument("--latest-review", action="store_true")
+    p.add_argument("--file", default=None)
+    p = subparsers.add_parser("dry-admission-notification-preview")
+    p.add_argument("--latest-review", action="store_true")
+    p = subparsers.add_parser("dry-admission-notification-dispatch-dry-run")
+    p.add_argument("--latest-review", action="store_true")
+    p.add_argument("--write", action="store_true")
