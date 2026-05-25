@@ -45,6 +45,58 @@ admission_evidence_seal_validation:
   require_hash_match: true
   require_immutable: true
   require_sealed: true
+advanced_foundation_freeze:
+  block_on_missing_evidence: true
+  block_on_stale_evidence: true
+  enabled: true
+  final_phase: 160
+  freeze_is_metadata_only: true
+  next_phase: 106
+  phase_end: 105
+  phase_start: 101
+  require_frozen: true
+  require_immutable: true
+  require_phase101_evidence: true
+  require_phase102_evidence: true
+  require_phase103_evidence: true
+  require_phase104_evidence: true
+advanced_runtime:
+  allow_activation: false
+  allow_active_paper: false
+  allow_broker_execution: false
+  allow_dashboard: false
+  allow_paid_api: false
+  allow_paper_state_mutation: false
+  allow_scraping: false
+  allow_telegram_real_send: false
+  current_phase: 102
+  enabled: true
+  final_phase: 160
+  normalize_config_surface: true
+  normalize_runtime_registry: true
+  provider_interfaces_ready: true
+  require_phase101_transition_review: true
+  warn_not_investment_advice: true
+  warn_phase102_is_not_activation: true
+  write_runtime_registry_reports: true
+advanced_transition:
+  allow_activation: false
+  allow_active_paper: false
+  allow_broker_execution: false
+  allow_dashboard: false
+  allow_paper_state_mutation: false
+  allow_scraping: false
+  allow_telegram_real_send: false
+  current_phase: 101
+  enabled: true
+  final_phase: 160
+  require_handoff_frozen: true
+  require_handoff_immutable: true
+  require_handoff_metadata_only: true
+  require_phase100_handoff: true
+  warn_not_investment_advice: true
+  warn_phase101_is_not_activation: true
+  write_transition_reports: true
 board_dossier_notifications:
   default_channel: dry_run
   dry_run: true
@@ -119,6 +171,61 @@ bridge_replay_audit_seal:
   require_replay_passed: true
   require_sealed: true
   seal_is_metadata_only: true
+core_runtime_acceptance:
+  current_phase: 105
+  enabled: true
+  final_phase: 160
+  require_foundation_freeze: true
+  require_lifecycle_ready: true
+  require_phase104_lifecycle_review: true
+  require_readiness_gate_passed: true
+  require_startup_checks_passed: true
+  warn_not_investment_advice: true
+  warn_phase105_closes_core_consolidation_band: true
+  warn_phase105_is_not_activation: true
+  write_acceptance_reports: true
+data_provider_abstraction:
+  current_phase: 106
+  enabled: true
+  fallback_plan_enabled: true
+  final_phase: 160
+  metadata_only: true
+  provider_registry_enabled: true
+  provider_selector_enabled: true
+  require_phase105_provider_kickoff_gate: true
+  skeleton_only: true
+  warn_no_real_fetch_required: true
+  warn_not_investment_advice: true
+  warn_phase106_is_not_activation: true
+  write_provider_reports: true
+data_provider_expansion_kickoff_gate:
+  allow_activation: false
+  allow_active_paper: false
+  allow_broker_execution: false
+  allow_dashboard: false
+  allow_html_parsing: false
+  allow_order_creation: false
+  allow_paid_api: false
+  allow_paper_state_mutation: false
+  allow_scraping: false
+  allow_telegram_real_send: false
+  enabled: true
+  metadata_only: true
+  provider_network_fetch_required: false
+  provider_ready: true
+  ready_for_phase106: true
+data_provider_runtime:
+  adapter_contract_tests_enabled: true
+  cache_aware_dry_run_enabled: true
+  current_phase: 107
+  enabled: true
+  final_phase: 160
+  provider_runtime_ready: true
+  require_phase106_provider_abstraction: true
+  warn_no_real_network_in_tests: true
+  warn_not_investment_advice: true
+  warn_phase107_is_not_activation: true
+  write_provider_runtime_reports: true
 dry_admission_acceptance_seal:
   allow_active_paper: false
   allow_broker_execution: false
@@ -1070,6 +1177,210 @@ paper_state_mutation_firewall:
   deny_telegram_real_send: true
   enabled: true
   simulate_forbidden_attempts: true
+phase101_notifications:
+  dry_run: true
+  enabled: true
+  preview_only: true
+  telegram_real_send: false
+phase101_runtime_boundary:
+  active_paper_blocked: true
+  all_execution_blocked: true
+  broker_execution_blocked: true
+  dashboard_blocked: true
+  local_read_only_allowed: true
+  metadata_outputs_allowed: true
+  paper_state_mutation_blocked: true
+  scraping_blocked: true
+  telegram_real_send_blocked: true
+  test_artifacts_allowed: true
+phase102_config_surface:
+  block_on_conflict: true
+  block_on_unsafe_value: true
+  enabled: true
+  generate_migration_hints: true
+  normalize_missing_safety_keys: true
+phase102_notifications:
+  dry_run: true
+  enabled: true
+  preview_only: true
+  telegram_real_send: false
+phase102_provider_contracts:
+  broker_blocked: true
+  cache_allowed: true
+  enabled: true
+  metadata_only_by_default: true
+  network_disabled_by_default: true
+  order_blocked: true
+  paid_api_blocked: true
+  paper_mutation_blocked: true
+  scraping_blocked: true
+  telegram_real_send_blocked: true
+phase102_runtime_modes:
+  active_paper_enabled: false
+  broker_execution_enabled: false
+  default_mode: PROVIDER_READY_NO_FETCH
+  local_compute_only_enabled: true
+  local_read_only_enabled: true
+  offline_metadata_enabled: true
+  provider_network_fetch_default: false
+  provider_ready_no_fetch_enabled: true
+phase103_dependency_policy:
+  require_no_broker_routes: true
+  require_no_cycles: true
+  require_no_dashboard_routes: true
+  require_no_execution_routes: true
+  require_no_missing_dependencies: true
+  require_no_order_routes: true
+  require_no_paper_mutation_routes: true
+  require_no_scraping_routes: true
+  require_no_telegram_real_send_routes: true
+phase103_notifications:
+  dry_run: true
+  enabled: true
+  preview_only: true
+  telegram_real_send: false
+phase103_orchestration:
+  broker_allowed: false
+  dashboard_allowed: false
+  dry_run_only: true
+  enabled: true
+  execution_allowed: false
+  local_compute_validation_allowed: true
+  metadata_only_default: true
+  network_allowed: false
+  order_allowed: false
+  paper_mutation_allowed: false
+  read_only_allowed: true
+  scraping_allowed: false
+  telegram_real_send_allowed: false
+phase104_notifications:
+  dry_run: true
+  enabled: true
+  preview_only: true
+  telegram_real_send: false
+phase104_readiness_gate:
+  allow_activation: false
+  allow_active_paper: false
+  allow_broker_execution: false
+  allow_dashboard: false
+  allow_order_creation: false
+  allow_paper_state_mutation: false
+  allow_scraping: false
+  allow_telegram_real_send: false
+  enabled: true
+  metadata_only: true
+  read_only: true
+  ready_for_phase105: true
+  require_config_readiness: true
+  require_dependency_readiness: true
+  require_no_execution_readiness: true
+  require_provider_readiness: true
+  require_service_readiness: true
+  require_startup_checks_passed: true
+phase104_startup_checks:
+  core_checks_enabled: true
+  destructive_file_ops_allowed: false
+  enabled: true
+  external_network_allowed: false
+  no_execution_safety_check_enabled: true
+  notification_checks_enabled: true
+  observability_checks_enabled: true
+  provider_checks_enabled: true
+  provider_fetch_allowed: false
+phase105_notifications:
+  dry_run: true
+  enabled: true
+  preview_only: true
+  telegram_real_send: false
+phase106_notifications:
+  dry_run: true
+  enabled: true
+  preview_only: true
+  telegram_real_send: false
+phase106_provider_registry:
+  default_market_data_provider: YFINANCE
+  default_selector_mode: METADATA_ONLY
+  fred_skeleton_enabled: true
+  local_csv_skeleton_enabled: true
+  nasdaq_data_link_skeleton_enabled: true
+  sec_company_facts_skeleton_enabled: true
+  stooq_skeleton_enabled: true
+  yfinance_skeleton_enabled: true
+phase106_provider_safety:
+  broker_execution_enabled: false
+  credential_required_now: false
+  dashboard_enabled: false
+  html_parse_enabled: false
+  metadata_only_by_default: true
+  network_fetch_enabled_now: false
+  order_creation_enabled: false
+  paid_api_enabled: false
+  paper_state_mutation_enabled: false
+  provider_network_fetch_required: false
+  scraping_enabled: false
+  telegram_real_send_enabled: false
+phase107_fetch_policy:
+  broker_execution_enabled: false
+  cache_lookup_dry_run_allowed: true
+  credential_required_now: false
+  dashboard_enabled: false
+  dry_run_only: true
+  html_parse_enabled: false
+  local_fixture_read_allowed: true
+  metadata_only_default: true
+  network_enabled_by_default: false
+  order_creation_enabled: false
+  paid_api_enabled: false
+  paper_state_mutation_enabled: false
+  scraping_enabled: false
+  telegram_real_send_enabled: false
+phase107_notifications:
+  dry_run: true
+  enabled: true
+  preview_only: true
+  telegram_real_send: false
+phase107_provider_adapters:
+  local_csv_adapter_enabled: true
+  local_csv_network_default: false
+  stooq_adapter_enabled: true
+  stooq_network_default: false
+  yfinance_adapter_enabled: true
+  yfinance_network_default: false
+phase108_cache_policy:
+  allow_stale_read: true
+  block_expired: false
+  daily_ttl_seconds: 86400
+  default_ttl_seconds: 86400
+  destructive_compaction_allowed: false
+  fundamentals_ttl_seconds: 604800
+  intraday_ttl_seconds: 900
+  macro_ttl_seconds: 86400
+  stale_read_requires_warning: true
+phase108_fallback_policy:
+  broker_execution_enabled: false
+  cache_only_default: true
+  dashboard_enabled: false
+  dry_run_only: true
+  html_parse_enabled: false
+  network_enabled_by_default: false
+  order_creation_enabled: false
+  paid_api_enabled: false
+  paper_state_mutation_enabled: false
+  scraping_enabled: false
+  telegram_real_send_enabled: false
+phase108_notifications:
+  dry_run: true
+  enabled: true
+  preview_only: true
+  telegram_real_send: false
+phase108_source_comparison:
+  default_tolerance_pct: 0.5
+  dry_run_only: true
+  enabled: true
+  material_difference_threshold_pct: 2.0
+  min_rows_required: 1
+  produce_confidence_hints: true
+  produce_trade_signals: false
 pre_paper_dry_rehearsal:
   active_paper_enabled: false
   broker_execution_enabled: false
@@ -1165,6 +1476,20 @@ promotion_evidence_refresh:
   require_observation_exit_review: true
   require_observer_comparison: true
   require_observer_review: true
+provider_cache:
+  cache_index_enabled: true
+  cache_store_enabled: true
+  current_phase: 108
+  enabled: true
+  fallback_dry_run_enabled: true
+  final_phase: 160
+  require_phase107_provider_runtime: true
+  source_comparison_enabled: true
+  stale_fresh_policy_enabled: true
+  warn_no_real_network_in_tests: true
+  warn_not_investment_advice: true
+  warn_phase108_is_not_activation: true
+  write_provider_cache_reports: true
 readiness_audit_checkpoint:
   activation_allowed: false
   activation_denied_by_default: true
@@ -1212,6 +1537,37 @@ rehearsal_blocker_replay:
   require_rehearsal_blocker_events: true
   shadow_launch_enabled: false
   telegram_real_send_enabled: false
+runtime_lifecycle:
+  allow_activation: false
+  allow_active_paper: false
+  allow_broker_execution: false
+  allow_dashboard: false
+  allow_paper_state_mutation: false
+  allow_scraping: false
+  allow_telegram_real_send: false
+  build_readiness_gate: true
+  build_readiness_matrix: true
+  current_phase: 104
+  enabled: true
+  final_phase: 160
+  lifecycle_dry_run_only: true
+  ready_for_phase105_metadata_only: true
+  require_phase103_service_graph: true
+  run_startup_checks: true
+  warn_not_investment_advice: true
+  warn_phase104_is_not_activation: true
+  write_lifecycle_reports: true
+runtime_service_graph:
+  build_service_graph: true
+  current_phase: 103
+  detect_cycles: true
+  enabled: true
+  final_phase: 160
+  require_phase102_runtime_registry: true
+  validate_dependency_contracts: true
+  warn_not_investment_advice: true
+  warn_phase103_is_not_activation: true
+  write_service_graph_reports: true
 sandbox_runtime_admission_blocker_replay:
   active_paper_enabled: false
   broker_execution_enabled: false
@@ -1361,341 +1717,3 @@ zero_mutation_audit:
   require_after_baseline: true
   require_before_baseline: true
   require_hash_unchanged: true
-
-advanced_transition:
-  enabled: true
-  current_phase: 101
-  final_phase: 160
-  require_phase100_handoff: true
-  require_handoff_frozen: true
-  require_handoff_immutable: true
-  require_handoff_metadata_only: true
-  allow_activation: false
-  allow_active_paper: false
-  allow_broker_execution: false
-  allow_paper_state_mutation: false
-  allow_telegram_real_send: false
-  allow_scraping: false
-  allow_dashboard: false
-  write_transition_reports: true
-  warn_not_investment_advice: true
-  warn_phase101_is_not_activation: true
-
-phase101_runtime_boundary:
-  all_execution_blocked: true
-  active_paper_blocked: true
-  broker_execution_blocked: true
-  paper_state_mutation_blocked: true
-  telegram_real_send_blocked: true
-  scraping_blocked: true
-  dashboard_blocked: true
-  metadata_outputs_allowed: true
-  test_artifacts_allowed: true
-  local_read_only_allowed: true
-
-phase101_notifications:
-  enabled: true
-  dry_run: true
-  preview_only: true
-  telegram_real_send: false
-
-
-advanced_runtime:
-  enabled: true
-  current_phase: 102
-  final_phase: 160
-  require_phase101_transition_review: true
-  normalize_runtime_registry: true
-  normalize_config_surface: true
-  provider_interfaces_ready: true
-  allow_activation: false
-  allow_active_paper: false
-  allow_broker_execution: false
-  allow_paper_state_mutation: false
-  allow_telegram_real_send: false
-  allow_scraping: false
-  allow_dashboard: false
-  allow_paid_api: false
-  write_runtime_registry_reports: true
-  warn_not_investment_advice: true
-  warn_phase102_is_not_activation: true
-
-phase102_runtime_modes:
-  default_mode: "PROVIDER_READY_NO_FETCH"
-  offline_metadata_enabled: true
-  local_read_only_enabled: true
-  local_compute_only_enabled: true
-  provider_ready_no_fetch_enabled: true
-  provider_network_fetch_default: false
-  active_paper_enabled: false
-  broker_execution_enabled: false
-
-phase102_provider_contracts:
-  enabled: true
-  metadata_only_by_default: true
-  network_disabled_by_default: true
-  cache_allowed: true
-  paid_api_blocked: true
-  scraping_blocked: true
-  broker_blocked: true
-  order_blocked: true
-  paper_mutation_blocked: true
-  telegram_real_send_blocked: true
-
-phase102_config_surface:
-  enabled: true
-  normalize_missing_safety_keys: true
-  block_on_conflict: true
-  block_on_unsafe_value: true
-  generate_migration_hints: true
-
-phase102_notifications:
-  enabled: true
-  dry_run: true
-  preview_only: true
-  telegram_real_send: false
-
-runtime_service_graph:
-  enabled: true
-  current_phase: 103
-  final_phase: 160
-  require_phase102_runtime_registry: true
-  build_service_graph: true
-  validate_dependency_contracts: true
-  detect_cycles: true
-  write_service_graph_reports: true
-  warn_not_investment_advice: true
-  warn_phase103_is_not_activation: true
-
-phase103_orchestration:
-  enabled: true
-  dry_run_only: true
-  metadata_only_default: true
-  read_only_allowed: true
-  local_compute_validation_allowed: true
-  network_allowed: false
-  execution_allowed: false
-  broker_allowed: false
-  order_allowed: false
-  paper_mutation_allowed: false
-  telegram_real_send_allowed: false
-  scraping_allowed: false
-  dashboard_allowed: false
-
-phase103_dependency_policy:
-  require_no_cycles: true
-  require_no_missing_dependencies: true
-  require_no_execution_routes: true
-  require_no_broker_routes: true
-  require_no_order_routes: true
-  require_no_paper_mutation_routes: true
-  require_no_telegram_real_send_routes: true
-  require_no_scraping_routes: true
-  require_no_dashboard_routes: true
-
-phase103_notifications:
-  enabled: true
-  dry_run: true
-  preview_only: true
-  telegram_real_send: false
-
-
-runtime_lifecycle:
-  enabled: true
-  current_phase: 104
-  final_phase: 160
-  require_phase103_service_graph: true
-  run_startup_checks: true
-  build_readiness_matrix: true
-  build_readiness_gate: true
-  lifecycle_dry_run_only: true
-  ready_for_phase105_metadata_only: true
-  allow_activation: false
-  allow_active_paper: false
-  allow_broker_execution: false
-  allow_paper_state_mutation: false
-  allow_telegram_real_send: false
-  allow_scraping: false
-  allow_dashboard: false
-  write_lifecycle_reports: true
-  warn_not_investment_advice: true
-  warn_phase104_is_not_activation: true
-
-phase104_startup_checks:
-  enabled: true
-  core_checks_enabled: true
-  provider_checks_enabled: true
-  observability_checks_enabled: true
-  notification_checks_enabled: true
-  no_execution_safety_check_enabled: true
-  external_network_allowed: false
-  destructive_file_ops_allowed: false
-  provider_fetch_allowed: false
-
-phase104_readiness_gate:
-  enabled: true
-  metadata_only: true
-  read_only: true
-  require_startup_checks_passed: true
-  require_service_readiness: true
-  require_dependency_readiness: true
-  require_config_readiness: true
-  require_provider_readiness: true
-  require_no_execution_readiness: true
-  ready_for_phase105: true
-  allow_activation: false
-  allow_active_paper: false
-  allow_broker_execution: false
-  allow_order_creation: false
-  allow_paper_state_mutation: false
-  allow_telegram_real_send: false
-  allow_scraping: false
-  allow_dashboard: false
-
-phase104_notifications:
-  enabled: true
-  dry_run: true
-  preview_only: true
-  telegram_real_send: false
-
-
-core_runtime_acceptance:
-  enabled: true
-  current_phase: 105
-  final_phase: 160
-  require_phase104_lifecycle_review: true
-  require_lifecycle_ready: true
-  require_readiness_gate_passed: true
-  require_startup_checks_passed: true
-  require_foundation_freeze: true
-  write_acceptance_reports: true
-  warn_not_investment_advice: true
-  warn_phase105_is_not_activation: true
-  warn_phase105_closes_core_consolidation_band: true
-
-advanced_foundation_freeze:
-  enabled: true
-  phase_start: 101
-  phase_end: 105
-  next_phase: 106
-  final_phase: 160
-  freeze_is_metadata_only: true
-  require_frozen: true
-  require_immutable: true
-  require_phase101_evidence: true
-  require_phase102_evidence: true
-  require_phase103_evidence: true
-  require_phase104_evidence: true
-  block_on_missing_evidence: true
-  block_on_stale_evidence: true
-
-data_provider_expansion_kickoff_gate:
-  enabled: true
-  ready_for_phase106: true
-  metadata_only: true
-  provider_ready: true
-  provider_network_fetch_required: false
-  allow_activation: false
-  allow_active_paper: false
-  allow_broker_execution: false
-  allow_order_creation: false
-  allow_paper_state_mutation: false
-  allow_telegram_real_send: false
-  allow_scraping: false
-  allow_html_parsing: false
-  allow_dashboard: false
-  allow_paid_api: false
-
-phase105_notifications:
-  enabled: true
-  dry_run: true
-  preview_only: true
-  telegram_real_send: false
-
-data_provider_abstraction:
-  enabled: true
-  current_phase: 106
-  final_phase: 160
-  require_phase105_provider_kickoff_gate: true
-  skeleton_only: true
-  metadata_only: true
-  provider_registry_enabled: true
-  provider_selector_enabled: true
-  fallback_plan_enabled: true
-  write_provider_reports: true
-  warn_not_investment_advice: true
-  warn_phase106_is_not_activation: true
-  warn_no_real_fetch_required: true
-
-phase106_provider_safety:
-  metadata_only_by_default: true
-  network_fetch_enabled_now: false
-  provider_network_fetch_required: false
-  paid_api_enabled: false
-  scraping_enabled: false
-  html_parse_enabled: false
-  broker_execution_enabled: false
-  order_creation_enabled: false
-  paper_state_mutation_enabled: false
-  telegram_real_send_enabled: false
-  dashboard_enabled: false
-  credential_required_now: false
-
-phase106_provider_registry:
-  yfinance_skeleton_enabled: true
-  stooq_skeleton_enabled: true
-  nasdaq_data_link_skeleton_enabled: true
-  fred_skeleton_enabled: true
-  sec_company_facts_skeleton_enabled: true
-  local_csv_skeleton_enabled: true
-  default_market_data_provider: "YFINANCE"
-  default_selector_mode: "METADATA_ONLY"
-
-phase106_notifications:
-  enabled: true
-  dry_run: true
-  preview_only: true
-  telegram_real_send: false
-
-data_provider_runtime:
-  enabled: true
-  current_phase: 107
-  final_phase: 160
-  require_phase106_provider_abstraction: true
-  provider_runtime_ready: true
-  adapter_contract_tests_enabled: true
-  cache_aware_dry_run_enabled: true
-  write_provider_runtime_reports: true
-  warn_not_investment_advice: true
-  warn_phase107_is_not_activation: true
-  warn_no_real_network_in_tests: true
-
-phase107_fetch_policy:
-  dry_run_only: true
-  metadata_only_default: true
-  cache_lookup_dry_run_allowed: true
-  local_fixture_read_allowed: true
-  network_enabled_by_default: false
-  paid_api_enabled: false
-  scraping_enabled: false
-  html_parse_enabled: false
-  broker_execution_enabled: false
-  order_creation_enabled: false
-  paper_state_mutation_enabled: false
-  telegram_real_send_enabled: false
-  dashboard_enabled: false
-  credential_required_now: false
-
-phase107_provider_adapters:
-  yfinance_adapter_enabled: true
-  stooq_adapter_enabled: true
-  local_csv_adapter_enabled: true
-  yfinance_network_default: false
-  stooq_network_default: false
-  local_csv_network_default: false
-
-phase107_notifications:
-  enabled: true
-  dry_run: true
-  preview_only: true
-  telegram_real_send: false

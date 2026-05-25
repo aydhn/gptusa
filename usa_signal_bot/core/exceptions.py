@@ -1335,3 +1335,25 @@ class ProviderRuntimeStoreError(DataProviderRuntimeError):
 
 class ProviderRuntimeReportingError(DataProviderRuntimeError):
     pass
+
+
+class ProviderCacheError(Exception): pass
+class ProviderRuntimeIngestionError(ProviderCacheError): pass
+class CachePathResolverError(ProviderCacheError): pass
+class CacheStoreError(ProviderCacheError): pass
+class CacheIndexError(ProviderCacheError): pass
+class StaleFreshPolicyError(ProviderCacheError): pass
+class StaleFreshEvaluationError(ProviderCacheError): pass
+class CacheCompactionPlanError(ProviderCacheError): pass
+class FallbackDryRunPlanError(ProviderCacheError): pass
+class FallbackDryRunEngineError(ProviderCacheError): pass
+class FallbackChainEvaluatorError(ProviderCacheError): pass
+class SourceComparisonError(ProviderCacheError): pass
+class OhlcvComparisonError(ProviderCacheError): pass
+class SourceDriftDetectorError(ProviderCacheError): pass
+class DataConfidenceHintError(ProviderCacheError): pass
+class ProviderCacheSafetyValidationError(ProviderCacheError): pass
+class SourceComparisonSafetyValidationError(ProviderCacheError): pass
+class ProviderCacheStoreError(ProviderCacheError): pass
+class ProviderCacheValidationError(ProviderCacheError): pass
+class ProviderCacheReportingError(ProviderCacheError): pass

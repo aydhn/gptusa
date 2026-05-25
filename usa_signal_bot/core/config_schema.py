@@ -1945,3 +1945,66 @@ class Phase105NotificationsConfig:
     dry_run: bool = True
     preview_only: bool = True
     telegram_real_send: bool = False
+
+
+from dataclasses import dataclass, field
+from typing import Optional, List, Dict, Any
+
+@dataclass
+class Phase108CachePolicyConfig:
+    default_ttl_seconds: int = 86400
+    intraday_ttl_seconds: int = 900
+    daily_ttl_seconds: int = 86400
+    fundamentals_ttl_seconds: int = 604800
+    macro_ttl_seconds: int = 86400
+    allow_stale_read: bool = True
+    stale_read_requires_warning: bool = True
+    block_expired: bool = False
+    destructive_compaction_allowed: bool = False
+
+@dataclass
+class Phase108FallbackPolicyConfig:
+    dry_run_only: bool = True
+    cache_only_default: bool = True
+    network_enabled_by_default: bool = False
+    paid_api_enabled: bool = False
+    scraping_enabled: bool = False
+    html_parse_enabled: bool = False
+    broker_execution_enabled: bool = False
+    order_creation_enabled: bool = False
+    paper_state_mutation_enabled: bool = False
+    telegram_real_send_enabled: bool = False
+    dashboard_enabled: bool = False
+
+@dataclass
+class Phase108SourceComparisonConfig:
+    enabled: bool = True
+    dry_run_only: bool = True
+    default_tolerance_pct: float = 0.5
+    material_difference_threshold_pct: float = 2.0
+    min_rows_required: int = 1
+    produce_confidence_hints: bool = True
+    produce_trade_signals: bool = False
+
+@dataclass
+class Phase108NotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    preview_only: bool = True
+    telegram_real_send: bool = False
+
+@dataclass
+class ProviderCacheConfig:
+    enabled: bool = True
+    current_phase: int = 108
+    final_phase: int = 160
+    require_phase107_provider_runtime: bool = True
+    cache_store_enabled: bool = True
+    cache_index_enabled: bool = True
+    stale_fresh_policy_enabled: bool = True
+    fallback_dry_run_enabled: bool = True
+    source_comparison_enabled: bool = True
+    write_provider_cache_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_phase108_is_not_activation: bool = True
+    warn_no_real_network_in_tests: bool = True
