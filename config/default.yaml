@@ -1929,3 +1929,64 @@ phase112_notifications:
   dry_run: true
   preview_only: true
   telegram_real_send: false
+
+provider_governance:
+  enabled: true
+  current_phase: 113
+  final_phase: 160
+  require_phase112_event_impact: true
+  provider_acceptance_enabled: true
+  governance_policy_enabled: true
+  data_lineage_enabled: true
+  audit_trail_enabled: true
+  no_execution_proof_enabled: true
+  write_provider_governance_reports: true
+  warn_not_investment_advice: true
+  warn_phase113_is_not_activation: true
+  warn_acceptance_is_not_trading_enable: true
+
+phase113_governance_policy:
+  metadata_only: true
+  research_data_only: true
+  free_source_only: true
+  no_scraping: true
+  no_html_parsing: true
+  no_paid_api: true
+  no_broker: true
+  no_order: true
+  no_paper_mutation: true
+  no_telegram_real_send: true
+  no_dashboard: true
+  no_trade_signal_from_data_layer: true
+  require_lineage: true
+  require_audit_manifest: true
+  require_no_secrets: true
+
+phase113_lineage:
+  enabled: true
+  require_provider_source_node: true
+  require_adapter_node: true
+  require_cache_artifact_node: true
+  require_quality_score_node: true
+  require_route_node: true
+  require_event_context_node: true
+  require_audit_node: true
+  block_on_secret_node: true
+  block_on_trade_signal_node: true
+  block_on_order_decision_node: true
+
+phase113_audit:
+  enabled: true
+  metadata_only: true
+  hash_artifacts: true
+  store_raw_secrets: false
+  redact_sensitive_fields: true
+  block_on_secret_violation: true
+  block_on_execution_violation: true
+  block_on_order_violation: true
+
+phase113_notifications:
+  enabled: true
+  dry_run: true
+  preview_only: true
+  telegram_real_send: false

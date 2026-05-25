@@ -10,3 +10,6 @@ def record_latest_calendar_explained_anomaly_count(count: int): pass
 def record_latest_calendar_unexplained_anomaly_count(count: int): pass
 def record_latest_event_impact_trade_language_violation_count(count: int): pass
 def record_latest_phase112_execution_violation_count(count: int): pass
+
+# Phase 113 Observability dummy
+def collect_phase113_metrics(): pass

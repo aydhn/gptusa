@@ -166,3 +166,11 @@ def phase112_macro_regime_metadata_score(context) -> float: return 100.0
 def phase112_calendar_aware_validation_score(context) -> float: return 100.0
 def phase112_event_impact_safety_score(context) -> float: return 100.0
 def phase112_non_execution_compliance_score(context) -> float: return 100.0
+
+# Phase 113 metrics dummy
+def phase113_provider_acceptance_score(): pass
+def phase113_governance_policy_score(): pass
+def phase113_data_lineage_score(): pass
+def phase113_audit_trail_score(): pass
+def phase113_no_execution_proof_score(): pass
+def phase113_non_execution_compliance_score(): pass
