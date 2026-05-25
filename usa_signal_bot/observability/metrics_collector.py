@@ -148,3 +148,17 @@ def collect_phase108_metrics():
         "latest_provider_cache_network_violation_count": 0,
         "latest_phase108_execution_violation_count": 0
     }
+
+# Phase 110 metrics
+latest_provider_orchestration_context_count: int = 0
+latest_provider_route_plan_count: int = 0
+latest_provider_route_result_count: int = 0
+latest_source_blend_result_count: int = 0
+latest_data_availability_report_count: int = 0
+latest_data_availability_missing_count: int = 0
+latest_data_availability_coverage_ratio: float = 0.0
+latest_refresh_plan_count: int = 0
+latest_refresh_required_count: int = 0
+latest_refresh_high_priority_count: int = 0
+latest_provider_orchestration_trade_language_violation_count: int = 0
+latest_phase110_execution_violation_count: int = 0

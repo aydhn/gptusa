@@ -1420,3 +1420,61 @@ class ProviderQualityValidationError(ProviderQualityError):
 
 class ProviderQualityReportingError(ProviderQualityError):
     pass
+
+
+class ProviderOrchestrationError(USASignalBotError):
+    pass
+
+class ProviderQualityIngestionError(ProviderOrchestrationError):
+    pass
+
+class ProviderRoutePlannerError(ProviderOrchestrationError):
+    pass
+
+class ProviderRouteSelectorError(ProviderOrchestrationError):
+    pass
+
+class SourceBlendingPolicyError(ProviderOrchestrationError):
+    pass
+
+class SourceBlendingEngineError(ProviderOrchestrationError):
+    pass
+
+class BlendedOhlcvMetadataError(ProviderOrchestrationError):
+    pass
+
+class DataAvailabilityMonitorError(ProviderOrchestrationError):
+    pass
+
+class CacheAvailabilityCheckerError(DataAvailabilityMonitorError):
+    pass
+
+class ProviderAvailabilityCheckerError(DataAvailabilityMonitorError):
+    pass
+
+class SymbolCoverageMonitorError(DataAvailabilityMonitorError):
+    pass
+
+class RefreshPriorityScorerError(ProviderOrchestrationError):
+    pass
+
+class RefreshPlanBuilderError(ProviderOrchestrationError):
+    pass
+
+class RefreshDryRunValidationError(ProviderOrchestrationError):
+    pass
+
+class ProviderOrchestrationSafetyValidationError(ProviderOrchestrationError):
+    pass
+
+class SourceBlendingSafetyValidationError(ProviderOrchestrationError):
+    pass
+
+class ProviderOrchestrationStoreError(ProviderOrchestrationError):
+    pass
+
+class ProviderOrchestrationValidationError(ProviderOrchestrationError):
+    pass
+
+class ProviderOrchestrationReportingError(ProviderOrchestrationError):
+    pass
