@@ -1717,7 +1717,6 @@ zero_mutation_audit:
   require_after_baseline: true
   require_before_baseline: true
   require_hash_unchanged: true
-
 provider_quality:
   enabled: true
   current_phase: 109
@@ -1731,11 +1730,10 @@ provider_quality:
   warn_not_investment_advice: true
   warn_phase109_is_not_activation: true
   warn_scores_are_not_trade_signals: true
-
 phase109_scoring_policy:
-  completeness_weight: 0.20
+  completeness_weight: 0.2
   freshness_weight: 0.15
-  schema_validity_weight: 0.20
+  schema_validity_weight: 0.2
   continuity_weight: 0.15
   source_agreement_weight: 0.15
   outlier_profile_weight: 0.05
@@ -1743,7 +1741,6 @@ phase109_scoring_policy:
   safety_compliance_weight: 0.05
   block_on_safety_score_zero: true
   block_on_schema_invalid: true
-
 phase109_selection_policy:
   research_data_only: true
   produce_trade_signals: false
@@ -1757,8 +1754,70 @@ phase109_selection_policy:
   allow_paper_mutation: false
   allow_telegram_real_send: false
   allow_dashboard: false
-
 phase109_notifications:
+  enabled: true
+  dry_run: true
+  preview_only: true
+  telegram_real_send: false
+provider_orchestration:
+  enabled: true
+  current_phase: 110
+  final_phase: 160
+  require_phase109_provider_quality: true
+  provider_route_planning_enabled: true
+  source_blending_enabled: true
+  availability_monitor_enabled: true
+  refresh_planning_enabled: true
+  write_provider_orchestration_reports: true
+  warn_not_investment_advice: true
+  warn_phase110_is_not_activation: true
+  warn_routes_are_not_trade_signals: true
+phase110_orchestration_policy:
+  metadata_only: true
+  research_data_only: true
+  cache_only_default: true
+  allow_blending: true
+  allow_fallback: true
+  allow_network: false
+  allow_paid_api: false
+  allow_scraping: false
+  allow_html_parsing: false
+  allow_broker: false
+  allow_order: false
+  allow_paper_mutation: false
+  allow_telegram_real_send: false
+  allow_dashboard: false
+  produce_trade_signals: false
+  produce_order_decisions: false
+phase110_source_blending:
+  enabled: true
+  dry_run_only: true
+  research_data_only: true
+  min_sources_for_blending: 2
+  default_method: TRUST_WEIGHTED_BLEND
+  max_disagreement_for_blending: 0.25
+  produce_trade_signals: false
+  produce_order_decisions: false
+phase110_availability_monitor:
+  enabled: true
+  default_symbols:
+  - AAPL
+  - MSFT
+  - SPY
+  default_capability: GET_DAILY_OHLCV
+  network_allowed: false
+  stale_counts_as_partial: true
+phase110_refresh_planning:
+  enabled: true
+  dry_run_only: true
+  network_allowed_now: false
+  paid_api_allowed: false
+  scraping_allowed: false
+  html_parsing_allowed: false
+  broker_allowed: false
+  order_allowed: false
+  future_refresh_metadata_only: true
+phase110_notifications:
   enabled: true
   dry_run: true
   preview_only: true

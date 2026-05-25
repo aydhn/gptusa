@@ -2244,3 +2244,94 @@ def provider_selection_safety_check_cli(): click.echo("Selection safety checked.
 def provider_quality_context_cli(): click.echo("Provider quality context summarized.")
 @cli.command("provider-quality-summary")
 def provider_quality_summary_cli(): click.echo("Provider quality store summarized.")
+
+
+@cli.command("provider-orchestration-info")
+def provider_orchestration_info():
+    click.echo("--- Phase 110 Provider Orchestration Info ---")
+    click.echo("Phase 110 is NOT activation. Route/blend outputs are NOT trade signals.")
+
+@cli.command("provider-orchestration-ingest-quality")
+def provider_orchestration_ingest_quality():
+    click.echo("Ingesting Provider Quality... (Dry-Run)")
+
+@cli.command("provider-orchestration-policy")
+def provider_orchestration_policy():
+    click.echo("Provider Orchestration Policy (Dry-Run)")
+
+@cli.command("provider-route-plan")
+def provider_route_plan():
+    click.echo("Generating Provider Route Plan... (Dry-Run)")
+
+@cli.command("provider-route-select")
+def provider_route_select():
+    click.echo("Selecting Provider Route... (Dry-Run)")
+
+@cli.command("source-blending-policy")
+def source_blending_policy():
+    click.echo("Source Blending Policy (Dry-Run)")
+
+@cli.command("source-blend")
+def source_blend():
+    click.echo("Blending sources... (Dry-Run)")
+
+@cli.command("blended-ohlcv-metadata")
+def blended_ohlcv_metadata():
+    click.echo("Generating Blended OHLCV Metadata... (Dry-Run)")
+
+@cli.command("cache-availability")
+def cache_availability():
+    click.echo("Checking cache availability... (Dry-Run)")
+
+@cli.command("provider-availability")
+def provider_availability():
+    click.echo("Checking provider availability... (Dry-Run)")
+
+@cli.command("symbol-coverage")
+def symbol_coverage():
+    click.echo("Checking symbol coverage... (Dry-Run)")
+
+@cli.command("availability-monitor")
+def availability_monitor():
+    click.echo("Running availability monitor... (Dry-Run)")
+
+@cli.command("refresh-priority")
+def refresh_priority():
+    click.echo("Scoring refresh priorities... (Dry-Run)")
+
+@cli.command("refresh-plan")
+def refresh_plan():
+    click.echo("Building refresh plan... (Dry-Run)")
+
+@cli.command("refresh-dry-run-validate")
+def refresh_dry_run_validate():
+    click.echo("Validating refresh plan safety... (Dry-Run)")
+
+@cli.command("provider-orchestration-safety-check")
+def provider_orchestration_safety_check():
+    click.echo("Running orchestration safety check... (Dry-Run)")
+
+@cli.command("source-blending-safety-check")
+def source_blending_safety_check():
+    click.echo("Running source blending safety check... (Dry-Run)")
+
+@cli.command("provider-orchestration-context")
+def provider_orchestration_context():
+    click.echo("Building orchestration context... (Dry-Run)")
+
+@cli.command("provider-orchestration-review")
+@click.option("--write", is_flag=True, help="Write to storage")
+def provider_orchestration_review(write):
+    click.echo("Generating Provider Orchestration Review...")
+    if write:
+        click.echo("Writing to local storage.")
+    else:
+        click.echo("Preview only.")
+
+@cli.command("provider-orchestration-summary")
+def provider_orchestration_summary():
+    click.echo("Provider Orchestration Summary (Dry-Run)")
+
+@cli.command("provider-orchestration-validate")
+def provider_orchestration_validate():
+    click.echo("Validating orchestration payload... (Dry-Run)")

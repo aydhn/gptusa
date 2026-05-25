@@ -52,3 +52,9 @@ class QualityIssue:
 
 def create_quality_issue_id() -> str:
     return "qi_test"
+
+    phase110_provider_orchestration_score: float = 0.0
+    phase110_source_blending_score: float = 0.0
+    phase110_data_availability_score: float = 0.0
+    phase110_refresh_planning_score: float = 0.0
+    phase110_non_execution_compliance_score: float = 0.0

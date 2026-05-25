@@ -262,3 +262,15 @@ def format_fallback_dry_run_warning_message(results: list) -> NotificationMessag
 
 def notifications_from_provider_cache_review(review: Any) -> list[NotificationMessage]:
     return [format_provider_cache_report_message(review)]
+
+def format_provider_orchestration_report_message(review) -> str:
+    return f'Provider Orchestration Report: {review.review_id} - {review.report_type}'
+
+def format_data_availability_warning_message(report) -> str:
+    return f'Data Availability Warning: {report.availability_report_id} - Missing: {report.missing_count}'
+
+def format_refresh_plan_warning_message(report) -> str:
+    return f'Refresh Plan Warning: {report.refresh_report_id} - High Priority: {report.high_priority_count}'
+
+def notifications_from_provider_orchestration_review(review) -> list[str]:
+    return [format_provider_orchestration_report_message(review)]
