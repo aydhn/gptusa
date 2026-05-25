@@ -1525,3 +1525,23 @@ class CalendarValidationSafetyError(EventImpactError): pass
 class EventImpactStoreError(EventImpactError): pass
 class EventImpactValidationError(EventImpactError): pass
 class EventImpactReportingError(EventImpactError): pass
+
+class ProviderGovernanceError(BaseAppError): pass
+class EventImpactIngestionError(ProviderGovernanceError): pass
+class ProviderExpansionEvidenceError(ProviderGovernanceError): pass
+class ProviderAcceptanceCriteriaError(ProviderGovernanceError): pass
+class ProviderAcceptanceCheckerError(ProviderGovernanceError): pass
+class ProviderGovernancePolicyError(ProviderGovernanceError): pass
+class GovernanceRuleEvaluatorError(ProviderGovernanceError): pass
+class DataLineageError(ProviderGovernanceError): pass
+class DataLineageGraphBuilderError(DataLineageError): pass
+class DataLineageValidationError(DataLineageError): pass
+class AuditTrailBuilderError(ProviderGovernanceError): pass
+class AuditArtifactManifestError(ProviderGovernanceError): pass
+class ArtifactHashingError(ProviderGovernanceError): pass
+class NoExecutionProofError(ProviderGovernanceError): pass
+class GovernanceSafetyValidationError(ProviderGovernanceError): pass
+class AuditSafetyValidationError(ProviderGovernanceError): pass
+class ProviderGovernanceStoreError(ProviderGovernanceError): pass
+class ProviderGovernanceValidationError(ProviderGovernanceError): pass
+class ProviderGovernanceReportingError(ProviderGovernanceError): pass
