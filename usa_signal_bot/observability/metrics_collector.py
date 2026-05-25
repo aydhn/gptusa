@@ -2,6 +2,19 @@ from typing import Any
 
 class MetricsCollector:
 
+    def update_provider_abstraction_metrics(self, review: Any):
+        self.metrics["latest_provider_abstraction_context_count"] = self.metrics.get("latest_provider_abstraction_context_count", 0) + 1
+        if review.context.provider_abstraction_ready:
+            self.metrics["latest_provider_abstraction_ready_count"] = self.metrics.get("latest_provider_abstraction_ready_count", 0) + 1
+        self.metrics["latest_provider_registry_entry_count"] = len(review.registry_entries)
+        self.metrics["latest_provider_adapter_skeleton_count"] = len(review.adapter_specs)
+        self.metrics["latest_provider_capability_matrix_count"] = 1 if review.capability_matrix else 0
+        self.metrics["latest_provider_unsafe_count"] = review.capability_matrix.unsafe_provider_count if review.capability_matrix else 0
+        self.metrics["latest_provider_selector_request_count"] = 0
+        self.metrics["latest_provider_network_fetch_violation_count"] = 1 if review.context.provider_network_fetch_enabled_now else 0
+        self.metrics["latest_provider_scraping_violation_count"] = 1 if review.context.scraping_enabled else 0
+        self.metrics["latest_phase106_execution_violation_count"] = 1 if review.context.activation_allowed else 0
+
     def update_dry_admission_gate_metrics(self, payload: dict):
         self.metrics["latest_dry_admission_gate_count"] = self.metrics.get("latest_dry_admission_gate_count", 0) + 1
         if payload.get("blocked", False):

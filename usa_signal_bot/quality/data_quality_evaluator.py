@@ -106,3 +106,26 @@ def evaluate_core_runtime_acceptance_quality(payload: Any) -> QualityScorecard:
     else:
         scorecard.phase105_non_execution_compliance_score = 100.0
     return scorecard
+
+def evaluate_provider_abstraction_quality(review: Any) -> QualityScorecard:
+    scorecard = QualityScorecard(scorecard_id="qs_provider_106")
+    scorecard.phase106_provider_abstraction_score = 100.0 if review.context.provider_abstraction_ready else 0.0
+    scorecard.phase106_provider_registry_score = 100.0 if len(review.registry_entries) > 0 else 0.0
+    scorecard.phase106_provider_capability_matrix_score = 100.0 if review.capability_matrix and review.capability_matrix.matrix_valid else 0.0
+    scorecard.phase106_provider_safety_score = 0.0 if review.capability_matrix and review.capability_matrix.unsafe_provider_count > 0 else 100.0
+
+    compliance = True
+    if review.context.network_fetch_enabled_now: compliance = False
+    if review.context.provider_network_fetch_required: compliance = False
+    if review.context.paid_api_enabled: compliance = False
+    if review.context.scraping_enabled: compliance = False
+    if review.context.html_parse_enabled: compliance = False
+    if review.context.broker_execution_enabled: compliance = False
+    if review.context.order_creation_enabled: compliance = False
+    if review.context.paper_state_mutation_enabled: compliance = False
+    if review.context.telegram_real_send_enabled: compliance = False
+    if review.context.dashboard_enabled: compliance = False
+    if getattr(review.context, 'credential_required_now', False): compliance = False
+
+    scorecard.phase106_non_execution_compliance_score = 100.0 if compliance else 0.0
+    return scorecard

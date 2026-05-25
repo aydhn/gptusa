@@ -13,3 +13,11 @@ data/backtests/
 data/reports/
 .pytest_cache/
 __pycache__/
+*.pyc
+__pycache__/
+
+# phase 106 scripts
+update_*.py
+generate_*.py
+plan_step_*.py
+plan_script.py
