@@ -2008,3 +2008,105 @@ class ProviderCacheConfig:
     warn_not_investment_advice: bool = True
     warn_phase108_is_not_activation: bool = True
     warn_no_real_network_in_tests: bool = True
+
+@dataclass
+class Phase109ScoringPolicyConfig:
+    completeness_weight: float = 0.20
+    freshness_weight: float = 0.15
+    schema_validity_weight: float = 0.20
+    continuity_weight: float = 0.15
+    source_agreement_weight: float = 0.15
+    outlier_profile_weight: float = 0.05
+    cache_reliability_weight: float = 0.05
+    safety_compliance_weight: float = 0.05
+    block_on_safety_score_zero: bool = True
+    block_on_schema_invalid: bool = True
+
+    def __post_init__(self):
+        total_weight = sum([
+            self.completeness_weight,
+            self.freshness_weight,
+            self.schema_validity_weight,
+            self.continuity_weight,
+            self.source_agreement_weight,
+            self.outlier_profile_weight,
+            self.cache_reliability_weight,
+            self.safety_compliance_weight
+        ])
+        if abs(total_weight - 1.0) > 0.01:
+            raise ValueError("Scoring policy weights must sum to approximately 1.0")
+
+@dataclass
+class Phase109SelectionPolicyConfig:
+    research_data_only: bool = True
+    produce_trade_signals: bool = False
+    produce_order_decisions: bool = False
+    allow_network: bool = False
+    allow_paid_api: bool = False
+    allow_scraping: bool = False
+    allow_html_parsing: bool = False
+    allow_broker: bool = False
+    allow_order: bool = False
+    allow_paper_mutation: bool = False
+    allow_telegram_real_send: bool = False
+    allow_dashboard: bool = False
+
+    def __post_init__(self):
+        if not self.research_data_only:
+            raise ValueError("research_data_only must be true")
+        if self.produce_trade_signals:
+            raise ValueError("produce_trade_signals must be false")
+        if self.produce_order_decisions:
+            raise ValueError("produce_order_decisions must be false")
+        if self.allow_network:
+            raise ValueError("allow_network must be false")
+        if self.allow_paid_api:
+            raise ValueError("allow_paid_api must be false")
+        if self.allow_scraping:
+            raise ValueError("allow_scraping must be false")
+        if self.allow_html_parsing:
+            raise ValueError("allow_html_parsing must be false")
+        if self.allow_broker:
+            raise ValueError("allow_broker must be false")
+        if self.allow_order:
+            raise ValueError("allow_order must be false")
+        if self.allow_paper_mutation:
+            raise ValueError("allow_paper_mutation must be false")
+        if self.allow_telegram_real_send:
+            raise ValueError("allow_telegram_real_send must be false")
+        if self.allow_dashboard:
+            raise ValueError("allow_dashboard must be false")
+
+@dataclass
+class Phase109NotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    preview_only: bool = True
+    telegram_real_send: bool = False
+
+    def __post_init__(self):
+        if self.telegram_real_send:
+            raise ValueError("telegram_real_send must be false")
+
+@dataclass
+class ProviderQualityConfig:
+    enabled: bool = True
+    current_phase: int = 109
+    final_phase: int = 160
+    require_phase108_provider_cache: bool = True
+    data_quality_scoring_enabled: bool = True
+    source_trust_model_enabled: bool = True
+    provider_selection_scoring_enabled: bool = True
+    provider_ranking_enabled: bool = True
+    write_provider_quality_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_phase109_is_not_activation: bool = True
+    warn_scores_are_not_trade_signals: bool = True
+
+    def __post_init__(self):
+        if self.current_phase != 109:
+            raise ValueError("current_phase must be 109")
+        if self.final_phase != 160:
+            raise ValueError("final_phase must be 160")
+        if not self.require_phase108_provider_cache:
+            raise ValueError("require_phase108_provider_cache must be true")

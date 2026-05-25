@@ -1717,3 +1717,49 @@ zero_mutation_audit:
   require_after_baseline: true
   require_before_baseline: true
   require_hash_unchanged: true
+
+provider_quality:
+  enabled: true
+  current_phase: 109
+  final_phase: 160
+  require_phase108_provider_cache: true
+  data_quality_scoring_enabled: true
+  source_trust_model_enabled: true
+  provider_selection_scoring_enabled: true
+  provider_ranking_enabled: true
+  write_provider_quality_reports: true
+  warn_not_investment_advice: true
+  warn_phase109_is_not_activation: true
+  warn_scores_are_not_trade_signals: true
+
+phase109_scoring_policy:
+  completeness_weight: 0.20
+  freshness_weight: 0.15
+  schema_validity_weight: 0.20
+  continuity_weight: 0.15
+  source_agreement_weight: 0.15
+  outlier_profile_weight: 0.05
+  cache_reliability_weight: 0.05
+  safety_compliance_weight: 0.05
+  block_on_safety_score_zero: true
+  block_on_schema_invalid: true
+
+phase109_selection_policy:
+  research_data_only: true
+  produce_trade_signals: false
+  produce_order_decisions: false
+  allow_network: false
+  allow_paid_api: false
+  allow_scraping: false
+  allow_html_parsing: false
+  allow_broker: false
+  allow_order: false
+  allow_paper_mutation: false
+  allow_telegram_real_send: false
+  allow_dashboard: false
+
+phase109_notifications:
+  enabled: true
+  dry_run: true
+  preview_only: true
+  telegram_real_send: false
