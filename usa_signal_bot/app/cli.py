@@ -2025,3 +2025,29 @@ def readiness_gate(write):
     manager = RuntimeLifecycleManager()
     ctx = manager.run_lifecycle_dry_run()
     click.echo(f"Gate Decision: {ctx.decision.value}")
+
+def setup_phase106_provider_parsers(subparsers):
+    cmds = [
+        "provider-abstraction-info",
+        "provider-ingest-kickoff-gate",
+        "provider-catalog",
+        "provider-registry",
+        "provider-capability-matrix",
+        "provider-safety-policy",
+        "provider-selector",
+        "provider-fallback-plan",
+        "provider-request-plan",
+        "provider-response-normalizer",
+        "provider-schema-mapper",
+        "provider-adapter-validate",
+        "provider-registry-validate",
+        "provider-safety-validate",
+        "provider-abstraction-context",
+        "provider-abstraction-review",
+        "provider-abstraction-summary",
+        "provider-abstraction-validate"
+    ]
+    for c in cmds:
+        p = subparsers.add_parser(c, help=f"Phase 106: {c}")
+        p.add_argument("--write", action="store_true", help="Write to storage")
+        p.set_defaults(func=lambda args: print(f"Executed {c} (Phase 106 is metadata only. No real fetch occurs.)"))

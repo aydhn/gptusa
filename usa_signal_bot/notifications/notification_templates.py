@@ -220,3 +220,12 @@ def format_data_provider_kickoff_gate_warning_message(gate: Any) -> Any:
 
 def notifications_from_core_runtime_acceptance_review(review: Any) -> list:
     return ["Phase 105: Core Runtime Consolidation Acceptance Review"]
+
+def format_data_provider_abstraction_report_message(review: Any) -> NotificationMessage:
+    return NotificationMessage(content=f"Phase 106 Provider Abstraction Review {review.review_id}")
+
+def format_provider_safety_warning_message(context: Any) -> NotificationMessage:
+    return NotificationMessage(content=f"Phase 106 Safety Warning for Context {context.context_id}")
+
+def notifications_from_provider_abstraction_review(review: Any) -> list[NotificationMessage]:
+    return [format_data_provider_abstraction_report_message(review)]

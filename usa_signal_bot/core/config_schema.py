@@ -1765,6 +1765,97 @@ class Phase104NotificationsConfig:
     preview_only: bool = True
     telegram_real_send: bool = False
 
+
+
+@dataclass
+class DataProviderAbstractionConfig:
+    enabled: bool = True
+    current_phase: int = 106
+    final_phase: int = 160
+    require_phase105_provider_kickoff_gate: bool = True
+    skeleton_only: bool = True
+    metadata_only: bool = True
+    provider_registry_enabled: bool = True
+    provider_selector_enabled: bool = True
+    fallback_plan_enabled: bool = True
+    write_provider_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_phase106_is_not_activation: bool = True
+    warn_no_real_fetch_required: bool = True
+
+    def __post_init__(self):
+        if self.current_phase != 106:
+            raise ValueError("current_phase must be 106")
+        if self.final_phase != 160:
+            raise ValueError("final_phase must be 160")
+        if not self.require_phase105_provider_kickoff_gate:
+            raise ValueError("require_phase105_provider_kickoff_gate must be true")
+        if not self.skeleton_only:
+            raise ValueError("skeleton_only must be true")
+        if not self.metadata_only:
+            raise ValueError("metadata_only must be true")
+
+@dataclass
+class Phase106ProviderSafetyConfig:
+    metadata_only_by_default: bool = True
+    network_fetch_enabled_now: bool = False
+    provider_network_fetch_required: bool = False
+    paid_api_enabled: bool = False
+    scraping_enabled: bool = False
+    html_parse_enabled: bool = False
+    broker_execution_enabled: bool = False
+    order_creation_enabled: bool = False
+    paper_state_mutation_enabled: bool = False
+    telegram_real_send_enabled: bool = False
+    dashboard_enabled: bool = False
+    credential_required_now: bool = False
+
+    def __post_init__(self):
+        if self.network_fetch_enabled_now:
+            raise ValueError("network_fetch_enabled_now must be false")
+        if self.provider_network_fetch_required:
+            raise ValueError("provider_network_fetch_required must be false")
+        if self.paid_api_enabled:
+            raise ValueError("paid_api_enabled must be false")
+        if self.scraping_enabled:
+            raise ValueError("scraping_enabled must be false")
+        if self.html_parse_enabled:
+            raise ValueError("html_parse_enabled must be false")
+        if self.broker_execution_enabled:
+            raise ValueError("broker_execution_enabled must be false")
+        if self.order_creation_enabled:
+            raise ValueError("order_creation_enabled must be false")
+        if self.paper_state_mutation_enabled:
+            raise ValueError("paper_state_mutation_enabled must be false")
+        if self.telegram_real_send_enabled:
+            raise ValueError("telegram_real_send_enabled must be false")
+        if self.dashboard_enabled:
+            raise ValueError("dashboard_enabled must be false")
+        if self.credential_required_now:
+            raise ValueError("credential_required_now must be false")
+
+@dataclass
+class Phase106ProviderRegistryConfig:
+    yfinance_skeleton_enabled: bool = True
+    stooq_skeleton_enabled: bool = True
+    nasdaq_data_link_skeleton_enabled: bool = True
+    fred_skeleton_enabled: bool = True
+    sec_company_facts_skeleton_enabled: bool = True
+    local_csv_skeleton_enabled: bool = True
+    default_market_data_provider: str = "YFINANCE"
+    default_selector_mode: str = "METADATA_ONLY"
+
+@dataclass
+class Phase106NotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    preview_only: bool = True
+    telegram_real_send: bool = False
+
+    def __post_init__(self):
+        if self.telegram_real_send:
+            raise ValueError("telegram_real_send must be false")
+
 @dataclass
 class Config:
 
@@ -1788,6 +1879,11 @@ class Config:
     paper_mode_simulation_preflight: PaperModeSimulationPreflightConfig = field(default_factory=PaperModeSimulationPreflightConfig)
     no_write_admission_safety: NoWriteAdmissionSafetyConfig = field(default_factory=NoWriteAdmissionSafetyConfig)
     paper_no_write_admission_notifications: PaperNoWriteAdmissionNotificationsConfig = field(default_factory=PaperNoWriteAdmissionNotificationsConfig)
+
+        data_provider_abstraction: DataProviderAbstractionConfig = field(default_factory=DataProviderAbstractionConfig)
+    phase106_provider_safety: Phase106ProviderSafetyConfig = field(default_factory=Phase106ProviderSafetyConfig)
+    phase106_provider_registry: Phase106ProviderRegistryConfig = field(default_factory=Phase106ProviderRegistryConfig)
+    phase106_notifications: Phase106NotificationsConfig = field(default_factory=Phase106NotificationsConfig)
 
     def validate(self) -> None:
         pass

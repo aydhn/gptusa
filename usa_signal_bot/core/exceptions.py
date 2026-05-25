@@ -1275,3 +1275,20 @@ class CoreRuntimeAcceptanceSafetyError(CoreRuntimeAcceptanceError): pass
 class CoreRuntimeAcceptanceStorageError(CoreRuntimeAcceptanceError): pass
 class CoreRuntimeAcceptanceValidationError(CoreRuntimeAcceptanceError): pass
 class CoreRuntimeAcceptanceReportingError(CoreRuntimeAcceptanceError): pass
+
+class DataProviderAbstractionError(Exception): pass
+class ProviderKickoffGateIngestionError(Exception): pass
+class ProviderRegistryError(Exception): pass
+class ProviderCapabilityMatrixError(Exception): pass
+class ProviderSafetyPolicyError(Exception): pass
+class ProviderSelectorError(Exception): pass
+class ProviderFallbackPlanError(Exception): pass
+class ProviderRequestPlannerError(Exception): pass
+class ProviderResponseNormalizerError(Exception): pass
+class ProviderSchemaMapperError(Exception): pass
+class ProviderAdapterValidationError(Exception): pass
+class ProviderRegistryValidationError(Exception): pass
+class ProviderSafetyValidationError(Exception): pass
+class ProviderStoreError(Exception): pass
+class ProviderValidationError(Exception): pass
+class ProviderReportingError(Exception): pass

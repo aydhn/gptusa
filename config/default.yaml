@@ -1611,3 +1611,48 @@ phase105_notifications:
   dry_run: true
   preview_only: true
   telegram_real_send: false
+
+data_provider_abstraction:
+  enabled: true
+  current_phase: 106
+  final_phase: 160
+  require_phase105_provider_kickoff_gate: true
+  skeleton_only: true
+  metadata_only: true
+  provider_registry_enabled: true
+  provider_selector_enabled: true
+  fallback_plan_enabled: true
+  write_provider_reports: true
+  warn_not_investment_advice: true
+  warn_phase106_is_not_activation: true
+  warn_no_real_fetch_required: true
+
+phase106_provider_safety:
+  metadata_only_by_default: true
+  network_fetch_enabled_now: false
+  provider_network_fetch_required: false
+  paid_api_enabled: false
+  scraping_enabled: false
+  html_parse_enabled: false
+  broker_execution_enabled: false
+  order_creation_enabled: false
+  paper_state_mutation_enabled: false
+  telegram_real_send_enabled: false
+  dashboard_enabled: false
+  credential_required_now: false
+
+phase106_provider_registry:
+  yfinance_skeleton_enabled: true
+  stooq_skeleton_enabled: true
+  nasdaq_data_link_skeleton_enabled: true
+  fred_skeleton_enabled: true
+  sec_company_facts_skeleton_enabled: true
+  local_csv_skeleton_enabled: true
+  default_market_data_provider: "YFINANCE"
+  default_selector_mode: "METADATA_ONLY"
+
+phase106_notifications:
+  enabled: true
+  dry_run: true
+  preview_only: true
+  telegram_real_send: false
