@@ -1226,3 +1226,46 @@ phase104_notifications:
   dry_run: true
   preview_only: true
   telegram_real_send: false
+
+data_provider_runtime:
+  enabled: true
+  current_phase: 107
+  final_phase: 160
+  require_phase106_provider_abstraction: true
+  provider_runtime_ready: true
+  adapter_contract_tests_enabled: true
+  cache_aware_dry_run_enabled: true
+  write_provider_runtime_reports: true
+  warn_not_investment_advice: true
+  warn_phase107_is_not_activation: true
+  warn_no_real_network_in_tests: true
+
+phase107_fetch_policy:
+  dry_run_only: true
+  metadata_only_default: true
+  cache_lookup_dry_run_allowed: true
+  local_fixture_read_allowed: true
+  network_enabled_by_default: false
+  paid_api_enabled: false
+  scraping_enabled: false
+  html_parse_enabled: false
+  broker_execution_enabled: false
+  order_creation_enabled: false
+  paper_state_mutation_enabled: false
+  telegram_real_send_enabled: false
+  dashboard_enabled: false
+  credential_required_now: false
+
+phase107_provider_adapters:
+  yfinance_adapter_enabled: true
+  stooq_adapter_enabled: true
+  local_csv_adapter_enabled: true
+  yfinance_network_default: false
+  stooq_network_default: false
+  local_csv_network_default: false
+
+phase107_notifications:
+  enabled: true
+  dry_run: true
+  preview_only: true
+  telegram_real_send: false

@@ -117,3 +117,16 @@ class MetricsCollector:
         self.metrics["latest_phase105_missing_evidence_count"] = self.metrics.get("latest_phase105_missing_evidence_count", 0) + payload.get("missing_evidence_count", 0)
         self.metrics["latest_phase105_stale_evidence_count"] = self.metrics.get("latest_phase105_stale_evidence_count", 0) + payload.get("stale_evidence_count", 0)
         self.metrics["latest_phase105_execution_violation_count"] = self.metrics.get("latest_phase105_execution_violation_count", 0) + payload.get("execution_violation_count", 0)
+
+
+    # Phase 107
+    latest_provider_runtime_context_count: int = 0
+    latest_provider_runtime_ready_count: int = 0
+    latest_provider_runtime_adapter_spec_count: int = 0
+    latest_provider_contract_test_count: int = 0
+    latest_provider_contract_test_failed_count: int = 0
+    latest_provider_fetch_dry_run_count: int = 0
+    latest_provider_fetch_dry_run_pass_count: int = 0
+    latest_provider_cache_lookup_dry_run_count: int = 0
+    latest_provider_network_violation_count: int = 0
+    latest_phase107_execution_violation_count: int = 0

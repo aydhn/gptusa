@@ -229,3 +229,17 @@ def format_provider_safety_warning_message(context: Any) -> NotificationMessage:
 
 def notifications_from_provider_abstraction_review(review: Any) -> list[NotificationMessage]:
     return [format_data_provider_abstraction_report_message(review)]
+
+
+# Phase 107
+def format_provider_runtime_report_message(review: Any) -> Any:
+    pass
+
+def format_provider_contract_test_warning_message(report: Any) -> Any:
+    pass
+
+def format_provider_fetch_dry_run_warning_message(results: Any) -> Any:
+    pass
+
+def notifications_from_provider_runtime_review(review: Any) -> Any:
+    pass

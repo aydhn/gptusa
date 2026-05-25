@@ -1292,3 +1292,46 @@ class ProviderSafetyValidationError(Exception): pass
 class ProviderStoreError(Exception): pass
 class ProviderValidationError(Exception): pass
 class ProviderReportingError(Exception): pass
+
+
+class DataProviderRuntimeError(Exception):
+    pass
+
+class ProviderAbstractionIngestionError(DataProviderRuntimeError):
+    pass
+
+class ProviderCacheKeyError(DataProviderRuntimeError):
+    pass
+
+class ProviderCacheLookupDryRunError(DataProviderRuntimeError):
+    pass
+
+class ProviderFetchDryRunPlannerError(DataProviderRuntimeError):
+    pass
+
+class ProviderFetchDryRunExecutorError(DataProviderRuntimeError):
+    pass
+
+class ProviderRuntimeRegistryError(DataProviderRuntimeError):
+    pass
+
+class ProviderRuntimePolicyError(DataProviderRuntimeError):
+    pass
+
+class ProviderRuntimeValidationError(DataProviderRuntimeError):
+    pass
+
+class ProviderContractTestRunnerError(DataProviderRuntimeError):
+    pass
+
+class ProviderFixtureFactoryError(DataProviderRuntimeError):
+    pass
+
+class OhlcvSchemaValidationError(DataProviderRuntimeError):
+    pass
+
+class ProviderRuntimeStoreError(DataProviderRuntimeError):
+    pass
+
+class ProviderRuntimeReportingError(DataProviderRuntimeError):
+    pass
