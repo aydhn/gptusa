@@ -274,3 +274,15 @@ def format_refresh_plan_warning_message(report) -> str:
 
 def notifications_from_provider_orchestration_review(review) -> list[str]:
     return [format_provider_orchestration_report_message(review)]
+
+def format_event_metadata_report_message(review: Any) -> Any:
+    return "Event metadata report formatted"
+
+def format_event_schedule_warning_message(schedule: Any) -> Any:
+    return "Event schedule warning formatted"
+
+def format_news_metadata_warning_message(items: list) -> Any:
+    return "News metadata warning formatted"
+
+def notifications_from_event_metadata_review(review: Any) -> list:
+    return []

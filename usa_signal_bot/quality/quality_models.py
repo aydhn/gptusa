@@ -15,6 +15,12 @@ class QualityScorecard:
     module_inventory_score: float = 0.0
     config_consolidation_score: float = 0.0
     phase101_non_execution_compliance_score: float = 0.0
+    phase111_event_metadata_score: float = 0.0
+    phase111_macro_metadata_score: float = 0.0
+    phase111_calendar_metadata_score: float = 0.0
+    phase111_news_metadata_score: float = 0.0
+    phase111_event_schedule_score: float = 0.0
+    phase111_non_execution_compliance_score: float = 0.0
 
     phase105_core_runtime_acceptance_score: float = 0.0
     phase105_foundation_freeze_score: float = 0.0

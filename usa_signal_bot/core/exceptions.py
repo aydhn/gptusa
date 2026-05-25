@@ -1478,3 +1478,23 @@ class ProviderOrchestrationValidationError(ProviderOrchestrationError):
 
 class ProviderOrchestrationReportingError(ProviderOrchestrationError):
     pass
+
+class EventMetadataError(UsaSignalBotError): pass
+class ProviderOrchestrationIngestionError(EventMetadataError): pass
+class MacroMetadataCatalogError(EventMetadataError): pass
+class EconomicCalendarSkeletonError(EventMetadataError): pass
+class EarningsCalendarSkeletonError(EventMetadataError): pass
+class CorporateActionsSkeletonError(EventMetadataError): pass
+class NewsMetadataSkeletonError(EventMetadataError): pass
+class EventScheduleNormalizerError(EventMetadataError): pass
+class EventDeduplicationError(EventMetadataError): pass
+class EventTimezoneNormalizerError(EventMetadataError): pass
+class EventImportanceError(EventMetadataError): pass
+class EventAvailabilityCheckerError(EventMetadataError): pass
+class EventFixtureFactoryError(EventMetadataError): pass
+class EventScheduleBuilderError(EventMetadataError): pass
+class EventScheduleIndexError(EventMetadataError): pass
+class EventMetadataValidationError(EventMetadataError): pass
+class EventScheduleSafetyValidationError(EventMetadataError): pass
+class EventMetadataStoreError(EventMetadataError): pass
+class EventMetadataReportingError(EventMetadataError): pass

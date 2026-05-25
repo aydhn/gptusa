@@ -13,6 +13,15 @@ def main():
     elif len(sys.argv) > 1 and sys.argv[1] == "normalized-runtime-registry":
         from usa_signal_bot.advanced_runtime.normalized_runtime_registry import build_default_normalized_runtime_registry
         print(f"Registry: {build_default_normalized_runtime_registry().registry_id}")
+    elif len(sys.argv) > 1 and sys.argv[1] == "event-metadata-info":
+        print("Phase 111 is metadata skeleton. No activation. Events are not trade signals.")
+        sys.exit(0)
+    elif len(sys.argv) > 1 and sys.argv[1] == "macro-metadata-catalog":
+        print("Macro metadata catalog")
+        sys.exit(0)
+    elif len(sys.argv) > 1 and sys.argv[1] == "event-metadata-review":
+        print("Event metadata review")
+        sys.exit(0)
         sys.exit(0)
     elif len(sys.argv) > 1 and sys.argv[1] == "runtime-registry-review":
         from usa_signal_bot.advanced_runtime.runtime_registry_report import build_runtime_registry_full_review
@@ -67,6 +76,16 @@ def main():
         sys.exit(0)
 
     # Let click handle if arguments are valid cli commands
+
+    elif len(sys.argv) > 1 and sys.argv[1] == "event-metadata-info":
+        print("Phase 111 is metadata skeleton. No activation. Events are not trade signals.")
+        sys.exit(0)
+    elif len(sys.argv) > 1 and sys.argv[1] == "macro-metadata-catalog":
+        print("Macro metadata catalog")
+        sys.exit(0)
+    elif len(sys.argv) > 1 and sys.argv[1] == "event-metadata-review":
+        print("Event metadata review")
+        sys.exit(0)
     try:
         cli()
     except Exception:
