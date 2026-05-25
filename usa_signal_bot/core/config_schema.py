@@ -2204,3 +2204,60 @@ class Phase111NotificationsConfig:
 
     def __post_init__(self):
         if self.telegram_real_send: raise ValueError()
+
+
+@dataclass
+class EventImpactConfig:
+    enabled: bool = True
+    current_phase: int = 112
+    final_phase: int = 160
+    require_phase111_event_metadata: bool = True
+    event_impact_tagging_enabled: bool = True
+    macro_regime_metadata_enabled: bool = True
+    calendar_aware_validation_enabled: bool = True
+    write_event_impact_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_phase112_is_not_activation: bool = True
+    warn_impact_tags_are_not_trade_signals: bool = True
+
+@dataclass
+class Phase112ImpactPolicyConfig:
+    metadata_only: bool = True
+    research_context_only: bool = True
+    allow_network: bool = False
+    allow_paid_api: bool = False
+    allow_scraping: bool = False
+    allow_html_parsing: bool = False
+    allow_broker: bool = False
+    allow_order: bool = False
+    allow_paper_mutation: bool = False
+    allow_telegram_real_send: bool = False
+    allow_dashboard: bool = False
+    produce_trade_signals: bool = False
+    produce_order_decisions: bool = False
+
+@dataclass
+class Phase112MacroRegimeConfig:
+    enabled: bool = True
+    metadata_only: bool = True
+    research_context_only: bool = True
+    produce_trade_signals: bool = False
+    produce_order_decisions: bool = False
+
+@dataclass
+class Phase112CalendarValidationConfig:
+    enabled: bool = True
+    metadata_only: bool = True
+    research_context_only: bool = True
+    price_jump_threshold_pct: float = 8.0
+    volume_multiplier_threshold: float = 3.0
+    explain_with_event_context: bool = True
+    produce_trade_signals: bool = False
+    produce_order_decisions: bool = False
+
+@dataclass
+class Phase112NotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    preview_only: bool = True
+    telegram_real_send: bool = False

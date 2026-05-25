@@ -2432,3 +2432,99 @@ def event_metadata_summary():
 def event_metadata_validate():
     """Phase 111 event metadata validate"""
     click.echo("Event metadata validate")
+
+
+import click
+
+@click.command(name="event-impact-info")
+def event_impact_info():
+    click.echo("Phase 112 Event Impact - Metadata only. Not activation. Tags are not trade signals.")
+
+@click.command(name="event-impact-ingest-metadata")
+def event_impact_ingest_metadata():
+    click.echo("Mock ingest metadata")
+
+@click.command(name="event-impact-policy")
+def event_impact_policy():
+    click.echo("Mock policy")
+
+@click.command(name="event-impact-tags")
+def event_impact_tags():
+    click.echo("Mock tags")
+
+@click.command(name="macro-impact-classify")
+def macro_impact_classify():
+    click.echo("Mock macro classify")
+
+@click.command(name="earnings-impact-classify")
+def earnings_impact_classify():
+    click.echo("Mock earnings classify")
+
+@click.command(name="corporate-action-impact-classify")
+def corporate_action_impact_classify():
+    click.echo("Mock corporate action classify")
+
+@click.command(name="news-metadata-impact-classify")
+def news_metadata_impact_classify():
+    click.echo("Mock news metadata classify")
+
+@click.command(name="symbol-event-exposure")
+def symbol_event_exposure():
+    click.echo("Mock exposure")
+
+@click.command(name="macro-regime-metadata")
+def macro_regime_metadata():
+    click.echo("Mock macro regime")
+
+@click.command(name="regime-label-normalize")
+def regime_label_normalize():
+    click.echo("Mock label normalize")
+
+@click.command(name="calendar-gap-validate")
+def calendar_gap_validate():
+    click.echo("Mock gap validate")
+
+@click.command(name="calendar-price-jump-validate")
+def calendar_price_jump_validate():
+    click.echo("Mock price jump validate")
+
+@click.command(name="calendar-volume-anomaly-validate")
+def calendar_volume_anomaly_validate():
+    click.echo("Mock volume anomaly validate")
+
+@click.command(name="calendar-timestamp-validate")
+def calendar_timestamp_validate():
+    click.echo("Mock timestamp validate")
+
+@click.command(name="calendar-quality-explanation")
+def calendar_quality_explanation():
+    click.echo("Mock quality explanation")
+
+@click.command(name="calendar-aware-validation")
+def calendar_aware_validation():
+    click.echo("Mock aware validation")
+
+@click.command(name="event-impact-safety-check")
+def event_impact_safety_check():
+    click.echo("Mock safety check")
+
+@click.command(name="calendar-validation-safety-check")
+def calendar_validation_safety_check():
+    click.echo("Mock calendar safety check")
+
+@click.command(name="event-impact-context")
+def event_impact_context():
+    click.echo("Mock context")
+
+@click.command(name="event-impact-review")
+@click.option("--write", is_flag=True, default=False)
+def event_impact_review(write):
+    click.echo(f"Mock review, write={write}")
+
+@click.command(name="event-impact-summary")
+def event_impact_summary():
+    click.echo("Mock summary")
+
+@click.command(name="event-impact-validate")
+def event_impact_validate():
+    click.echo("Mock validate")
