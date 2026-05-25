@@ -1,16 +1,17 @@
+import abc
+from typing import Any, Dict
 
-from typing import Any
-from usa_signal_bot.data_providers.interfaces.base import BaseDataProvider
+from usa_signal_bot.data_providers.interfaces.base import DataProviderAdapterBase
 
-class MarketDataProviderBase(BaseDataProvider):
-    def build_daily_ohlcv_request(self, symbol: str) -> dict[str, Any]:
-        return {"action": "daily_ohlcv", "symbol": symbol}
+class MarketDataProviderBase(DataProviderAdapterBase):
+    @abc.abstractmethod
+    def build_daily_ohlcv_plan(self, symbol: str, start_date: str | None = None, end_date: str | None = None) -> Any:
+        pass
 
-    def build_intraday_ohlcv_request(self, symbol: str, interval: str) -> dict[str, Any]:
-        return {"action": "intraday_ohlcv", "symbol": symbol, "interval": interval}
+    @abc.abstractmethod
+    def execute_metadata_only(self, request_or_plan: Any) -> Dict[str, Any]:
+        pass
 
-    def supported_intervals(self) -> list[str]:
-        return ["1m", "5m", "15m", "1d"]
-
-    def canonical_schema(self) -> list[str]:
-        return ["symbol", "timestamp", "open", "high", "low", "close", "adjusted_close", "volume", "source", "fetched_at_utc", "quality_flags"]
+    @abc.abstractmethod
+    def normalize_sample(self, payload: Any | None = None) -> Dict[str, Any]:
+        pass

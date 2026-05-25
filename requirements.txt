@@ -2,3 +2,5 @@ PyYAML
 pytest
 yfinance
 pandas
+
+pandas

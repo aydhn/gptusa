@@ -129,3 +129,11 @@ def evaluate_provider_abstraction_quality(review: Any) -> QualityScorecard:
 
     scorecard.phase106_non_execution_compliance_score = 100.0 if compliance else 0.0
     return scorecard
+
+
+    # Phase 107
+    phase107_provider_runtime_score: float = 1.0
+    phase107_adapter_contract_score: float = 1.0
+    phase107_cache_aware_dry_run_score: float = 1.0
+    phase107_ohlcv_schema_score: float = 1.0
+    phase107_non_execution_compliance_score: float = 1.0
