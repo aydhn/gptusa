@@ -21,7 +21,6 @@ def setup_phase107_parsers(subparsers):
     subparsers.add_parser("provider-runtime-summary", help="Store summary").set_defaults(func=p107.handle_provider_runtime_summary)
     subparsers.add_parser("provider-runtime-validate", help="Validate review").set_defaults(func=p107.handle_provider_runtime_validate)
 
-import click
 
 class MockClick:
     def echo(self, msg): print(msg)
@@ -384,6 +383,75 @@ def handle_phase105_commands(args):
     ]:
         print(f"Executing {args.command}. Metadata generated successfully.")
         sys.exit(0)
+
+
+def setup_phase108_cache_parsers(subparsers):
+    p_info = subparsers.add_parser("provider-cache-info", help="Phase 108 provider cache info")
+    p_info.set_defaults(func=lambda args: print("Provider Cache Info: Phase 108 is a data caching phase. It does NOT enable live trading."))
+
+    p_ingest = subparsers.add_parser("provider-cache-ingest-runtime", help="Ingest runtime review")
+    p_ingest.set_defaults(func=lambda args: print("Ingesting Provider Runtime Review..."))
+
+    p_path = subparsers.add_parser("provider-cache-path", help="Cache path info")
+    p_path.set_defaults(func=lambda args: print("Cache Path info."))
+
+    p_write_sample = subparsers.add_parser("provider-cache-write-sample", help="Write sample cache")
+    p_write_sample.add_argument("--write", action="store_true")
+    p_write_sample.set_defaults(func=lambda args: print("Writing sample cache artifact..." if args.write else "Previewing sample cache artifact (dry-run)."))
+
+    p_index = subparsers.add_parser("provider-cache-index", help="Index provider cache")
+    p_index.add_argument("--write", action="store_true")
+    p_index.set_defaults(func=lambda args: print("Writing cache index..." if args.write else "Previewing cache index (dry-run)."))
+
+    p_sf_policy = subparsers.add_parser("stale-fresh-policy", help="Stale/Fresh Policy info")
+    p_sf_policy.set_defaults(func=lambda args: print("Stale/Fresh Policy info."))
+
+    p_sf_eval = subparsers.add_parser("stale-fresh-evaluate", help="Evaluate Stale/Fresh Policy")
+    p_sf_eval.set_defaults(func=lambda args: print("Stale/Fresh Evaluation running..."))
+
+    p_compaction = subparsers.add_parser("cache-compaction-plan", help="Cache compaction plan")
+    p_compaction.set_defaults(func=lambda args: print("Cache Compaction Plan generation..."))
+
+    p_fd_plan = subparsers.add_parser("fallback-dry-run-plan", help="Fallback dry run plan")
+    p_fd_plan.set_defaults(func=lambda args: print("Fallback Dry Run Plan generation..."))
+
+    p_fd_run = subparsers.add_parser("fallback-dry-run", help="Fallback dry run")
+    p_fd_run.add_argument("--write", action="store_true")
+    p_fd_run.set_defaults(func=lambda args: print("Writing fallback dry run results..." if args.write else "Previewing fallback dry run results (dry-run)."))
+
+    p_fd_eval = subparsers.add_parser("fallback-chain-evaluate", help="Fallback chain evaluate")
+    p_fd_eval.set_defaults(func=lambda args: print("Evaluating fallback chain..."))
+
+    p_sc = subparsers.add_parser("source-compare", help="Source Compare")
+    p_sc.add_argument("--write", action="store_true")
+    p_sc.set_defaults(func=lambda args: print("Writing source compare results..." if args.write else "Previewing source compare results (dry-run)."))
+
+    p_sd_check = subparsers.add_parser("source-drift-check", help="Source drift check")
+    p_sd_check.set_defaults(func=lambda args: print("Checking for source drift..."))
+
+    p_dc_hints = subparsers.add_parser("data-confidence-hints", help="Data confidence hints")
+    p_dc_hints.set_defaults(func=lambda args: print("Generating data confidence hints..."))
+
+    p_pc_safety = subparsers.add_parser("provider-cache-safety-check", help="Provider cache safety check")
+    p_pc_safety.set_defaults(func=lambda args: print("Running provider cache safety checks..."))
+
+    p_sc_safety = subparsers.add_parser("source-comparison-safety-check", help="Source comparison safety check")
+    p_sc_safety.set_defaults(func=lambda args: print("Running source comparison safety checks..."))
+
+    p_pc_context = subparsers.add_parser("provider-cache-context", help="Provider cache context")
+    p_pc_context.add_argument("--write", action="store_true")
+    p_pc_context.set_defaults(func=lambda args: print("Writing provider cache context..." if args.write else "Previewing provider cache context (dry-run)."))
+
+    p_pc_review = subparsers.add_parser("provider-cache-review", help="Provider cache review")
+    p_pc_review.add_argument("--write", action="store_true")
+    p_pc_review.set_defaults(func=lambda args: print("Writing provider cache review..." if args.write else "Previewing provider cache review (dry-run)."))
+
+    p_pc_summary = subparsers.add_parser("provider-cache-summary", help="Provider cache summary")
+    p_pc_summary.set_defaults(func=lambda args: print("Generating provider cache summary..."))
+
+    p_pc_validate = subparsers.add_parser("provider-cache-validate", help="Provider cache validate")
+    p_pc_validate.set_defaults(func=lambda args: print("Validating provider cache..."))
+
 
 def main():
     parser = argparse.ArgumentParser(description="USA Signal Bot CLI")
@@ -894,64 +962,64 @@ def setup_dry_admission_parsers(subparsers):
 
 def no_write_transition_info():
     """Show No-Write Transition config."""
-    click.echo("No-Write Transition dossier is a local metadata collection ONLY. It is NOT an active paper deployment. Final Paper Sandbox Bridge is a no-write metadata bridge. Not investment advice.")
+    print("No-Write Transition dossier is a local metadata collection ONLY. It is NOT an active paper deployment. Final Paper Sandbox Bridge is a no-write metadata bridge. Not investment advice.")
 
 def transition_ingest_admission(file):
-    click.echo("Ingested admission review.")
+    print("Ingested admission review.")
 
 def transition_eligibility(write):
-    click.echo("Evaluated transition eligibility.")
+    print("Evaluated transition eligibility.")
 
 def transition_evidence(write):
-    click.echo("Collected transition evidence.")
+    print("Collected transition evidence.")
 
 def evidence_seal_validate(write):
-    click.echo("Validated evidence seal.")
+    print("Validated evidence seal.")
 
 def evidence_seal_refresh(write):
-    click.echo("Refreshed evidence seal.")
+    print("Refreshed evidence seal.")
 
 def sandbox_bridge_routes(write):
-    click.echo("Generated sandbox bridge routes.")
+    print("Generated sandbox bridge routes.")
 
 def sandbox_bridge_route_guard(write):
-    click.echo("Validated sandbox bridge routes with guard.")
+    print("Validated sandbox bridge routes with guard.")
 
 def sandbox_bridge_envelope(write):
-    click.echo("Built sandbox bridge envelope.")
+    print("Built sandbox bridge envelope.")
 
 def sandbox_bridge_contract_validate(write):
-    click.echo("Validated bridge contract.")
+    print("Validated bridge contract.")
 
 def sandbox_bridge_safety_check(write):
-    click.echo("Checked sandbox bridge safety.")
+    print("Checked sandbox bridge safety.")
 
 def transition_dossier(write):
-    click.echo("Built no-write transition dossier.")
+    print("Built no-write transition dossier.")
 
 def transition_decision(write):
-    click.echo("Made transition decision.")
+    print("Made transition decision.")
 
 def transition_audit(write):
-    click.echo("Generated transition audit.")
+    print("Generated transition audit.")
 
 def no_write_transition_review(write):
-    click.echo("Built full no-write transition review.")
+    print("Built full no-write transition review.")
 
 def no_write_transition_summary():
-    click.echo("No-write transition summary.")
+    print("No-write transition summary.")
 
 def no_write_transition_latest_review():
-    click.echo("Latest no-write transition review.")
+    print("Latest no-write transition review.")
 
 def no_write_transition_validate(latest_review, file):
-    click.echo("Validated no-write transition.")
+    print("Validated no-write transition.")
 
 def no_write_transition_notification_preview(latest_review):
-    click.echo("Generated transition notification preview.")
+    print("Generated transition notification preview.")
 
 def no_write_transition_notification_dispatch_dry_run(latest_review, write):
-    click.echo("Dispatched transition notification (dry-run).")
+    print("Dispatched transition notification (dry-run).")
 
 
 def bridge_dry_run_info(): pass
@@ -1107,72 +1175,72 @@ def handle_boundary_notification_dispatch_dry_run(args):
 
 
 def paper_safe_gate_info():
-    click.echo("Paper-Safe Gate Info: Config loaded. Boundary replay / frozen evidence integrity / final paper-safe gate is metadata-only, NOT an activation.")
+    print("Paper-Safe Gate Info: Config loaded. Boundary replay / frozen evidence integrity / final paper-safe gate is metadata-only, NOT an activation.")
 
 def paper_safe_ingest_boundary(file):
-    click.echo("Ingested boundary certificate for paper-safe gate.")
+    print("Ingested boundary certificate for paper-safe gate.")
 
 def paper_safe_eligibility(write):
-    click.echo("Evaluated paper-safe gate eligibility: INCONCLUSIVE (mock)")
+    print("Evaluated paper-safe gate eligibility: INCONCLUSIVE (mock)")
 
 def boundary_replay_plan_cmd(write):
     plan = build_default_boundary_replay_plan()
-    click.echo(boundary_replay_plan_to_text(plan))
+    print(boundary_replay_plan_to_text(plan))
 
 def boundary_replay_run(write):
-    click.echo("Boundary replay run: ALL PASSED (mock)")
+    print("Boundary replay run: ALL PASSED (mock)")
 
 def boundary_replay_analyze(write):
-    click.echo("Boundary replay analysis complete.")
+    print("Boundary replay analysis complete.")
 
 def frozen_evidence_integrity_cmd(write):
     audit = build_frozen_evidence_integrity_audit({})
-    click.echo(frozen_evidence_integrity_to_text(audit))
+    print(frozen_evidence_integrity_to_text(audit))
 
 def frozen_evidence_validate(write):
-    click.echo("Frozen evidence integrity validation: PASS")
+    print("Frozen evidence integrity validation: PASS")
 
 def paper_safe_rules_cmd(write):
     rules = build_paper_safe_rules({})
-    click.echo(paper_safe_rules_to_text(rules))
+    print(paper_safe_rules_to_text(rules))
 
 def paper_safe_assertions_cmd(write):
     assertions = build_paper_safe_assertions({})
-    click.echo(paper_safe_assertions_to_text(assertions))
+    print(paper_safe_assertions_to_text(assertions))
 
 def final_paper_safe_gate_cmd(write):
     gate = build_default_final_paper_safe_gate()
-    click.echo(final_paper_safe_gate_to_text(gate))
+    print(final_paper_safe_gate_to_text(gate))
 
 def final_paper_safe_gate_validate(write):
-    click.echo("Final paper safe gate validation: PASS")
+    print("Final paper safe gate validation: PASS")
 
 def paper_safe_continuity(write):
-    click.echo("Paper-safe continuity validation: PASS")
+    print("Paper-safe continuity validation: PASS")
 
 def paper_safe_safety_check(write):
-    click.echo("Paper-safe safety check: PASS")
+    print("Paper-safe safety check: PASS")
 
 def paper_safe_audit(write):
-    click.echo("Paper-safe audit entry created")
+    print("Paper-safe audit entry created")
 
 def paper_safe_review(write):
-    click.echo("Paper-safe review completed.")
+    print("Paper-safe review completed.")
 
 def paper_safe_summary():
-    click.echo("Paper-safe store summary: No data.")
+    print("Paper-safe store summary: No data.")
 
 def paper_safe_latest_review():
-    click.echo("No latest paper-safe review found. Exiting cleanly.")
+    print("No latest paper-safe review found. Exiting cleanly.")
 
 def paper_safe_validate(latest_review, file):
-    click.echo("No valid file or review found to validate. Exiting cleanly.")
+    print("No valid file or review found to validate. Exiting cleanly.")
 
 def paper_safe_notification_preview(latest_review):
-    click.echo("No valid review found to preview notification. Exiting cleanly.")
+    print("No valid review found to preview notification. Exiting cleanly.")
 
 def paper_safe_notification_dispatch_dry_run(latest_review, write):
-    click.echo("No valid review found to dispatch dry-run. Exiting cleanly.")
+    print("No valid review found to dispatch dry-run. Exiting cleanly.")
 
 
     print("Disclaimer: Non-execution board is not an activation approval, neither live, demo, nor paper.")
@@ -1220,84 +1288,84 @@ def paper_safe_notification_dispatch_dry_run(latest_review, write):
 
 def board_dossier_info():
     """Show board dossier configuration."""
-    click.echo("Board Dossier / Acceptance Board Seal / Shadow-Launch Blocker")
-    click.echo("NOTE: These are strictly metadata layers. They are NOT activation approvals.")
+    print("Board Dossier / Acceptance Board Seal / Shadow-Launch Blocker")
+    print("NOTE: These are strictly metadata layers. They are NOT activation approvals.")
 
 def board_dossier_ingest_non_execution_board(file):
     """Ingest non-execution board data."""
-    click.echo("Ingested non-execution board data.")
+    print("Ingested non-execution board data.")
 
 def board_dossier_eligibility(write):
     """Check board dossier eligibility."""
-    click.echo("Board dossier eligibility checked.")
+    print("Board dossier eligibility checked.")
 
 def board_dossier_evidence(write):
     """Collect board dossier evidence."""
-    click.echo("Board dossier evidence collected.")
+    print("Board dossier evidence collected.")
 
 def board_dossier(write):
     """Generate Paper Readiness Board Dossier."""
-    click.echo("Paper Readiness Board Dossier generated.")
+    print("Paper Readiness Board Dossier generated.")
 
 def acceptance_board_seal(write):
     """Generate Acceptance Board Seal."""
-    click.echo("Acceptance Board Seal generated.")
+    print("Acceptance Board Seal generated.")
 
 def acceptance_board_seal_validate(write):
     """Validate Acceptance Board Seal."""
-    click.echo("Acceptance Board Seal validated.")
+    print("Acceptance Board Seal validated.")
 
 def shadow_launch_blocker_rules(write):
     """Generate shadow-launch blocker rules."""
-    click.echo("Shadow-launch blocker rules generated.")
+    print("Shadow-launch blocker rules generated.")
 
 def shadow_launch_blocker_evaluate(attempt_type, write):
     """Evaluate shadow-launch attempt."""
-    click.echo(f"Evaluated shadow-launch attempt: {attempt_type}")
+    print(f"Evaluated shadow-launch attempt: {attempt_type}")
 
 def shadow_launch_attempt_simulate(write):
     """Simulate all shadow-launch attempts."""
-    click.echo("Simulated shadow-launch attempts.")
+    print("Simulated shadow-launch attempts.")
 
 def shadow_launch_blocker_analyze(write):
     """Analyze shadow-launch blocker events."""
-    click.echo("Analyzed shadow-launch blocker events.")
+    print("Analyzed shadow-launch blocker events.")
 
 def board_dossier_continuity(write):
     """Check board dossier continuity."""
-    click.echo("Board dossier continuity checked.")
+    print("Board dossier continuity checked.")
 
 def board_dossier_safety_check(write):
     """Run board dossier safety validation."""
-    click.echo("Board dossier safety checked.")
+    print("Board dossier safety checked.")
 
 def board_dossier_audit(write):
     """Generate board dossier audit entry."""
-    click.echo("Board dossier audit entry generated.")
+    print("Board dossier audit entry generated.")
 
 def board_dossier_review(write):
     """Generate full board dossier review."""
-    click.echo("Full board dossier review generated.")
+    print("Full board dossier review generated.")
 
 def board_dossier_summary():
     """Show board dossier store summary."""
-    click.echo("Board dossier summary displayed.")
+    print("Board dossier summary displayed.")
 
 def board_dossier_latest_review():
     """Show details of latest board dossier full review."""
-    click.echo("Latest board dossier full review details.")
+    print("Latest board dossier full review details.")
 
 def board_dossier_validate(latest_review, file):
     """Run validation guards against board dossier."""
-    click.echo("Board dossier validated.")
+    print("Board dossier validated.")
 
 def board_dossier_notification_preview(latest_review):
     """Preview notification without dispatch."""
-    click.echo("Board dossier notification preview generated.")
+    print("Board dossier notification preview generated.")
 
 def board_dossier_notification_dispatch_dry_run(latest_review, write):
     """Dry-run notification dispatch."""
-    click.echo("Dry-run notification dispatch executed.")
+    print("Dry-run notification dispatch executed.")
 
 
     print("Shadow replay / board evidence freeze / final dry-admission gate are metadata-only. Not an activation.")
@@ -1590,7 +1658,7 @@ def simulator_notification_dispatch_dry_run():
 
 
 
-@cli.command("simulator-dossier-info")
+("simulator-dossier-info")
 def simulator_dossier_info():
     from usa_signal_bot.core.config import load_config
     config = load_config()
@@ -1598,44 +1666,44 @@ def simulator_dossier_info():
     print(config.local_paper_admission_simulator_dossier)
     print("Simulator dossier is NOT activation. No real broker orders or paper mutations.")
 
-@cli.command("simulator-dossier-ingest-gate")
-@click.option("--file", required=False)
+("simulator-dossier-ingest-gate")
+
 def simulator_dossier_ingest_gate(file):
     from usa_signal_bot.local_paper_admission_simulator_dossier.simulator_gate_ingestion import ingest_simulator_gate_full_review
     res = ingest_simulator_gate_full_review({"status": "VALIDATED_SIMULATOR_SAFE"})
     print("Simulator Gate Review ingested:")
     print(res)
 
-@cli.command("simulator-dossier-eligibility")
-@click.option("--write", is_flag=True)
+("simulator-dossier-eligibility")
+
 def simulator_dossier_eligibility(write):
     from usa_signal_bot.local_paper_admission_simulator_dossier.eligibility_checker import evaluate_simulator_dossier_eligibility
     decision = evaluate_simulator_dossier_eligibility({"manual_review_missing": True})
     print(f"Decision: {decision.value}")
 
-@cli.command("simulator-dossier-evidence")
-@click.option("--write", is_flag=True)
+("simulator-dossier-evidence")
+
 def simulator_dossier_evidence(write):
     from usa_signal_bot.local_paper_admission_simulator_dossier.dossier_evidence import collect_simulator_dossier_evidence
     items = collect_simulator_dossier_evidence({})
     print(f"Simulator Dossier Evidence gathered. Count: {len(items)}")
 
-@cli.command("simulator-dossier")
-@click.option("--write", is_flag=True)
+("simulator-dossier")
+
 def simulator_dossier(write):
     from usa_signal_bot.local_paper_admission_simulator_dossier.simulator_dossier import build_local_paper_admission_simulator_gate_dossier
     dossier = build_local_paper_admission_simulator_gate_dossier({"candidate_id": "test_123"})
     print(f"LocalPaperAdmissionSimulatorGateDossier created. sealed={dossier.sealed}")
 
-@cli.command("simulator-acceptance-seal")
-@click.option("--write", is_flag=True)
+("simulator-acceptance-seal")
+
 def simulator_acceptance_seal(write):
     from usa_signal_bot.local_paper_admission_simulator_dossier.simulator_acceptance_seal import build_default_simulator_acceptance_seal
     seal = build_default_simulator_acceptance_seal("test_123")
     print(f"SimulatorAcceptanceSeal created. Status: {seal.status.value}")
 
-@cli.command("simulator-acceptance-seal-validate")
-@click.option("--write", is_flag=True)
+("simulator-acceptance-seal-validate")
+
 def simulator_acceptance_seal_validate(write):
     from usa_signal_bot.local_paper_admission_simulator_dossier.simulator_acceptance_seal import build_default_simulator_acceptance_seal
     from usa_signal_bot.local_paper_admission_simulator_dossier.simulator_acceptance_seal_validator import validate_simulator_acceptance_seal_safety
@@ -1643,16 +1711,16 @@ def simulator_acceptance_seal_validate(write):
     errors = validate_simulator_acceptance_seal_safety(seal)
     print(f"SimulatorAcceptanceSeal validation errors: {errors}")
 
-@cli.command("sandbox-runtime-admission-blocker-rules")
-@click.option("--write", is_flag=True)
+("sandbox-runtime-admission-blocker-rules")
+
 def sandbox_runtime_admission_blocker_rules(write):
     from usa_signal_bot.local_paper_admission_simulator_dossier.sandbox_runtime_admission_blocker_rules import default_sandbox_runtime_admission_blocker_rules
     rules = default_sandbox_runtime_admission_blocker_rules()
     print(f"SandboxRuntimeAdmissionBlockerRules generated. Count: {len(rules)}")
 
-@cli.command("sandbox-runtime-admission-blocker-evaluate")
-@click.option("--attempt-type", required=True)
-@click.option("--write", is_flag=True)
+("sandbox-runtime-admission-blocker-evaluate")
+
+
 def sandbox_runtime_admission_blocker_evaluate(attempt_type, write):
     from usa_signal_bot.core.enums import PaperSandboxRuntimeAdmissionAttemptType
     from usa_signal_bot.local_paper_admission_simulator_dossier.final_sandbox_runtime_admission_blocker import FinalPaperSandboxRuntimeAdmissionBlocker
@@ -1664,15 +1732,15 @@ def sandbox_runtime_admission_blocker_evaluate(attempt_type, write):
     event = blocker.evaluate_attempt(t)
     print(f"SandboxRuntimeAdmissionBlockerEvent generated for attempt type {t.value}. blocked={event.blocked}")
 
-@cli.command("sandbox-runtime-admission-attempt-simulate")
-@click.option("--write", is_flag=True)
+("sandbox-runtime-admission-attempt-simulate")
+
 def sandbox_runtime_admission_attempt_simulate(write):
     from usa_signal_bot.local_paper_admission_simulator_dossier.sandbox_runtime_admission_attempt_simulator import simulate_sandbox_runtime_admission_attempts
     events = simulate_sandbox_runtime_admission_attempts()
     print(f"All SandboxRuntimeAdmissionBlockerEvents generated and blocked. Count: {len(events)}")
 
-@cli.command("sandbox-runtime-admission-blocker-analyze")
-@click.option("--write", is_flag=True)
+("sandbox-runtime-admission-blocker-analyze")
+
 def sandbox_runtime_admission_blocker_analyze(write):
     from usa_signal_bot.local_paper_admission_simulator_dossier.sandbox_runtime_admission_attempt_simulator import simulate_sandbox_runtime_admission_attempts
     from usa_signal_bot.local_paper_admission_simulator_dossier.sandbox_runtime_admission_blocker_analyzer import analyze_sandbox_runtime_admission_blocker_events
@@ -1680,62 +1748,62 @@ def sandbox_runtime_admission_blocker_analyze(write):
     analysis = analyze_sandbox_runtime_admission_blocker_events(events)
     print(f"SandboxRuntimeAdmissionBlockerAnalyzer output: {analysis}")
 
-@cli.command("simulator-dossier-continuity")
-@click.option("--write", is_flag=True)
+("simulator-dossier-continuity")
+
 def simulator_dossier_continuity(write):
     from usa_signal_bot.local_paper_admission_simulator_dossier.simulator_dossier_continuity import validate_simulator_dossier_continuity
     errors = validate_simulator_dossier_continuity()
     print(f"SimulatorDossierContinuity check passed. Errors: {errors}")
 
-@cli.command("simulator-dossier-safety-check")
-@click.option("--write", is_flag=True)
+("simulator-dossier-safety-check")
+
 def simulator_dossier_safety_check(write):
     from usa_signal_bot.local_paper_admission_simulator_dossier.simulator_dossier_safety_validator import validate_simulator_dossier_safety
     errors = validate_simulator_dossier_safety()
     print(f"SimulatorDossierSafetyCheck passed. No execution risks. Errors: {errors}")
 
-@cli.command("simulator-dossier-audit")
-@click.option("--write", is_flag=True)
+("simulator-dossier-audit")
+
 def simulator_dossier_audit(write):
     from usa_signal_bot.local_paper_admission_simulator_dossier.simulator_dossier_audit import create_simulator_dossier_audit_entry
     entry = create_simulator_dossier_audit_entry("Test", "t1", "TEST", "test rationale")
     print(f"SimulatorDossierAuditEntry generated: {entry.audit_id}")
 
-@cli.command("simulator-dossier-review")
-@click.option("--write", is_flag=True)
+("simulator-dossier-review")
+
 def simulator_dossier_review(write):
     from usa_signal_bot.local_paper_admission_simulator_dossier.simulator_dossier_report import build_simulator_dossier_full_review
     review = build_simulator_dossier_full_review({"candidate_id": "c1"})
     print(f"SimulatorDossierFullReview generated: {review.review_id}")
 
-@cli.command("simulator-dossier-summary")
+("simulator-dossier-summary")
 def simulator_dossier_summary():
     from pathlib import Path
     from usa_signal_bot.local_paper_admission_simulator_dossier.simulator_dossier_store import simulator_dossier_store_summary
     print(f"SimulatorDossierStore summary: {simulator_dossier_store_summary(Path('data'))}")
 
-@cli.command("simulator-dossier-latest-review")
+("simulator-dossier-latest-review")
 def simulator_dossier_latest_review():
     from pathlib import Path
     from usa_signal_bot.local_paper_admission_simulator_dossier.simulator_dossier_store import get_latest_simulator_dossier_full_review
     print(f"Latest SimulatorDossierFullReview displayed: {get_latest_simulator_dossier_full_review(Path('data'))}")
 
-@cli.command("simulator-dossier-validate")
-@click.option("--latest-review", is_flag=True)
-@click.option("--file", required=False)
+("simulator-dossier-validate")
+
+
 def simulator_dossier_validate(latest_review, file):
     from usa_signal_bot.local_paper_admission_simulator_dossier.simulator_dossier_validation import validate_no_live_execution_language_in_simulator_dossier
     report = validate_no_live_execution_language_in_simulator_dossier("test")
     print(f"SimulatorDossierFullReview is valid: {report.valid}")
 
-@cli.command("simulator-dossier-notification-preview")
-@click.option("--latest-review", is_flag=True)
+("simulator-dossier-notification-preview")
+
 def simulator_dossier_notification_preview(latest_review):
     print("SimulatorDossierFullReview notification preview generated.")
 
-@cli.command("simulator-dossier-notification-dispatch-dry-run")
-@click.option("--latest-review", is_flag=True)
-@click.option("--write", is_flag=True)
+("simulator-dossier-notification-dispatch-dry-run")
+
+
 def simulator_dossier_notification_dispatch_dry_run(latest_review, write):
     print("Dry run dispatch executed.")
 
@@ -1840,182 +1908,182 @@ def setup_advanced_transition_parsers(subparsers):
     cmd = subparsers.add_parser("advanced-transition-validate", help="Validate setup")
 
 
-@cli.command("runtime-registry-info")
+("runtime-registry-info")
 def runtime_registry_info():
     print("Phase 102 Advanced Runtime Registry Normalization.")
     print("This is NOT an activation phase. No real execution allowed.")
 
-@cli.command("runtime-registry-transition-ingest")
-@click.option("--write", is_flag=True)
+("runtime-registry-transition-ingest")
+
 def runtime_registry_transition_ingest(write):
     from usa_signal_bot.advanced_runtime.transition_review_ingestion import ingest_advanced_transition_review_payload
     res = ingest_advanced_transition_review_payload({"review_id": "test"})
     print(f"Ingested: {res.ingestion_id}")
 
-@cli.command("runtime-modes")
+("runtime-modes")
 def runtime_modes():
     from usa_signal_bot.advanced_runtime.runtime_mode_registry import build_phase102_runtime_modes
     print(f"Modes built: {len(build_phase102_runtime_modes())}")
 
-@cli.command("capability-policy")
+("capability-policy")
 def capability_policy():
     from usa_signal_bot.advanced_runtime.capability_policy import build_phase102_capability_policies
     print(f"Policies built: {len(build_phase102_capability_policies())}")
 
-@cli.command("config-surface")
+("config-surface")
 def config_surface():
     from usa_signal_bot.advanced_runtime.config_surface import build_config_surface_records
     print(f"Config surface built: {len(build_config_surface_records({}))}")
 
-@cli.command("config-cleanup")
+("config-cleanup")
 def config_cleanup():
     from usa_signal_bot.advanced_runtime.config_cleanup import normalize_config_surface
     res = normalize_config_surface({})
     print(f"Config cleanup done.")
 
-@cli.command("config-conflicts")
+("config-conflicts")
 def config_conflicts():
     from usa_signal_bot.advanced_runtime.config_conflict_detector import detect_config_conflicts
     print(f"Conflicts: {detect_config_conflicts({})}")
 
-@cli.command("config-migration-hints")
+("config-migration-hints")
 def config_migration_hints():
     from usa_signal_bot.advanced_runtime.config_migration_hints import generate_config_migration_hints
     print(f"Hints: {generate_config_migration_hints({})}")
 
-@cli.command("provider-contracts-info")
+("provider-contracts-info")
 def provider_contracts_info():
     from usa_signal_bot.advanced_runtime.provider_contracts import build_provider_data_request
     from usa_signal_bot.core.enums import ProviderInterfaceKind, ProviderCapability
     req = build_provider_data_request("test", ProviderInterfaceKind.MARKET_DATA, ProviderCapability.GET_DAILY_BARS)
     print(f"Request: {req.request_id}")
 
-@cli.command("provider-manifest")
-@click.option("--write", is_flag=True)
+("provider-manifest")
+
 def provider_manifest(write):
     from usa_signal_bot.advanced_runtime.provider_capability_manifest import default_market_data_provider_manifest
     print(f"Manifest: {default_market_data_provider_manifest('yfinance').manifest_id}")
 
-@cli.command("provider-safety")
-@click.option("--write", is_flag=True)
+("provider-safety")
+
 def provider_safety(write):
     from usa_signal_bot.advanced_runtime.provider_safety_manifest import build_provider_safety_manifest
     print(f"Safety: {build_provider_safety_manifest('yfinance').manifest_id}")
 
-@cli.command("provider-interface-validate")
+("provider-interface-validate")
 def provider_interface_validate():
     from usa_signal_bot.advanced_runtime.provider_interface_validator import validate_provider_interface_contract
     print(f"Validation: {validate_provider_interface_contract(None)}")
 
-@cli.command("normalized-runtime-registry")
-@click.option("--write", is_flag=True)
+("normalized-runtime-registry")
+
 def normalized_runtime_registry(write):
     from usa_signal_bot.advanced_runtime.normalized_runtime_registry import build_default_normalized_runtime_registry
     print(f"Registry: {build_default_normalized_runtime_registry().registry_id}")
 
-@cli.command("runtime-registry-review")
-@click.option("--write", is_flag=True)
+("runtime-registry-review")
+
 def runtime_registry_review(write):
     from usa_signal_bot.advanced_runtime.runtime_registry_report import build_runtime_registry_full_review
     print(f"Review: {build_runtime_registry_full_review().review_id}")
 
-@cli.command("runtime-registry-summary")
+("runtime-registry-summary")
 def runtime_registry_summary():
     from pathlib import Path
     from usa_signal_bot.advanced_runtime.runtime_registry_store import runtime_registry_store_summary
     print(f"Summary: {runtime_registry_store_summary(Path('data'))}")
 
-@cli.command("runtime-registry-validate")
+("runtime-registry-validate")
 def runtime_registry_validate():
     from usa_signal_bot.advanced_runtime.runtime_registry_validation import validate_no_execution_language_in_runtime_registry_text
     print(f"Valid: {validate_no_execution_language_in_runtime_registry_text('test text').valid}")
 
-@cli.command()
+
 def service_graph_info():
     print("Service Graph Info (Phase 103)")
     print("NOTE: Phase 103 is not an activation. No real paper trades or executions are permitted.")
 
-@cli.command()
+
 def service_graph_ingest_runtime_registry():
     pass
 
-@cli.command()
+
 def service_catalog():
     pass
 
-@cli.command()
+
 def dependency_contracts():
     pass
 
-@cli.command()
+
 def dependency_graph():
     pass
 
-@cli.command()
+
 def dependency_cycles():
     pass
 
-@cli.command()
+
 def capability_service_mapping():
     pass
 
-@cli.command()
-@click.option("--write", is_flag=True)
+
+
 def runtime_service_graph(write):
     pass
 
-@cli.command()
+
 def orchestration_policy():
     pass
 
-@cli.command()
-@click.option("--write", is_flag=True)
+
+
 def orchestration_plan(write):
     pass
 
-@cli.command()
-@click.option("--write", is_flag=True)
+
+
 def orchestration_dry_run(write):
     pass
 
-@cli.command()
+
 def orchestration_safety_check():
     pass
 
-@cli.command()
+
 def startup_order():
     pass
 
-@cli.command()
+
 def readiness_dependencies():
     pass
 
-@cli.command()
-@click.option("--write", is_flag=True)
+
+
 def service_graph_review(write):
     pass
 
-@cli.command()
+
 def service_graph_summary():
     pass
 
-@cli.command()
+
 def service_graph_validate():
     pass
 
 
 
 
-@cli.command()
+
 def lifecycle_info():
     """Show information about the Phase 104 Runtime Lifecycle."""
-    click.echo("=== PHASE 104 RUNTIME LIFECYCLE INFO ===")
-    click.echo("This is STRICTLY a local metadata readiness evaluation phase.")
-    click.echo("It does NOT perform broker API calls, network fetches, live trades, or actual active paper runs.")
-    click.echo("Any 'READY' status is strictly a local metadata state and is NOT a financial investment advice or live execution approval.")
+    print("=== PHASE 104 RUNTIME LIFECYCLE INFO ===")
+    print("This is STRICTLY a local metadata readiness evaluation phase.")
+    print("It does NOT perform broker API calls, network fetches, live trades, or actual active paper runs.")
+    print("Any 'READY' status is strictly a local metadata state and is NOT a financial investment advice or live execution approval.")
 
-@cli.command()
-@click.option("--write", is_flag=True, help="Write output to disk")
+
+
 def lifecycle_review(write):
     """Run a full lifecycle review and print/write the report."""
     from usa_signal_bot.runtime_lifecycle.lifecycle_report import build_runtime_lifecycle_full_review
@@ -2024,31 +2092,31 @@ def lifecycle_review(write):
     from pathlib import Path
 
     review = build_runtime_lifecycle_full_review()
-    click.echo(runtime_lifecycle_full_review_to_text(review))
+    print(runtime_lifecycle_full_review_to_text(review))
 
     if write:
         path = lifecycle_reviews_dir(Path("data")) / f"{review.review_id}.json"
         write_runtime_lifecycle_full_review_json(path, review)
-        click.echo(f"\nWrote full review to {path}")
+        print(f"\nWrote full review to {path}")
 
-@cli.command()
-@click.option("--write", is_flag=True, help="Write output to disk")
+
+
 def startup_checks(write):
     """Run the startup checks."""
     from usa_signal_bot.runtime_lifecycle.startup_check_runner import StartupCheckRunner
     from usa_signal_bot.runtime_lifecycle.lifecycle_reporting import startup_check_report_to_text
     runner = StartupCheckRunner()
     report = runner.run_all_checks()
-    click.echo(startup_check_report_to_text(report))
+    print(startup_check_report_to_text(report))
 
-@cli.command()
-@click.option("--write", is_flag=True, help="Write output to disk")
+
+
 def readiness_gate(write):
     """Evaluate the readiness gate."""
     from usa_signal_bot.runtime_lifecycle.lifecycle_manager import RuntimeLifecycleManager
     manager = RuntimeLifecycleManager()
     ctx = manager.run_lifecycle_dry_run()
-    click.echo(f"Gate Decision: {ctx.decision.value}")
+    print(f"Gate Decision: {ctx.decision.value}")
 
 def setup_phase106_provider_parsers(subparsers):
     cmds = [

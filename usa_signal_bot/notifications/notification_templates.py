@@ -243,3 +243,22 @@ def format_provider_fetch_dry_run_warning_message(results: Any) -> Any:
 
 def notifications_from_provider_runtime_review(review: Any) -> Any:
     pass
+
+
+from typing import Any
+
+class NotificationMessage:
+    def __init__(self, message: str):
+        self.message = message
+
+def format_provider_cache_report_message(review: Any) -> NotificationMessage:
+    return NotificationMessage(f"[DRY-RUN] Cache Report: {getattr(review, 'review_id', 'unknown')}")
+
+def format_source_comparison_warning_message(results: list) -> NotificationMessage:
+    return NotificationMessage(f"[DRY-RUN] Compare Warnings: {len(results)}")
+
+def format_fallback_dry_run_warning_message(results: list) -> NotificationMessage:
+    return NotificationMessage(f"[DRY-RUN] Fallback Warnings: {len(results)}")
+
+def notifications_from_provider_cache_review(review: Any) -> list[NotificationMessage]:
+    return [format_provider_cache_report_message(review)]

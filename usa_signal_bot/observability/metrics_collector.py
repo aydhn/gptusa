@@ -130,3 +130,21 @@ class MetricsCollector:
     latest_provider_cache_lookup_dry_run_count: int = 0
     latest_provider_network_violation_count: int = 0
     latest_phase107_execution_violation_count: int = 0
+
+
+# Phase 108 metrics
+def collect_phase108_metrics():
+    return {
+        "latest_provider_cache_context_count": 0,
+        "latest_provider_cache_index_count": 0,
+        "latest_provider_cache_record_count": 0,
+        "latest_provider_cache_fresh_count": 0,
+        "latest_provider_cache_stale_count": 0,
+        "latest_provider_cache_missing_count": 0,
+        "latest_fallback_dry_run_count": 0,
+        "latest_fallback_exhausted_count": 0,
+        "latest_source_comparison_count": 0,
+        "latest_source_disagreement_high_count": 0,
+        "latest_provider_cache_network_violation_count": 0,
+        "latest_phase108_execution_violation_count": 0
+    }
