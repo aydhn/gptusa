@@ -1,3 +1,6 @@
+class UsaSignalBotError(Exception):
+    pass
+
 class USASignalBotError(Exception):
     pass
 
@@ -1498,3 +1501,27 @@ class EventMetadataValidationError(EventMetadataError): pass
 class EventScheduleSafetyValidationError(EventMetadataError): pass
 class EventMetadataStoreError(EventMetadataError): pass
 class EventMetadataReportingError(EventMetadataError): pass
+
+
+class EventImpactError(Exception): pass
+class EventMetadataIngestionError(EventImpactError): pass
+class EventImpactPolicyError(EventImpactError): pass
+class EventImpactTaggerError(EventImpactError): pass
+class MacroImpactClassifierError(EventImpactError): pass
+class EarningsImpactClassifierError(EventImpactError): pass
+class CorporateActionImpactClassifierError(EventImpactError): pass
+class NewsMetadataImpactClassifierError(EventImpactError): pass
+class SymbolEventExposureError(EventImpactError): pass
+class MacroRegimeMetadataError(EventImpactError): pass
+class RegimeLabelNormalizerError(EventImpactError): pass
+class CalendarGapValidationError(EventImpactError): pass
+class CalendarPriceJumpValidationError(EventImpactError): pass
+class CalendarVolumeAnomalyValidationError(EventImpactError): pass
+class CalendarTimestampValidationError(EventImpactError): pass
+class CalendarQualityExplanationError(EventImpactError): pass
+class CalendarAwareValidationError(EventImpactError): pass
+class EventImpactSafetyValidationError(EventImpactError): pass
+class CalendarValidationSafetyError(EventImpactError): pass
+class EventImpactStoreError(EventImpactError): pass
+class EventImpactValidationError(EventImpactError): pass
+class EventImpactReportingError(EventImpactError): pass
