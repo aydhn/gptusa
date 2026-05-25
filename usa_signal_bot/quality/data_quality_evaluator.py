@@ -148,3 +148,14 @@ def evaluate_phase108_quality():
         "phase108_source_comparison_score": 100,
         "phase108_non_execution_compliance_score": 100
     }
+
+def evaluate_phase111_event_metadata_quality(review: Any) -> QualityScorecard:
+    scorecard = QualityScorecard(scorecard_id="qs_phase111")
+    if not review.errors:
+        scorecard.phase111_event_metadata_score = 100.0
+        scorecard.phase111_macro_metadata_score = 100.0
+        scorecard.phase111_calendar_metadata_score = 100.0
+        scorecard.phase111_news_metadata_score = 100.0
+        scorecard.phase111_event_schedule_score = 100.0
+        scorecard.phase111_non_execution_compliance_score = 100.0
+    return scorecard

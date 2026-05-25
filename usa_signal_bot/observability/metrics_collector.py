@@ -1,6 +1,18 @@
 from typing import Any
 
 class MetricsCollector:
+    latest_event_metadata_context_count: int = 0
+    latest_event_schedule_count: int = 0
+    latest_event_schedule_total_events: int = 0
+    latest_macro_series_count: int = 0
+    latest_economic_event_count: int = 0
+    latest_earnings_event_count: int = 0
+    latest_corporate_action_count: int = 0
+    latest_news_metadata_count: int = 0
+    latest_event_duplicate_count: int = 0
+    latest_event_invalid_time_count: int = 0
+    latest_news_content_fetch_violation_count: int = 0
+    latest_phase111_execution_violation_count: int = 0
 
     def update_provider_abstraction_metrics(self, review: Any):
         self.metrics["latest_provider_abstraction_context_count"] = self.metrics.get("latest_provider_abstraction_context_count", 0) + 1

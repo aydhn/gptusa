@@ -2110,3 +2110,97 @@ class ProviderQualityConfig:
             raise ValueError("final_phase must be 160")
         if not self.require_phase108_provider_cache:
             raise ValueError("require_phase108_provider_cache must be true")
+
+@dataclass
+class EventMetadataConfig:
+    enabled: bool = True
+    current_phase: int = 111
+    final_phase: int = 160
+    require_phase110_provider_orchestration: bool = True
+    macro_metadata_enabled: bool = True
+    economic_calendar_enabled: bool = True
+    earnings_calendar_enabled: bool = True
+    corporate_actions_enabled: bool = True
+    news_metadata_enabled: bool = True
+    event_schedule_enabled: bool = True
+    write_event_metadata_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_phase111_is_not_activation: bool = True
+    warn_events_are_not_trade_signals: bool = True
+
+    def __post_init__(self):
+        if self.current_phase != 111: raise ValueError("current_phase must be 111")
+        if self.final_phase != 160: raise ValueError("final_phase must be 160")
+        if not self.require_phase110_provider_orchestration: raise ValueError("require_phase110_provider_orchestration must be True")
+
+@dataclass
+class Phase111EventPolicyConfig:
+    metadata_only: bool = True
+    research_context_only: bool = True
+    local_fixture_only_default: bool = True
+    allow_network: bool = False
+    allow_paid_api: bool = False
+    allow_scraping: bool = False
+    allow_html_parsing: bool = False
+    allow_broker: bool = False
+    allow_order: bool = False
+    allow_paper_mutation: bool = False
+    allow_telegram_real_send: bool = False
+    allow_dashboard: bool = False
+    produce_trade_signals: bool = False
+    produce_order_decisions: bool = False
+    fetch_news_content: bool = False
+
+    def __post_init__(self):
+        if not self.metadata_only: raise ValueError()
+        if not self.research_context_only: raise ValueError()
+        if not self.local_fixture_only_default: raise ValueError()
+        if self.allow_network: raise ValueError()
+        if self.allow_paid_api: raise ValueError()
+        if self.allow_scraping: raise ValueError()
+        if self.allow_html_parsing: raise ValueError()
+        if self.allow_broker: raise ValueError()
+        if self.allow_order: raise ValueError()
+        if self.allow_paper_mutation: raise ValueError()
+        if self.allow_telegram_real_send: raise ValueError()
+        if self.allow_dashboard: raise ValueError()
+        if self.produce_trade_signals: raise ValueError()
+        if self.produce_order_decisions: raise ValueError()
+        if self.fetch_news_content: raise ValueError()
+
+@dataclass
+class Phase111MacroCatalogConfig:
+    enabled: bool = True
+    fred_compatible_metadata_only: bool = True
+    network_enabled_now: bool = False
+    credential_required_now: bool = False
+
+    def __post_init__(self):
+        if self.network_enabled_now: raise ValueError()
+
+@dataclass
+class Phase111NewsMetadataConfig:
+    enabled: bool = True
+    metadata_only: bool = True
+    content_fetch_enabled: bool = False
+    network_enabled_now: bool = False
+    scraping_enabled: bool = False
+    html_parse_enabled: bool = False
+    store_raw_urls: bool = False
+    use_url_hash: bool = True
+
+    def __post_init__(self):
+        if self.content_fetch_enabled: raise ValueError()
+        if self.network_enabled_now: raise ValueError()
+        if self.store_raw_urls: raise ValueError()
+        if not self.use_url_hash: raise ValueError()
+
+@dataclass
+class Phase111NotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    preview_only: bool = True
+    telegram_real_send: bool = False
+
+    def __post_init__(self):
+        if self.telegram_real_send: raise ValueError()

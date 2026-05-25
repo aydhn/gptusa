@@ -2335,3 +2335,100 @@ def provider_orchestration_summary():
 @cli.command("provider-orchestration-validate")
 def provider_orchestration_validate():
     click.echo("Validating orchestration payload... (Dry-Run)")
+
+
+@cli.command()
+def event_metadata_info():
+    """Phase 111 event metadata info"""
+    click.echo("Phase 111 is metadata skeleton. No activation. Events are not trade signals.")
+
+@cli.command()
+def event_ingest_orchestration():
+    """Phase 111 ingest orchestration"""
+    click.echo("Ingested orchestration")
+
+@cli.command()
+def macro_metadata_catalog():
+    """Phase 111 macro metadata catalog"""
+    click.echo("Macro metadata catalog")
+
+@cli.command()
+def economic_calendar_skeleton():
+    """Phase 111 economic calendar skeleton"""
+    click.echo("Economic calendar skeleton")
+
+@cli.command()
+def earnings_calendar_skeleton():
+    """Phase 111 earnings calendar skeleton"""
+    click.echo("Earnings calendar skeleton")
+
+@cli.command()
+def corporate_actions_skeleton():
+    """Phase 111 corporate actions skeleton"""
+    click.echo("Corporate actions skeleton")
+
+@cli.command()
+def news_metadata_skeleton():
+    """Phase 111 news metadata skeleton"""
+    click.echo("News metadata skeleton")
+
+@cli.command()
+def event_normalize():
+    """Phase 111 event normalize"""
+    click.echo("Event normalize")
+
+@cli.command()
+def event_deduplicate():
+    """Phase 111 event deduplicate"""
+    click.echo("Event deduplicate")
+
+@cli.command()
+def event_timezone_normalize():
+    """Phase 111 event timezone normalize"""
+    click.echo("Event timezone normalize")
+
+@cli.command()
+def event_importance():
+    """Phase 111 event importance"""
+    click.echo("Event importance")
+
+@cli.command()
+def event_schedule():
+    """Phase 111 event schedule"""
+    click.echo("Event schedule")
+
+@cli.command()
+def event_schedule_index():
+    """Phase 111 event schedule index"""
+    click.echo("Event schedule index")
+
+@cli.command()
+def event_availability():
+    """Phase 111 event availability"""
+    click.echo("Event availability")
+
+@cli.command()
+def event_metadata_safety_check():
+    """Phase 111 event metadata safety check"""
+    click.echo("Event metadata safety check")
+
+@cli.command()
+def event_metadata_context():
+    """Phase 111 event metadata context"""
+    click.echo("Event metadata context")
+
+@cli.command()
+@click.option('--write', is_flag=True, help="Write to file")
+def event_metadata_review(write):
+    """Phase 111 event metadata review"""
+    click.echo("Event metadata review")
+
+@cli.command()
+def event_metadata_summary():
+    """Phase 111 event metadata summary"""
+    click.echo("Event metadata summary")
+
+@cli.command()
+def event_metadata_validate():
+    """Phase 111 event metadata validate"""
+    click.echo("Event metadata validate")

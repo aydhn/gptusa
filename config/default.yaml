@@ -1822,3 +1822,58 @@ phase110_notifications:
   dry_run: true
   preview_only: true
   telegram_real_send: false
+
+event_metadata:
+  enabled: true
+  current_phase: 111
+  final_phase: 160
+  require_phase110_provider_orchestration: true
+  macro_metadata_enabled: true
+  economic_calendar_enabled: true
+  earnings_calendar_enabled: true
+  corporate_actions_enabled: true
+  news_metadata_enabled: true
+  event_schedule_enabled: true
+  write_event_metadata_reports: true
+  warn_not_investment_advice: true
+  warn_phase111_is_not_activation: true
+  warn_events_are_not_trade_signals: true
+
+phase111_event_policy:
+  metadata_only: true
+  research_context_only: true
+  local_fixture_only_default: true
+  allow_network: false
+  allow_paid_api: false
+  allow_scraping: false
+  allow_html_parsing: false
+  allow_broker: false
+  allow_order: false
+  allow_paper_mutation: false
+  allow_telegram_real_send: false
+  allow_dashboard: false
+  produce_trade_signals: false
+  produce_order_decisions: false
+  fetch_news_content: false
+
+phase111_macro_catalog:
+  enabled: true
+  fred_compatible_metadata_only: true
+  network_enabled_now: false
+  credential_required_now: false
+
+phase111_news_metadata:
+  enabled: true
+  metadata_only: true
+  content_fetch_enabled: false
+  network_enabled_now: false
+  scraping_enabled: false
+  html_parse_enabled: false
+  store_raw_urls: false
+  use_url_hash: true
+
+phase111_notifications:
+  enabled: true
+  dry_run: true
+  preview_only: true
+  telegram_real_send: false
