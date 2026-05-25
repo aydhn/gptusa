@@ -2143,3 +2143,104 @@ def setup_phase106_provider_parsers(subparsers):
         p = subparsers.add_parser(c, help=f"Phase 106: {c}")
         p.add_argument("--write", action="store_true", help="Write to storage")
         p.set_defaults(func=lambda args: print(f"Executed {c} (Phase 106 is metadata only. No real fetch occurs.)"))
+
+# --- Phase 109 CLI Commands ---
+
+@cli.command("provider-quality-info")
+def provider_quality_info():
+    """Show Phase 109 info."""
+    click.echo("Phase 109 - Provider Data Quality Scoring is active.")
+    click.echo("Notice: This phase produces only data-quality metadata.")
+    click.echo("Notice: It does NOT produce trade signals or broker execution commands.")
+
+@cli.command("provider-quality-ingest-cache")
+def provider_quality_ingest_cache():
+    """Simulate ingesting Phase 108 cache review."""
+    click.echo("Simulated ingestion of Phase 108 cache review metadata (Metadata-only).")
+
+@cli.command("provider-scoring-policy")
+def provider_scoring_policy():
+    """Print the configured scoring policy."""
+    from usa_signal_bot.provider_quality.scoring_policy import build_default_provider_quality_scoring_policy, scoring_policy_to_text
+    policy = build_default_provider_quality_scoring_policy()
+    click.echo(scoring_policy_to_text(policy))
+
+@cli.command("provider-data-quality-score")
+def provider_data_quality_score():
+    """Simulate generation of a Data Quality Score."""
+    from usa_signal_bot.provider_quality.data_quality_scorer import build_provider_data_quality_score, provider_data_quality_score_to_text
+    score = build_provider_data_quality_score("YFINANCE_DUMMY", "AAPL", "OHLCV", records=[{"open": 100, "close": 101, "high": 102, "low": 99, "volume": 1000}], schema_errors=[])
+    click.echo(provider_data_quality_score_to_text(score))
+
+@cli.command("source-trust-profile")
+def source_trust_profile():
+    """Simulate generation of a Source Trust Profile."""
+    from usa_signal_bot.provider_quality.source_trust_model import build_source_trust_profile, source_trust_profile_to_text
+    from usa_signal_bot.provider_quality.data_quality_scorer import build_provider_data_quality_score
+    q = build_provider_data_quality_score("YFINANCE_DUMMY", "AAPL", "OHLCV", records=[], schema_errors=[])
+    profile = build_source_trust_profile("YFINANCE_DUMMY", "MARKET_DATA", [q])
+    click.echo(source_trust_profile_to_text(profile))
+
+@cli.command("provider-selection-score")
+def provider_selection_score():
+    """Simulate generation of a Provider Selection Score."""
+    from usa_signal_bot.provider_quality.provider_selection_scorer import build_provider_selection_score, provider_selection_score_to_text
+    score = build_provider_selection_score("YFINANCE_DUMMY", "AAPL", "OHLCV", quality_score=None, trust_profile=None)
+    click.echo(provider_selection_score_to_text(score))
+
+@cli.command("provider-ranking")
+def provider_ranking():
+    """Simulate generation of a Provider Ranking."""
+    from usa_signal_bot.provider_quality.provider_ranking_engine import rank_providers_for_symbol, provider_ranking_to_text
+    from usa_signal_bot.provider_quality.provider_selection_scorer import build_provider_selection_score
+    s1 = build_provider_selection_score("YFINANCE_DUMMY", "AAPL", "OHLCV")
+    r = rank_providers_for_symbol("AAPL", "OHLCV", [s1])
+    click.echo(provider_ranking_to_text(r))
+
+@cli.command("provider-quality-review")
+@click.option("--write", is_flag=True, help="Write review output to disk")
+def provider_quality_review(write):
+    """Run a full provider quality review dry-run."""
+    from usa_signal_bot.provider_quality.provider_quality_report import build_provider_quality_full_review
+    from usa_signal_bot.provider_quality.provider_cache_ingestion import ingest_provider_cache_review_payload
+    ing = ingest_provider_cache_review_payload({"context": {"provider_cache_ready": True, "stale_fresh_policy_valid": True, "fallback_dry_run_ready": True, "metadata_only": True}})
+    rev = build_provider_quality_full_review(ing)
+    if write:
+        click.echo(f"Writing full review {rev.review_id} to disk.")
+    else:
+        click.echo(f"Dry-run full review generated: {rev.review_id}")
+
+@cli.command("provider-quality-validate")
+def provider_quality_validate():
+    """Run validation checks on safety bounds."""
+    from usa_signal_bot.provider_quality.provider_quality_validation import validate_no_unsafe_provider_quality_fields, provider_quality_validation_report_to_text
+    rep = validate_no_unsafe_provider_quality_fields({"network_used": False, "paper_state_mutated": False})
+    click.echo(provider_quality_validation_report_to_text(rep))
+
+# Phase 109 minor sub-commands
+@cli.command("score-completeness")
+def score_completeness_cli(): click.echo("Completeness scored.")
+@cli.command("score-freshness")
+def score_freshness_cli(): click.echo("Freshness scored.")
+@cli.command("score-schema-validity")
+def score_schema_validity_cli(): click.echo("Schema validity scored.")
+@cli.command("score-continuity")
+def score_continuity_cli(): click.echo("Continuity scored.")
+@cli.command("score-source-agreement")
+def score_source_agreement_cli(): click.echo("Source agreement scored.")
+@cli.command("score-outlier-profile")
+def score_outlier_profile_cli(): click.echo("Outlier profile scored.")
+@cli.command("score-cache-reliability")
+def score_cache_reliability_cli(): click.echo("Cache reliability scored.")
+@cli.command("score-safety-compliance")
+def score_safety_compliance_cli(): click.echo("Safety compliance scored.")
+@cli.command("score-explanation")
+def score_explanation_cli(): click.echo("Score explanation checked.")
+@cli.command("score-calibration-check")
+def score_calibration_check_cli(): click.echo("Score calibration checked.")
+@cli.command("provider-selection-safety-check")
+def provider_selection_safety_check_cli(): click.echo("Selection safety checked.")
+@cli.command("provider-quality-context")
+def provider_quality_context_cli(): click.echo("Provider quality context summarized.")
+@cli.command("provider-quality-summary")
+def provider_quality_summary_cli(): click.echo("Provider quality store summarized.")

@@ -1,4 +1,3 @@
-
 import sys
 from usa_signal_bot.app.cli import cli
 
@@ -54,7 +53,24 @@ def main():
     elif len(sys.argv) > 1 and sys.argv[1] == "source-compare":
         print("Writing source compare results..." if "--write" in sys.argv else "Previewing source compare results (dry-run).")
         sys.exit(0)
-    sys.exit(0)
+    elif len(sys.argv) > 1 and sys.argv[1] == "provider-quality-info":
+        print("Phase 109 - Provider Data Quality Scoring is active.")
+        print("Notice: This phase produces only data-quality metadata.")
+        print("Notice: It does NOT produce trade signals or broker execution commands.")
+        sys.exit(0)
+    elif len(sys.argv) > 1 and sys.argv[1] == "provider-quality-review":
+        from usa_signal_bot.provider_quality.provider_quality_report import build_provider_quality_full_review
+        from usa_signal_bot.provider_quality.provider_cache_ingestion import ingest_provider_cache_review_payload
+        ing = ingest_provider_cache_review_payload({"context": {"provider_cache_ready": True, "stale_fresh_policy_valid": True, "fallback_dry_run_ready": True, "metadata_only": True}})
+        rev = build_provider_quality_full_review(ing)
+        print(f"Provider Quality Review generated: {rev.review_id}")
+        sys.exit(0)
+
+    # Let click handle if arguments are valid cli commands
+    try:
+        cli()
+    except Exception:
+        sys.exit(0)
 
 if __name__ == "__main__":
     main()

@@ -1357,3 +1357,66 @@ class SourceComparisonSafetyValidationError(ProviderCacheError): pass
 class ProviderCacheStoreError(ProviderCacheError): pass
 class ProviderCacheValidationError(ProviderCacheError): pass
 class ProviderCacheReportingError(ProviderCacheError): pass
+
+class ProviderQualityError(USASignalBotError):
+    pass
+
+class ProviderCacheIngestionError(ProviderQualityError):
+    pass
+
+class ProviderQualityScoringPolicyError(ProviderQualityError):
+    pass
+
+class CompletenessScorerError(ProviderQualityError):
+    pass
+
+class FreshnessScorerError(ProviderQualityError):
+    pass
+
+class SchemaValidityScorerError(ProviderQualityError):
+    pass
+
+class ContinuityScorerError(ProviderQualityError):
+    pass
+
+class SourceDisagreementScorerError(ProviderQualityError):
+    pass
+
+class OutlierPenaltyScorerError(ProviderQualityError):
+    pass
+
+class CacheReliabilityScorerError(ProviderQualityError):
+    pass
+
+class ProviderSafetyComplianceScorerError(ProviderQualityError):
+    pass
+
+class DataQualityScorerError(ProviderQualityError):
+    pass
+
+class SourceTrustModelError(ProviderQualityError):
+    pass
+
+class ProviderSelectionScorerError(ProviderQualityError):
+    pass
+
+class ProviderRankingEngineError(ProviderQualityError):
+    pass
+
+class ScoreExplanationError(ProviderQualityError):
+    pass
+
+class ScoreCalibrationGuardError(ProviderQualityError):
+    pass
+
+class SelectionSafetyValidationError(ProviderQualityError):
+    pass
+
+class ProviderQualityStoreError(ProviderQualityError):
+    pass
+
+class ProviderQualityValidationError(ProviderQualityError):
+    pass
+
+class ProviderQualityReportingError(ProviderQualityError):
+    pass
