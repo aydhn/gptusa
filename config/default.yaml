@@ -341,6 +341,49 @@ dry_admission_gate_safety:
   block_on_telegram_real_send_risk: true
   block_on_transition_allowed_risk: true
   enabled: true
+event_impact:
+  calendar_aware_validation_enabled: true
+  current_phase: 112
+  enabled: true
+  event_impact_tagging_enabled: true
+  final_phase: 160
+  macro_regime_metadata_enabled: true
+  require_phase111_event_metadata: true
+  warn_impact_tags_are_not_trade_signals: true
+  warn_not_investment_advice: true
+  warn_phase112_is_not_activation: true
+  write_event_impact_reports: true
+event_metadata:
+  corporate_actions_enabled: true
+  current_phase: 111
+  earnings_calendar_enabled: true
+  economic_calendar_enabled: true
+  enabled: true
+  event_schedule_enabled: true
+  final_phase: 160
+  macro_metadata_enabled: true
+  news_metadata_enabled: true
+  require_phase110_provider_orchestration: true
+  warn_events_are_not_trade_signals: true
+  warn_not_investment_advice: true
+  warn_phase111_is_not_activation: true
+  write_event_metadata_reports: true
+feature_engine_foundation:
+  current_phase: 116
+  enabled: true
+  factor_registry_enabled: true
+  feature_computation_planner_enabled: true
+  feature_input_contract_enabled: true
+  feature_output_schema_enabled: true
+  feature_registry_enabled: true
+  feature_transform_pipeline_enabled: true
+  final_phase: 160
+  indicator_registry_enabled: true
+  require_phase115_feature_factor_kickoff_gate: true
+  warn_features_are_not_trade_signals: true
+  warn_not_investment_advice: true
+  warn_phase116_is_not_activation: true
+  write_feature_foundation_reports: true
 final_activation_firewall:
   activation_allowed: false
   deny_activation_by_default: true
@@ -1381,6 +1424,337 @@ phase108_source_comparison:
   min_rows_required: 1
   produce_confidence_hints: true
   produce_trade_signals: false
+phase109_notifications:
+  dry_run: true
+  enabled: true
+  preview_only: true
+  telegram_real_send: false
+phase109_scoring_policy:
+  block_on_safety_score_zero: true
+  block_on_schema_invalid: true
+  cache_reliability_weight: 0.05
+  completeness_weight: 0.2
+  continuity_weight: 0.15
+  freshness_weight: 0.15
+  outlier_profile_weight: 0.05
+  safety_compliance_weight: 0.05
+  schema_validity_weight: 0.2
+  source_agreement_weight: 0.15
+phase109_selection_policy:
+  allow_broker: false
+  allow_dashboard: false
+  allow_html_parsing: false
+  allow_network: false
+  allow_order: false
+  allow_paid_api: false
+  allow_paper_mutation: false
+  allow_scraping: false
+  allow_telegram_real_send: false
+  produce_order_decisions: false
+  produce_trade_signals: false
+  research_data_only: true
+phase110_availability_monitor:
+  default_capability: GET_DAILY_OHLCV
+  default_symbols:
+  - AAPL
+  - MSFT
+  - SPY
+  enabled: true
+  network_allowed: false
+  stale_counts_as_partial: true
+phase110_notifications:
+  dry_run: true
+  enabled: true
+  preview_only: true
+  telegram_real_send: false
+phase110_orchestration_policy:
+  allow_blending: true
+  allow_broker: false
+  allow_dashboard: false
+  allow_fallback: true
+  allow_html_parsing: false
+  allow_network: false
+  allow_order: false
+  allow_paid_api: false
+  allow_paper_mutation: false
+  allow_scraping: false
+  allow_telegram_real_send: false
+  cache_only_default: true
+  metadata_only: true
+  produce_order_decisions: false
+  produce_trade_signals: false
+  research_data_only: true
+phase110_refresh_planning:
+  broker_allowed: false
+  dry_run_only: true
+  enabled: true
+  future_refresh_metadata_only: true
+  html_parsing_allowed: false
+  network_allowed_now: false
+  order_allowed: false
+  paid_api_allowed: false
+  scraping_allowed: false
+phase110_source_blending:
+  default_method: TRUST_WEIGHTED_BLEND
+  dry_run_only: true
+  enabled: true
+  max_disagreement_for_blending: 0.25
+  min_sources_for_blending: 2
+  produce_order_decisions: false
+  produce_trade_signals: false
+  research_data_only: true
+phase111_event_policy:
+  allow_broker: false
+  allow_dashboard: false
+  allow_html_parsing: false
+  allow_network: false
+  allow_order: false
+  allow_paid_api: false
+  allow_paper_mutation: false
+  allow_scraping: false
+  allow_telegram_real_send: false
+  fetch_news_content: false
+  local_fixture_only_default: true
+  metadata_only: true
+  produce_order_decisions: false
+  produce_trade_signals: false
+  research_context_only: true
+phase111_macro_catalog:
+  credential_required_now: false
+  enabled: true
+  fred_compatible_metadata_only: true
+  network_enabled_now: false
+phase111_news_metadata:
+  content_fetch_enabled: false
+  enabled: true
+  html_parse_enabled: false
+  metadata_only: true
+  network_enabled_now: false
+  scraping_enabled: false
+  store_raw_urls: false
+  use_url_hash: true
+phase111_notifications:
+  dry_run: true
+  enabled: true
+  preview_only: true
+  telegram_real_send: false
+phase112_calendar_validation:
+  enabled: true
+  explain_with_event_context: true
+  metadata_only: true
+  price_jump_threshold_pct: 8.0
+  produce_order_decisions: false
+  produce_trade_signals: false
+  research_context_only: true
+  volume_multiplier_threshold: 3.0
+phase112_impact_policy:
+  allow_broker: false
+  allow_dashboard: false
+  allow_html_parsing: false
+  allow_network: false
+  allow_order: false
+  allow_paid_api: false
+  allow_paper_mutation: false
+  allow_scraping: false
+  allow_telegram_real_send: false
+  metadata_only: true
+  produce_order_decisions: false
+  produce_trade_signals: false
+  research_context_only: true
+phase112_macro_regime:
+  enabled: true
+  metadata_only: true
+  produce_order_decisions: false
+  produce_trade_signals: false
+  research_context_only: true
+phase112_notifications:
+  dry_run: true
+  enabled: true
+  preview_only: true
+  telegram_real_send: false
+phase113_audit:
+  block_on_execution_violation: true
+  block_on_order_violation: true
+  block_on_secret_violation: true
+  enabled: true
+  hash_artifacts: true
+  metadata_only: true
+  redact_sensitive_fields: true
+  store_raw_secrets: false
+phase113_governance_policy:
+  free_source_only: true
+  metadata_only: true
+  no_broker: true
+  no_dashboard: true
+  no_html_parsing: true
+  no_order: true
+  no_paid_api: true
+  no_paper_mutation: true
+  no_scraping: true
+  no_telegram_real_send: true
+  no_trade_signal_from_data_layer: true
+  require_audit_manifest: true
+  require_lineage: true
+  require_no_secrets: true
+  research_data_only: true
+phase113_lineage:
+  block_on_order_decision_node: true
+  block_on_secret_node: true
+  block_on_trade_signal_node: true
+  enabled: true
+  require_adapter_node: true
+  require_audit_node: true
+  require_cache_artifact_node: true
+  require_event_context_node: true
+  require_provider_source_node: true
+  require_quality_score_node: true
+  require_route_node: true
+phase113_notifications:
+  dry_run: true
+  enabled: true
+  preview_only: true
+  telegram_real_send: false
+phase114_freeze_policy:
+  allow_activation: false
+  allow_active_paper: false
+  allow_broker_execution: false
+  allow_dashboard: false
+  allow_html_parsing: false
+  allow_order_creation: false
+  allow_paid_api: false
+  allow_paper_mutation: false
+  allow_scraping: false
+  allow_telegram_real_send: false
+  final_phase: 160
+  frozen: true
+  immutable: true
+  metadata_only: true
+  network_default_enabled: false
+  next_phase: 115
+  phase_end: 114
+  phase_start: 106
+  produce_order_decisions: false
+  produce_trade_signals: false
+  research_data_only: true
+phase114_notifications:
+  dry_run: true
+  enabled: true
+  preview_only: true
+  telegram_real_send: false
+phase114_output_contract:
+  broker_blocked: true
+  enabled: true
+  execution_blocked: true
+  html_parsing_blocked: true
+  metadata_only_required: true
+  network_default_enabled_blocked: true
+  order_decision_blocked: true
+  paid_api_blocked: true
+  paper_mutation_blocked: true
+  research_data_only_required: true
+  scraping_blocked: true
+  telegram_real_send_blocked: true
+  trade_signal_blocked: true
+phase114_rehearsal:
+  allow_broker: false
+  allow_dashboard: false
+  allow_html_parsing: false
+  allow_network: false
+  allow_order: false
+  allow_paid_api: false
+  allow_paper_mutation: false
+  allow_scraping: false
+  allow_telegram_real_send: false
+  dry_run_only: true
+  enabled: true
+  metadata_only: true
+  produce_order_decisions: false
+  produce_trade_signals: false
+  research_data_only: true
+phase115_feature_factor_kickoff:
+  allow_factor_metadata_definitions: true
+  allow_feature_schema_definitions: true
+  allow_feature_validation_rules: true
+  allow_indicator_input_contracts: true
+  block_broker_execution: true
+  block_dashboard: true
+  block_html_parsing: true
+  block_live_demo_trading: true
+  block_order_decision: true
+  block_paid_api: true
+  block_paper_state_mutation: true
+  block_scraping: true
+  block_strategy_activation: true
+  block_telegram_real_send: true
+  block_trade_signal_generation: true
+  enabled: true
+  metadata_only: true
+  ready_for_phase116: true
+  research_data_only: true
+phase115_final_acceptance_policy:
+  accept_provider_layer: true
+  allow_activation: false
+  allow_active_paper: false
+  allow_broker_execution: false
+  allow_dashboard: false
+  allow_html_parsing: false
+  allow_order_creation: false
+  allow_paid_api: false
+  allow_paper_mutation: false
+  allow_scraping: false
+  allow_telegram_real_send: false
+  close_provider_layer: true
+  final_phase: 160
+  metadata_only: true
+  network_default_enabled: false
+  next_phase: 116
+  phase_end: 115
+  phase_start: 106
+  produce_order_decisions: false
+  produce_trade_signals: false
+  research_data_only: true
+phase115_notifications:
+  dry_run: true
+  enabled: true
+  preview_only: true
+  telegram_real_send: false
+phase116_feature_policy:
+  allow_broker: false
+  allow_dashboard: false
+  allow_html_parsing: false
+  allow_network: false
+  allow_order: false
+  allow_paid_api: false
+  allow_paper_mutation: false
+  allow_scraping: false
+  allow_telegram_real_send: false
+  dry_run_only_default: true
+  local_fixture_only_default: true
+  metadata_only: true
+  produce_order_decisions: false
+  produce_trade_signals: false
+  research_data_only: true
+  strategy_activation_allowed: false
+phase116_feature_scope:
+  allow_calendar_aware_feature_metadata: true
+  allow_event_context_feature_metadata: true
+  allow_factor_metadata_definitions: true
+  allow_feature_lineage_metadata: true
+  allow_feature_schema_definitions: true
+  allow_feature_validation_rules: true
+  allow_indicator_input_contracts: true
+  allow_ohlcv_feature_fixtures: true
+  allow_quality_aware_feature_metadata: true
+  block_broker_execution: true
+  block_order_decision: true
+  block_paper_state_mutation: true
+  block_signal_generation: true
+  block_strategy_activation: true
+phase116_notifications:
+  dry_run: true
+  enabled: true
+  preview_only: true
+  telegram_real_send: false
 pre_paper_dry_rehearsal:
   active_paper_enabled: false
   broker_execution_enabled: false
@@ -1490,6 +1864,71 @@ provider_cache:
   warn_not_investment_advice: true
   warn_phase108_is_not_activation: true
   write_provider_cache_reports: true
+provider_final_acceptance:
+  current_phase: 115
+  enabled: true
+  feature_factor_kickoff_gate_enabled: true
+  final_acceptance_enabled: true
+  final_phase: 160
+  provider_layer_closure_enabled: true
+  require_phase114_provider_freeze: true
+  warn_acceptance_is_not_trading_enable: true
+  warn_not_investment_advice: true
+  warn_phase115_is_not_activation: true
+  write_final_acceptance_reports: true
+provider_freeze:
+  current_phase: 114
+  data_layer_rehearsal_enabled: true
+  enabled: true
+  final_phase: 160
+  freeze_enabled: true
+  multi_provider_final_review_enabled: true
+  output_contract_enabled: true
+  require_phase113_provider_governance: true
+  warn_freeze_is_not_trading_enable: true
+  warn_not_investment_advice: true
+  warn_phase114_is_not_activation: true
+  write_provider_freeze_reports: true
+provider_governance:
+  audit_trail_enabled: true
+  current_phase: 113
+  data_lineage_enabled: true
+  enabled: true
+  final_phase: 160
+  governance_policy_enabled: true
+  no_execution_proof_enabled: true
+  provider_acceptance_enabled: true
+  require_phase112_event_impact: true
+  warn_acceptance_is_not_trading_enable: true
+  warn_not_investment_advice: true
+  warn_phase113_is_not_activation: true
+  write_provider_governance_reports: true
+provider_orchestration:
+  availability_monitor_enabled: true
+  current_phase: 110
+  enabled: true
+  final_phase: 160
+  provider_route_planning_enabled: true
+  refresh_planning_enabled: true
+  require_phase109_provider_quality: true
+  source_blending_enabled: true
+  warn_not_investment_advice: true
+  warn_phase110_is_not_activation: true
+  warn_routes_are_not_trade_signals: true
+  write_provider_orchestration_reports: true
+provider_quality:
+  current_phase: 109
+  data_quality_scoring_enabled: true
+  enabled: true
+  final_phase: 160
+  provider_ranking_enabled: true
+  provider_selection_scoring_enabled: true
+  require_phase108_provider_cache: true
+  source_trust_model_enabled: true
+  warn_not_investment_advice: true
+  warn_phase109_is_not_activation: true
+  warn_scores_are_not_trade_signals: true
+  write_provider_quality_reports: true
 readiness_audit_checkpoint:
   activation_allowed: false
   activation_denied_by_default: true
@@ -1717,415 +2156,3 @@ zero_mutation_audit:
   require_after_baseline: true
   require_before_baseline: true
   require_hash_unchanged: true
-provider_quality:
-  enabled: true
-  current_phase: 109
-  final_phase: 160
-  require_phase108_provider_cache: true
-  data_quality_scoring_enabled: true
-  source_trust_model_enabled: true
-  provider_selection_scoring_enabled: true
-  provider_ranking_enabled: true
-  write_provider_quality_reports: true
-  warn_not_investment_advice: true
-  warn_phase109_is_not_activation: true
-  warn_scores_are_not_trade_signals: true
-phase109_scoring_policy:
-  completeness_weight: 0.2
-  freshness_weight: 0.15
-  schema_validity_weight: 0.2
-  continuity_weight: 0.15
-  source_agreement_weight: 0.15
-  outlier_profile_weight: 0.05
-  cache_reliability_weight: 0.05
-  safety_compliance_weight: 0.05
-  block_on_safety_score_zero: true
-  block_on_schema_invalid: true
-phase109_selection_policy:
-  research_data_only: true
-  produce_trade_signals: false
-  produce_order_decisions: false
-  allow_network: false
-  allow_paid_api: false
-  allow_scraping: false
-  allow_html_parsing: false
-  allow_broker: false
-  allow_order: false
-  allow_paper_mutation: false
-  allow_telegram_real_send: false
-  allow_dashboard: false
-phase109_notifications:
-  enabled: true
-  dry_run: true
-  preview_only: true
-  telegram_real_send: false
-provider_orchestration:
-  enabled: true
-  current_phase: 110
-  final_phase: 160
-  require_phase109_provider_quality: true
-  provider_route_planning_enabled: true
-  source_blending_enabled: true
-  availability_monitor_enabled: true
-  refresh_planning_enabled: true
-  write_provider_orchestration_reports: true
-  warn_not_investment_advice: true
-  warn_phase110_is_not_activation: true
-  warn_routes_are_not_trade_signals: true
-phase110_orchestration_policy:
-  metadata_only: true
-  research_data_only: true
-  cache_only_default: true
-  allow_blending: true
-  allow_fallback: true
-  allow_network: false
-  allow_paid_api: false
-  allow_scraping: false
-  allow_html_parsing: false
-  allow_broker: false
-  allow_order: false
-  allow_paper_mutation: false
-  allow_telegram_real_send: false
-  allow_dashboard: false
-  produce_trade_signals: false
-  produce_order_decisions: false
-phase110_source_blending:
-  enabled: true
-  dry_run_only: true
-  research_data_only: true
-  min_sources_for_blending: 2
-  default_method: TRUST_WEIGHTED_BLEND
-  max_disagreement_for_blending: 0.25
-  produce_trade_signals: false
-  produce_order_decisions: false
-phase110_availability_monitor:
-  enabled: true
-  default_symbols:
-  - AAPL
-  - MSFT
-  - SPY
-  default_capability: GET_DAILY_OHLCV
-  network_allowed: false
-  stale_counts_as_partial: true
-phase110_refresh_planning:
-  enabled: true
-  dry_run_only: true
-  network_allowed_now: false
-  paid_api_allowed: false
-  scraping_allowed: false
-  html_parsing_allowed: false
-  broker_allowed: false
-  order_allowed: false
-  future_refresh_metadata_only: true
-phase110_notifications:
-  enabled: true
-  dry_run: true
-  preview_only: true
-  telegram_real_send: false
-
-event_metadata:
-  enabled: true
-  current_phase: 111
-  final_phase: 160
-  require_phase110_provider_orchestration: true
-  macro_metadata_enabled: true
-  economic_calendar_enabled: true
-  earnings_calendar_enabled: true
-  corporate_actions_enabled: true
-  news_metadata_enabled: true
-  event_schedule_enabled: true
-  write_event_metadata_reports: true
-  warn_not_investment_advice: true
-  warn_phase111_is_not_activation: true
-  warn_events_are_not_trade_signals: true
-
-phase111_event_policy:
-  metadata_only: true
-  research_context_only: true
-  local_fixture_only_default: true
-  allow_network: false
-  allow_paid_api: false
-  allow_scraping: false
-  allow_html_parsing: false
-  allow_broker: false
-  allow_order: false
-  allow_paper_mutation: false
-  allow_telegram_real_send: false
-  allow_dashboard: false
-  produce_trade_signals: false
-  produce_order_decisions: false
-  fetch_news_content: false
-
-phase111_macro_catalog:
-  enabled: true
-  fred_compatible_metadata_only: true
-  network_enabled_now: false
-  credential_required_now: false
-
-phase111_news_metadata:
-  enabled: true
-  metadata_only: true
-  content_fetch_enabled: false
-  network_enabled_now: false
-  scraping_enabled: false
-  html_parse_enabled: false
-  store_raw_urls: false
-  use_url_hash: true
-
-phase111_notifications:
-  enabled: true
-  dry_run: true
-  preview_only: true
-  telegram_real_send: false
-
-
-event_impact:
-  enabled: true
-  current_phase: 112
-  final_phase: 160
-  require_phase111_event_metadata: true
-  event_impact_tagging_enabled: true
-  macro_regime_metadata_enabled: true
-  calendar_aware_validation_enabled: true
-  write_event_impact_reports: true
-  warn_not_investment_advice: true
-  warn_phase112_is_not_activation: true
-  warn_impact_tags_are_not_trade_signals: true
-
-phase112_impact_policy:
-  metadata_only: true
-  research_context_only: true
-  allow_network: false
-  allow_paid_api: false
-  allow_scraping: false
-  allow_html_parsing: false
-  allow_broker: false
-  allow_order: false
-  allow_paper_mutation: false
-  allow_telegram_real_send: false
-  allow_dashboard: false
-  produce_trade_signals: false
-  produce_order_decisions: false
-
-phase112_macro_regime:
-  enabled: true
-  metadata_only: true
-  research_context_only: true
-  produce_trade_signals: false
-  produce_order_decisions: false
-
-phase112_calendar_validation:
-  enabled: true
-  metadata_only: true
-  research_context_only: true
-  price_jump_threshold_pct: 8.0
-  volume_multiplier_threshold: 3.0
-  explain_with_event_context: true
-  produce_trade_signals: false
-  produce_order_decisions: false
-
-phase112_notifications:
-  enabled: true
-  dry_run: true
-  preview_only: true
-  telegram_real_send: false
-
-provider_governance:
-  enabled: true
-  current_phase: 113
-  final_phase: 160
-  require_phase112_event_impact: true
-  provider_acceptance_enabled: true
-  governance_policy_enabled: true
-  data_lineage_enabled: true
-  audit_trail_enabled: true
-  no_execution_proof_enabled: true
-  write_provider_governance_reports: true
-  warn_not_investment_advice: true
-  warn_phase113_is_not_activation: true
-  warn_acceptance_is_not_trading_enable: true
-
-phase113_governance_policy:
-  metadata_only: true
-  research_data_only: true
-  free_source_only: true
-  no_scraping: true
-  no_html_parsing: true
-  no_paid_api: true
-  no_broker: true
-  no_order: true
-  no_paper_mutation: true
-  no_telegram_real_send: true
-  no_dashboard: true
-  no_trade_signal_from_data_layer: true
-  require_lineage: true
-  require_audit_manifest: true
-  require_no_secrets: true
-
-phase113_lineage:
-  enabled: true
-  require_provider_source_node: true
-  require_adapter_node: true
-  require_cache_artifact_node: true
-  require_quality_score_node: true
-  require_route_node: true
-  require_event_context_node: true
-  require_audit_node: true
-  block_on_secret_node: true
-  block_on_trade_signal_node: true
-  block_on_order_decision_node: true
-
-phase113_audit:
-  enabled: true
-  metadata_only: true
-  hash_artifacts: true
-  store_raw_secrets: false
-  redact_sensitive_fields: true
-  block_on_secret_violation: true
-  block_on_execution_violation: true
-  block_on_order_violation: true
-
-phase113_notifications:
-  enabled: true
-  dry_run: true
-  preview_only: true
-  telegram_real_send: false
-
-
-provider_freeze:
-  enabled: true
-  current_phase: 114
-  final_phase: 160
-  require_phase113_provider_governance: true
-  freeze_enabled: true
-  multi_provider_final_review_enabled: true
-  data_layer_rehearsal_enabled: true
-  output_contract_enabled: true
-  write_provider_freeze_reports: true
-  warn_not_investment_advice: true
-  warn_phase114_is_not_activation: true
-  warn_freeze_is_not_trading_enable: true
-
-phase114_freeze_policy:
-  metadata_only: true
-  research_data_only: true
-  phase_start: 106
-  phase_end: 114
-  next_phase: 115
-  final_phase: 160
-  frozen: true
-  immutable: true
-  allow_activation: false
-  allow_active_paper: false
-  allow_broker_execution: false
-  allow_order_creation: false
-  allow_paper_mutation: false
-  allow_telegram_real_send: false
-  allow_scraping: false
-  allow_html_parsing: false
-  allow_paid_api: false
-  allow_dashboard: false
-  network_default_enabled: false
-  produce_trade_signals: false
-  produce_order_decisions: false
-
-phase114_rehearsal:
-  enabled: true
-  metadata_only: true
-  dry_run_only: true
-  research_data_only: true
-  allow_network: false
-  allow_paid_api: false
-  allow_scraping: false
-  allow_html_parsing: false
-  allow_broker: false
-  allow_order: false
-  allow_paper_mutation: false
-  allow_telegram_real_send: false
-  allow_dashboard: false
-  produce_trade_signals: false
-  produce_order_decisions: false
-
-phase114_output_contract:
-  enabled: true
-  metadata_only_required: true
-  research_data_only_required: true
-  trade_signal_blocked: true
-  order_decision_blocked: true
-  execution_blocked: true
-  broker_blocked: true
-  paper_mutation_blocked: true
-  telegram_real_send_blocked: true
-  scraping_blocked: true
-  html_parsing_blocked: true
-  paid_api_blocked: true
-  network_default_enabled_blocked: true
-
-phase114_notifications:
-  enabled: true
-  dry_run: true
-  preview_only: true
-  telegram_real_send: false
-
-provider_final_acceptance:
-  enabled: true
-  current_phase: 115
-  final_phase: 160
-  require_phase114_provider_freeze: true
-  final_acceptance_enabled: true
-  provider_layer_closure_enabled: true
-  feature_factor_kickoff_gate_enabled: true
-  write_final_acceptance_reports: true
-  warn_not_investment_advice: true
-  warn_phase115_is_not_activation: true
-  warn_acceptance_is_not_trading_enable: true
-
-phase115_final_acceptance_policy:
-  metadata_only: true
-  research_data_only: true
-  phase_start: 106
-  phase_end: 115
-  next_phase: 116
-  final_phase: 160
-  accept_provider_layer: true
-  close_provider_layer: true
-  allow_activation: false
-  allow_active_paper: false
-  allow_broker_execution: false
-  allow_order_creation: false
-  allow_paper_mutation: false
-  allow_telegram_real_send: false
-  allow_scraping: false
-  allow_html_parsing: false
-  allow_paid_api: false
-  allow_dashboard: false
-  network_default_enabled: false
-  produce_trade_signals: false
-  produce_order_decisions: false
-
-phase115_feature_factor_kickoff:
-  enabled: true
-  ready_for_phase116: true
-  metadata_only: true
-  research_data_only: true
-  allow_indicator_input_contracts: true
-  allow_feature_schema_definitions: true
-  allow_factor_metadata_definitions: true
-  allow_feature_validation_rules: true
-  block_trade_signal_generation: true
-  block_strategy_activation: true
-  block_order_decision: true
-  block_broker_execution: true
-  block_paper_state_mutation: true
-  block_live_demo_trading: true
-  block_telegram_real_send: true
-  block_dashboard: true
-  block_paid_api: true
-  block_scraping: true
-  block_html_parsing: true
-
-phase115_notifications:
-  enabled: true
-  dry_run: true
-  preview_only: true
-  telegram_real_send: false

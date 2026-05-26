@@ -46,3 +46,16 @@ def format_provider_governance_report_message(review): pass
 def format_data_lineage_warning_message(graph): pass
 def format_audit_trail_warning_message(manifest): pass
 def notifications_from_provider_governance_review(review): pass
+
+
+def format_feature_foundation_report_message(review) -> dict:
+    return {"message": "Dry-run feature foundation report", "type": "FEATURE_FOUNDATION_REPORT"}
+
+def format_feature_contract_warning_message(contract) -> dict:
+    return {"message": "Dry-run feature contract warning", "type": "FEATURE_CONTRACT_WARNING"}
+
+def format_feature_registry_warning_message(registry) -> dict:
+    return {"message": "Dry-run feature registry warning", "type": "FEATURE_REGISTRY_WARNING"}
+
+def notifications_from_feature_foundation_review(review) -> list:
+    return [format_feature_foundation_report_message(review)]
