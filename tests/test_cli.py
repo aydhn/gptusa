@@ -1,11 +1,11 @@
-import unittest
-from usa_signal_bot.app.cli import phase114_provider_freeze_info
+from click.testing import CliRunner
+from usa_signal_bot.app.cli import cli
+from pathlib import Path
+import tempfile
+import pandas as pd
 
-class DummyArgs:
-    pass
-
-class TestCLI(unittest.TestCase):
-    def test_info(self):
-        args = DummyArgs()
-        phase114_provider_freeze_info(args)
-        self.assertTrue(True)
+def test_core_indicators_info():
+    runner = CliRunner()
+    result = runner.invoke(cli, ['core-indicators-info'])
+    assert result.exit_code == 0
+    assert "NOT activation" in result.output
