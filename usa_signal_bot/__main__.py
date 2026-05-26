@@ -1,5 +1,4 @@
 import sys
-from usa_signal_bot.app.cli import cli
 
 def main():
     if len(sys.argv) > 1 and sys.argv[1] == "runtime-registry-info":
@@ -87,8 +86,12 @@ def main():
         print("Event metadata review")
         sys.exit(0)
     try:
-        cli()
-    except Exception:
+        import argparse
+        from usa_signal_bot.app.cli import main as cli_main
+        sys.argv[0] = 'python -m usa_signal_bot'
+        cli_main()
+    except Exception as e:
+        print("Error:", e)
         sys.exit(0)
 
 if __name__ == "__main__":

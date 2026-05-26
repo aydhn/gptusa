@@ -1605,3 +1605,21 @@ class ProviderFreezeStoreError(Exception):
 
 class ProviderFreezeReportingError(Exception):
     pass
+
+
+class ProviderFinalAcceptanceError(Exception): pass
+class ProviderFreezeIngestionError(Exception): pass
+class FinalAcceptanceCriteriaError(Exception): pass
+class FinalAcceptanceCheckerError(Exception): pass
+class ProviderLayerClosureError(Exception): pass
+class ProviderLayerClosureValidationError(Exception): pass
+class FinalNoExecutionValidationError(Exception): pass
+class FinalDataContractError(Exception): pass
+class FeatureFactorScopeError(Exception): pass
+class FeatureFactorKickoffRuleError(Exception): pass
+class FeatureFactorKickoffAssertionError(Exception): pass
+class FeatureFactorKickoffGateError(Exception): pass
+class FeatureFactorKickoffValidationError(Exception): pass
+class FinalAcceptanceStoreError(Exception): pass
+class FinalAcceptanceValidationError(Exception): pass
+class FinalAcceptanceReportingError(Exception): pass

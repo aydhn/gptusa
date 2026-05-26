@@ -69,10 +69,95 @@ def setup_phase114_cli(subparsers):
     p_rehearsal = subparsers.add_parser('data-layer-rehearsal', help='Run data layer acceptance rehearsal.')
     p_rehearsal.set_defaults(func=phase114_data_layer_rehearsal)
 
+
+def provider_final_acceptance_info(args):
+    print("Phase 115: Data Provider Expansion Final Acceptance and Closure")
+    print("This phase is strictly for final acceptance and layer closure.")
+    print("It is NOT active paper trading or live deployment.")
+    print("Feature/factor engine kickoff is strictly for development scope.")
+    print("Real execution, broker API, HTML scraping, and Telegram sends are strictly blocked.")
+
+def provider_final_ingest_freeze(args):
+    from usa_signal_bot.provider_final_acceptance.provider_freeze_ingestion import ingest_latest_provider_freeze_review_from_store, provider_freeze_ingestion_to_text
+    from pathlib import Path
+    def get_data_dir(): return Path("data")
+    data_root = get_data_dir()
+    res = ingest_latest_provider_freeze_review_from_store(data_root)
+    print(provider_freeze_ingestion_to_text(res))
+
+def provider_final_acceptance_check(args):
+    from usa_signal_bot.provider_final_acceptance.provider_freeze_ingestion import ingest_latest_provider_freeze_review_from_store
+    from usa_signal_bot.provider_final_acceptance.final_acceptance_checker import build_data_provider_final_acceptance_report, data_provider_final_acceptance_report_to_text
+    from usa_signal_bot.provider_final_acceptance.final_acceptance_store import write_data_provider_final_acceptance_report_json, final_acceptance_reports_dir
+    from pathlib import Path
+    def get_data_dir(): return Path("data")
+    data_root = get_data_dir()
+    ingestion = ingest_latest_provider_freeze_review_from_store(data_root)
+    report = build_data_provider_final_acceptance_report(ingestion)
+    print(data_provider_final_acceptance_report_to_text(report))
+    if hasattr(args, 'write') and args.write:
+        d = final_acceptance_reports_dir(data_root)
+        write_data_provider_final_acceptance_report_json(d / f"{report.report_id}.json", report)
+        print("Report written.")
+
+def provider_final_acceptance_review(args):
+    from usa_signal_bot.provider_final_acceptance.final_acceptance_report import build_provider_final_acceptance_full_review, provider_final_acceptance_full_review_to_text
+    from usa_signal_bot.provider_final_acceptance.final_acceptance_store import write_provider_final_acceptance_full_review_json, final_acceptance_reviews_dir
+    from pathlib import Path
+    def get_data_dir(): return Path("data")
+    data_root = get_data_dir()
+    data_root = get_data_dir()
+    try:
+        import json
+        with open(data_root / "provider_freeze" / "reviews" / "dummy.json") as f: payload = json.load(f)
+    except: payload = {}
+    review = build_provider_final_acceptance_full_review(payload)
+    print(provider_final_acceptance_full_review_to_text(review))
+    if hasattr(args, 'write') and args.write:
+        d = final_acceptance_reviews_dir(data_root)
+        write_provider_final_acceptance_full_review_json(d / f"{review.review_id}.json", review)
+        print("Review written.")
+
+def provider_layer_closure(args):
+    from usa_signal_bot.provider_final_acceptance.provider_freeze_ingestion import ingest_latest_provider_freeze_review_from_store
+    from usa_signal_bot.provider_final_acceptance.provider_layer_closure import build_provider_layer_closure_bundle, provider_layer_closure_to_text
+    from usa_signal_bot.provider_final_acceptance.final_acceptance_store import write_provider_layer_closure_bundle_json, provider_layer_closures_dir
+    from pathlib import Path
+    def get_data_dir(): return Path("data")
+    data_root = get_data_dir()
+    ingestion = ingest_latest_provider_freeze_review_from_store(data_root)
+    bundle = build_provider_layer_closure_bundle(ingestion)
+    print(provider_layer_closure_to_text(bundle))
+    if hasattr(args, 'write') and args.write:
+        d = provider_layer_closures_dir(data_root)
+        write_provider_layer_closure_bundle_json(d / f"{bundle.closure_id}.json", bundle)
+        print("Closure bundle written.")
+
+
 def main():
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest='command')
     setup_phase114_cli(subparsers)
+
+
+    parser_info = subparsers.add_parser("provider-final-acceptance-info")
+    parser_info.set_defaults(func=provider_final_acceptance_info)
+
+    parser_ingest = subparsers.add_parser("provider-final-ingest-freeze")
+    parser_ingest.add_argument("--write", action="store_true")
+    parser_ingest.set_defaults(func=provider_final_ingest_freeze)
+
+    parser_check = subparsers.add_parser("provider-final-acceptance-check")
+    parser_check.add_argument("--write", action="store_true")
+    parser_check.set_defaults(func=provider_final_acceptance_check)
+
+    parser_review = subparsers.add_parser("provider-final-acceptance-review")
+    parser_review.add_argument("--write", action="store_true")
+    parser_review.set_defaults(func=provider_final_acceptance_review)
+
+    parser_closure = subparsers.add_parser("provider-layer-closure")
+    parser_closure.add_argument("--write", action="store_true")
+    parser_closure.set_defaults(func=provider_layer_closure)
 
     args = parser.parse_args()
     if args.command:
@@ -82,3 +167,57 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+    print("Feature/factor engine kickoff is strictly for development scope.")
+    print("Real execution, broker API, HTML scraping, and Telegram sends are strictly blocked.")
+
+
+    data_root = get_data_dir()
+    res = ingest_latest_provider_freeze_review_from_store(data_root)
+    print(provider_freeze_ingestion_to_text(res))
+
+    from usa_signal_bot.provider_final_acceptance.final_acceptance_store import write_data_provider_final_acceptance_report_json, final_acceptance_reports_dir
+    from pathlib import Path
+    def get_data_dir(): return Path("data")
+
+    data_root = get_data_dir()
+    ingestion = ingest_latest_provider_freeze_review_from_store(data_root)
+    report = build_data_provider_final_acceptance_report(ingestion)
+
+    print(data_provider_final_acceptance_report_to_text(report))
+    if write:
+        d = final_acceptance_reports_dir(data_root)
+        write_data_provider_final_acceptance_report_json(d / f"{report.report_id}.json", report)
+        print("Report written.")
+
+    from pathlib import Path
+    def get_data_dir(): return Path("data")
+
+    data_root = get_data_dir()
+    data_root = get_data_dir()
+    try:
+        import json
+        with open(data_root / "provider_freeze" / "reviews" / "dummy.json") as f: payload = json.load(f)
+    except: payload = {}
+    review = build_provider_final_acceptance_full_review(payload)
+
+    print(provider_final_acceptance_full_review_to_text(review))
+    if write:
+        d = final_acceptance_reviews_dir(data_root)
+        write_provider_final_acceptance_full_review_json(d / f"{review.review_id}.json", review)
+        print("Review written.")
+
+    from usa_signal_bot.provider_final_acceptance.final_acceptance_store import write_provider_layer_closure_bundle_json, provider_layer_closures_dir
+    from pathlib import Path
+    def get_data_dir(): return Path("data")
+
+    data_root = get_data_dir()
+    ingestion = ingest_latest_provider_freeze_review_from_store(data_root)
+    bundle = build_provider_layer_closure_bundle(ingestion)
+
+    print(provider_layer_closure_to_text(bundle))
+    if write:
+        d = provider_layer_closures_dir(data_root)
+        write_provider_layer_closure_bundle_json(d / f"{bundle.closure_id}.json", bundle)
+        print("Closure bundle written.")

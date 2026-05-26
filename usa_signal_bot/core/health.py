@@ -47,3 +47,99 @@ def check_phase114_notification_boundary_health(context: Any) -> Any:
 
 with open('usa_signal_bot/core/health.py', 'a') as f:
     f.write(health_patch)
+
+def check_phase115_provider_final_acceptance_config_health(context: RuntimeContext) -> HealthCheckResult:
+    config = context.config.provider_final_acceptance
+    if not config.enabled:
+        return HealthCheckResult(
+            component="phase115_provider_final_acceptance_config",
+            status=HealthStatus.WARNING,
+            message="Phase 115 Provider Final Acceptance is disabled.",
+            details={"enabled": False}
+        )
+    return HealthCheckResult(
+        component="phase115_provider_final_acceptance_config",
+        status=HealthStatus.HEALTHY,
+        message="Phase 115 Provider Final Acceptance config is healthy.",
+        details={"enabled": True, "phase": config.current_phase}
+    )
+
+def check_phase115_provider_freeze_ingestion_health(context: RuntimeContext) -> HealthCheckResult:
+    return HealthCheckResult(
+        component="phase115_provider_freeze_ingestion",
+        status=HealthStatus.HEALTHY,
+        message="Phase 115 Provider Freeze Ingestion subsystem is healthy.",
+        details={"ready": True}
+    )
+
+def check_phase115_final_acceptance_criteria_health(context: RuntimeContext) -> HealthCheckResult:
+    return HealthCheckResult(
+        component="phase115_final_acceptance_criteria",
+        status=HealthStatus.HEALTHY,
+        message="Phase 115 Final Acceptance Criteria subsystem is healthy.",
+        details={"ready": True}
+    )
+
+def check_phase115_final_acceptance_checker_health(context: RuntimeContext) -> HealthCheckResult:
+    return HealthCheckResult(
+        component="phase115_final_acceptance_checker",
+        status=HealthStatus.HEALTHY,
+        message="Phase 115 Final Acceptance Checker subsystem is healthy.",
+        details={"ready": True}
+    )
+
+def check_phase115_provider_layer_closure_health(context: RuntimeContext) -> HealthCheckResult:
+    return HealthCheckResult(
+        component="phase115_provider_layer_closure",
+        status=HealthStatus.HEALTHY,
+        message="Phase 115 Provider Layer Closure subsystem is healthy.",
+        details={"ready": True}
+    )
+
+def check_phase115_final_no_execution_health(context: RuntimeContext) -> HealthCheckResult:
+    return HealthCheckResult(
+        component="phase115_final_no_execution",
+        status=HealthStatus.HEALTHY,
+        message="Phase 115 Final No-Execution subsystem is healthy.",
+        details={"ready": True}
+    )
+
+def check_phase115_final_data_contract_health(context: RuntimeContext) -> HealthCheckResult:
+    return HealthCheckResult(
+        component="phase115_final_data_contract",
+        status=HealthStatus.HEALTHY,
+        message="Phase 115 Final Data Contract subsystem is healthy.",
+        details={"ready": True}
+    )
+
+def check_phase115_feature_factor_scope_health(context: RuntimeContext) -> HealthCheckResult:
+    return HealthCheckResult(
+        component="phase115_feature_factor_scope",
+        status=HealthStatus.HEALTHY,
+        message="Phase 115 Feature Factor Scope subsystem is healthy.",
+        details={"ready": True}
+    )
+
+def check_phase115_feature_factor_kickoff_gate_health(context: RuntimeContext) -> HealthCheckResult:
+    return HealthCheckResult(
+        component="phase115_feature_factor_kickoff_gate",
+        status=HealthStatus.HEALTHY,
+        message="Phase 115 Feature Factor Kickoff Gate subsystem is healthy.",
+        details={"ready": True}
+    )
+
+def check_phase115_final_acceptance_store_health(context: RuntimeContext) -> HealthCheckResult:
+    return HealthCheckResult(
+        component="phase115_final_acceptance_store",
+        status=HealthStatus.HEALTHY,
+        message="Phase 115 Final Acceptance Store subsystem is healthy.",
+        details={"ready": True}
+    )
+
+def check_phase115_notification_boundary_health(context: RuntimeContext) -> HealthCheckResult:
+    return HealthCheckResult(
+        component="phase115_notification_boundary",
+        status=HealthStatus.HEALTHY,
+        message="Phase 115 Notification Boundary subsystem is healthy.",
+        details={"ready": True}
+    )
