@@ -2606,3 +2606,70 @@ class Phase117NotificationsConfig:
     dry_run: bool = True
     preview_only: bool = True
     telegram_real_send: bool = False
+
+
+@dataclass
+class Phase119EnrichmentPolicyConfig:
+    compute_values_local_only: bool = True
+    research_data_only: bool = True
+    local_fixture_only_default: bool = True
+    allow_network: bool = False
+    allow_paid_api: bool = False
+    allow_scraping: bool = False
+    allow_html_parsing: bool = False
+    allow_broker: bool = False
+    allow_order: bool = False
+    allow_paper_mutation: bool = False
+    allow_telegram_real_send: bool = False
+    allow_dashboard: bool = False
+    produce_trade_signals: bool = False
+    produce_order_decisions: bool = False
+    produce_portfolio_weights: bool = False
+    strategy_activation_allowed: bool = False
+
+@dataclass
+class Phase119FeatureInteractionsConfig:
+    enabled: bool = True
+    allow_multiplicative: bool = True
+    allow_ratio: bool = True
+    allow_difference: bool = True
+    allow_event_conditioned: bool = True
+    allow_quality_weighted: bool = True
+    allow_calendar_conditioned: bool = True
+    block_signal_generation: bool = True
+    block_order_decision: bool = True
+    block_portfolio_weights: bool = True
+
+@dataclass
+class Phase119FeatureTableConfig:
+    preserve_advanced_feature_columns: bool = True
+    preserve_warmup_nulls: bool = True
+    block_forbidden_columns: bool = True
+    allow_macd_signal_line_column: bool = True
+    write_feature_tables: bool = True
+    overwrite_feature_tables_default: bool = False
+
+@dataclass
+class Phase119NotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    preview_only: bool = True
+    telegram_real_send: bool = False
+
+@dataclass
+class FeatureEnrichmentConfig:
+    enabled: bool = True
+    current_phase: int = 119
+    final_phase: int = 160
+    require_phase118_advanced_features: bool = True
+    event_aware_features_enabled: bool = True
+    quality_aware_features_enabled: bool = True
+    calendar_aware_features_enabled: bool = True
+    feature_freshness_enabled: bool = True
+    feature_confidence_enabled: bool = True
+    feature_interactions_enabled: bool = True
+    enriched_feature_table_enabled: bool = True
+    write_feature_enrichment_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_phase119_is_not_activation: bool = True
+    warn_enriched_features_are_not_trade_signals: bool = True

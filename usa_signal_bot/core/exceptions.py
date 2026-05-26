@@ -1750,3 +1750,73 @@ class AdvancedFeatureValidationError(AdvancedFeatureError):
 
 class AdvancedFeatureReportingError(AdvancedFeatureError):
     pass
+
+
+class FeatureEnrichmentError(USASignalBotError):
+    pass
+
+class AdvancedFeatureIngestionError(FeatureEnrichmentError):
+    pass
+
+class EventContextLoaderError(FeatureEnrichmentError):
+    pass
+
+class QualityMetadataLoaderError(FeatureEnrichmentError):
+    pass
+
+class CalendarMetadataLoaderError(FeatureEnrichmentError):
+    pass
+
+class EventEnrichmentSpecError(FeatureEnrichmentError):
+    pass
+
+class QualityEnrichmentSpecError(FeatureEnrichmentError):
+    pass
+
+class CalendarEnrichmentSpecError(FeatureEnrichmentError):
+    pass
+
+class EventAwareFeatureError(FeatureEnrichmentError):
+    pass
+
+class QualityAwareFeatureError(FeatureEnrichmentError):
+    pass
+
+class CalendarAwareFeatureError(FeatureEnrichmentError):
+    pass
+
+class FeatureFreshnessError(FeatureEnrichmentError):
+    pass
+
+class FeatureConfidenceError(FeatureEnrichmentError):
+    pass
+
+class FeatureAnomalyContextError(FeatureEnrichmentError):
+    pass
+
+class FeatureInteractionSpecError(FeatureEnrichmentError):
+    pass
+
+class FeatureInteractionBuilderError(FeatureEnrichmentError):
+    pass
+
+class InteractionSchemaValidationError(FeatureEnrichmentError):
+    pass
+
+class EnrichedFeatureTableBuilderError(FeatureEnrichmentError):
+    pass
+
+class EnrichedFeatureComputationValidationError(FeatureEnrichmentError):
+    pass
+
+class EnrichedFeatureOutputSafetyValidationError(FeatureEnrichmentError):
+    pass
+
+class FeatureEnrichmentStoreError(FeatureEnrichmentError):
+    pass
+
+class FeatureEnrichmentValidationError(FeatureEnrichmentError):
+    pass
+
+class FeatureEnrichmentReportingError(FeatureEnrichmentError):
+    pass

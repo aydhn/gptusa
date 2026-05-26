@@ -52,4 +52,12 @@ class DataQualityEvaluator:
             "phase118_cross_sectional_feature_score": 100,
             "phase118_advanced_feature_output_safety_score": 100,
             "phase118_non_execution_compliance_score": 100,
+            "phase119_event_aware_feature_score": 100.0,
+            "phase119_quality_aware_feature_score": 100.0,
+            "phase119_calendar_aware_feature_score": 100.0,
+            "phase119_feature_confidence_score": 100.0,
+            "phase119_feature_interaction_score": 100.0,
+            "phase119_enriched_feature_output_safety_score": 100.0,
+            "phase119_non_execution_compliance_score": 100.0,
+
         }
