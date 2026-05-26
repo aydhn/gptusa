@@ -6,7 +6,7 @@ from dataclasses import asdict
 from typing import Optional
 
 
-from usa_signal_bot.core.config_schema import Config as AppConfig, CoreRuntimeAcceptanceConfig, AdvancedFoundationFreezeConfig, DataProviderExpansionKickoffGateConfig, Phase105NotificationsConfig
+from usa_signal_bot.core.config_schema import Config as AppConfig, AdvancedFeaturesConfig, Phase118FeaturePolicyConfig, Phase118CrossSectionalConfig, Phase118FeatureTableConfig, Phase118NotificationsConfig, CoreRuntimeAcceptanceConfig, AdvancedFoundationFreezeConfig, DataProviderExpansionKickoffGateConfig, Phase105NotificationsConfig
 
 from usa_signal_bot.core.exceptions import ConfigError
 from usa_signal_bot.utils.dict_utils import deep_merge_dicts
@@ -226,6 +226,74 @@ def load_app_config(config_dir: Optional[Path] = None) -> AppConfig:
         if 'phase105_notifications' in merged_cfg_dict:
             config.phase105_notifications = Phase105NotificationsConfig(**merged_cfg_dict['phase105_notifications'])
 
+
+        if "advanced_features" in merged_cfg_dict:
+            af_dict = merged_cfg_dict.get("advanced_features", {})
+            config.advanced_features = AdvancedFeaturesConfig(
+                enabled=af_dict.get("enabled", True),
+                current_phase=af_dict.get("current_phase", 118),
+                final_phase=af_dict.get("final_phase", 160),
+                require_phase117_core_indicators=af_dict.get("require_phase117_core_indicators", True),
+                advanced_volatility_enabled=af_dict.get("advanced_volatility_enabled", True),
+                advanced_momentum_enabled=af_dict.get("advanced_momentum_enabled", True),
+                advanced_trend_enabled=af_dict.get("advanced_trend_enabled", True),
+                normalization_enabled=af_dict.get("normalization_enabled", True),
+                cross_sectional_enabled=af_dict.get("cross_sectional_enabled", True),
+                multi_symbol_feature_table_enabled=af_dict.get("multi_symbol_feature_table_enabled", True),
+                write_advanced_feature_reports=af_dict.get("write_advanced_feature_reports", True),
+                warn_not_investment_advice=af_dict.get("warn_not_investment_advice", True),
+                warn_phase118_is_not_activation=af_dict.get("warn_phase118_is_not_activation", True),
+                warn_advanced_features_are_not_trade_signals=af_dict.get("warn_advanced_features_are_not_trade_signals", True),
+            )
+        if "phase118_feature_policy" in merged_cfg_dict:
+             pd = merged_cfg_dict.get("phase118_feature_policy", {})
+             config.advanced_features.policy = Phase118FeaturePolicyConfig(
+                 compute_values_local_only=pd.get("compute_values_local_only", True),
+                 research_data_only=pd.get("research_data_only", True),
+                 local_fixture_only_default=pd.get("local_fixture_only_default", True),
+                 allow_network=pd.get("allow_network", False),
+                 allow_paid_api=pd.get("allow_paid_api", False),
+                 allow_scraping=pd.get("allow_scraping", False),
+                 allow_html_parsing=pd.get("allow_html_parsing", False),
+                 allow_broker=pd.get("allow_broker", False),
+                 allow_order=pd.get("allow_order", False),
+                 allow_paper_mutation=pd.get("allow_paper_mutation", False),
+                 allow_telegram_real_send=pd.get("allow_telegram_real_send", False),
+                 allow_dashboard=pd.get("allow_dashboard", False),
+                 produce_trade_signals=pd.get("produce_trade_signals", False),
+                 produce_order_decisions=pd.get("produce_order_decisions", False),
+                 produce_portfolio_weights=pd.get("produce_portfolio_weights", False),
+                 strategy_activation_allowed=pd.get("strategy_activation_allowed", False),
+             )
+        if "phase118_cross_sectional" in merged_cfg_dict:
+             cd = merged_cfg_dict.get("phase118_cross_sectional", {})
+             config.advanced_features.cross_sectional = Phase118CrossSectionalConfig(
+                 enabled=cd.get("enabled", True),
+                 min_required_symbols=cd.get("min_required_symbols", 2),
+                 default_benchmark_symbol=cd.get("default_benchmark_symbol", "SPY"),
+                 align_on_common_timestamps=cd.get("align_on_common_timestamps", True),
+                 produce_portfolio_weights=cd.get("produce_portfolio_weights", False),
+                 produce_trade_signals=cd.get("produce_trade_signals", False),
+                 produce_order_decisions=cd.get("produce_order_decisions", False),
+             )
+        if "phase118_feature_table" in merged_cfg_dict:
+             fd = merged_cfg_dict.get("phase118_feature_table", {})
+             config.advanced_features.feature_table = Phase118FeatureTableConfig(
+                 preserve_core_feature_columns=fd.get("preserve_core_feature_columns", True),
+                 preserve_warmup_nulls=fd.get("preserve_warmup_nulls", True),
+                 block_forbidden_columns=fd.get("block_forbidden_columns", True),
+                 allow_macd_signal_line_column=fd.get("allow_macd_signal_line_column", True),
+                 write_feature_tables=fd.get("write_feature_tables", True),
+                 overwrite_feature_tables_default=fd.get("overwrite_feature_tables_default", False),
+             )
+        if "phase118_notifications" in merged_cfg_dict:
+             nd = merged_cfg_dict.get("phase118_notifications", {})
+             config.advanced_features.notifications = Phase118NotificationsConfig(
+                 enabled=nd.get("enabled", True),
+                 dry_run=nd.get("dry_run", True),
+                 preview_only=nd.get("preview_only", True),
+                 telegram_real_send=nd.get("telegram_real_send", False),
+             )
         return config
 
     except Exception as e:
@@ -344,3 +412,6 @@ def load_dry_admission_gate_notifications_config(data: dict):
         default_channel=d.get("default_channel", "dry_run"),
         warn_no_real_send_default=d.get("warn_no_real_send_default", True)
     )
+
+# add parsing to `config.py` near other configurations
+# using sed

@@ -66,3 +66,26 @@ def format_core_indicator_report_message(review) -> dict: return {}
 def format_feature_computation_warning_message(results) -> dict: return {}
 def format_feature_table_warning_message(tables) -> dict: return {}
 def notifications_from_core_indicator_review(review) -> list: return []
+
+
+from usa_signal_bot.feature_engine.advanced_features.phase118_models import AdvancedFeatureFullReview, AdvancedFeatureComputationResult, AdvancedFeatureTableResult
+
+class NotificationMessage:
+    def __init__(self, message: str, type: str):
+        self.message = message
+        self.type = type
+
+def format_advanced_feature_report_message(review: AdvancedFeatureFullReview) -> NotificationMessage:
+    msg = f"Phase 118 Review {review.review_id} completed. This is a local-only research artifact and NOT investment advice."
+    return NotificationMessage(message=msg, type="ADVANCED_FEATURE_REPORT")
+
+def format_cross_sectional_feature_warning_message(result: AdvancedFeatureComputationResult) -> NotificationMessage:
+    msg = f"Cross sectional feature warning for {result.result_id}."
+    return NotificationMessage(message=msg, type="CROSS_SECTIONAL_FEATURE_WARNING")
+
+def format_advanced_feature_table_warning_message(tables: list[AdvancedFeatureTableResult]) -> NotificationMessage:
+    msg = f"Advanced feature table warning for {len(tables)} tables."
+    return NotificationMessage(message=msg, type="ADVANCED_FEATURE_TABLE_WARNING")
+
+def notifications_from_advanced_feature_review(review: AdvancedFeatureFullReview) -> list[NotificationMessage]:
+    return [format_advanced_feature_report_message(review)]

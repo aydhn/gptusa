@@ -1,0 +1,9 @@
+{
+    "universe_id": "univ_test",
+    "symbols": ["AAPL", "MSFT", "SPY"],
+    "min_required_symbols": 2,
+    "status": "VALIDATED",
+    "research_data_only": true,
+    "contains_benchmark_symbol": true,
+    "benchmark_symbol": "SPY"
+}

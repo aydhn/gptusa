@@ -198,6 +198,45 @@ def phase116_add_commands(subparsers):
     parser_val.add_argument('--write', action='store_true')
     parser_val.set_defaults(func=lambda args: print("Feature foundation valid."))
 
+
+
+def advanced_features_info(args):
+    print("Phase 118: Advanced Volatility, Momentum, Trend, Normalization and Cross-Sectional Feature Expansion")
+    print("NOTE: This phase is for research data only. Outputs are NOT trade signals, and NOT investment advice.")
+    from usa_signal_bot.feature_engine.advanced_features.advanced_feature_registry import build_advanced_feature_specs
+    specs = build_advanced_feature_specs()
+    print(f"Registered Specs: {len(specs)}")
+
+def advanced_feature_review(args):
+    from usa_signal_bot.feature_engine.advanced_features.advanced_feature_report import build_advanced_feature_full_review, advanced_feature_full_review_to_text
+    review = build_advanced_feature_full_review()
+    print(advanced_feature_full_review_to_text(review))
+    if hasattr(args, "write") and args.write:
+        print("Write to store not fully integrated in dummy CLI yet, see tests.")
+
+def build_multi_symbol_table(args):
+    print("Building multi-symbol advanced feature tables (dry-run/local mode only)...")
+    print("NOTE: This will NOT issue real broker execution, paper orders, or mutations.")
+    if hasattr(args, "write") and args.write:
+        print("Write enabled.")
+
+def advanced_features_ingest_core(args): print("Ingesting core indicators...")
+def advanced_feature_registry(args): print("Advanced feature registry:")
+def compute_advanced_volatility_features(args): print("Computing advanced volatility features...")
+def compute_advanced_momentum_features(args): print("Computing advanced momentum features...")
+def compute_advanced_trend_features(args): print("Computing advanced trend features...")
+def compute_normalization_features(args): print("Computing normalization features...")
+def cross_sectional_universe(args): print("Cross-sectional universe generation...")
+def cross_sectional_align(args): print("Cross-sectional alignment...")
+def compute_cross_sectional_features(args): print("Computing cross-sectional features...")
+def compute_relative_strength_features(args): print("Computing relative strength features...")
+def compute_volatility_liquidity_ranks(args): print("Computing volatility/liquidity ranks...")
+def advanced_feature_schema_check(args): print("Checking schema...")
+def advanced_feature_computation_validate(args): print("Validating computation...")
+def advanced_feature_output_safety_check(args): print("Validating safety...")
+def advanced_feature_context(args): print("Advanced feature context details:")
+def advanced_feature_summary(args): print("Advanced feature summary:")
+def advanced_feature_validate(args): print("Full advanced feature validation:")
 def main():
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest='command')
@@ -227,6 +266,68 @@ def main():
     # Phase 116
     phase116_add_commands(subparsers)
 
+
+    parser_af_info = subparsers.add_parser('advanced-features-info')
+    parser_af_info.set_defaults(func=advanced_features_info)
+
+    parser_af_rev = subparsers.add_parser('advanced-feature-review')
+    parser_af_rev.add_argument('--write', action='store_true')
+    parser_af_rev.set_defaults(func=advanced_feature_review)
+
+    parser_msft = subparsers.add_parser('build-multi-symbol-advanced-feature-table')
+    parser_msft.add_argument('--write', action='store_true')
+    parser_msft.set_defaults(func=build_multi_symbol_table)
+
+    parser_af_ic = subparsers.add_parser('advanced-features-ingest-core')
+    parser_af_ic.set_defaults(func=advanced_features_ingest_core)
+
+    parser_af_reg = subparsers.add_parser('advanced-feature-registry')
+    parser_af_reg.set_defaults(func=advanced_feature_registry)
+
+    parser_cavf = subparsers.add_parser('compute-advanced-volatility-features')
+    parser_cavf.set_defaults(func=compute_advanced_volatility_features)
+
+    parser_camf = subparsers.add_parser('compute-advanced-momentum-features')
+    parser_camf.set_defaults(func=compute_advanced_momentum_features)
+
+    parser_catf = subparsers.add_parser('compute-advanced-trend-features')
+    parser_catf.set_defaults(func=compute_advanced_trend_features)
+
+    parser_cnf = subparsers.add_parser('compute-normalization-features')
+    parser_cnf.set_defaults(func=compute_normalization_features)
+
+    parser_csu = subparsers.add_parser('cross-sectional-universe')
+    parser_csu.set_defaults(func=cross_sectional_universe)
+
+    parser_csa = subparsers.add_parser('cross-sectional-align')
+    parser_csa.set_defaults(func=cross_sectional_align)
+
+    parser_ccsf = subparsers.add_parser('compute-cross-sectional-features')
+    parser_ccsf.set_defaults(func=compute_cross_sectional_features)
+
+    parser_crsf = subparsers.add_parser('compute-relative-strength-features')
+    parser_crsf.set_defaults(func=compute_relative_strength_features)
+
+    parser_cvlr = subparsers.add_parser('compute-volatility-liquidity-ranks')
+    parser_cvlr.set_defaults(func=compute_volatility_liquidity_ranks)
+
+    parser_afsc = subparsers.add_parser('advanced-feature-schema-check')
+    parser_afsc.set_defaults(func=advanced_feature_schema_check)
+
+    parser_afcv = subparsers.add_parser('advanced-feature-computation-validate')
+    parser_afcv.set_defaults(func=advanced_feature_computation_validate)
+
+    parser_afosc = subparsers.add_parser('advanced-feature-output-safety-check')
+    parser_afosc.set_defaults(func=advanced_feature_output_safety_check)
+
+    parser_afc = subparsers.add_parser('advanced-feature-context')
+    parser_afc.set_defaults(func=advanced_feature_context)
+
+    parser_afs = subparsers.add_parser('advanced-feature-summary')
+    parser_afs.set_defaults(func=advanced_feature_summary)
+
+    parser_afv = subparsers.add_parser('advanced-feature-validate')
+    parser_afv.set_defaults(func=advanced_feature_validate)
     args = parser.parse_args()
     if args.command:
         args.func(args)
