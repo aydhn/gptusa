@@ -289,3 +289,79 @@ if __name__ == '__main__':
         d = provider_layer_closures_dir(data_root)
         write_provider_layer_closure_bundle_json(d / f"{bundle.closure_id}.json", bundle)
         print("Closure bundle written.")
+
+
+# Phase 117 CLI Commands (Stubs for demonstration)
+def handle_core_indicators_info(args):
+    print("Phase 117 is for research-data only, no activation, no trade signals.")
+
+def handle_core_indicators_ingest_foundation(args):
+    pass
+
+def handle_indicator_implementation_registry(args):
+    pass
+
+def handle_ohlcv_feature_input_validate(args):
+    pass
+
+def handle_rolling_window_check(args):
+    pass
+
+def handle_compute_return_features(args):
+    pass
+
+def handle_compute_moving_average_features(args):
+    pass
+
+def handle_compute_volatility_features(args):
+    pass
+
+def handle_compute_atr_features(args):
+    pass
+
+def handle_compute_rsi_features(args):
+    pass
+
+def handle_compute_macd_features(args):
+    pass
+
+def handle_compute_stochastic_features(args):
+    pass
+
+def handle_compute_bollinger_features(args):
+    pass
+
+def handle_compute_volume_features(args):
+    pass
+
+def handle_compute_price_action_features(args):
+    pass
+
+def handle_compute_gap_range_candle_features(args):
+    pass
+
+def handle_build_core_feature_table(args):
+    pass
+
+def handle_feature_warmup_null_summary(args):
+    pass
+
+def handle_core_feature_computation_validate(args):
+    pass
+
+def handle_core_feature_output_safety_check(args):
+    pass
+
+def handle_core_indicator_context(args):
+    pass
+
+def handle_core_indicator_review(args):
+    pass
+
+def handle_core_indicator_summary(args):
+    pass
+
+def handle_core_indicator_validate(args):
+    pass
+
+# Assuming click or argparse is used. We just add the function definitions.

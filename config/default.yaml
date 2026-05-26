@@ -2156,3 +2156,50 @@ zero_mutation_audit:
   require_after_baseline: true
   require_before_baseline: true
   require_hash_unchanged: true
+
+
+core_indicators:
+  enabled: true
+  current_phase: 117
+  final_phase: 160
+  require_phase116_feature_foundation: true
+  local_pandas_indicators_enabled: true
+  rolling_window_engine_enabled: true
+  feature_table_builder_enabled: true
+  write_core_indicator_reports: true
+  warn_not_investment_advice: true
+  warn_phase117_is_not_activation: true
+  warn_indicators_are_not_trade_signals: true
+
+phase117_indicator_policy:
+  metadata_only: false
+  compute_values_local_only: true
+  research_data_only: true
+  dry_run_only_default: false
+  local_fixture_only_default: true
+  allow_network: false
+  allow_paid_api: false
+  allow_scraping: false
+  allow_html_parsing: false
+  allow_broker: false
+  allow_order: false
+  allow_paper_mutation: false
+  allow_telegram_real_send: false
+  allow_dashboard: false
+  produce_trade_signals: false
+  produce_order_decisions: false
+  strategy_activation_allowed: false
+
+phase117_feature_table:
+  preserve_base_ohlcv_columns: true
+  preserve_warmup_nulls: true
+  default_null_policy: "PRESERVE_WARMUP_NULLS"
+  block_forbidden_columns: true
+  allow_macd_signal_line_column: true
+  write_feature_tables: true
+
+phase117_notifications:
+  enabled: true
+  dry_run: true
+  preview_only: true
+  telegram_real_send: false

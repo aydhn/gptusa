@@ -59,3 +59,10 @@ def format_feature_registry_warning_message(registry) -> dict:
 
 def notifications_from_feature_foundation_review(review) -> list:
     return [format_feature_foundation_report_message(review)]
+
+
+# Phase 117 Notifications
+def format_core_indicator_report_message(review) -> dict: return {}
+def format_feature_computation_warning_message(results) -> dict: return {}
+def format_feature_table_warning_message(tables) -> dict: return {}
+def notifications_from_core_indicator_review(review) -> list: return []
