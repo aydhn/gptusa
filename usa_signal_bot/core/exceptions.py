@@ -1526,7 +1526,7 @@ class EventImpactStoreError(EventImpactError): pass
 class EventImpactValidationError(EventImpactError): pass
 class EventImpactReportingError(EventImpactError): pass
 
-class ProviderGovernanceError(BaseAppError): pass
+class ProviderGovernanceError(Exception): pass
 class EventImpactIngestionError(ProviderGovernanceError): pass
 class ProviderExpansionEvidenceError(ProviderGovernanceError): pass
 class ProviderAcceptanceCriteriaError(ProviderGovernanceError): pass
@@ -1545,3 +1545,63 @@ class AuditSafetyValidationError(ProviderGovernanceError): pass
 class ProviderGovernanceStoreError(ProviderGovernanceError): pass
 class ProviderGovernanceValidationError(ProviderGovernanceError): pass
 class ProviderGovernanceReportingError(ProviderGovernanceError): pass
+
+class ProviderFreezeError(Exception):
+    pass
+
+class ProviderGovernanceIngestionError(Exception):
+    pass
+
+class ProviderFreezePolicyError(Exception):
+    pass
+
+class ProviderFreezeEvidenceError(Exception):
+    pass
+
+class ProviderFreezeBundleError(Exception):
+    pass
+
+class ProviderFreezeValidationError(Exception):
+    pass
+
+class MultiProviderFinalReviewError(Exception):
+    pass
+
+class ProviderConsistencyCheckError(Exception):
+    pass
+
+class ProviderCoverageCheckError(Exception):
+    pass
+
+class ProviderSafetyFinalCheckError(Exception):
+    pass
+
+class RehearsalScenarioBuilderError(Exception):
+    pass
+
+class DataLayerRehearsalRunnerError(Exception):
+    pass
+
+class DataLayerRehearsalValidationError(Exception):
+    pass
+
+class DataLayerOutputContractError(Exception):
+    pass
+
+class NoExecutionFinalValidationError(Exception):
+    pass
+
+class FreezeArtifactManifestError(Exception):
+    pass
+
+class FreezeSafetyValidationError(Exception):
+    pass
+
+class FinalReviewSafetyValidationError(Exception):
+    pass
+
+class ProviderFreezeStoreError(Exception):
+    pass
+
+class ProviderFreezeReportingError(Exception):
+    pass

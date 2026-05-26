@@ -1,15 +1,23 @@
 
-def record_latest_event_impact_context_count(count: int): pass
-def record_latest_event_impact_tag_count(count: int): pass
-def record_latest_high_impact_event_count(count: int): pass
-def record_latest_symbol_event_exposure_count(count: int): pass
-def record_latest_macro_regime_metadata_count(count: int): pass
-def record_latest_calendar_validation_result_count(count: int): pass
-def record_latest_calendar_anomaly_count(count: int): pass
-def record_latest_calendar_explained_anomaly_count(count: int): pass
-def record_latest_calendar_unexplained_anomaly_count(count: int): pass
-def record_latest_event_impact_trade_language_violation_count(count: int): pass
-def record_latest_phase112_execution_violation_count(count: int): pass
+class MetricsCollector:
+    def __init__(self):
+        self.latest_provider_freeze_context_count = 0
+        self.latest_provider_expansion_freeze_count = 0
+        self.latest_provider_freeze_valid_count = 0
+        self.latest_multi_provider_review_count = 0
+        self.latest_multi_provider_review_pass_count = 0
+        self.latest_data_layer_rehearsal_count = 0
+        self.latest_data_layer_rehearsal_pass_count = 0
+        self.latest_output_contract_pass_count = 0
+        self.latest_freeze_artifact_manifest_count = 0
+        self.latest_freeze_secret_violation_count = 0
+        self.latest_freeze_trade_signal_violation_count = 0
+        self.latest_phase114_execution_violation_count = 0
 
-# Phase 113 Observability dummy
-def collect_phase113_metrics(): pass
+    def record_freeze_metrics(self, bundle):
+        self.latest_provider_expansion_freeze_count += 1
+        if bundle.freeze_valid:
+            self.latest_provider_freeze_valid_count += 1
+        self.latest_freeze_secret_violation_count += bundle.secret_violation_count
+        self.latest_freeze_trade_signal_violation_count += bundle.trade_signal_violation_count
+        self.latest_phase114_execution_violation_count += bundle.execution_violation_count
