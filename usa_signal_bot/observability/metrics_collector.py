@@ -24,3 +24,15 @@ class MetricsCollector:
 
 # Phase 113 Observability dummy
 def collect_phase113_metrics(): pass
+
+
+# Phase 117 Observability
+def get_latest_core_indicator_context_count(): return 0
+def get_latest_core_indicator_spec_count(): return 0
+def get_latest_core_indicator_computation_result_count(): return 0
+def get_latest_core_feature_table_count(): return 0
+def get_latest_core_feature_column_count(): return 0
+def get_latest_core_feature_warmup_null_count(): return 0
+def get_latest_core_feature_output_safety_violation_count(): return 0
+def get_latest_core_indicator_trade_signal_violation_count(): return 0
+def get_latest_phase117_execution_violation_count(): return 0

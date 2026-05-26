@@ -2484,3 +2484,57 @@ class Config:
 
 from dataclasses import dataclass, field
 from typing import Optional, List, Dict, Any
+
+
+from dataclasses import dataclass, field
+from typing import Optional, List, Dict, Any
+
+@dataclass
+class CoreIndicatorsConfig:
+    enabled: bool = True
+    current_phase: int = 117
+    final_phase: int = 160
+    require_phase116_feature_foundation: bool = True
+    local_pandas_indicators_enabled: bool = True
+    rolling_window_engine_enabled: bool = True
+    feature_table_builder_enabled: bool = True
+    write_core_indicator_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_phase117_is_not_activation: bool = True
+    warn_indicators_are_not_trade_signals: bool = True
+
+@dataclass
+class Phase117IndicatorPolicyConfig:
+    metadata_only: bool = False
+    compute_values_local_only: bool = True
+    research_data_only: bool = True
+    dry_run_only_default: bool = False
+    local_fixture_only_default: bool = True
+    allow_network: bool = False
+    allow_paid_api: bool = False
+    allow_scraping: bool = False
+    allow_html_parsing: bool = False
+    allow_broker: bool = False
+    allow_order: bool = False
+    allow_paper_mutation: bool = False
+    allow_telegram_real_send: bool = False
+    allow_dashboard: bool = False
+    produce_trade_signals: bool = False
+    produce_order_decisions: bool = False
+    strategy_activation_allowed: bool = False
+
+@dataclass
+class Phase117FeatureTableConfig:
+    preserve_base_ohlcv_columns: bool = True
+    preserve_warmup_nulls: bool = True
+    default_null_policy: str = "PRESERVE_WARMUP_NULLS"
+    block_forbidden_columns: bool = True
+    allow_macd_signal_line_column: bool = True
+    write_feature_tables: bool = True
+
+@dataclass
+class Phase117NotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    preview_only: bool = True
+    telegram_real_send: bool = False

@@ -1668,3 +1668,28 @@ class FeatureFoundationValidationError(FeatureFoundationError):
 
 class FeatureFoundationReportingError(FeatureFoundationError):
     pass
+
+
+class CoreIndicatorError(Exception): pass
+class FeatureFoundationIngestionError(CoreIndicatorError): pass
+class IndicatorImplementationRegistryError(CoreIndicatorError): pass
+class OhlcvFeatureInputLoaderError(CoreIndicatorError): pass
+class RollingWindowEngineError(CoreIndicatorError): pass
+class ReturnFeatureError(CoreIndicatorError): pass
+class MovingAverageFeatureError(CoreIndicatorError): pass
+class VolatilityFeatureError(CoreIndicatorError): pass
+class TrueRangeAtrFeatureError(CoreIndicatorError): pass
+class RsiFeatureError(CoreIndicatorError): pass
+class MacdFeatureError(CoreIndicatorError): pass
+class StochasticFeatureError(CoreIndicatorError): pass
+class BollingerFeatureError(CoreIndicatorError): pass
+class VolumeFeatureError(CoreIndicatorError): pass
+class PriceActionFeatureError(CoreIndicatorError): pass
+class GapRangeCandleFeatureError(CoreIndicatorError): pass
+class FeatureTableBuilderError(CoreIndicatorError): pass
+class FeatureWarmupNullError(CoreIndicatorError): pass
+class FeatureComputationValidationError(CoreIndicatorError): pass
+class FeatureOutputSafetyValidationError(CoreIndicatorError): pass
+class CoreIndicatorStoreError(CoreIndicatorError): pass
+class CoreIndicatorValidationError(CoreIndicatorError): pass
+class CoreIndicatorReportingError(CoreIndicatorError): pass

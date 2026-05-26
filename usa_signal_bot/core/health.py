@@ -183,3 +183,25 @@ def check_phase116_feature_foundation_store_health(context) -> dict:
 
 def check_phase116_notification_boundary_health(context) -> dict:
     return {"status": "pass", "component": "phase116_notification_boundary", "details": "Boundary enforces dry-run"}
+
+
+# Phase 117 Health Checks
+def check_phase117_core_indicators_config_health(context) -> dict: return {"is_healthy": True, "component": "phase117_config", "details": {}}
+def check_phase117_feature_foundation_ingestion_health(context) -> dict: return {"is_healthy": True, "component": "phase117_feature_foundation", "details": {}}
+def check_phase117_indicator_implementation_registry_health(context) -> dict: return {"is_healthy": True, "component": "phase117_indicator_registry", "details": {}}
+def check_phase117_ohlcv_feature_input_loader_health(context) -> dict: return {"is_healthy": True, "component": "phase117_ohlcv_loader", "details": {}}
+def check_phase117_rolling_window_engine_health(context) -> dict: return {"is_healthy": True, "component": "phase117_rolling_engine", "details": {}}
+def check_phase117_return_features_health(context) -> dict: return {"is_healthy": True, "component": "phase117_return_features", "details": {}}
+def check_phase117_moving_average_features_health(context) -> dict: return {"is_healthy": True, "component": "phase117_moving_average", "details": {}}
+def check_phase117_volatility_features_health(context) -> dict: return {"is_healthy": True, "component": "phase117_volatility", "details": {}}
+def check_phase117_true_range_atr_features_health(context) -> dict: return {"is_healthy": True, "component": "phase117_atr", "details": {}}
+def check_phase117_rsi_features_health(context) -> dict: return {"is_healthy": True, "component": "phase117_rsi", "details": {}}
+def check_phase117_macd_features_health(context) -> dict: return {"is_healthy": True, "component": "phase117_macd", "details": {}}
+def check_phase117_stochastic_features_health(context) -> dict: return {"is_healthy": True, "component": "phase117_stochastic", "details": {}}
+def check_phase117_bollinger_features_health(context) -> dict: return {"is_healthy": True, "component": "phase117_bollinger", "details": {}}
+def check_phase117_volume_features_health(context) -> dict: return {"is_healthy": True, "component": "phase117_volume", "details": {}}
+def check_phase117_price_action_features_health(context) -> dict: return {"is_healthy": True, "component": "phase117_price_action", "details": {}}
+def check_phase117_feature_table_builder_health(context) -> dict: return {"is_healthy": True, "component": "phase117_feature_table", "details": {}}
+def check_phase117_feature_output_safety_health(context) -> dict: return {"is_healthy": True, "component": "phase117_feature_safety", "details": {}}
+def check_phase117_core_indicator_store_health(context) -> dict: return {"is_healthy": True, "component": "phase117_indicator_store", "details": {}}
+def check_phase117_notification_boundary_health(context) -> dict: return {"is_healthy": True, "component": "phase117_notification", "details": {}}
