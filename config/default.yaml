@@ -1990,3 +1990,79 @@ phase113_notifications:
   dry_run: true
   preview_only: true
   telegram_real_send: false
+
+
+provider_freeze:
+  enabled: true
+  current_phase: 114
+  final_phase: 160
+  require_phase113_provider_governance: true
+  freeze_enabled: true
+  multi_provider_final_review_enabled: true
+  data_layer_rehearsal_enabled: true
+  output_contract_enabled: true
+  write_provider_freeze_reports: true
+  warn_not_investment_advice: true
+  warn_phase114_is_not_activation: true
+  warn_freeze_is_not_trading_enable: true
+
+phase114_freeze_policy:
+  metadata_only: true
+  research_data_only: true
+  phase_start: 106
+  phase_end: 114
+  next_phase: 115
+  final_phase: 160
+  frozen: true
+  immutable: true
+  allow_activation: false
+  allow_active_paper: false
+  allow_broker_execution: false
+  allow_order_creation: false
+  allow_paper_mutation: false
+  allow_telegram_real_send: false
+  allow_scraping: false
+  allow_html_parsing: false
+  allow_paid_api: false
+  allow_dashboard: false
+  network_default_enabled: false
+  produce_trade_signals: false
+  produce_order_decisions: false
+
+phase114_rehearsal:
+  enabled: true
+  metadata_only: true
+  dry_run_only: true
+  research_data_only: true
+  allow_network: false
+  allow_paid_api: false
+  allow_scraping: false
+  allow_html_parsing: false
+  allow_broker: false
+  allow_order: false
+  allow_paper_mutation: false
+  allow_telegram_real_send: false
+  allow_dashboard: false
+  produce_trade_signals: false
+  produce_order_decisions: false
+
+phase114_output_contract:
+  enabled: true
+  metadata_only_required: true
+  research_data_only_required: true
+  trade_signal_blocked: true
+  order_decision_blocked: true
+  execution_blocked: true
+  broker_blocked: true
+  paper_mutation_blocked: true
+  telegram_real_send_blocked: true
+  scraping_blocked: true
+  html_parsing_blocked: true
+  paid_api_blocked: true
+  network_default_enabled_blocked: true
+
+phase114_notifications:
+  enabled: true
+  dry_run: true
+  preview_only: true
+  telegram_real_send: false

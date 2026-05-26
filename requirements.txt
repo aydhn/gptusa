@@ -2,6 +2,3 @@ PyYAML
 pytest
 yfinance
 pandas
-
-pandas
-pandas>=2.0.0

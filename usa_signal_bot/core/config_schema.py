@@ -1859,6 +1859,13 @@ class Phase106NotificationsConfig:
 @dataclass
 class Config:
 
+    provider_freeze: ProviderFreezeConfig = field(default_factory=ProviderFreezeConfig)
+    phase114_freeze_policy: Phase114FreezePolicyConfig = field(default_factory=Phase114FreezePolicyConfig)
+    phase114_rehearsal: Phase114RehearsalConfig = field(default_factory=Phase114RehearsalConfig)
+    phase114_output_contract: Phase114OutputContractConfig = field(default_factory=Phase114OutputContractConfig)
+    phase114_notifications: Phase114NotificationsConfig = field(default_factory=Phase114NotificationsConfig)
+
+
     pre_paper_handoff_freeze_gate: PrePaperHandoffFreezeGateConfig = field(default_factory=PrePaperHandoffFreezeGateConfig)
     sandbox_runtime_admission_blocker_replay: SandboxRuntimeAdmissionBlockerReplayConfig = field(default_factory=SandboxRuntimeAdmissionBlockerReplayConfig)
     simulator_evidence_freeze: SimulatorEvidenceFreezeConfig = field(default_factory=SimulatorEvidenceFreezeConfig)
@@ -2257,6 +2264,86 @@ class Phase112CalendarValidationConfig:
 
 @dataclass
 class Phase112NotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    preview_only: bool = True
+    telegram_real_send: bool = False
+
+@dataclass
+class ProviderFreezeConfig:
+    enabled: bool = True
+    current_phase: int = 114
+    final_phase: int = 160
+    require_phase113_provider_governance: bool = True
+    freeze_enabled: bool = True
+    multi_provider_final_review_enabled: bool = True
+    data_layer_rehearsal_enabled: bool = True
+    output_contract_enabled: bool = True
+    write_provider_freeze_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_phase114_is_not_activation: bool = True
+    warn_freeze_is_not_trading_enable: bool = True
+
+@dataclass
+class Phase114FreezePolicyConfig:
+    metadata_only: bool = True
+    research_data_only: bool = True
+    phase_start: int = 106
+    phase_end: int = 114
+    next_phase: int = 115
+    final_phase: int = 160
+    frozen: bool = True
+    immutable: bool = True
+    allow_activation: bool = False
+    allow_active_paper: bool = False
+    allow_broker_execution: bool = False
+    allow_order_creation: bool = False
+    allow_paper_mutation: bool = False
+    allow_telegram_real_send: bool = False
+    allow_scraping: bool = False
+    allow_html_parsing: bool = False
+    allow_paid_api: bool = False
+    allow_dashboard: bool = False
+    network_default_enabled: bool = False
+    produce_trade_signals: bool = False
+    produce_order_decisions: bool = False
+
+@dataclass
+class Phase114RehearsalConfig:
+    enabled: bool = True
+    metadata_only: bool = True
+    dry_run_only: bool = True
+    research_data_only: bool = True
+    allow_network: bool = False
+    allow_paid_api: bool = False
+    allow_scraping: bool = False
+    allow_html_parsing: bool = False
+    allow_broker: bool = False
+    allow_order: bool = False
+    allow_paper_mutation: bool = False
+    allow_telegram_real_send: bool = False
+    allow_dashboard: bool = False
+    produce_trade_signals: bool = False
+    produce_order_decisions: bool = False
+
+@dataclass
+class Phase114OutputContractConfig:
+    enabled: bool = True
+    metadata_only_required: bool = True
+    research_data_only_required: bool = True
+    trade_signal_blocked: bool = True
+    order_decision_blocked: bool = True
+    execution_blocked: bool = True
+    broker_blocked: bool = True
+    paper_mutation_blocked: bool = True
+    telegram_real_send_blocked: bool = True
+    scraping_blocked: bool = True
+    html_parsing_blocked: bool = True
+    paid_api_blocked: bool = True
+    network_default_enabled_blocked: bool = True
+
+@dataclass
+class Phase114NotificationsConfig:
     enabled: bool = True
     dry_run: bool = True
     preview_only: bool = True
