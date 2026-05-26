@@ -1,0 +1,14 @@
+{
+  "review_id": "test_core_review",
+  "core_indicators_ready": true,
+  "rolling_window_engine_ready": true,
+  "feature_table_ready": true,
+  "produces_trade_signal": false,
+  "broker_execution_enabled": false,
+  "network_used": false,
+  "context": {
+    "core_indicators_ready": true,
+    "rolling_window_engine_ready": true,
+    "feature_table_ready": true
+  }
+}

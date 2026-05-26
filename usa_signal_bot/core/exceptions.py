@@ -1693,3 +1693,60 @@ class FeatureOutputSafetyValidationError(CoreIndicatorError): pass
 class CoreIndicatorStoreError(CoreIndicatorError): pass
 class CoreIndicatorValidationError(CoreIndicatorError): pass
 class CoreIndicatorReportingError(CoreIndicatorError): pass
+
+class AdvancedFeatureError(USASignalBotError):
+    pass
+
+class CoreIndicatorIngestionError(AdvancedFeatureError):
+    pass
+
+class AdvancedFeatureRegistryError(AdvancedFeatureError):
+    pass
+
+class AdvancedVolatilityFeatureError(AdvancedFeatureError):
+    pass
+
+class AdvancedMomentumFeatureError(AdvancedFeatureError):
+    pass
+
+class AdvancedTrendFeatureError(AdvancedFeatureError):
+    pass
+
+class NormalizationFeatureError(AdvancedFeatureError):
+    pass
+
+class CrossSectionalUniverseError(AdvancedFeatureError):
+    pass
+
+class CrossSectionalAlignmentError(AdvancedFeatureError):
+    pass
+
+class CrossSectionalFeatureError(AdvancedFeatureError):
+    pass
+
+class RelativeStrengthFeatureError(AdvancedFeatureError):
+    pass
+
+class VolatilityLiquidityRankError(AdvancedFeatureError):
+    pass
+
+class MultiSymbolFeatureTableError(AdvancedFeatureError):
+    pass
+
+class AdvancedFeatureSchemaError(AdvancedFeatureError):
+    pass
+
+class AdvancedFeatureComputationValidationError(AdvancedFeatureError):
+    pass
+
+class AdvancedFeatureOutputSafetyValidationError(AdvancedFeatureError):
+    pass
+
+class AdvancedFeatureStoreError(AdvancedFeatureError):
+    pass
+
+class AdvancedFeatureValidationError(AdvancedFeatureError):
+    pass
+
+class AdvancedFeatureReportingError(AdvancedFeatureError):
+    pass

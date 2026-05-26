@@ -2439,7 +2439,75 @@ class Phase115NotificationsConfig:
 
 
 
+
+@dataclass
+class Phase118FeaturePolicyConfig:
+    compute_values_local_only: bool = True
+    research_data_only: bool = True
+    local_fixture_only_default: bool = True
+    allow_network: bool = False
+    allow_paid_api: bool = False
+    allow_scraping: bool = False
+    allow_html_parsing: bool = False
+    allow_broker: bool = False
+    allow_order: bool = False
+    allow_paper_mutation: bool = False
+    allow_telegram_real_send: bool = False
+    allow_dashboard: bool = False
+    produce_trade_signals: bool = False
+    produce_order_decisions: bool = False
+    produce_portfolio_weights: bool = False
+    strategy_activation_allowed: bool = False
+
+@dataclass
+class Phase118CrossSectionalConfig:
+    enabled: bool = True
+    min_required_symbols: int = 2
+    default_benchmark_symbol: str = "SPY"
+    align_on_common_timestamps: bool = True
+    produce_portfolio_weights: bool = False
+    produce_trade_signals: bool = False
+    produce_order_decisions: bool = False
+
+@dataclass
+class Phase118FeatureTableConfig:
+    preserve_core_feature_columns: bool = True
+    preserve_warmup_nulls: bool = True
+    block_forbidden_columns: bool = True
+    allow_macd_signal_line_column: bool = True
+    write_feature_tables: bool = True
+    overwrite_feature_tables_default: bool = False
+
+@dataclass
+class Phase118NotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    preview_only: bool = True
+    telegram_real_send: bool = False
+
+@dataclass
+class AdvancedFeaturesConfig:
+    enabled: bool = True
+    current_phase: int = 118
+    final_phase: int = 160
+    require_phase117_core_indicators: bool = True
+    advanced_volatility_enabled: bool = True
+    advanced_momentum_enabled: bool = True
+    advanced_trend_enabled: bool = True
+    normalization_enabled: bool = True
+    cross_sectional_enabled: bool = True
+    multi_symbol_feature_table_enabled: bool = True
+    write_advanced_feature_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_phase118_is_not_activation: bool = True
+    warn_advanced_features_are_not_trade_signals: bool = True
+    policy: Phase118FeaturePolicyConfig = field(default_factory=Phase118FeaturePolicyConfig)
+    cross_sectional: Phase118CrossSectionalConfig = field(default_factory=Phase118CrossSectionalConfig)
+    feature_table: Phase118FeatureTableConfig = field(default_factory=Phase118FeatureTableConfig)
+    notifications: Phase118NotificationsConfig = field(default_factory=Phase118NotificationsConfig)
+
 class Config:
+    advanced_features: AdvancedFeaturesConfig = field(default_factory=AdvancedFeaturesConfig)
 
     provider_freeze: ProviderFreezeConfig = field(default_factory=ProviderFreezeConfig)
     phase114_freeze_policy: Phase114FreezePolicyConfig = field(default_factory=Phase114FreezePolicyConfig)

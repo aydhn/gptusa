@@ -36,3 +36,23 @@ def get_latest_core_feature_warmup_null_count(): return 0
 def get_latest_core_feature_output_safety_violation_count(): return 0
 def get_latest_core_indicator_trade_signal_violation_count(): return 0
 def get_latest_phase117_execution_violation_count(): return 0
+
+
+class MetricsCollector:
+    def __init__(self):
+        self.metrics = {
+            "latest_advanced_feature_context_count": 0,
+            "latest_advanced_feature_spec_count": 0,
+            "latest_advanced_feature_result_count": 0,
+            "latest_advanced_feature_table_count": 0,
+            "latest_advanced_feature_column_count": 0,
+            "latest_cross_sectional_feature_column_count": 0,
+            "latest_cross_sectional_symbol_count": 0,
+            "latest_cross_sectional_alignment_warning_count": 0,
+            "latest_advanced_feature_output_safety_violation_count": 0,
+            "latest_advanced_feature_trade_signal_violation_count": 0,
+            "latest_phase118_execution_violation_count": 0,
+        }
+
+    def record_advanced_features(self, count):
+        self.metrics["latest_advanced_feature_context_count"] = count

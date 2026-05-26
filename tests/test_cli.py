@@ -1,11 +1,6 @@
-import unittest
-from usa_signal_bot.app.cli import phase114_provider_freeze_info
 
-class DummyArgs:
-    pass
-
-class TestCLI(unittest.TestCase):
-    def test_info(self):
-        args = DummyArgs()
-        phase114_provider_freeze_info(args)
-        self.assertTrue(True)
+def test_advanced_features_info_command():
+    import subprocess
+    result = subprocess.run(["python", "-m", "usa_signal_bot", "advanced-features-info"], capture_output=True, text=True)
+    assert result.returncode == 0
+    assert "Phase 118" in result.stdout
