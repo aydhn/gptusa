@@ -21,3 +21,6 @@ class MetricsCollector:
         self.latest_freeze_secret_violation_count += bundle.secret_violation_count
         self.latest_freeze_trade_signal_violation_count += bundle.trade_signal_violation_count
         self.latest_phase114_execution_violation_count += bundle.execution_violation_count
+
+# Phase 113 Observability dummy
+def collect_phase113_metrics(): pass

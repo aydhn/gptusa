@@ -2066,3 +2066,66 @@ phase114_notifications:
   dry_run: true
   preview_only: true
   telegram_real_send: false
+
+provider_final_acceptance:
+  enabled: true
+  current_phase: 115
+  final_phase: 160
+  require_phase114_provider_freeze: true
+  final_acceptance_enabled: true
+  provider_layer_closure_enabled: true
+  feature_factor_kickoff_gate_enabled: true
+  write_final_acceptance_reports: true
+  warn_not_investment_advice: true
+  warn_phase115_is_not_activation: true
+  warn_acceptance_is_not_trading_enable: true
+
+phase115_final_acceptance_policy:
+  metadata_only: true
+  research_data_only: true
+  phase_start: 106
+  phase_end: 115
+  next_phase: 116
+  final_phase: 160
+  accept_provider_layer: true
+  close_provider_layer: true
+  allow_activation: false
+  allow_active_paper: false
+  allow_broker_execution: false
+  allow_order_creation: false
+  allow_paper_mutation: false
+  allow_telegram_real_send: false
+  allow_scraping: false
+  allow_html_parsing: false
+  allow_paid_api: false
+  allow_dashboard: false
+  network_default_enabled: false
+  produce_trade_signals: false
+  produce_order_decisions: false
+
+phase115_feature_factor_kickoff:
+  enabled: true
+  ready_for_phase116: true
+  metadata_only: true
+  research_data_only: true
+  allow_indicator_input_contracts: true
+  allow_feature_schema_definitions: true
+  allow_factor_metadata_definitions: true
+  allow_feature_validation_rules: true
+  block_trade_signal_generation: true
+  block_strategy_activation: true
+  block_order_decision: true
+  block_broker_execution: true
+  block_paper_state_mutation: true
+  block_live_demo_trading: true
+  block_telegram_real_send: true
+  block_dashboard: true
+  block_paid_api: true
+  block_scraping: true
+  block_html_parsing: true
+
+phase115_notifications:
+  enabled: true
+  dry_run: true
+  preview_only: true
+  telegram_real_send: false

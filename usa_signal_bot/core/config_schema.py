@@ -2348,3 +2348,71 @@ class Phase114NotificationsConfig:
     dry_run: bool = True
     preview_only: bool = True
     telegram_real_send: bool = False
+
+
+@dataclass
+class ProviderFinalAcceptanceConfig:
+    enabled: bool = False
+    current_phase: int = 115
+    final_phase: int = 160
+    require_phase114_provider_freeze: bool = True
+    final_acceptance_enabled: bool = True
+    provider_layer_closure_enabled: bool = True
+    feature_factor_kickoff_gate_enabled: bool = True
+    write_final_acceptance_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_phase115_is_not_activation: bool = True
+    warn_acceptance_is_not_trading_enable: bool = True
+
+@dataclass
+class Phase115FinalAcceptancePolicyConfig:
+    metadata_only: bool = True
+    research_data_only: bool = True
+    phase_start: int = 106
+    phase_end: int = 115
+    next_phase: int = 116
+    final_phase: int = 160
+    accept_provider_layer: bool = True
+    close_provider_layer: bool = True
+    allow_activation: bool = False
+    allow_active_paper: bool = False
+    allow_broker_execution: bool = False
+    allow_order_creation: bool = False
+    allow_paper_mutation: bool = False
+    allow_telegram_real_send: bool = False
+    allow_scraping: bool = False
+    allow_html_parsing: bool = False
+    allow_paid_api: bool = False
+    allow_dashboard: bool = False
+    network_default_enabled: bool = False
+    produce_trade_signals: bool = False
+    produce_order_decisions: bool = False
+
+@dataclass
+class Phase115FeatureFactorKickoffConfig:
+    enabled: bool = True
+    ready_for_phase116: bool = True
+    metadata_only: bool = True
+    research_data_only: bool = True
+    allow_indicator_input_contracts: bool = True
+    allow_feature_schema_definitions: bool = True
+    allow_factor_metadata_definitions: bool = True
+    allow_feature_validation_rules: bool = True
+    block_trade_signal_generation: bool = True
+    block_strategy_activation: bool = True
+    block_order_decision: bool = True
+    block_broker_execution: bool = True
+    block_paper_state_mutation: bool = True
+    block_live_demo_trading: bool = True
+    block_telegram_real_send: bool = True
+    block_dashboard: bool = True
+    block_paid_api: bool = True
+    block_scraping: bool = True
+    block_html_parsing: bool = True
+
+@dataclass
+class Phase115NotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    preview_only: bool = True
+    telegram_real_send: bool = False
