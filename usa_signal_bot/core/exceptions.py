@@ -1877,3 +1877,67 @@ class FactorCompositionValidationError(FactorCompositionError):
 
 class FactorCompositionReportingError(FactorCompositionError):
     pass
+
+
+class FactorScoringError(USASignalBotError):
+    pass
+
+class FactorCompositionIngestionError(FactorScoringError):
+    pass
+
+class FactorTableInputLoaderError(FactorScoringError):
+    pass
+
+class FactorScoringRegistryError(FactorScoringError):
+    pass
+
+class FactorComponentScorerError(FactorScoringError):
+    pass
+
+class IndividualFactorScorerError(FactorScoringError):
+    pass
+
+class CompositeFactorScorerError(FactorScoringError):
+    pass
+
+class FactorNormalizationError(FactorScoringError):
+    pass
+
+class FactorWinsorizationError(FactorScoringError):
+    pass
+
+class CrossSectionalFactorRankError(FactorScoringError):
+    pass
+
+class FactorDistributionDiagnosticsError(FactorScoringError):
+    pass
+
+class FactorCorrelationDiagnosticsError(FactorScoringError):
+    pass
+
+class FactorStabilityDiagnosticsError(FactorScoringError):
+    pass
+
+class FactorDiagnosticsBuilderError(FactorScoringError):
+    pass
+
+class FactorTableSchemaError(FactorScoringError):
+    pass
+
+class FactorTableBuilderError(FactorScoringError):
+    pass
+
+class FactorComputationValidationError(FactorScoringError):
+    pass
+
+class FactorOutputSafetyValidationError(FactorScoringError):
+    pass
+
+class FactorScoringStoreError(FactorScoringError):
+    pass
+
+class FactorScoringValidationError(FactorScoringError):
+    pass
+
+class FactorScoringReportingError(FactorScoringError):
+    pass

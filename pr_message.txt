@@ -1,6 +1,6 @@
-feat: Implement Phase 119 Advanced Feature Enrichment and Interactions
+feat: Implement Phase 121 Factor Scoring, Normalization, Diagnostics and Computation
 
-Implements Phase 119 feature enrichment layers strictly as local, read-only metadata computations.
-Adds builders for event-aware, quality-aware, and calendar-aware features.
-Introduces feature freshness and confidence profiles.
-Builds feature interactions while strictly guarding against signal or execution language.
+Implements Phase 121 factor engineering layers strictly as local, read-only metadata computations.
+Adds builders for factor composition ingestion, scoring specs, component/individual/composite scoring, normalization (z-score, winsorization), and cross-sectional ranking.
+Includes robust diagnostics for factor distribution, correlation, and stability.
+Enforces rigorous safety validations blocking live execution, broker instructions, trade signals, and portfolio weights from all outputs.
