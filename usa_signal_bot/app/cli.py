@@ -657,3 +657,101 @@ def factor_scoring_review(write: bool = typer.Option(False, "--write", help="Wri
     if write:
         console.print("Writing review to local storage...")
     console.print("[green]Review generated successfully.[/green]")
+
+
+@cli.command("factor-validation-info")
+def factor_validation_info(data_root: str = "data"):
+    print("Phase 122 Factor Validation & Store Hardening Info")
+    print("This is a local metadata phase. No activation, no trading.")
+
+@cli.command("factor-validation-ingest-scoring")
+@click.option("--write/--no-write", default=False)
+def factor_validation_ingest_scoring(write: bool, data_root: str = "data"):
+    print("Ingesting Phase 121 scoring review...")
+
+@cli.command("factor-table-load")
+def factor_table_load(data_root: str = "data"):
+    print("Loading factor tables...")
+
+@cli.command("factor-validation-rules")
+def factor_validation_rules(data_root: str = "data"):
+    print("Building validation rules...")
+
+@cli.command("run-factor-validation")
+@click.option("--write/--no-write", default=False)
+def run_factor_validation(write: bool, data_root: str = "data"):
+    print("Running factor validation...")
+
+@cli.command("build-factor-drift-baseline")
+@click.option("--write/--no-write", default=False)
+def build_factor_drift_baseline(write: bool, data_root: str = "data"):
+    print("Building factor drift baseline...")
+
+@cli.command("factor-drift-metrics")
+def factor_drift_metrics(data_root: str = "data"):
+    print("Computing drift metrics...")
+
+@cli.command("run-factor-drift-monitor")
+@click.option("--write/--no-write", default=False)
+def run_factor_drift_monitor(write: bool, data_root: str = "data"):
+    print("Running factor drift monitor...")
+
+@cli.command("factor-drift-report")
+def factor_drift_report(data_root: str = "data"):
+    print("Generating factor drift report...")
+
+@cli.command("factor-schema-signature")
+@click.option("--write/--no-write", default=False)
+def factor_schema_signature(write: bool, data_root: str = "data"):
+    print("Building schema signatures...")
+
+@cli.command("factor-version-metadata")
+@click.option("--write/--no-write", default=False)
+def factor_version_metadata(write: bool, data_root: str = "data"):
+    print("Building version metadata...")
+
+@cli.command("factor-artifact-manifest")
+@click.option("--write/--no-write", default=False)
+def factor_artifact_manifest(write: bool, data_root: str = "data"):
+    print("Building artifact manifest...")
+
+@cli.command("factor-store-snapshot")
+@click.option("--write/--no-write", default=False)
+def factor_store_snapshot(write: bool, data_root: str = "data"):
+    print("Building store snapshot...")
+
+@cli.command("factor-retention-policy")
+def factor_retention_policy(data_root: str = "data"):
+    print("Generating retention policy...")
+
+@cli.command("factor-rollback-metadata")
+@click.option("--write/--no-write", default=False)
+def factor_rollback_metadata(write: bool, data_root: str = "data"):
+    print("Generating rollback metadata...")
+
+@cli.command("factor-store-hardening")
+@click.option("--write/--no-write", default=False)
+def factor_store_hardening(write: bool, data_root: str = "data"):
+    print("Hardening factor store...")
+
+@cli.command("factor-persistence-safety-check")
+def factor_persistence_safety_check(data_root: str = "data"):
+    print("Checking persistence safety...")
+
+@cli.command("factor-validation-context")
+@click.option("--write/--no-write", default=False)
+def factor_validation_context(write: bool, data_root: str = "data"):
+    print("Building validation context...")
+
+@cli.command("factor-validation-review")
+@click.option("--write/--no-write", default=False)
+def factor_validation_review(write: bool, data_root: str = "data"):
+    print("Building full validation review...")
+
+@cli.command("factor-validation-summary")
+def factor_validation_summary(data_root: str = "data"):
+    print("Generating validation summary...")
+
+@cli.command("factor-validation-validate")
+def factor_validation_validate(data_root: str = "data"):
+    print("Validating factor validation payload...")

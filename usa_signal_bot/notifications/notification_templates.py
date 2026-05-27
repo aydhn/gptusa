@@ -124,3 +124,40 @@ def format_provider_governance_report_message(review): pass
 def format_data_lineage_warning_message(graph): pass
 def format_audit_trail_warning_message(manifest): pass
 def notifications_from_provider_governance_review(review): pass
+
+# Phase 113 Notifications dummy
+def format_provider_governance_report_message(review): pass
+def format_data_lineage_warning_message(graph): pass
+def format_audit_trail_warning_message(manifest): pass
+def notifications_from_provider_governance_review(review): pass
+
+
+def format_factor_validation_report_message(review) -> dict:
+    return {"message": "Dry-run factor validation report", "type": "FACTOR_VALIDATION_REPORT"}
+
+def format_factor_drift_warning_message(reports) -> dict:
+    return {"message": "Dry-run factor drift warning", "type": "FACTOR_DRIFT_WARNING"}
+
+def format_factor_store_hardening_warning_message(result) -> dict:
+    return {"message": "Dry-run factor store hardening warning", "type": "FACTOR_STORE_HARDENING_WARNING"}
+
+def notifications_from_factor_validation_review(review) -> list:
+    return [format_factor_validation_report_message(review)]
+
+# Phase 113 Notifications dummy
+def format_provider_governance_report_message(review): pass
+def format_data_lineage_warning_message(graph): pass
+def format_audit_trail_warning_message(manifest): pass
+def notifications_from_provider_governance_review(review): pass
+
+# Phase 113 Notifications dummy
+def format_provider_governance_report_message(review): pass
+def format_data_lineage_warning_message(graph): pass
+def format_audit_trail_warning_message(manifest): pass
+def notifications_from_provider_governance_review(review): pass
+
+# Phase 113 Notifications dummy
+def format_provider_governance_report_message(review): pass
+def format_data_lineage_warning_message(graph): pass
+def format_audit_trail_warning_message(manifest): pass
+def notifications_from_provider_governance_review(review): pass

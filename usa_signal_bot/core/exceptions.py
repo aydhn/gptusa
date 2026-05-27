@@ -1941,3 +1941,61 @@ class FactorScoringValidationError(FactorScoringError):
 
 class FactorScoringReportingError(FactorScoringError):
     pass
+
+
+class FactorValidationError(USASignalBotError):
+    pass
+
+class FactorScoringIngestionError(USASignalBotError):
+    pass
+
+class FactorValidationRuleError(USASignalBotError):
+    pass
+
+class FactorValidationRunnerError(USASignalBotError):
+    pass
+
+class FactorBaselineBuilderError(USASignalBotError):
+    pass
+
+class FactorDriftMetricError(USASignalBotError):
+    pass
+
+class FactorDriftMonitorError(USASignalBotError):
+    pass
+
+class FactorDriftReportError(USASignalBotError):
+    pass
+
+class FactorSchemaSignatureError(USASignalBotError):
+    pass
+
+class FactorVersioningError(USASignalBotError):
+    pass
+
+class FactorArtifactManifestError(USASignalBotError):
+    pass
+
+class FactorStoreSnapshotError(USASignalBotError):
+    pass
+
+class FactorRetentionPolicyError(USASignalBotError):
+    pass
+
+class FactorRollbackMetadataError(USASignalBotError):
+    pass
+
+class FactorStoreHardeningError(USASignalBotError):
+    pass
+
+class FactorPersistenceSafetyValidationError(USASignalBotError):
+    pass
+
+class FactorValidationStoreError(USASignalBotError):
+    pass
+
+class FactorValidationValidationError(USASignalBotError):
+    pass
+
+class FactorValidationReportingError(USASignalBotError):
+    pass
