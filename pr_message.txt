@@ -1,6 +1,21 @@
-feat: Implement Phase 121 Factor Scoring, Normalization, Diagnostics and Computation
+# Phase 123 Factor Explainability, Feature Attribution, Factor Interpretation and Research Report Layer
 
-Implements Phase 121 factor engineering layers strictly as local, read-only metadata computations.
-Adds builders for factor composition ingestion, scoring specs, component/individual/composite scoring, normalization (z-score, winsorization), and cross-sectional ranking.
-Includes robust diagnostics for factor distribution, correlation, and stability.
-Enforces rigorous safety validations blocking live execution, broker instructions, trade signals, and portfolio weights from all outputs.
+This PR implements Phase 123 of the Advanced Feature/Factor Engine band.
+
+**Core Additions:**
+* **Phase 123 Models (`usa_signal_bot/feature_engine/factor_explainability/phase123_models.py`)**: Data models for FactorValidationIngestionResult, ExplainabilityInputBundle, FeatureAttributionSpec, FeatureAttributionResult, FactorContributionProfile, FactorInterpretationSummary, FactorExplanationReport, ResearchReportSection, ResearchReportDocument, ReportQaRuleResult, ExplainabilityContext, ExplainabilityFullReview. Includes safe validation logic enforcing strict non-execution safety.
+* **Factor Validation Ingestion (`factor_validation_ingestion.py`)**: Read-only ingestion of Phase 122 review outputs ensuring `research_data_only=True` and blocking execution permissions.
+* **Artifact Loader (`factor_report_artifact_loader.py`)**: CSV and JSON artifact loading with traversal protection and forbidden column checking to catch and block `["buy", "sell", "entry", "exit", "order", "portfolio_weight", "target_weight", "allocation"]`.
+* **Attribution Specs & Engine (`attribution_specs.py`, `feature_attribution_engine.py`)**: Generates mathematical heuristics (like deterministic proxy correlations) for feature contributions to factors safely, normalizing outputs and generating directions without reliance on ML logic like SHAP/LIME or suggesting trade execution.
+* **Contribution & Interpretation Builders (`factor_contribution_analyzer.py`, `factor_interpretation_builder.py`, `diagnostics_interpretation.py`, `drift_interpretation.py`, `lineage_quality_interpretation.py`)**: Constructs text summaries based on metadata profiles. Employs a strict language safety policy forbidding any investment advice or execution tone.
+* **Research Reports & Renderers (`research_report_sections.py`, `research_report_document.py`, `markdown_report_renderer.py`, `json_report_renderer.py`)**: Assembles explanations and outputs them as read-only documents (Markdown/JSON) protected by robust SHA-256 hashes and explicit disclaimer sections.
+* **QA & Safety Verification (`report_qa_validator.py`, `explainability_safety_validator.py`)**: Scans texts for matched terms like "buy signal", "sell signal", "garanti kâr", "kesin al", validating compliance before allowing the bundle to transition to Phase 124 readied statuses.
+* **Storage & Review Generation (`explainability_store.py`, `explainability_report.py`, `explainability_validation.py`, `explainability_reporting.py`)**: Persists outputs and guarantees payload validation on saving / fetching.
+* **Docs, Health, Configuration, Enums & Exceptions**: Updated configurations and CLI wrappers to align with Phase 123 goals.
+
+**Constraints:**
+* No broker integrations.
+* No live/paper orders.
+* No dashboards or web scraping.
+* No network default usages.
+* No Telegram real sends.
