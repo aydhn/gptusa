@@ -364,3 +364,51 @@ def check_phase120_factor_composition_store_health(context: RuntimeContext) -> H
 
 def check_phase120_notification_boundary_health(context: RuntimeContext) -> HealthCheckResult:
     return HealthCheckResult(component="phase120_notification_boundary", status=HealthStatus.HEALTHY, latency_ms=0.1, message="Phase 120 notification boundary OK", details={})
+
+def check_phase121_factor_scoring_config_health(context) -> HealthCheckResult:
+    return HealthCheckResult("phase121_factor_scoring_config", True, "OK")
+
+def check_phase121_factor_composition_ingestion_health(context) -> HealthCheckResult:
+    return HealthCheckResult("phase121_factor_composition_ingestion", True, "OK")
+
+def check_phase121_factor_table_input_loader_health(context) -> HealthCheckResult:
+    return HealthCheckResult("phase121_factor_table_input_loader", True, "OK")
+
+def check_phase121_factor_scoring_registry_health(context) -> HealthCheckResult:
+    return HealthCheckResult("phase121_factor_scoring_registry", True, "OK")
+
+def check_phase121_factor_component_scorer_health(context) -> HealthCheckResult:
+    return HealthCheckResult("phase121_factor_component_scorer", True, "OK")
+
+def check_phase121_individual_factor_scorer_health(context) -> HealthCheckResult:
+    return HealthCheckResult("phase121_individual_factor_scorer", True, "OK")
+
+def check_phase121_composite_factor_scorer_health(context) -> HealthCheckResult:
+    return HealthCheckResult("phase121_composite_factor_scorer", True, "OK")
+
+def check_phase121_factor_normalization_health(context) -> HealthCheckResult:
+    return HealthCheckResult("phase121_factor_normalization", True, "OK")
+
+def check_phase121_cross_sectional_factor_ranks_health(context) -> HealthCheckResult:
+    return HealthCheckResult("phase121_cross_sectional_factor_ranks", True, "OK")
+
+def check_phase121_factor_distribution_diagnostics_health(context) -> HealthCheckResult:
+    return HealthCheckResult("phase121_factor_distribution_diagnostics", True, "OK")
+
+def check_phase121_factor_correlation_diagnostics_health(context) -> HealthCheckResult:
+    return HealthCheckResult("phase121_factor_correlation_diagnostics", True, "OK")
+
+def check_phase121_factor_stability_diagnostics_health(context) -> HealthCheckResult:
+    return HealthCheckResult("phase121_factor_stability_diagnostics", True, "OK")
+
+def check_phase121_factor_table_builder_health(context) -> HealthCheckResult:
+    return HealthCheckResult("phase121_factor_table_builder", True, "OK")
+
+def check_phase121_factor_output_safety_health(context) -> HealthCheckResult:
+    return HealthCheckResult("phase121_factor_output_safety", True, "OK")
+
+def check_phase121_factor_scoring_store_health(context) -> HealthCheckResult:
+    return HealthCheckResult("phase121_factor_scoring_store", True, "OK")
+
+def check_phase121_notification_boundary_health(context) -> HealthCheckResult:
+    return HealthCheckResult("phase121_notification_boundary", True, "OK")

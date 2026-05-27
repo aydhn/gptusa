@@ -2737,3 +2737,66 @@ class Phase120NotificationsConfig:
     dry_run: bool = True
     preview_only: bool = True
     telegram_real_send: bool = False
+
+
+@dataclass
+class FactorScoringConfig:
+    enabled: bool = True
+    current_phase: int = 121
+    final_phase: int = 160
+    require_phase120_factor_composition: bool = True
+    factor_scoring_enabled: bool = True
+    factor_normalization_enabled: bool = True
+    factor_diagnostics_enabled: bool = True
+    factor_table_builder_enabled: bool = True
+    write_factor_scoring_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_phase121_is_not_activation: bool = True
+    warn_factor_scores_are_not_trade_signals: bool = True
+
+@dataclass
+class Phase121FactorPolicyConfig:
+    compute_values_local_only: bool = True
+    research_data_only: bool = True
+    local_fixture_only_default: bool = True
+    allow_network: bool = False
+    allow_paid_api: bool = False
+    allow_scraping: bool = False
+    allow_html_parsing: bool = False
+    allow_broker: bool = False
+    allow_order: bool = False
+    allow_paper_mutation: bool = False
+    allow_telegram_real_send: bool = False
+    allow_dashboard: bool = False
+    produce_trade_signals: bool = False
+    produce_order_decisions: bool = False
+    produce_portfolio_weights: bool = False
+    strategy_activation_allowed: bool = False
+
+@dataclass
+class Phase121FactorNormalizationConfig:
+    enabled: bool = True
+    default_method: str = "Z_SCORE"
+    winsorization_enabled: bool = True
+    lower_pct: float = 0.01
+    upper_pct: float = 0.99
+    cross_sectional_ranks_enabled: bool = True
+    produce_trade_signals: bool = False
+    produce_order_decisions: bool = False
+    produce_portfolio_weights: bool = False
+
+@dataclass
+class Phase121FactorTableConfig:
+    preserve_enriched_feature_columns: bool = True
+    preserve_warmup_nulls: bool = True
+    block_forbidden_columns: bool = True
+    allow_macd_signal_line_column: bool = True
+    write_factor_tables: bool = True
+    overwrite_factor_tables_default: bool = False
+
+@dataclass
+class Phase121NotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    preview_only: bool = True
+    telegram_real_send: bool = False

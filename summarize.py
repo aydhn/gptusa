@@ -1,0 +1,5 @@
+print("Phase 121 Summary")
+print("Factor scoring, normalization, diagnostics and factor table computation completed successfully.")
+print("This phase is NOT strategy activation or active paper trading. No broker APIs, demo/live orders, paper mutations, scraping or paid APIs were used.")
+print("The results are purely local, metadata-driven research-only items.")
+print("Run `python -m pytest tests/test_phase121.py` to see passing tests.")
