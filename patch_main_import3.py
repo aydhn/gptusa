@@ -1,4 +1,5 @@
-import argparse
+with open('usa_signal_bot/__main__.py', 'w') as f:
+    f.write('''import argparse
 import sys
 from .app.cli import (
     setup_phase114_cli,
@@ -25,3 +26,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+''')

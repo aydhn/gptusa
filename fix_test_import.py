@@ -1,7 +1,8 @@
-import re
+import os
+import sys
 
-with open('tests/test_all_models.py', 'r') as f:
-    content = f.read()
+def main():
+    pass
 
-# Make sure we import our new models to test them in test_all_models.py if needed.
-# Let's just create a new test explicitly for Phase 116 Models.
+if __name__ == '__main__':
+    main()
