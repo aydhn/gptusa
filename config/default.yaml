@@ -2438,3 +2438,65 @@ phase121_notifications:
   dry_run: true
   preview_only: true
   telegram_real_send: false
+
+
+factor_validation:
+  enabled: true
+  current_phase: 122
+  final_phase: 160
+  require_phase121_factor_scoring: true
+  factor_validation_enabled: true
+  factor_drift_monitoring_enabled: true
+  factor_versioning_enabled: true
+  factor_store_hardening_enabled: true
+  write_factor_validation_reports: true
+  warn_not_investment_advice: true
+  warn_phase122_is_not_activation: true
+  warn_drift_reports_are_not_trade_signals: true
+
+phase122_factor_validation_policy:
+  compute_metadata_local_only: true
+  research_data_only: true
+  local_fixture_only_default: true
+  allow_network: false
+  allow_paid_api: false
+  allow_scraping: false
+  allow_html_parsing: false
+  allow_broker: false
+  allow_order: false
+  allow_paper_mutation: false
+  allow_telegram_real_send: false
+  allow_dashboard: false
+  produce_trade_signals: false
+  produce_order_decisions: false
+  produce_portfolio_weights: false
+  strategy_activation_allowed: false
+
+phase122_factor_drift:
+  enabled: true
+  build_baseline_from_current_fixture_if_previous_missing: true
+  drift_score_scale: "0_100"
+  high_drift_threshold: 70.0
+  critical_drift_threshold: 90.0
+  drift_reports_are_metadata_only: true
+  produce_trade_signals: false
+  produce_order_decisions: false
+  produce_portfolio_weights: false
+
+phase122_factor_store:
+  enabled: true
+  local_filesystem_only: true
+  overwrite_safe_default: true
+  immutable_artifacts: true
+  create_schema_signature: true
+  create_version_metadata: true
+  create_artifact_manifest: true
+  create_snapshot_metadata: true
+  create_rollback_metadata: true
+  no_auto_deployment: true
+
+phase122_notifications:
+  enabled: true
+  dry_run: true
+  preview_only: true
+  telegram_real_send: false
