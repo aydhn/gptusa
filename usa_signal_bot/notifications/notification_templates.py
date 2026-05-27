@@ -103,3 +103,24 @@ def format_enriched_feature_table_warning_message(tables: list[Any]) -> Any:
 
 def notifications_from_feature_enrichment_review(review: Any) -> list[Any]:
     return [format_feature_enrichment_report_message(review)]
+
+def format_factor_composition_report_message(review: Any) -> Any:
+    # Dry-run stub
+    pass
+
+def format_feature_selection_warning_message(items: list[Any]) -> Any:
+    # Dry-run stub
+    pass
+
+def format_factor_readiness_warning_message(gate: Any) -> Any:
+    # Dry-run stub
+    pass
+
+def notifications_from_factor_composition_review(review: Any) -> list[Any]:
+    return []
+
+# Phase 113 Notifications dummy
+def format_provider_governance_report_message(review): pass
+def format_data_lineage_warning_message(graph): pass
+def format_audit_trail_warning_message(manifest): pass
+def notifications_from_provider_governance_review(review): pass

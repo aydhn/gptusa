@@ -1820,3 +1820,60 @@ class FeatureEnrichmentValidationError(FeatureEnrichmentError):
 
 class FeatureEnrichmentReportingError(FeatureEnrichmentError):
     pass
+
+class FactorCompositionError(USASignalBotError):
+    pass
+
+class FeatureEnrichmentIngestionError(FactorCompositionError):
+    pass
+
+class EnrichedFeatureTableLoaderError(FactorCompositionError):
+    pass
+
+class FeatureGroupRegistryError(FactorCompositionError):
+    pass
+
+class FeatureGroupProfilerError(FactorCompositionError):
+    pass
+
+class FactorComponentRegistryError(FactorCompositionError):
+    pass
+
+class FactorCandidateRegistryError(FactorCompositionError):
+    pass
+
+class FactorCompositionSpecError(FactorCompositionError):
+    pass
+
+class FeatureCoverageAnalyzerError(FactorCompositionError):
+    pass
+
+class FeatureMissingnessAnalyzerError(FactorCompositionError):
+    pass
+
+class FeatureStabilityAnalyzerError(FactorCompositionError):
+    pass
+
+class FeatureRedundancyAnalyzerError(FactorCompositionError):
+    pass
+
+class FeatureSelectionMetadataError(FactorCompositionError):
+    pass
+
+class FactorReadinessRuleError(FactorCompositionError):
+    pass
+
+class FactorReadinessGateError(FactorCompositionError):
+    pass
+
+class FactorCompositionSafetyValidationError(FactorCompositionError):
+    pass
+
+class FactorCompositionStoreError(FactorCompositionError):
+    pass
+
+class FactorCompositionValidationError(FactorCompositionError):
+    pass
+
+class FactorCompositionReportingError(FactorCompositionError):
+    pass

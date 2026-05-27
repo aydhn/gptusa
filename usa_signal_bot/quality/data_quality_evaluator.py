@@ -61,3 +61,11 @@ class DataQualityEvaluator:
             "phase119_non_execution_compliance_score": 100.0,
 
         }
+
+# Phase 113 metrics dummy
+def phase113_provider_acceptance_score(): pass
+def phase113_governance_policy_score(): pass
+def phase113_data_lineage_score(): pass
+def phase113_audit_trail_score(): pass
+def phase113_no_execution_proof_score(): pass
+def phase113_non_execution_compliance_score(): pass

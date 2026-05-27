@@ -1,0 +1,3 @@
+symbol,timestamp,buy_signal,sell_signal,portfolio_weight
+XYZ,2023-01-01,1,0,0.1
+XYZ,2023-01-02,0,1,0.0

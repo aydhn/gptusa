@@ -2322,3 +2322,62 @@ phase119_notifications:
   dry_run: true
   preview_only: true
   telegram_real_send: false
+
+factor_composition:
+  enabled: true
+  current_phase: 120
+  final_phase: 160
+  require_phase119_feature_enrichment: true
+  feature_grouping_enabled: true
+  factor_candidate_registry_enabled: true
+  feature_selection_metadata_enabled: true
+  factor_readiness_gate_enabled: true
+  write_factor_composition_reports: true
+  warn_not_investment_advice: true
+  warn_phase120_is_not_activation: true
+  warn_factors_are_not_trade_signals: true
+
+phase120_factor_policy:
+  compute_metadata_local_only: true
+  research_data_only: true
+  local_fixture_only_default: true
+  allow_network: false
+  allow_paid_api: false
+  allow_scraping: false
+  allow_html_parsing: false
+  allow_broker: false
+  allow_order: false
+  allow_paper_mutation: false
+  allow_telegram_real_send: false
+  allow_dashboard: false
+  produce_trade_signals: false
+  produce_order_decisions: false
+  produce_portfolio_weights: false
+  strategy_activation_allowed: false
+
+phase120_feature_selection:
+  enabled: true
+  min_coverage_ratio: 0.70
+  max_missingness_ratio: 0.30
+  min_stability_score: 40.0
+  max_redundancy_score: 80.0
+  research_selection_only: true
+  block_signal_generation: true
+  block_order_decision: true
+  block_portfolio_weights: true
+
+phase120_factor_readiness:
+  enabled: true
+  require_feature_groups: true
+  require_factor_candidates: true
+  require_selection_metadata: true
+  require_safety_pass: true
+  ready_for_phase121_allowed: true
+  activation_allowed: false
+  strategy_activation_allowed: false
+
+phase120_notifications:
+  enabled: true
+  dry_run: true
+  preview_only: true
+  telegram_real_send: false

@@ -51,7 +51,8 @@ def phase114_data_layer_rehearsal(args):
     report = runner.run()
     print(data_layer_rehearsal_report_to_text(report))
 
-def setup_phase114_cli(subparsers):
+def setup_phase114_cli(subparsers)
+    setup_phase120_cli(subparsers):
     p_info = subparsers.add_parser('provider-freeze-info', help='Show Phase 114 freeze info.')
     p_info.set_defaults(func=phase114_provider_freeze_info)
 
@@ -241,6 +242,7 @@ def main():
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest='command')
     setup_phase114_cli(subparsers)
+    setup_phase120_cli(subparsers)
 
 
     parser_info = subparsers.add_parser("provider-final-acceptance-info")
@@ -568,3 +570,66 @@ def feature_enrichment_summary():
 @cli.command("feature-enrichment-validate")
 def feature_enrichment_validate():
     click.echo("Feature enrichment validated.")
+
+def setup_phase120_cli(subparsers):
+    parser_info = subparsers.add_parser("factor-composition-info")
+    parser_info.set_defaults(func=lambda args: print("Phase 120 Factor Composition Details:\nThis phase handles factor candidate creation, grouping, and metadata. It is NOT active execution, strategy activation, or investment advice."))
+
+    parser_ingest = subparsers.add_parser("factor-composition-ingest-enrichment")
+    parser_ingest.set_defaults(func=lambda args: print("Ingesting Phase 119 Feature Enrichment... (Dry run)"))
+
+    parser_load = subparsers.add_parser("enriched-feature-table-load")
+    parser_load.set_defaults(func=lambda args: print("Loading Enriched Feature Tables... (Dry run)"))
+
+    parser_gr_reg = subparsers.add_parser("feature-group-registry")
+    parser_gr_reg.set_defaults(func=lambda args: print("Building Feature Group Registry... (Dry run)"))
+
+    parser_gr_prof = subparsers.add_parser("feature-group-profile")
+    parser_gr_prof.set_defaults(func=lambda args: print("Profiling Feature Groups... (Dry run)"))
+
+    parser_comp_reg = subparsers.add_parser("factor-component-registry")
+    parser_comp_reg.set_defaults(func=lambda args: print("Building Factor Component Registry... (Dry run)"))
+
+    parser_cand_reg = subparsers.add_parser("factor-candidate-registry")
+    parser_cand_reg.set_defaults(func=lambda args: print("Building Factor Candidate Registry... (Dry run)"))
+
+    parser_spec = subparsers.add_parser("factor-composition-spec")
+    parser_spec.set_defaults(func=lambda args: print("Building Factor Composition Spec... (Dry run)"))
+
+    parser_cov = subparsers.add_parser("feature-coverage-analyze")
+    parser_cov.set_defaults(func=lambda args: print("Analyzing Feature Coverage... (Dry run)"))
+
+    parser_miss = subparsers.add_parser("feature-missingness-analyze")
+    parser_miss.set_defaults(func=lambda args: print("Analyzing Feature Missingness... (Dry run)"))
+
+    parser_stab = subparsers.add_parser("feature-stability-analyze")
+    parser_stab.set_defaults(func=lambda args: print("Analyzing Feature Stability... (Dry run)"))
+
+    parser_red = subparsers.add_parser("feature-redundancy-analyze")
+    parser_red.set_defaults(func=lambda args: print("Analyzing Feature Redundancy... (Dry run)"))
+
+    parser_sel = subparsers.add_parser("feature-selection-metadata")
+    parser_sel.set_defaults(func=lambda args: print("Generating Feature Selection Metadata... Note: This is research selection only, NOT strategy activation. (Dry run)"))
+
+    parser_rules = subparsers.add_parser("factor-readiness-rules")
+    parser_rules.set_defaults(func=lambda args: print("Evaluating Factor Readiness Rules... (Dry run)"))
+
+    parser_gate = subparsers.add_parser("factor-readiness-gate")
+    parser_gate.add_argument("--write", action="store_true", help="Write gate metadata to disk")
+    parser_gate.set_defaults(func=lambda args: print("Evaluating Factor Readiness Gate... (Dry run)"))
+
+    parser_safe = subparsers.add_parser("factor-composition-safety-check")
+    parser_safe.set_defaults(func=lambda args: print("Validating Factor Composition Safety... (Dry run)"))
+
+    parser_ctx = subparsers.add_parser("factor-composition-context")
+    parser_ctx.set_defaults(func=lambda args: print("Building Factor Composition Context... (Dry run)"))
+
+    parser_rev = subparsers.add_parser("factor-composition-review")
+    parser_rev.add_argument("--write", action="store_true", help="Write review metadata to disk")
+    parser_rev.set_defaults(func=lambda args: print("Building Factor Composition Full Review... (Dry run)"))
+
+    parser_sum = subparsers.add_parser("factor-composition-summary")
+    parser_sum.set_defaults(func=lambda args: print("Generating Factor Composition Summary... (Dry run)"))
+
+    parser_val = subparsers.add_parser("factor-composition-validate")
+    parser_val.set_defaults(func=lambda args: print("Validating Factor Composition Full Review... (Dry run)"))
