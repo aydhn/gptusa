@@ -1999,3 +1999,24 @@ class FactorValidationValidationError(USASignalBotError):
 
 class FactorValidationReportingError(USASignalBotError):
     pass
+
+
+class FactorExplainabilityError(BaseProjectError): pass
+class FactorValidationIngestionError(BaseProjectError): pass
+class FactorReportArtifactLoaderError(BaseProjectError): pass
+class AttributionSpecError(BaseProjectError): pass
+class FeatureAttributionEngineError(BaseProjectError): pass
+class FactorContributionAnalyzerError(BaseProjectError): pass
+class FactorInterpretationBuilderError(BaseProjectError): pass
+class DiagnosticsInterpretationError(BaseProjectError): pass
+class DriftInterpretationError(BaseProjectError): pass
+class LineageQualityInterpretationError(BaseProjectError): pass
+class ResearchReportSectionError(BaseProjectError): pass
+class ResearchReportDocumentError(BaseProjectError): pass
+class MarkdownReportRendererError(BaseProjectError): pass
+class JsonReportRendererError(BaseProjectError): pass
+class ReportQaValidationError(BaseProjectError): pass
+class ExplainabilitySafetyValidationError(BaseProjectError): pass
+class ExplainabilityStoreError(BaseProjectError): pass
+class ExplainabilityValidationError(BaseProjectError): pass
+class ExplainabilityReportingError(BaseProjectError): pass

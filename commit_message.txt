@@ -1,13 +1,20 @@
-feat: Implement Phase 100 - Final Pre-Paper Handoff Freeze Gate
+feat: implement phase 123 factor explainability and report layer
 
-This commit implements the final phase of the MVP local-offline pre-paper pipeline.
-
-- Adds new models and enums for handoff freeze gates and simulator evidence freeze.
-- Implements sandbox runtime admission blocker replay logic, verifying that all previous events effectively block sandbox access.
-- Implements simulator evidence freeze logic, bundling all required evidence traces into a hashed, sealed bundle.
-- Implements final handoff freeze gate validation rules and safety checks, explicitly enforcing non-execution policies (e.g. no active paper enable, no broker API connections, no Telegram real sends, no config writes, no paper order mutations).
-- Adds audit trailing, reporting, and file storage for handoff artifacts.
-- Adds adapters for ingesting earlier dossier states (simulator, dry-admission, paper runtime).
-- Updates CLI, quality evaluation, observability metrics, and config schemas.
-- Adds comprehensive documentation explicitly detailing the non-execution, read-only scope of this release.
-- Fixes passing of all isolated new unit tests.
+Implemented the factor explainability and feature attribution engines as
+specified in Phase 123. This includes:
+- Added enum values and dataclasses for explainability contexts, report
+  sections, and feature attributions ensuring deterministic structure.
+- Developed factor validation ingestion routines rejecting records that
+  expose broker permissions or paper state mutations.
+- Implemented file artifact loaders incorporating safety constraints (no
+  directory traversal, forbidding 'buy', 'sell' columns).
+- Created deterministic feature attribution logic using normalization
+  without machine learning techniques.
+- Drafted interpretation summary builders conforming to non-execution
+  disclaimer standards.
+- Designed comprehensive QA report validators that actively scan text for
+  trade signals ("buy signal", "garanti kâr") and reject transition flags.
+- Built a markdown and JSON rendering layer, persisting explainability
+  metadata effectively to local structures.
+- Added comprehensive unit tests reflecting the required safe-language
+  and zero-mutation operational policies.
