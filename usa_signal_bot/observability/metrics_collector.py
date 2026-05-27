@@ -13,6 +13,19 @@ class MetricsCollector:
         self.latest_freeze_secret_violation_count = 0
         self.latest_freeze_trade_signal_violation_count = 0
         self.latest_phase114_execution_violation_count = 0
+        self.metrics["latest_feature_enrichment_context_count"] = 0
+        self.metrics["latest_feature_enrichment_spec_count"] = 0
+        self.metrics["latest_feature_interaction_spec_count"] = 0
+        self.metrics["latest_enriched_feature_result_count"] = 0
+        self.metrics["latest_enriched_feature_table_count"] = 0
+        self.metrics["latest_enriched_feature_column_count"] = 0
+        self.metrics["latest_interaction_feature_column_count"] = 0
+        self.metrics["latest_feature_confidence_low_count"] = 0
+        self.metrics["latest_feature_freshness_stale_count"] = 0
+        self.metrics["latest_enriched_feature_output_safety_violation_count"] = 0
+        self.metrics["latest_feature_enrichment_trade_signal_violation_count"] = 0
+        self.metrics["latest_phase119_execution_violation_count"] = 0
+
 
     def record_freeze_metrics(self, bundle):
         self.latest_provider_expansion_freeze_count += 1

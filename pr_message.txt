@@ -1,0 +1,6 @@
+feat: Implement Phase 119 Advanced Feature Enrichment and Interactions
+
+Implements Phase 119 feature enrichment layers strictly as local, read-only metadata computations.
+Adds builders for event-aware, quality-aware, and calendar-aware features.
+Introduces feature freshness and confidence profiles.
+Builds feature interactions while strictly guarding against signal or execution language.

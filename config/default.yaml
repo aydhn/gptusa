@@ -2260,3 +2260,65 @@ phase118_notifications:
   dry_run: true
   preview_only: true
   telegram_real_send: false
+
+
+feature_enrichment:
+  enabled: true
+  current_phase: 119
+  final_phase: 160
+  require_phase118_advanced_features: true
+  event_aware_features_enabled: true
+  quality_aware_features_enabled: true
+  calendar_aware_features_enabled: true
+  feature_freshness_enabled: true
+  feature_confidence_enabled: true
+  feature_interactions_enabled: true
+  enriched_feature_table_enabled: true
+  write_feature_enrichment_reports: true
+  warn_not_investment_advice: true
+  warn_phase119_is_not_activation: true
+  warn_enriched_features_are_not_trade_signals: true
+
+phase119_enrichment_policy:
+  compute_values_local_only: true
+  research_data_only: true
+  local_fixture_only_default: true
+  allow_network: false
+  allow_paid_api: false
+  allow_scraping: false
+  allow_html_parsing: false
+  allow_broker: false
+  allow_order: false
+  allow_paper_mutation: false
+  allow_telegram_real_send: false
+  allow_dashboard: false
+  produce_trade_signals: false
+  produce_order_decisions: false
+  produce_portfolio_weights: false
+  strategy_activation_allowed: false
+
+phase119_feature_interactions:
+  enabled: true
+  allow_multiplicative: true
+  allow_ratio: true
+  allow_difference: true
+  allow_event_conditioned: true
+  allow_quality_weighted: true
+  allow_calendar_conditioned: true
+  block_signal_generation: true
+  block_order_decision: true
+  block_portfolio_weights: true
+
+phase119_feature_table:
+  preserve_advanced_feature_columns: true
+  preserve_warmup_nulls: true
+  block_forbidden_columns: true
+  allow_macd_signal_line_column: true
+  write_feature_tables: true
+  overwrite_feature_tables_default: false
+
+phase119_notifications:
+  enabled: true
+  dry_run: true
+  preview_only: true
+  telegram_real_send: false
