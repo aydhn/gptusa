@@ -1,0 +1,4 @@
+symbol,timestamp,price_close,returns_1d,volatility_14d,macd_line,rsi_14,event_earnings_active
+AAPL,2023-01-01,150.0,0.01,0.02,0.5,60.0,1
+AAPL,2023-01-02,151.0,0.005,0.02,0.55,62.0,0
+AAPL,2023-01-03,149.0,-0.01,0.025,0.45,58.0,0

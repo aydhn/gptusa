@@ -69,3 +69,6 @@ class MetricsCollector:
 
     def record_advanced_features(self, count):
         self.metrics["latest_advanced_feature_context_count"] = count
+
+# Phase 113 Observability dummy
+def collect_phase113_metrics(): pass

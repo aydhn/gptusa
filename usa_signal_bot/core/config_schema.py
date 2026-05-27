@@ -2673,3 +2673,67 @@ class FeatureEnrichmentConfig:
     warn_not_investment_advice: bool = True
     warn_phase119_is_not_activation: bool = True
     warn_enriched_features_are_not_trade_signals: bool = True
+
+@dataclass
+class FactorCompositionConfig:
+    enabled: bool = True
+    current_phase: int = 120
+    final_phase: int = 160
+    require_phase119_feature_enrichment: bool = True
+    feature_grouping_enabled: bool = True
+    factor_candidate_registry_enabled: bool = True
+    feature_selection_metadata_enabled: bool = True
+    factor_readiness_gate_enabled: bool = True
+    write_factor_composition_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_phase120_is_not_activation: bool = True
+    warn_factors_are_not_trade_signals: bool = True
+
+@dataclass
+class Phase120FactorPolicyConfig:
+    compute_metadata_local_only: bool = True
+    research_data_only: bool = True
+    local_fixture_only_default: bool = True
+    allow_network: bool = False
+    allow_paid_api: bool = False
+    allow_scraping: bool = False
+    allow_html_parsing: bool = False
+    allow_broker: bool = False
+    allow_order: bool = False
+    allow_paper_mutation: bool = False
+    allow_telegram_real_send: bool = False
+    allow_dashboard: bool = False
+    produce_trade_signals: bool = False
+    produce_order_decisions: bool = False
+    produce_portfolio_weights: bool = False
+    strategy_activation_allowed: bool = False
+
+@dataclass
+class Phase120FeatureSelectionConfig:
+    enabled: bool = True
+    min_coverage_ratio: float = 0.70
+    max_missingness_ratio: float = 0.30
+    min_stability_score: float = 40.0
+    max_redundancy_score: float = 80.0
+    research_selection_only: bool = True
+    block_signal_generation: bool = True
+    block_order_decision: bool = True
+    block_portfolio_weights: bool = True
+
+@dataclass
+class Phase120FactorReadinessConfig:
+    enabled: bool = True
+    require_feature_groups: bool = True
+    require_factor_candidates: bool = True
+    require_selection_metadata: bool = True
+    require_safety_pass: bool = True
+    ready_for_phase121_allowed: bool = True
+    activation_allowed: bool = False
+    strategy_activation_allowed: bool = False
+
+@dataclass
+class Phase120NotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    preview_only: bool = True
+    telegram_real_send: bool = False

@@ -1,0 +1,4 @@
+symbol,timestamp,price_close,returns_1d,volatility_14d,macd_line,rsi_14,event_earnings_active
+MSFT,2023-01-01,250.0,0.01,0.015,1.5,55.0,0
+MSFT,2023-01-02,252.0,0.008,0.015,1.55,57.0,1
+MSFT,2023-01-03,248.0,-0.015,0.018,1.4,52.0,0

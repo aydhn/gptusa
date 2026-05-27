@@ -1,0 +1,9 @@
+{
+  "review_id": "fc_rev_bad123",
+  "context": {
+    "activation_allowed": true,
+    "broker_execution_enabled": true,
+    "event_enrichment_ready": false,
+    "produces_trade_signal": true
+  }
+}
