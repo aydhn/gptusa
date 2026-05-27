@@ -1,52 +1,56 @@
-with open('usa_signal_bot/core/exceptions.py', 'r') as f:
-    content = f.read()
+with open('usa_signal_bot/core/exceptions.py', 'a') as f:
+    f.write('''
 
-exceptions = """
-class FeatureFoundationError(Exception):
-    pass
+class FeatureFactorIntegrationFreezeError(USASignalBotError):
+    """Raised when integration freeze fails."""
 
-class FeatureFactorKickoffIngestionError(FeatureFoundationError):
-    pass
+class ExplainabilityIngestionError(USASignalBotError):
+    """Raised when explainability ingestion fails."""
 
-class IndicatorRegistryError(FeatureFoundationError):
-    pass
+class ArtifactChainLoaderError(USASignalBotError):
+    """Raised when artifact chain loader fails."""
 
-class FeatureRegistryError(FeatureFoundationError):
-    pass
+class ArtifactChainIntegrityError(USASignalBotError):
+    """Raised when artifact chain integrity fails."""
 
-class FactorRegistryError(FeatureFoundationError):
-    pass
+class SchemaContinuityValidationError(USASignalBotError):
+    """Raised when schema continuity validation fails."""
 
-class FeatureInputContractError(FeatureFoundationError):
-    pass
+class LineageContinuityValidationError(USASignalBotError):
+    """Raised when lineage continuity validation fails."""
 
-class FeatureSchemaError(FeatureFoundationError):
-    pass
+class SafetyBoundaryContinuityError(USASignalBotError):
+    """Raised when safety boundary continuity fails."""
 
-class FeatureComputationPlannerError(FeatureFoundationError):
-    pass
+class ReportQaAcceptanceError(USASignalBotError):
+    """Raised when report QA acceptance fails."""
 
-class FeatureTransformPipelineError(FeatureFoundationError):
-    pass
+class ResearchReportAcceptanceError(USASignalBotError):
+    """Raised when research report acceptance fails."""
 
-class FeatureOutputContractError(FeatureFoundationError):
-    pass
+class FactorStoreHardeningAcceptanceError(USASignalBotError):
+    """Raised when factor store hardening acceptance fails."""
 
-class FeatureLineageError(FeatureFoundationError):
-    pass
+class IntegrationRehearsalRunnerError(USASignalBotError):
+    """Raised when integration rehearsal runner fails."""
 
-class FeatureSafetyValidationError(FeatureFoundationError):
-    pass
+class FreezeCandidateManifestError(USASignalBotError):
+    """Raised when freeze candidate manifest fails."""
 
-class FeatureFoundationStoreError(FeatureFoundationError):
-    pass
+class FreezeReadinessGateError(USASignalBotError):
+    """Raised when freeze readiness gate fails."""
 
-class FeatureFoundationValidationError(FeatureFoundationError):
-    pass
+class FreezePreparationSafetyValidationError(USASignalBotError):
+    """Raised when freeze preparation safety validation fails."""
 
-class FeatureFoundationReportingError(FeatureFoundationError):
-    pass
-"""
+class FreezePreparationStoreError(USASignalBotError):
+    """Raised when freeze preparation store fails."""
 
-with open('usa_signal_bot/core/exceptions.py', 'w') as f:
-    f.write(content + exceptions)
+class FreezePreparationValidationError(USASignalBotError):
+    """Raised when freeze preparation validation fails."""
+
+class FreezePreparationReportingError(USASignalBotError):
+    """Raised when freeze preparation reporting fails."""
+
+''')
+

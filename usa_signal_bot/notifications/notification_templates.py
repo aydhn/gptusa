@@ -161,3 +161,21 @@ def format_provider_governance_report_message(review): pass
 def format_data_lineage_warning_message(graph): pass
 def format_audit_trail_warning_message(manifest): pass
 def notifications_from_provider_governance_review(review): pass
+
+def format_freeze_preparation_report_message(review) -> dict:
+    return {"message": "Freeze Preparation Report - DRY RUN", "type": "FREEZE_PREPARATION_REPORT"}
+
+def format_integration_rehearsal_warning_message(result) -> dict:
+    return {"message": "Integration Rehearsal Warning", "type": "INTEGRATION_REHEARSAL_WARNING"}
+
+def format_freeze_readiness_warning_message(gate) -> dict:
+    return {"message": "Freeze Readiness Warning", "type": "FREEZE_READINESS_WARNING"}
+
+def notifications_from_freeze_preparation_review(review) -> list:
+    return [format_freeze_preparation_report_message(review)]
+
+# Phase 113 Notifications dummy
+def format_provider_governance_report_message(review): pass
+def format_data_lineage_warning_message(graph): pass
+def format_audit_trail_warning_message(manifest): pass
+def notifications_from_provider_governance_review(review): pass

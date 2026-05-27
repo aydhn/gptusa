@@ -2506,8 +2506,75 @@ class AdvancedFeaturesConfig:
     feature_table: Phase118FeatureTableConfig = field(default_factory=Phase118FeatureTableConfig)
     notifications: Phase118NotificationsConfig = field(default_factory=Phase118NotificationsConfig)
 
+
+
+@dataclass
+class FeatureFactorIntegrationFreezeConfig:
+    enabled: bool = True
+    current_phase: int = 124
+    final_phase: int = 160
+    require_phase123_explainability: bool = True
+    artifact_chain_integrity_enabled: bool = True
+    schema_continuity_enabled: bool = True
+    lineage_continuity_enabled: bool = True
+    safety_boundary_continuity_enabled: bool = True
+    integration_rehearsal_enabled: bool = True
+    report_qa_acceptance_enabled: bool = True
+    freeze_candidate_manifest_enabled: bool = True
+    freeze_readiness_gate_enabled: bool = True
+    write_freeze_preparation_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_phase124_is_not_activation: bool = True
+    warn_freeze_preparation_is_not_deployment: bool = True
+
+@dataclass
+class Phase124FreezePolicyConfig:
+    compute_metadata_local_only: bool = True
+    research_data_only: bool = True
+    local_fixture_only_default: bool = True
+    allow_network: bool = False
+    allow_paid_api: bool = False
+    allow_scraping: bool = False
+    allow_html_parsing: bool = False
+    allow_broker: bool = False
+    allow_order: bool = False
+    allow_paper_mutation: bool = False
+    allow_telegram_real_send: bool = False
+    allow_dashboard: bool = False
+    produce_trade_signals: bool = False
+    produce_order_decisions: bool = False
+    produce_portfolio_weights: bool = False
+    produce_investment_advice: bool = False
+    strategy_activation_allowed: bool = False
+    deployment_allowed: bool = False
+
+@dataclass
+class Phase124AcceptancePolicyConfig:
+    require_artifact_chain_complete: bool = True
+    require_schema_continuity: bool = True
+    require_lineage_continuity: bool = True
+    require_safety_boundary_pass: bool = True
+    require_report_qa_accepted: bool = True
+    require_factor_store_hardened: bool = True
+    require_freeze_manifest_valid: bool = True
+    ready_for_phase125_allowed: bool = True
+    ready_for_phase126_kickoff_after_phase125_allowed: bool = True
+
+@dataclass
+class Phase124NotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    preview_only: bool = True
+    telegram_real_send: bool = False
+
+
 class Config:
     advanced_features: AdvancedFeaturesConfig = field(default_factory=AdvancedFeaturesConfig)
+
+    feature_factor_integration_freeze: FeatureFactorIntegrationFreezeConfig = field(default_factory=FeatureFactorIntegrationFreezeConfig)
+    phase124_freeze_policy: Phase124FreezePolicyConfig = field(default_factory=Phase124FreezePolicyConfig)
+    phase124_acceptance_policy: Phase124AcceptancePolicyConfig = field(default_factory=Phase124AcceptancePolicyConfig)
+    phase124_notifications: Phase124NotificationsConfig = field(default_factory=Phase124NotificationsConfig)
 
     provider_freeze: ProviderFreezeConfig = field(default_factory=ProviderFreezeConfig)
     phase114_freeze_policy: Phase114FreezePolicyConfig = field(default_factory=Phase114FreezePolicyConfig)

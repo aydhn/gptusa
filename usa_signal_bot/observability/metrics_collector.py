@@ -84,3 +84,23 @@ def collect_phase113_metrics(): pass
 
 # Phase 113 Observability dummy
 def collect_phase113_metrics(): pass
+
+# Phase 124 Metrics
+phase124_metrics = [
+    "latest_freeze_preparation_context_count",
+    "latest_artifact_chain_reference_count",
+    "latest_artifact_chain_complete_count",
+    "latest_artifact_chain_missing_required_count",
+    "latest_schema_continuity_fail_count",
+    "latest_lineage_continuity_fail_count",
+    "latest_safety_boundary_fail_count",
+    "latest_report_qa_acceptance_pass_count",
+    "latest_integration_rehearsal_pass_count",
+    "latest_freeze_candidate_manifest_count",
+    "latest_freeze_readiness_gate_pass_count",
+    "latest_freeze_preparation_output_safety_violation_count",
+    "latest_phase124_execution_violation_count"
+]
+
+# Phase 113 Observability dummy
+def collect_phase113_metrics(): pass
