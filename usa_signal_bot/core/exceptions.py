@@ -2072,3 +2072,17 @@ class FreezePreparationValidationError(USASignalBotError):
 
 class FreezePreparationReportingError(USASignalBotError):
     """Raised when freeze preparation reporting fails."""
+
+# Phase 125 Exceptions
+class FeatureFactorFinalClosureError(Exception): pass
+class FreezePreparationIngestionError(FeatureFactorFinalClosureError): pass
+class FinalArtifactChainLoaderError(FeatureFactorFinalClosureError): pass
+class FinalClosureChecksError(FeatureFactorFinalClosureError): pass
+class FinalSchemaLineageSafetyClosureError(FeatureFactorFinalClosureError): pass
+class FreezeSealBuilderError(FeatureFactorFinalClosureError): pass
+class EngineReadinessCertificateError(FeatureFactorFinalClosureError): pass
+class Phase126KickoffGateError(FeatureFactorFinalClosureError): pass
+class FinalClosureSafetyValidationError(FeatureFactorFinalClosureError): pass
+class FinalClosureStoreError(FeatureFactorFinalClosureError): pass
+class FinalClosureValidationError(FeatureFactorFinalClosureError): pass
+class FinalClosureReportingError(FeatureFactorFinalClosureError): pass
