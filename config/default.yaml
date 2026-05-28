@@ -2156,8 +2156,6 @@ zero_mutation_audit:
   require_after_baseline: true
   require_before_baseline: true
   require_hash_unchanged: true
-
-
 core_indicators:
   enabled: true
   current_phase: 117
@@ -2170,7 +2168,6 @@ core_indicators:
   warn_not_investment_advice: true
   warn_phase117_is_not_activation: true
   warn_indicators_are_not_trade_signals: true
-
 phase117_indicator_policy:
   metadata_only: false
   compute_values_local_only: true
@@ -2189,21 +2186,18 @@ phase117_indicator_policy:
   produce_trade_signals: false
   produce_order_decisions: false
   strategy_activation_allowed: false
-
 phase117_feature_table:
   preserve_base_ohlcv_columns: true
   preserve_warmup_nulls: true
-  default_null_policy: "PRESERVE_WARMUP_NULLS"
+  default_null_policy: PRESERVE_WARMUP_NULLS
   block_forbidden_columns: true
   allow_macd_signal_line_column: true
   write_feature_tables: true
-
 phase117_notifications:
   enabled: true
   dry_run: true
   preview_only: true
   telegram_real_send: false
-
 advanced_features:
   enabled: true
   current_phase: 118
@@ -2219,7 +2213,6 @@ advanced_features:
   warn_not_investment_advice: true
   warn_phase118_is_not_activation: true
   warn_advanced_features_are_not_trade_signals: true
-
 phase118_feature_policy:
   compute_values_local_only: true
   research_data_only: true
@@ -2237,16 +2230,14 @@ phase118_feature_policy:
   produce_order_decisions: false
   produce_portfolio_weights: false
   strategy_activation_allowed: false
-
 phase118_cross_sectional:
   enabled: true
   min_required_symbols: 2
-  default_benchmark_symbol: "SPY"
+  default_benchmark_symbol: SPY
   align_on_common_timestamps: true
   produce_portfolio_weights: false
   produce_trade_signals: false
   produce_order_decisions: false
-
 phase118_feature_table:
   preserve_core_feature_columns: true
   preserve_warmup_nulls: true
@@ -2254,14 +2245,11 @@ phase118_feature_table:
   allow_macd_signal_line_column: true
   write_feature_tables: true
   overwrite_feature_tables_default: false
-
 phase118_notifications:
   enabled: true
   dry_run: true
   preview_only: true
   telegram_real_send: false
-
-
 feature_enrichment:
   enabled: true
   current_phase: 119
@@ -2278,7 +2266,6 @@ feature_enrichment:
   warn_not_investment_advice: true
   warn_phase119_is_not_activation: true
   warn_enriched_features_are_not_trade_signals: true
-
 phase119_enrichment_policy:
   compute_values_local_only: true
   research_data_only: true
@@ -2296,7 +2283,6 @@ phase119_enrichment_policy:
   produce_order_decisions: false
   produce_portfolio_weights: false
   strategy_activation_allowed: false
-
 phase119_feature_interactions:
   enabled: true
   allow_multiplicative: true
@@ -2308,7 +2294,6 @@ phase119_feature_interactions:
   block_signal_generation: true
   block_order_decision: true
   block_portfolio_weights: true
-
 phase119_feature_table:
   preserve_advanced_feature_columns: true
   preserve_warmup_nulls: true
@@ -2316,13 +2301,11 @@ phase119_feature_table:
   allow_macd_signal_line_column: true
   write_feature_tables: true
   overwrite_feature_tables_default: false
-
 phase119_notifications:
   enabled: true
   dry_run: true
   preview_only: true
   telegram_real_send: false
-
 factor_composition:
   enabled: true
   current_phase: 120
@@ -2336,7 +2319,6 @@ factor_composition:
   warn_not_investment_advice: true
   warn_phase120_is_not_activation: true
   warn_factors_are_not_trade_signals: true
-
 phase120_factor_policy:
   compute_metadata_local_only: true
   research_data_only: true
@@ -2354,18 +2336,16 @@ phase120_factor_policy:
   produce_order_decisions: false
   produce_portfolio_weights: false
   strategy_activation_allowed: false
-
 phase120_feature_selection:
   enabled: true
-  min_coverage_ratio: 0.70
-  max_missingness_ratio: 0.30
+  min_coverage_ratio: 0.7
+  max_missingness_ratio: 0.3
   min_stability_score: 40.0
   max_redundancy_score: 80.0
   research_selection_only: true
   block_signal_generation: true
   block_order_decision: true
   block_portfolio_weights: true
-
 phase120_factor_readiness:
   enabled: true
   require_feature_groups: true
@@ -2375,13 +2355,11 @@ phase120_factor_readiness:
   ready_for_phase121_allowed: true
   activation_allowed: false
   strategy_activation_allowed: false
-
 phase120_notifications:
   enabled: true
   dry_run: true
   preview_only: true
   telegram_real_send: false
-
 factor_scoring:
   enabled: true
   current_phase: 121
@@ -2395,7 +2373,6 @@ factor_scoring:
   warn_not_investment_advice: true
   warn_phase121_is_not_activation: true
   warn_factor_scores_are_not_trade_signals: true
-
 phase121_factor_policy:
   compute_values_local_only: true
   research_data_only: true
@@ -2413,10 +2390,9 @@ phase121_factor_policy:
   produce_order_decisions: false
   produce_portfolio_weights: false
   strategy_activation_allowed: false
-
 phase121_factor_normalization:
   enabled: true
-  default_method: "Z_SCORE"
+  default_method: Z_SCORE
   winsorization_enabled: true
   lower_pct: 0.01
   upper_pct: 0.99
@@ -2424,7 +2400,6 @@ phase121_factor_normalization:
   produce_trade_signals: false
   produce_order_decisions: false
   produce_portfolio_weights: false
-
 phase121_factor_table:
   preserve_enriched_feature_columns: true
   preserve_warmup_nulls: true
@@ -2432,14 +2407,11 @@ phase121_factor_table:
   allow_macd_signal_line_column: true
   write_factor_tables: true
   overwrite_factor_tables_default: false
-
 phase121_notifications:
   enabled: true
   dry_run: true
   preview_only: true
   telegram_real_send: false
-
-
 factor_validation:
   enabled: true
   current_phase: 122
@@ -2453,7 +2425,6 @@ factor_validation:
   warn_not_investment_advice: true
   warn_phase122_is_not_activation: true
   warn_drift_reports_are_not_trade_signals: true
-
 phase122_factor_validation_policy:
   compute_metadata_local_only: true
   research_data_only: true
@@ -2471,18 +2442,16 @@ phase122_factor_validation_policy:
   produce_order_decisions: false
   produce_portfolio_weights: false
   strategy_activation_allowed: false
-
 phase122_factor_drift:
   enabled: true
   build_baseline_from_current_fixture_if_previous_missing: true
-  drift_score_scale: "0_100"
+  drift_score_scale: '0_100'
   high_drift_threshold: 70.0
   critical_drift_threshold: 90.0
   drift_reports_are_metadata_only: true
   produce_trade_signals: false
   produce_order_decisions: false
   produce_portfolio_weights: false
-
 phase122_factor_store:
   enabled: true
   local_filesystem_only: true
@@ -2494,14 +2463,11 @@ phase122_factor_store:
   create_snapshot_metadata: true
   create_rollback_metadata: true
   no_auto_deployment: true
-
 phase122_notifications:
   enabled: true
   dry_run: true
   preview_only: true
   telegram_real_send: false
-
-
 feature_factor_integration_freeze:
   enabled: true
   current_phase: 124
@@ -2519,7 +2485,6 @@ feature_factor_integration_freeze:
   warn_not_investment_advice: true
   warn_phase124_is_not_activation: true
   warn_freeze_preparation_is_not_deployment: true
-
 phase124_freeze_policy:
   compute_metadata_local_only: true
   research_data_only: true
@@ -2539,7 +2504,6 @@ phase124_freeze_policy:
   produce_investment_advice: false
   strategy_activation_allowed: false
   deployment_allowed: false
-
 phase124_acceptance_policy:
   require_artifact_chain_complete: true
   require_schema_continuity: true
@@ -2550,14 +2514,11 @@ phase124_acceptance_policy:
   require_freeze_manifest_valid: true
   ready_for_phase125_allowed: true
   ready_for_phase126_kickoff_after_phase125_allowed: true
-
 phase124_notifications:
   enabled: true
   dry_run: true
   preview_only: true
   telegram_real_send: false
-
-
 feature_factor_final_closure:
   enabled: true
   current_phase: 125
@@ -2573,7 +2534,6 @@ feature_factor_final_closure:
   warn_phase125_is_not_activation: true
   warn_freeze_seal_is_not_deployment: true
   warn_phase126_gate_is_not_strategy_activation: true
-
 phase125_final_closure_policy:
   compute_metadata_local_only: true
   research_data_only: true
@@ -2593,7 +2553,6 @@ phase125_final_closure_policy:
   produce_portfolio_weights: false
   produce_investment_advice: false
   strategy_activation_allowed: false
-
 phase125_closure_requirements:
   require_phase124_ready: true
   require_final_artifact_chain_complete: true
@@ -2603,8 +2562,67 @@ phase125_closure_requirements:
   require_phase126_gate_passed: true
   require_safety_pass: true
   ready_for_phase126_allowed: true
-
 phase125_notifications:
+  enabled: true
+  dry_run: true
+  preview_only: true
+  telegram_real_send: false
+regime_feature_engineering:
+  enabled: true
+  current_phase: 127
+  final_phase: 160
+  require_phase126_regime_foundation: true
+  market_state_metrics_enabled: true
+  rolling_market_state_metrics_enabled: true
+  cross_sectional_market_state_metrics_enabled: true
+  regime_feature_table_enabled: true
+  unsupervised_candidate_preparation_enabled: true
+  candidate_readiness_gate_enabled: true
+  write_regime_feature_engineering_reports: true
+  warn_not_investment_advice: true
+  warn_phase127_is_not_activation: true
+  warn_candidates_are_not_predictions: true
+  warn_candidates_are_not_trade_signals: true
+phase127_regime_policy:
+  compute_values_local_only: true
+  research_data_only: true
+  local_fixture_only_default: true
+  allow_network: false
+  allow_paid_api: false
+  allow_scraping: false
+  allow_html_parsing: false
+  allow_broker: false
+  allow_order: false
+  allow_paper_mutation: false
+  allow_telegram_real_send: false
+  allow_dashboard: false
+  allow_deployment: false
+  allow_model_training: false
+  allow_heavy_ml_dependencies: false
+  produce_trade_signals: false
+  produce_order_decisions: false
+  produce_portfolio_weights: false
+  produce_investment_advice: false
+  strategy_activation_allowed: false
+phase127_market_state_metrics:
+  enabled: true
+  default_windows:
+  - 20
+  - 60
+  - 120
+  build_cross_sectional_metrics: true
+  preserve_warmup_nulls: true
+  write_feature_tables: true
+  overwrite_feature_tables_default: false
+phase127_candidate_preparation:
+  enabled: true
+  method: DETERMINISTIC_RULE_TEMPLATE
+  produce_model_predictions: false
+  train_models: false
+  fit_clustering_models: false
+  candidate_scores_are_metadata_only: true
+  ready_for_phase128_allowed: true
+phase127_notifications:
   enabled: true
   dry_run: true
   preview_only: true
