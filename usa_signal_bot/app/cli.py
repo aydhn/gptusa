@@ -329,6 +329,21 @@ def main():
 
     parser_afv = subparsers.add_parser('advanced-feature-validate')
     parser_afv.set_defaults(func=advanced_feature_validate)
+
+    parser_phase126_info = subparsers.add_parser("regime-foundation-info", help="Show Phase 126 Regime Foundation info")
+    parser_phase126_info.set_defaults(func=phase126_regime_foundation_info)
+
+    parser_phase126_ingest = subparsers.add_parser("regime-foundation-ingest-final-closure", help="Ingest Phase 125 final closure review")
+    parser_phase126_ingest.set_defaults(func=phase126_regime_foundation_ingest)
+
+    parser_phase126_review = subparsers.add_parser("regime-foundation-review", help="Generate Regime Foundation full review")
+    parser_phase126_review.add_argument("--write", action="store_true", help="Write review to disk")
+    parser_phase126_review.set_defaults(func=phase126_regime_foundation_review)
+
+    parser_phase126_tax = subparsers.add_parser("regime-label-taxonomy", help="Show Regime Taxonomy info")
+    parser_phase126_tax.add_argument("--write", action="store_true", help="Write taxonomy to disk")
+    parser_phase126_tax.set_defaults(func=phase126_regime_taxonomy_info)
+
     args = parser.parse_args()
     if args.command:
         args.func(args)
@@ -980,3 +995,68 @@ def final_closure_validate(args):
 def append_to_parser():
     # Helper to add args
     pass
+
+
+def phase126_regime_foundation_info(args):
+    print("USA Signal Bot - Phase 126: Regime Classification Foundation")
+    print("Notice: This phase produces a regime foundation review, market state dataset schemas, and taxonomies.")
+    print("Notice: This is NOT an active paper trading phase.")
+    print("Notice: 'Ready for Phase 127' does not constitute live trading approval.")
+    print("Notice: Regime labels and market dataset outputs are strictly research metadata, not trade signals.")
+
+def phase126_regime_foundation_ingest(args):
+    from usa_signal_bot.regime_classification.foundation.final_closure_ingestion import ingest_latest_final_closure_review_from_store, final_closure_ingestion_to_text
+    from pathlib import Path
+    try:
+        res = ingest_latest_final_closure_review_from_store(Path("data"))
+        print(final_closure_ingestion_to_text(res))
+    except Exception as e:
+        print(f"Ingestion failed: {e}")
+
+def phase126_regime_foundation_review(args):
+    from pathlib import Path
+    from usa_signal_bot.regime_classification.foundation.final_closure_ingestion import ingest_latest_final_closure_review_from_store
+    from usa_signal_bot.regime_classification.foundation.frozen_artifact_loader import build_frozen_artifact_references_from_final_closure, build_regime_research_input_bundle
+    from usa_signal_bot.regime_classification.foundation.market_state_dataset_schema import build_market_state_dataset_contract
+    from usa_signal_bot.regime_classification.foundation.market_state_dataset_skeleton import build_market_state_dataset_skeleton
+    from usa_signal_bot.regime_classification.foundation.regime_label_taxonomy import build_regime_label_taxonomy
+    from usa_signal_bot.regime_classification.foundation.regime_non_activation_boundary import build_regime_non_activation_boundary_result
+    from usa_signal_bot.regime_classification.foundation.regime_foundation_report import build_regime_foundation_context, build_regime_foundation_full_review, regime_foundation_full_review_to_text
+    from usa_signal_bot.regime_classification.foundation.regime_foundation_store import write_regime_foundation_full_review_json, regime_foundation_reviews_dir
+
+    try:
+        data_root = Path("data")
+        ingestion = ingest_latest_final_closure_review_from_store(data_root)
+        refs = build_frozen_artifact_references_from_final_closure({"output_paths": {"artifact1": "path"}}) # Dummy payload for cli run
+        bundle = build_regime_research_input_bundle(ingestion.source_review_id, refs)
+        contract = build_market_state_dataset_contract()
+        skeleton = build_market_state_dataset_skeleton(contract)
+        taxonomy = build_regime_label_taxonomy()
+        boundary = build_regime_non_activation_boundary_result({"produces_trade_signal": False}, [], "safe")
+
+        ctx = build_regime_foundation_context(ingestion, bundle, contract, skeleton, taxonomy, boundary)
+        review = build_regime_foundation_full_review(ctx)
+
+        print(regime_foundation_full_review_to_text(review))
+
+        if getattr(args, 'write', False):
+            d = regime_foundation_reviews_dir(data_root)
+            f = d / f"{review.review_id}.json"
+            write_regime_foundation_full_review_json(f, review)
+            print(f"\nWrote regime foundation review to {f}")
+    except Exception as e:
+        print(f"Review failed: {e}")
+
+def phase126_regime_taxonomy_info(args):
+    from usa_signal_bot.regime_classification.foundation.regime_label_taxonomy import build_regime_label_taxonomy, regime_label_taxonomy_to_text
+    from usa_signal_bot.regime_classification.foundation.regime_foundation_store import write_regime_label_taxonomy_json, regime_taxonomies_dir
+    from pathlib import Path
+
+    tax = build_regime_label_taxonomy()
+    print(regime_label_taxonomy_to_text(tax))
+
+    if getattr(args, 'write', False):
+        d = regime_taxonomies_dir(Path("data"))
+        f = d / f"{tax.taxonomy_id}.json"
+        write_regime_label_taxonomy_json(f, tax)
+        print(f"\nWrote taxonomy to {f}")

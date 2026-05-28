@@ -40,6 +40,20 @@ class MetricsCollector:
         self.metrics["latest_phase125_deployment_violation_count"] = 0
 
 
+        self.metrics["latest_final_closure_context_count"] = 0
+        self.metrics["latest_final_closure_artifact_count"] = 0
+        self.metrics["latest_final_closure_manifest_count"] = 0
+        self.metrics["latest_freeze_seal_count"] = 0
+        self.metrics["latest_engine_certificate_count"] = 0
+        self.metrics["latest_phase126_kickoff_gate_count"] = 0
+        self.metrics["latest_final_closure_pass_count"] = 0
+        self.metrics["latest_feature_factor_engine_final_closed_count"] = 0
+        self.metrics["latest_phase126_ready_count"] = 0
+        self.metrics["latest_final_closure_safety_violation_count"] = 0
+        self.metrics["latest_phase125_execution_violation_count"] = 0
+        self.metrics["latest_phase125_deployment_violation_count"] = 0
+
+
 
     def record_freeze_metrics(self, bundle):
         self.latest_provider_expansion_freeze_count += 1
@@ -115,6 +129,9 @@ phase124_metrics = [
     "latest_freeze_preparation_output_safety_violation_count",
     "latest_phase124_execution_violation_count"
 ]
+
+# Phase 113 Observability dummy
+def collect_phase113_metrics(): pass
 
 # Phase 113 Observability dummy
 def collect_phase113_metrics(): pass
