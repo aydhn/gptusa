@@ -2086,3 +2086,58 @@ class FinalClosureSafetyValidationError(FeatureFactorFinalClosureError): pass
 class FinalClosureStoreError(FeatureFactorFinalClosureError): pass
 class FinalClosureValidationError(FeatureFactorFinalClosureError): pass
 class FinalClosureReportingError(FeatureFactorFinalClosureError): pass
+
+# Phase 125 Exceptions
+class FeatureFactorFinalClosureError(Exception): pass
+class FreezePreparationIngestionError(FeatureFactorFinalClosureError): pass
+class FinalArtifactChainLoaderError(FeatureFactorFinalClosureError): pass
+class FinalClosureChecksError(FeatureFactorFinalClosureError): pass
+class FinalSchemaLineageSafetyClosureError(FeatureFactorFinalClosureError): pass
+class FreezeSealBuilderError(FeatureFactorFinalClosureError): pass
+class EngineReadinessCertificateError(FeatureFactorFinalClosureError): pass
+class Phase126KickoffGateError(FeatureFactorFinalClosureError): pass
+class FinalClosureSafetyValidationError(FeatureFactorFinalClosureError): pass
+class FinalClosureStoreError(FeatureFactorFinalClosureError): pass
+class FinalClosureValidationError(FeatureFactorFinalClosureError): pass
+class FinalClosureReportingError(FeatureFactorFinalClosureError): pass
+
+
+# Phase 126 Exceptions
+class RegimeFoundationError(Exception):
+    pass
+
+class FinalClosureIngestionError(RegimeFoundationError):
+    pass
+
+class FrozenArtifactLoaderError(RegimeFoundationError):
+    pass
+
+class RegimeInputContractError(RegimeFoundationError):
+    pass
+
+class MarketStateDatasetSchemaError(RegimeFoundationError):
+    pass
+
+class MarketStateDatasetSkeletonError(RegimeFoundationError):
+    pass
+
+class RegimeLabelTaxonomyError(RegimeFoundationError):
+    pass
+
+class RegimeTaxonomyValidationError(RegimeFoundationError):
+    pass
+
+class RegimeNonActivationBoundaryError(RegimeFoundationError):
+    pass
+
+class RegimeFoundationSafetyValidationError(RegimeFoundationError):
+    pass
+
+class RegimeFoundationStoreError(RegimeFoundationError):
+    pass
+
+class RegimeFoundationValidationError(RegimeFoundationError):
+    pass
+
+class RegimeFoundationReportingError(RegimeFoundationError):
+    pass
