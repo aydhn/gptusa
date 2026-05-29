@@ -4,26 +4,29 @@ with open("usa_signal_bot/core/config_schema.py", "r") as f:
     content = f.read()
 
 new_configs = """
-@dataclass
-class FeatureFactorFinalClosureConfig:
-    enabled: bool = True
-    current_phase: int = 125
-    final_phase: int = 160
-    require_phase124_freeze_preparation: bool = True
-    final_artifact_chain_enabled: bool = True
-    final_closure_checks_enabled: bool = True
-    freeze_seal_enabled: bool = True
-    engine_readiness_certificate_enabled: bool = True
-    phase126_kickoff_gate_enabled: bool = True
-    write_final_closure_reports: bool = True
-    warn_not_investment_advice: bool = True
-    warn_phase125_is_not_activation: bool = True
-    warn_freeze_seal_is_not_deployment: bool = True
-    warn_phase126_gate_is_not_strategy_activation: bool = True
+from dataclasses import dataclass, field
 
 @dataclass
-class Phase125FinalClosurePolicyConfig:
-    compute_metadata_local_only: bool = True
+class RegimeFeatureEngineeringConfig:
+    enabled: bool = True
+    current_phase: int = 127
+    final_phase: int = 160
+    require_phase126_regime_foundation: bool = True
+    market_state_metrics_enabled: bool = True
+    rolling_market_state_metrics_enabled: bool = True
+    cross_sectional_market_state_metrics_enabled: bool = True
+    regime_feature_table_enabled: bool = True
+    unsupervised_candidate_preparation_enabled: bool = True
+    candidate_readiness_gate_enabled: bool = True
+    write_regime_feature_engineering_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_phase127_is_not_activation: bool = True
+    warn_candidates_are_not_predictions: bool = True
+    warn_candidates_are_not_trade_signals: bool = True
+
+@dataclass
+class Phase127RegimePolicyConfig:
+    compute_values_local_only: bool = True
     research_data_only: bool = True
     local_fixture_only_default: bool = True
     allow_network: bool = False
@@ -36,6 +39,8 @@ class Phase125FinalClosurePolicyConfig:
     allow_telegram_real_send: bool = False
     allow_dashboard: bool = False
     allow_deployment: bool = False
+    allow_model_training: bool = False
+    allow_heavy_ml_dependencies: bool = False
     produce_trade_signals: bool = False
     produce_order_decisions: bool = False
     produce_portfolio_weights: bool = False
@@ -43,39 +48,46 @@ class Phase125FinalClosurePolicyConfig:
     strategy_activation_allowed: bool = False
 
 @dataclass
-class Phase125ClosureRequirementsConfig:
-    require_phase124_ready: bool = True
-    require_final_artifact_chain_complete: bool = True
-    require_final_checks_passed: bool = True
-    require_freeze_seal_valid: bool = True
-    require_engine_certificate_valid: bool = True
-    require_phase126_gate_passed: bool = True
-    require_safety_pass: bool = True
-    ready_for_phase126_allowed: bool = True
+class Phase127MarketStateMetricsConfig:
+    enabled: bool = True
+    default_windows: list[int] = field(default_factory=lambda: [20, 60, 120])
+    build_cross_sectional_metrics: bool = True
+    preserve_warmup_nulls: bool = True
+    write_feature_tables: bool = True
+    overwrite_feature_tables_default: bool = False
 
 @dataclass
-class Phase125NotificationsConfig:
+class Phase127CandidatePreparationConfig:
+    enabled: bool = True
+    method: str = "DETERMINISTIC_RULE_TEMPLATE"
+    produce_model_predictions: bool = False
+    train_models: bool = False
+    fit_clustering_models: bool = False
+    candidate_scores_are_metadata_only: bool = True
+    ready_for_phase128_allowed: bool = True
+
+@dataclass
+class Phase127NotificationsConfig:
     enabled: bool = True
     dry_run: bool = True
     preview_only: bool = True
     telegram_real_send: bool = False
-
 """
 
-# Insert before `class Config:`
+# Insert before class Config:
 content = re.sub(
     r'(class Config:)',
-    new_configs + r'\1',
+    new_configs + r'\n\1',
     content
 )
 
-# Append to Config class
 content = re.sub(
     r'(class Config:.*?)(?=\n\n|\Z)',
-    r'\1\n    feature_factor_final_closure: FeatureFactorFinalClosureConfig = field(default_factory=FeatureFactorFinalClosureConfig)\n'
-    r'    phase125_final_closure_policy: Phase125FinalClosurePolicyConfig = field(default_factory=Phase125FinalClosurePolicyConfig)\n'
-    r'    phase125_closure_requirements: Phase125ClosureRequirementsConfig = field(default_factory=Phase125ClosureRequirementsConfig)\n'
-    r'    phase125_notifications: Phase125NotificationsConfig = field(default_factory=Phase125NotificationsConfig)\n',
+    r'\1\n    regime_feature_engineering: RegimeFeatureEngineeringConfig = field(default_factory=RegimeFeatureEngineeringConfig)\n'
+    r'    phase127_regime_policy: Phase127RegimePolicyConfig = field(default_factory=Phase127RegimePolicyConfig)\n'
+    r'    phase127_market_state_metrics: Phase127MarketStateMetricsConfig = field(default_factory=Phase127MarketStateMetricsConfig)\n'
+    r'    phase127_candidate_preparation: Phase127CandidatePreparationConfig = field(default_factory=Phase127CandidatePreparationConfig)\n'
+    r'    phase127_notifications: Phase127NotificationsConfig = field(default_factory=Phase127NotificationsConfig)\n',
     content,
     flags=re.DOTALL
 )
