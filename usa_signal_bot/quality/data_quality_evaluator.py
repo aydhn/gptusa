@@ -151,3 +151,6 @@ def phase113_data_lineage_score(): pass
 def phase113_audit_trail_score(): pass
 def phase113_no_execution_proof_score(): pass
 def phase113_non_execution_compliance_score(): pass
+
+# Phase 128 metrics
+def phase128_quality_hooks(): pass

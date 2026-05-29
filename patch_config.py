@@ -1,83 +1,104 @@
-import yaml
-from pathlib import Path
+import re
 
-config_path = Path("config/default.yaml")
+with open("usa_signal_bot/core/config_schema.py", "r") as f:
+    content = f.read()
 
-with open(config_path, "r") as f:
-    config = yaml.safe_load(f)
+new_classes = """
+@dataclass
+class Phase128LabelingPolicyConfig:
+    compute_values_local_only: bool = True
+    research_data_only: bool = True
+    local_fixture_only_default: bool = True
+    allow_network: bool = False
+    allow_paid_api: bool = False
+    allow_scraping: bool = False
+    allow_html_parsing: bool = False
+    allow_broker: bool = False
+    allow_order: bool = False
+    allow_paper_mutation: bool = False
+    allow_telegram_real_send: bool = False
+    allow_dashboard: bool = False
+    allow_deployment: bool = False
+    allow_model_training: bool = False
+    allow_model_prediction: bool = False
+    allow_heavy_ml_dependencies: bool = False
+    produce_trade_signals: bool = False
+    produce_order_decisions: bool = False
+    produce_portfolio_weights: bool = False
+    produce_investment_advice: bool = False
+    strategy_activation_allowed: bool = False
 
-if "regime_feature_engineering" not in config:
-    config["regime_feature_engineering"] = {
-        "enabled": True,
-        "current_phase": 127,
-        "final_phase": 160,
-        "require_phase126_regime_foundation": True,
-        "market_state_metrics_enabled": True,
-        "rolling_market_state_metrics_enabled": True,
-        "cross_sectional_market_state_metrics_enabled": True,
-        "regime_feature_table_enabled": True,
-        "unsupervised_candidate_preparation_enabled": True,
-        "candidate_readiness_gate_enabled": True,
-        "write_regime_feature_engineering_reports": True,
-        "warn_not_investment_advice": True,
-        "warn_phase127_is_not_activation": True,
-        "warn_candidates_are_not_predictions": True,
-        "warn_candidates_are_not_trade_signals": True,
-    }
+@dataclass
+class Phase128HeuristicLabelingConfig:
+    enabled: bool = True
+    minimum_score_threshold: float = 40.0
+    minimum_score_gap: float = 5.0
+    fallback_label: str = "unknown_regime"
+    mixed_label: str = "mixed_regime"
+    unknown_label: str = "unknown_regime"
+    conflict_policy: str = "fallback_to_mixed_or_unknown"
+    write_labeled_tables: bool = True
+    overwrite_labeled_tables_default: bool = False
 
-if "phase127_regime_policy" not in config:
-    config["phase127_regime_policy"] = {
-        "compute_values_local_only": True,
-        "research_data_only": True,
-        "local_fixture_only_default": True,
-        "allow_network": False,
-        "allow_paid_api": False,
-        "allow_scraping": False,
-        "allow_html_parsing": False,
-        "allow_broker": False,
-        "allow_order": False,
-        "allow_paper_mutation": False,
-        "allow_telegram_real_send": False,
-        "allow_dashboard": False,
-        "allow_deployment": False,
-        "allow_model_training": False,
-        "allow_heavy_ml_dependencies": False,
-        "produce_trade_signals": False,
-        "produce_order_decisions": False,
-        "produce_portfolio_weights": False,
-        "produce_investment_advice": False,
-        "strategy_activation_allowed": False,
-    }
+@dataclass
+class Phase128RollingWindowsConfig:
+    enabled: bool = True
+    windows: list[int] = field(default_factory=lambda: [20, 60, 120])
+    min_periods_ratio: float = 0.5
+    preserve_warmup_nulls: bool = True
+    build_stability_profiles: bool = True
 
-if "phase127_market_state_metrics" not in config:
-    config["phase127_market_state_metrics"] = {
-        "enabled": True,
-        "default_windows": [20, 60, 120],
-        "build_cross_sectional_metrics": True,
-        "preserve_warmup_nulls": True,
-        "write_feature_tables": True,
-        "overwrite_feature_tables_default": False,
-    }
+@dataclass
+class Phase128CandidateValidationConfig:
+    enabled: bool = True
+    require_candidate_definitions: bool = True
+    require_candidate_scores: bool = True
+    require_taxonomy_alignment: bool = True
+    require_no_model_training: bool = True
+    require_no_model_prediction: bool = True
+    ready_for_phase129_allowed: bool = True
 
-if "phase127_candidate_preparation" not in config:
-    config["phase127_candidate_preparation"] = {
-        "enabled": True,
-        "method": "DETERMINISTIC_RULE_TEMPLATE",
-        "produce_model_predictions": False,
-        "train_models": False,
-        "fit_clustering_models": False,
-        "candidate_scores_are_metadata_only": True,
-        "ready_for_phase128_allowed": True,
-    }
+@dataclass
+class Phase128NotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    preview_only: bool = True
+    telegram_real_send: bool = False
 
-if "phase127_notifications" not in config:
-    config["phase127_notifications"] = {
-        "enabled": True,
-        "dry_run": True,
-        "preview_only": True,
-        "telegram_real_send": False,
-    }
+@dataclass
+class RegimeLabelingConfig:
+    enabled: bool = True
+    current_phase: int = 128
+    final_phase: int = 160
+    require_phase127_regime_feature_engineering: bool = True
+    heuristic_labeling_enabled: bool = True
+    rolling_regime_windows_enabled: bool = True
+    candidate_validation_enabled: bool = True
+    label_stability_enabled: bool = True
+    readiness_gate_enabled: bool = True
+    write_regime_labeling_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_phase128_is_not_activation: bool = True
+    warn_labels_are_not_trade_signals: bool = True
+    warn_labels_are_not_model_predictions: bool = True
+    policy: Phase128LabelingPolicyConfig = field(default_factory=Phase128LabelingPolicyConfig)
+    heuristic_labeling: Phase128HeuristicLabelingConfig = field(default_factory=Phase128HeuristicLabelingConfig)
+    rolling_windows: Phase128RollingWindowsConfig = field(default_factory=Phase128RollingWindowsConfig)
+    candidate_validation: Phase128CandidateValidationConfig = field(default_factory=Phase128CandidateValidationConfig)
+    notifications: Phase128NotificationsConfig = field(default_factory=Phase128NotificationsConfig)
+"""
 
+if "RegimeLabelingConfig" not in content:
+    content += "\n" + new_classes
 
-with open(config_path, "w") as f:
-    yaml.dump(config, f, sort_keys=False)
+# Add to AppConfig
+if "regime_labeling: RegimeLabelingConfig" not in content:
+    content = re.sub(
+        r'(class AppConfig:\n(?:.*\n)*?)(\s*def )',
+        r'\1    regime_labeling: RegimeLabelingConfig = field(default_factory=RegimeLabelingConfig)\n\2',
+        content
+    )
+
+with open("usa_signal_bot/core/config_schema.py", "w") as f:
+    f.write(content)
+

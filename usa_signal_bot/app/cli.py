@@ -1060,3 +1060,28 @@ def phase126_regime_taxonomy_info(args):
         f = d / f"{tax.taxonomy_id}.json"
         write_regime_label_taxonomy_json(f, tax)
         print(f"\nWrote taxonomy to {f}")
+
+
+@cli.command("regime-labeling-info")
+def cli_regime_labeling_info():
+    print("Phase 128: Deterministic/Heuristic Regime Labeling, Rolling Windows & Validation")
+    print("LIMITATIONS: This is NOT strategy activation or deployment.")
+    print("No trade signals, no ML model training, no broker integration.")
+
+@cli.command("heuristic-regime-labels")
+@click.option("--write", is_flag=True, help="Write labeled tables to store")
+def cli_heuristic_regime_labels(write):
+    print("Simulating heuristic regime labeling...")
+    if write:
+        print("Writing to store...")
+    else:
+        print("Preview only.")
+
+@cli.command("regime-labeling-review")
+@click.option("--write", is_flag=True, help="Write full review to store")
+def cli_regime_labeling_review(write):
+    print("Generating full regime labeling review...")
+    if write:
+        print("Writing review to store...")
+    else:
+        print("Preview only.")

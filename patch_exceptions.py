@@ -1,59 +1,66 @@
-with open("usa_signal_bot/core/exceptions.py", "a") as f:
-    f.write("""
-class RegimeFeatureEngineeringError(USASignalBotError):
+import re
+
+with open("usa_signal_bot/core/exceptions.py", "r") as f:
+    content = f.read()
+
+new_exceptions = """
+class RegimeLabelingError(USAError):
     pass
 
-class RegimeFoundationIngestionError(RegimeFeatureEngineeringError):
+class RegimeFeatureEngineeringIngestionError(RegimeLabelingError):
     pass
 
-class MarketStateInputLoaderError(RegimeFeatureEngineeringError):
+class RegimeLabelInputLoaderError(RegimeLabelingError):
     pass
 
-class MarketStateMetricSpecError(RegimeFeatureEngineeringError):
+class RegimeLabelingSpecError(RegimeLabelingError):
     pass
 
-class RegimeFeatureSpecError(RegimeFeatureEngineeringError):
+class HeuristicLabelingRuleError(RegimeLabelingError):
     pass
 
-class MarketStateMetricsEngineError(RegimeFeatureEngineeringError):
+class CandidateScoreResolverError(RegimeLabelingError):
     pass
 
-class RollingMarketStateMetricsError(RegimeFeatureEngineeringError):
+class RollingRegimeWindowError(RegimeLabelingError):
     pass
 
-class CrossSectionalMarketStateMetricsError(RegimeFeatureEngineeringError):
+class RegimeLabelSequenceError(RegimeLabelingError):
     pass
 
-class FactorContextRegimeMapperError(RegimeFeatureEngineeringError):
+class LabelConflictDetectorError(RegimeLabelingError):
     pass
 
-class RegimeFeatureTableBuilderError(RegimeFeatureEngineeringError):
+class LabelConfidenceProxyError(RegimeLabelingError):
     pass
 
-class RegimeCandidateDefinitionError(RegimeFeatureEngineeringError):
+class CandidateValidationRunnerError(RegimeLabelingError):
     pass
 
-class UnsupervisedCandidatePreparationError(RegimeFeatureEngineeringError):
+class LabelStabilityProfilerError(RegimeLabelingError):
     pass
 
-class CandidateDistanceContextError(RegimeFeatureEngineeringError):
+class RegimeLabelingReadinessGateError(RegimeLabelingError):
     pass
 
-class CandidateReadinessGateError(RegimeFeatureEngineeringError):
+class RegimeLabelSchemaValidationError(RegimeLabelingError):
     pass
 
-class RegimeFeatureSchemaValidationError(RegimeFeatureEngineeringError):
+class RegimeLabelSafetyValidationError(RegimeLabelingError):
     pass
 
-class RegimeFeatureOutputSafetyValidationError(RegimeFeatureEngineeringError):
+class RegimeLabelingStoreError(RegimeLabelingError):
     pass
 
-class RegimeFeatureEngineeringStoreError(RegimeFeatureEngineeringError):
+class RegimeLabelingValidationError(RegimeLabelingError):
     pass
 
-class RegimeFeatureEngineeringValidationError(RegimeFeatureEngineeringError):
+class RegimeLabelingReportingError(RegimeLabelingError):
     pass
+"""
 
-class RegimeFeatureEngineeringReportingError(RegimeFeatureEngineeringError):
-    pass
-""")
+if "class RegimeLabelingError" not in content:
+    content += "\n" + new_exceptions
+
+with open("usa_signal_bot/core/exceptions.py", "w") as f:
+    f.write(content)
