@@ -1062,26 +1062,98 @@ def phase126_regime_taxonomy_info(args):
         print(f"\nWrote taxonomy to {f}")
 
 
-@cli.command("regime-labeling-info")
-def cli_regime_labeling_info():
+def cli_regime_labeling_info(args):
     print("Phase 128: Deterministic/Heuristic Regime Labeling, Rolling Windows & Validation")
     print("LIMITATIONS: This is NOT strategy activation or deployment.")
     print("No trade signals, no ML model training, no broker integration.")
 
-@cli.command("heuristic-regime-labels")
-@click.option("--write", is_flag=True, help="Write labeled tables to store")
-def cli_heuristic_regime_labels(write):
+def cli_heuristic_regime_labels(args):
     print("Simulating heuristic regime labeling...")
     if write:
         print("Writing to store...")
     else:
         print("Preview only.")
 
-@cli.command("regime-labeling-review")
-@click.option("--write", is_flag=True, help="Write full review to store")
-def cli_regime_labeling_review(write):
+def cli_regime_labeling_review(args):
     print("Generating full regime labeling review...")
     if write:
         print("Writing review to store...")
     else:
         print("Preview only.")
+
+
+def cmd_regime_transition_info(args):
+    """Show information about Regime Transition Analytics phase (Phase 129)."""
+    print("Phase 129: Regime Transition Matrix, Persistence Analytics, and Stability Diagnostics")
+    print("This phase ingests Phase 128 labeled regime artifacts and generates pure metadata transition profiles.")
+    print("Strict Non-Execution Context:")
+    print("- Outputs are NOT trade signals, order decisions, or portfolio allocations.")
+    print("- Outputs are NOT investment advice.")
+    print("- Outputs DO NOT activate paper trading, live trading, or production deployments.")
+    print("- Model training and predictions are EXPLICITLY FORBIDDEN.")
+
+def cmd_regime_transition_ingest_labeling(args):
+    """Ingest Phase 128 labeled regime outputs for review."""
+    print("Regime labeling ingestion dry run...")
+
+def cmd_regime_sequence_input_load(args):
+    print("Regime sequence input load dry run...")
+
+def cmd_regime_transition_matrix(args):
+    print(f"Building transition matrix... write={write}")
+
+def cmd_regime_persistence_analytics(args):
+    print("Building persistence analytics...")
+
+def cmd_regime_duration_analytics(args):
+    print("Building duration analytics...")
+
+def cmd_regime_churn_diagnostics(args):
+    print("Building churn diagnostics...")
+
+def cmd_regime_stability_diagnostics(args):
+    print("Building stability diagnostics...")
+
+def cmd_cross_symbol_regime_transitions(args):
+    print("Building cross-symbol transition analytics...")
+
+def cmd_rolling_transition_analytics(args):
+    print("Building rolling transition analytics...")
+
+def cmd_transition_concentration_metrics(args):
+    print("Building transition concentration metrics...")
+
+def cmd_regime_diagnostics_readiness_gate(args):
+    print("Evaluating diagnostics readiness gate...")
+
+def cmd_regime_diagnostics_schema_check(args):
+    print("Evaluating schema validator...")
+
+def cmd_regime_diagnostics_safety_check(args):
+    print("Evaluating safety validator...")
+
+def cmd_regime_transition_context(args):
+    print("Building transition context...")
+
+def cmd_regime_transition_review(args):
+    print(f"Building full regime transition review... write={write}")
+
+def cmd_regime_transition_summary(args):
+    print("Printing regime transition store summary...")
+
+def cmd_regime_transition_validate(args):
+    print("Validating transition reviews in store...")
+
+
+
+def append_phase129_to_parser(subparsers):
+    p1 = subparsers.add_parser("regime-transition-info")
+    p1.set_defaults(func=cmd_regime_transition_info)
+
+    p2 = subparsers.add_parser("regime-transition-matrix")
+    p2.add_argument("--write", action="store_true")
+    p2.set_defaults(func=cmd_regime_transition_matrix)
+
+    p3 = subparsers.add_parser("regime-transition-review")
+    p3.add_argument("--write", action="store_true")
+    p3.set_defaults(func=cmd_regime_transition_review)

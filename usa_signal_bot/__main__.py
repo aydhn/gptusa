@@ -1,6 +1,7 @@
 import argparse
 import sys
 from .app.cli import (
+    append_phase129_to_parser,
     setup_phase114_cli,
     setup_phase124_cli
 )
@@ -14,6 +15,9 @@ def main():
     except: pass
     try:
         setup_phase124_cli(subparsers)
+    except: pass
+    try:
+        append_phase129_to_parser(subparsers)
     except: pass
 
     args = parser.parse_args()

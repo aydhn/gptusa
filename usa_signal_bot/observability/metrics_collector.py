@@ -138,3 +138,22 @@ def collect_phase113_metrics(): pass
 
 # Phase 128 metrics
 def phase128_observability_hooks(): pass
+
+# Phase 129 Metrics
+latest_regime_transition_context_count = 0
+latest_regime_transition_matrix_count = 0
+latest_regime_transition_observation_count = 0
+latest_regime_persistence_profile_count = 0
+latest_regime_duration_profile_count = 0
+latest_regime_churn_diagnostic_count = 0
+latest_regime_stability_diagnostic_count = 0
+latest_regime_diagnostics_readiness_gate_pass_count = 0
+latest_high_churn_regime_count = 0
+latest_low_stability_regime_count = 0
+latest_phase129_model_training_violation_count = 0
+latest_phase129_model_prediction_violation_count = 0
+latest_phase129_execution_violation_count = 0
+latest_phase129_activation_violation_count = 0
+
+# Phase 113 Observability dummy
+def collect_phase113_metrics(): pass

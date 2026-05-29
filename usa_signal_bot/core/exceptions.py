@@ -2310,3 +2310,54 @@ class RegimeLabelingValidationError(RegimeLabelingError):
 
 class RegimeLabelingReportingError(RegimeLabelingError):
     pass
+
+class RegimeTransitionAnalyticsError(USASignalBotError):
+    pass
+
+class RegimeLabelingIngestionError(RegimeTransitionAnalyticsError):
+    pass
+
+class RegimeSequenceInputLoaderError(RegimeTransitionAnalyticsError):
+    pass
+
+class RegimeTransitionMatrixError(RegimeTransitionAnalyticsError):
+    pass
+
+class RegimePersistenceAnalyticsError(RegimeTransitionAnalyticsError):
+    pass
+
+class RegimeDurationAnalyticsError(RegimeTransitionAnalyticsError):
+    pass
+
+class RegimeChurnDiagnosticsError(RegimeTransitionAnalyticsError):
+    pass
+
+class RegimeStabilityDiagnosticsError(RegimeTransitionAnalyticsError):
+    pass
+
+class CrossSymbolRegimeTransitionError(RegimeTransitionAnalyticsError):
+    pass
+
+class RollingTransitionAnalyticsError(RegimeTransitionAnalyticsError):
+    pass
+
+class TransitionConcentrationMetricsError(RegimeTransitionAnalyticsError):
+    pass
+
+class RegimeDiagnosticsReadinessGateError(RegimeTransitionAnalyticsError):
+    pass
+
+class RegimeDiagnosticsSchemaValidationError(RegimeTransitionAnalyticsError):
+    pass
+
+class RegimeDiagnosticsSafetyValidationError(RegimeTransitionAnalyticsError):
+    pass
+
+class RegimeTransitionStoreError(RegimeTransitionAnalyticsError):
+    pass
+
+class RegimeTransitionValidationError(RegimeTransitionAnalyticsError):
+    pass
+
+class RegimeTransitionReportingError(RegimeTransitionAnalyticsError):
+    pass

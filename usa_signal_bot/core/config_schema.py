@@ -3165,3 +3165,63 @@ class RegimeLabelingConfig:
     rolling_windows: Phase128RollingWindowsConfig = field(default_factory=Phase128RollingWindowsConfig)
     candidate_validation: Phase128CandidateValidationConfig = field(default_factory=Phase128CandidateValidationConfig)
     notifications: Phase128NotificationsConfig = field(default_factory=Phase128NotificationsConfig)
+
+
+@dataclass
+class Phase129TransitionPolicyConfig:
+    compute_values_local_only: bool = True
+    research_data_only: bool = True
+    local_fixture_only_default: bool = True
+    allow_network: bool = False
+    allow_paid_api: bool = False
+    allow_scraping: bool = False
+    allow_html_parsing: bool = False
+    allow_broker: bool = False
+    allow_order: bool = False
+    allow_paper_mutation: bool = False
+    allow_telegram_real_send: bool = False
+    allow_dashboard: bool = False
+    allow_deployment: bool = False
+    allow_model_training: bool = False
+    allow_model_prediction: bool = False
+    allow_heavy_ml_dependencies: bool = False
+    produce_trade_signals: bool = False
+    produce_order_decisions: bool = False
+    produce_portfolio_weights: bool = False
+    produce_investment_advice: bool = False
+    strategy_activation_allowed: bool = False
+
+@dataclass
+class Phase129TransitionMetricsConfig:
+    enabled: bool = True
+    default_rolling_windows: list[int] = field(default_factory=lambda: [20, 60, 120])
+    compute_cross_symbol_transitions: bool = True
+    compute_transition_entropy_proxy: bool = True
+    compute_transition_concentration: bool = True
+
+@dataclass
+class Phase129NotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    preview_only: bool = True
+    telegram_real_send: bool = False
+
+@dataclass
+class RegimeTransitionAnalyticsConfig:
+    enabled: bool = True
+    current_phase: int = 129
+    final_phase: int = 160
+    require_phase128_regime_labeling: bool = True
+    transition_matrix_enabled: bool = True
+    persistence_analytics_enabled: bool = True
+    duration_analytics_enabled: bool = True
+    churn_diagnostics_enabled: bool = True
+    stability_diagnostics_enabled: bool = True
+    readiness_gate_enabled: bool = True
+    write_regime_transition_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_phase129_is_not_activation: bool = True
+    warn_transition_matrix_is_not_trade_signal: bool = True
+    policy: Phase129TransitionPolicyConfig = field(default_factory=Phase129TransitionPolicyConfig)
+    metrics: Phase129TransitionMetricsConfig = field(default_factory=Phase129TransitionMetricsConfig)
+    notifications: Phase129NotificationsConfig = field(default_factory=Phase129NotificationsConfig)

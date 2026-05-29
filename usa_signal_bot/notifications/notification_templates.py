@@ -216,3 +216,18 @@ def notifications_from_provider_governance_review(review): pass
 
 # Phase 128 templates
 def format_regime_labeling_report_message(review): pass
+
+def format_regime_transition_analytics_report_message(review):
+    return {'type': 'REGIME_TRANSITION_ANALYTICS_REPORT', 'text': 'Dry Run Preview: Analytics Report'}
+def format_regime_stability_warning_message(items):
+    return {'type': 'REGIME_STABILITY_WARNING', 'text': 'Dry Run Preview: Stability Warning'}
+def format_regime_churn_warning_message(items):
+    return {'type': 'REGIME_CHURN_WARNING', 'text': 'Dry Run Preview: Churn Warning'}
+def notifications_from_regime_transition_review(review):
+    return [format_regime_transition_analytics_report_message(review)]
+
+# Phase 113 Notifications dummy
+def format_provider_governance_report_message(review): pass
+def format_data_lineage_warning_message(graph): pass
+def format_audit_trail_warning_message(manifest): pass
+def notifications_from_provider_governance_review(review): pass
