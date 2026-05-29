@@ -1,18 +1,9 @@
-Phase 128: Implement deterministic/heuristic regime labeling and rolling windows
+Phase 130: Market Behavior Profiling and Diagnostics Report Layer
 
-This phase implements purely deterministic and heuristic approaches to classify regimes
-using local Phase 127 artifacts, ensuring zero-execution semantics.
-
-Updates include:
-- Core enums, exceptions, configuration schema, and defaults with Phase 128 additions.
-- Dataclass models (`phase128_models.py`) encapsulating labeling context, rules, results,
-  and comprehensive read-only review objects.
-- Ingestion (`regime_feature_engineering_ingestion.py`) and CSV loading.
-- Labeling logic (`regime_labeling_specs.py`, `heuristic_labeling_rules.py`, `candidate_score_resolver.py`).
-- Proxies and detectors (`label_confidence_proxy.py`, `label_conflict_detector.py`).
-- Rolling regime windows (`rolling_regime_windows.py`) and sequence aggregation.
-- Validation and stability profiling.
-- Safety validators preventing execution/broker interactions.
-- CLI commands (`app/cli.py`) for invoking purely local views of the regimes.
-- Corresponding tests executing deterministically.
-- Extensive markdown documentation in `docs/`.
+This phase introduces:
+- Read-only ingestion of Phase 129 Regime Transition analytics.
+- Construction of market behavior profiles (transition, persistence, churn, duration, stability, cross-symbol).
+- Building regime behavior summaries based on the generated profiles.
+- Generation of the Regime Diagnostics Report using Markdown, JSON, and Text formats.
+- Complete set of rigorous QA rules, Safety Gate, and strict language boundary checking.
+- NO model training, NO prediction, NO trade signal output, and NO active deployment allowed.

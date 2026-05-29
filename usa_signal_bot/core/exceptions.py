@@ -2361,3 +2361,21 @@ class RegimeTransitionValidationError(RegimeTransitionAnalyticsError):
 
 class RegimeTransitionReportingError(RegimeTransitionAnalyticsError):
     pass
+
+
+class MarketBehaviorReportingError(USASignalBotError): pass
+class RegimeTransitionIngestionError(MarketBehaviorReportingError): pass
+class DiagnosticsArtifactLoaderError(MarketBehaviorReportingError): pass
+class MarketBehaviorProfileSpecError(MarketBehaviorReportingError): pass
+class MarketBehaviorProfileBuilderError(MarketBehaviorReportingError): pass
+class RegimeBehaviorSummaryBuilderError(MarketBehaviorReportingError): pass
+class DiagnosticsInterpretationBuilderError(MarketBehaviorReportingError): pass
+class CrossSymbolBehaviorProfileError(MarketBehaviorReportingError): pass
+class BehaviorReportSectionError(MarketBehaviorReportingError): pass
+class BehaviorReportDocumentError(MarketBehaviorReportingError): pass
+class BehaviorReportRendererError(MarketBehaviorReportingError): pass
+class BehaviorReportQaValidationError(MarketBehaviorReportingError): pass
+class BehaviorReportReadinessGateError(MarketBehaviorReportingError): pass
+class MarketBehaviorSafetyValidationError(MarketBehaviorReportingError): pass
+class MarketBehaviorStoreError(MarketBehaviorReportingError): pass
+class MarketBehaviorValidationError(MarketBehaviorReportingError): pass

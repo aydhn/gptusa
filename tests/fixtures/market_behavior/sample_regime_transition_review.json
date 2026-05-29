@@ -1,0 +1,27 @@
+{
+  "review_id": "rev-123",
+  "context": {
+    "context_id": "ctx-123",
+    "labeling_ingested": true,
+    "sequences_loaded": true,
+    "transition_matrix_built": true,
+    "persistence_analytics_built": true,
+    "duration_analytics_built": true,
+    "churn_diagnostics_built": true,
+    "stability_diagnostics_built": true,
+    "readiness_gate_ready": true,
+    "ready_for_phase130": true,
+    "research_data_only": true,
+    "activation_allowed": false,
+    "strategy_activation_allowed": false,
+    "deployment_allowed": false,
+    "produces_trade_signal": false,
+    "produces_order_decision": false,
+    "produces_portfolio_weights": false,
+    "investment_advice": false,
+    "model_training_used": false,
+    "model_prediction_used": false,
+    "heavy_ml_dependency_used": false,
+    "network_default_enabled": false
+  }
+}

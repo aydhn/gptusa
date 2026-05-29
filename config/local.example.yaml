@@ -1604,3 +1604,6 @@ zero_mutation_audit:
 
 regime_transition_analytics:
   enabled: true
+
+market_behavior_reporting:
+  enabled: true
