@@ -1,0 +1,10 @@
+{
+  "review_id": "rev_blocked",
+  "context": {
+    "context_id": "ctx_blocked",
+    "ready_for_phase131": false,
+    "transition_analytics_computed": true,
+    "behavior_profiles_ready": true,
+    "activation_allowed": true
+  }
+}

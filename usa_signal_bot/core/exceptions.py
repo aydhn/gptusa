@@ -2379,3 +2379,21 @@ class BehaviorReportReadinessGateError(MarketBehaviorReportingError): pass
 class MarketBehaviorSafetyValidationError(MarketBehaviorReportingError): pass
 class MarketBehaviorStoreError(MarketBehaviorReportingError): pass
 class MarketBehaviorValidationError(MarketBehaviorReportingError): pass
+
+
+class RegimeAlignmentError(Exception): pass
+class MarketBehaviorIngestionError(RegimeAlignmentError): pass
+class FrozenFactorArtifactLoaderError(RegimeAlignmentError): pass
+class BehaviorArtifactLoaderError(RegimeAlignmentError): pass
+class AlignmentSpecError(RegimeAlignmentError): pass
+class FeatureFactorRegimeMapperError(RegimeAlignmentError): pass
+class MarketBehaviorOverlayBuilderError(RegimeAlignmentError): pass
+class CompatibilityEngineError(RegimeAlignmentError): pass
+class AlignmentDiagnosticsBuilderError(RegimeAlignmentError): pass
+class CrossSymbolCompatibilityProfileError(RegimeAlignmentError): pass
+class CompatibilitySchemaValidationError(RegimeAlignmentError): pass
+class CompatibilitySafetyValidationError(RegimeAlignmentError): pass
+class RegimeAlignmentReadinessGateError(RegimeAlignmentError): pass
+class RegimeAlignmentStoreError(RegimeAlignmentError): pass
+class RegimeAlignmentValidationError(RegimeAlignmentError): pass
+class RegimeAlignmentReportingError(RegimeAlignmentError): pass

@@ -1,0 +1,10 @@
+{
+  "artifact_references": [
+    {
+      "symbol": "AAPL",
+      "artifact_name": "table_AAPL",
+      "artifact_path": "aapl.csv",
+      "artifact_hash": "hash1"
+    }
+  ]
+}

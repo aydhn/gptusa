@@ -1,0 +1,13 @@
+# Regime Alignment Safety Guards
+- No trade signal.
+- No strategy activation.
+- No deployment.
+- No order decision.
+- No portfolio weights.
+- No investment advice.
+- No broker / paper mutation.
+- No Telegram real send.
+- No scraping/HTML/dashboard/paid API.
+- No model training/prediction.
+- Forbidden columns are actively caught.
+- Unsafe language is actively blocked.

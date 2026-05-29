@@ -1,5 +1,18 @@
 
 class MetricsCollector:
+    latest_regime_alignment_context_count: int = 0
+    latest_frozen_factor_alignment_ref_count: int = 0
+    latest_alignment_spec_count: int = 0
+    latest_behavior_overlay_result_count: int = 0
+    latest_compatibility_result_count: int = 0
+    latest_alignment_diagnostics_profile_count: int = 0
+    latest_low_compatibility_count: int = 0
+    latest_uncertain_compatibility_count: int = 0
+    latest_alignment_readiness_gate_pass_count: int = 0
+    latest_phase131_model_training_violation_count: int = 0
+    latest_phase131_model_prediction_violation_count: int = 0
+    latest_phase131_execution_violation_count: int = 0
+    latest_phase131_activation_violation_count: int = 0
     def __init__(self):
         self.latest_provider_freeze_context_count = 0
         self.latest_provider_expansion_freeze_count = 0

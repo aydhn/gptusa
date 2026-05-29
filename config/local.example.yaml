@@ -1607,3 +1607,57 @@ regime_transition_analytics:
 
 market_behavior_reporting:
   enabled: true
+
+
+regime_alignment:
+  enabled: true
+  current_phase: 131
+  final_phase: 160
+  require_phase130_market_behavior: true
+  frozen_factor_loader_enabled: true
+  behavior_artifact_loader_enabled: true
+  alignment_specs_enabled: true
+  behavior_overlay_enabled: true
+  compatibility_engine_enabled: true
+  alignment_diagnostics_enabled: true
+  readiness_gate_enabled: true
+  write_regime_alignment_reports: true
+  warn_not_investment_advice: true
+  warn_phase131_is_not_activation: true
+  warn_compatibility_scores_are_not_trade_signals: true
+
+phase131_alignment_policy:
+  compute_values_local_only: true
+  research_data_only: true
+  local_fixture_only_default: true
+  allow_network: false
+  allow_paid_api: false
+  allow_scraping: false
+  allow_html_parsing: false
+  allow_broker: false
+  allow_order: false
+  allow_paper_mutation: false
+  allow_telegram_real_send: false
+  allow_dashboard: false
+  allow_deployment: false
+  allow_model_training: false
+  allow_model_prediction: false
+  allow_heavy_ml_dependencies: false
+  produce_trade_signals: false
+  produce_order_decisions: false
+  produce_portfolio_weights: false
+  produce_investment_advice: false
+  strategy_activation_allowed: false
+
+phase131_compatibility:
+  enabled: true
+  minimum_required_compatibility_results: 1
+  compatibility_scores_are_metadata_only: true
+  build_cross_symbol_profile: true
+  ready_for_phase132_allowed: true
+
+phase131_notifications:
+  enabled: true
+  dry_run: true
+  preview_only: true
+  telegram_real_send: false
