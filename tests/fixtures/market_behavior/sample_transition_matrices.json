@@ -1,0 +1,2 @@
+{"symbol": "AAPL", "transition_matrix": {}, "dominant_transition": "bull_to_bull", "diagnostic_notes": ["Note 1"]}
+{"symbol": "MSFT", "transition_matrix": {}, "dominant_transition": "bear_to_bear"}

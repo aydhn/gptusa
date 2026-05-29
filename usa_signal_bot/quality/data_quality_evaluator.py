@@ -7,6 +7,8 @@ class DataQualityEvaluator:
         self.phase114_output_contract_score = 0.0
         self.phase114_non_execution_compliance_score = 0.0
 
+        self.phase130_regime_transition_ingestion_score = 0.0
+
     def evaluate_phase114_freeze(self, report):
         if not report.freeze_bundle.freeze_valid:
             self.phase114_provider_freeze_score = 0.0

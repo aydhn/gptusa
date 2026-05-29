@@ -237,6 +237,71 @@ def advanced_feature_output_safety_check(args): print("Validating safety...")
 def advanced_feature_context(args): print("Advanced feature context details:")
 def advanced_feature_summary(args): print("Advanced feature summary:")
 def advanced_feature_validate(args): print("Full advanced feature validation:")
+
+def phase130_market_behavior_info(args):
+    print("USA Signal Bot - Phase 130: Market Behavior Profiling")
+    print("Notice: This phase produces market behavior profiles, regime summaries, and diagnostics reports.")
+    print("Notice: This is NOT an active paper trading phase.")
+    print("Notice: 'Ready for Phase 131' does not constitute live trading approval.")
+    print("Notice: Behavior and report outputs are NOT trade signals.")
+
+def phase130_market_behavior_ingest_transition(args):
+    from pathlib import Path
+    from usa_signal_bot.regime_classification.behavior_reporting.regime_transition_ingestion import ingest_latest_regime_transition_review_from_store, regime_transition_ingestion_to_text
+    res = ingest_latest_regime_transition_review_from_store(Path("data"))
+    print(regime_transition_ingestion_to_text(res))
+
+def phase130_diagnostics_artifact_load(args):
+    print("Artifact loading preview")
+
+def phase130_market_behavior_profile_specs(args):
+    print("Profile specs preview")
+
+def phase130_build_market_behavior_profiles(args):
+    print("Building behavior profiles preview")
+
+def phase130_build_regime_behavior_summaries(args):
+    print("Building regime behavior summaries preview")
+
+def phase130_build_diagnostics_interpretations(args):
+    print("Building diagnostics interpretations preview")
+
+def phase130_build_cross_symbol_behavior_profile(args):
+    print("Building cross symbol behavior profile preview")
+
+def phase130_build_behavior_report(args):
+    print("Building behavior report preview")
+
+def phase130_render_behavior_report_markdown(args):
+    print("Rendering behavior report markdown preview")
+
+def phase130_render_behavior_report_json(args):
+    print("Rendering behavior report json preview")
+
+def phase130_render_behavior_report_text(args):
+    print("Rendering behavior report text preview")
+
+def phase130_behavior_report_qa(args):
+    print("Running behavior report qa preview")
+
+def phase130_market_behavior_readiness_gate(args):
+    print("Running readiness gate preview")
+
+def phase130_market_behavior_safety_check(args):
+    print("Running safety check preview")
+
+def phase130_market_behavior_context(args):
+    print("Building context preview")
+
+def phase130_market_behavior_review(args):
+    print("Building review preview")
+
+def phase130_market_behavior_summary(args):
+    print("Building store summary preview")
+
+def phase130_market_behavior_validate(args):
+    print("Validating market behavior payload preview")
+
 def main():
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest='command')

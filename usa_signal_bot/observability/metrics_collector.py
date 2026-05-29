@@ -26,6 +26,8 @@ class MetricsCollector:
         self.metrics["latest_feature_enrichment_trade_signal_violation_count"] = 0
         self.metrics["latest_phase119_execution_violation_count"] = 0
 
+        self.latest_market_behavior_context_count = 0
+
         self.metrics["latest_final_closure_context_count"] = 0
         self.metrics["latest_final_closure_artifact_count"] = 0
         self.metrics["latest_final_closure_manifest_count"] = 0
@@ -82,6 +84,20 @@ def get_latest_phase117_execution_violation_count(): return 0
 class MetricsCollector:
     def __init__(self):
         self.metrics = {
+
+            "latest_market_behavior_context_count": 0,
+            "latest_market_behavior_profile_count": 0,
+            "latest_regime_behavior_summary_count": 0,
+            "latest_diagnostics_interpretation_count": 0,
+            "latest_behavior_report_document_count": 0,
+            "latest_behavior_report_qa_pass_count": 0,
+            "latest_behavior_report_qa_warning_count": 0,
+            "latest_market_behavior_readiness_gate_pass_count": 0,
+            "latest_behavior_report_language_risk_count": 0,
+            "latest_phase130_model_training_violation_count": 0,
+            "latest_phase130_model_prediction_violation_count": 0,
+            "latest_phase130_execution_violation_count": 0,
+            "latest_phase130_activation_violation_count": 0,
             "latest_advanced_feature_context_count": 0,
             "latest_advanced_feature_spec_count": 0,
             "latest_advanced_feature_result_count": 0,
