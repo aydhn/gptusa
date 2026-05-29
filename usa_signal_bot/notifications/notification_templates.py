@@ -213,3 +213,6 @@ def format_provider_governance_report_message(review): pass
 def format_data_lineage_warning_message(graph): pass
 def format_audit_trail_warning_message(manifest): pass
 def notifications_from_provider_governance_review(review): pass
+
+# Phase 128 templates
+def format_regime_labeling_report_message(review): pass

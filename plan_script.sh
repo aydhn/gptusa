@@ -1,2 +1,4 @@
-# Check if python exists
-python --version
+#!/bin/bash
+set -e
+
+echo "Running plan steps..."

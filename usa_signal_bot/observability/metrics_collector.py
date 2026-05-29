@@ -135,3 +135,6 @@ def collect_phase113_metrics(): pass
 
 # Phase 113 Observability dummy
 def collect_phase113_metrics(): pass
+
+# Phase 128 metrics
+def phase128_observability_hooks(): pass

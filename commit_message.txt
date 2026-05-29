@@ -1,20 +1,18 @@
-feat: implement phase 123 factor explainability and report layer
+Phase 128: Implement deterministic/heuristic regime labeling and rolling windows
 
-Implemented the factor explainability and feature attribution engines as
-specified in Phase 123. This includes:
-- Added enum values and dataclasses for explainability contexts, report
-  sections, and feature attributions ensuring deterministic structure.
-- Developed factor validation ingestion routines rejecting records that
-  expose broker permissions or paper state mutations.
-- Implemented file artifact loaders incorporating safety constraints (no
-  directory traversal, forbidding 'buy', 'sell' columns).
-- Created deterministic feature attribution logic using normalization
-  without machine learning techniques.
-- Drafted interpretation summary builders conforming to non-execution
-  disclaimer standards.
-- Designed comprehensive QA report validators that actively scan text for
-  trade signals ("buy signal", "garanti kâr") and reject transition flags.
-- Built a markdown and JSON rendering layer, persisting explainability
-  metadata effectively to local structures.
-- Added comprehensive unit tests reflecting the required safe-language
-  and zero-mutation operational policies.
+This phase implements purely deterministic and heuristic approaches to classify regimes
+using local Phase 127 artifacts, ensuring zero-execution semantics.
+
+Updates include:
+- Core enums, exceptions, configuration schema, and defaults with Phase 128 additions.
+- Dataclass models (`phase128_models.py`) encapsulating labeling context, rules, results,
+  and comprehensive read-only review objects.
+- Ingestion (`regime_feature_engineering_ingestion.py`) and CSV loading.
+- Labeling logic (`regime_labeling_specs.py`, `heuristic_labeling_rules.py`, `candidate_score_resolver.py`).
+- Proxies and detectors (`label_confidence_proxy.py`, `label_conflict_detector.py`).
+- Rolling regime windows (`rolling_regime_windows.py`) and sequence aggregation.
+- Validation and stability profiling.
+- Safety validators preventing execution/broker interactions.
+- CLI commands (`app/cli.py`) for invoking purely local views of the regimes.
+- Corresponding tests executing deterministically.
+- Extensive markdown documentation in `docs/`.
