@@ -1,0 +1,34 @@
+{
+    "review_id": "rlr_12345",
+    "context": {
+        "context_id": "rlc_12345",
+        "ready_for_phase129": true,
+        "feature_engineering_ingested": true,
+        "inputs_loaded": true,
+        "labeling_specs_ready": true,
+        "heuristic_labels_ready": true,
+        "rolling_windows_ready": true,
+        "candidates_validated": true,
+        "label_stability_profiled": true,
+        "readiness_gate_ready": true,
+        "activation_allowed": false,
+        "strategy_activation_allowed": false,
+        "deployment_allowed": false,
+        "model_training_used": false,
+        "produces_trade_signal": false,
+        "produces_order_decision": false,
+        "produces_portfolio_weights": false,
+        "investment_advice": false,
+        "result": {
+            "label_sequences": [
+                {"symbol": "AAPL", "sequence": ["trend", "trend", "volatility"]}
+            ],
+            "stability_profiles": []
+        }
+    },
+    "output_paths": {
+        "labeled_tables": {
+            "AAPL": "tests/fixtures/regime_diagnostics/sample_labeled_regime_table_aapl.csv"
+        }
+    }
+}

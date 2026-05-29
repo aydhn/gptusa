@@ -1,0 +1,6 @@
+timestamp,symbol,regime_label_research,regime_label_confidence
+2024-01-01,AAPL,trend,85.0
+2024-01-02,AAPL,trend,80.0
+2024-01-03,AAPL,volatility,45.0
+2024-01-04,AAPL,volatility,30.0
+2024-01-05,AAPL,trend,90.0

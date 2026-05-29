@@ -1601,3 +1601,6 @@ zero_mutation_audit:
   require_after_baseline: true
   require_before_baseline: true
   require_hash_unchanged: true
+
+regime_transition_analytics:
+  enabled: true
