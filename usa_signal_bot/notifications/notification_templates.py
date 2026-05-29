@@ -265,3 +265,12 @@ def notifications_from_market_behavior_review(review: MarketBehaviorFullReview) 
     if any(p.errors or p.warnings for p in review.behavior_profiles):
         msgs.append(format_market_behavior_profile_warning_message(review.behavior_profiles))
     return msgs
+
+def format_regime_alignment_report_message(review: Any) -> NotificationMessage:
+    return NotificationMessage(text="Regime alignment report")
+def format_compatibility_warning_message(results: Any) -> NotificationMessage:
+    return NotificationMessage(text="Compatibility warning")
+def format_behavior_overlay_warning_message(results: Any) -> NotificationMessage:
+    return NotificationMessage(text="Overlay warning")
+def notifications_from_regime_alignment_review(review: Any) -> list[NotificationMessage]:
+    return [format_regime_alignment_report_message(review)]

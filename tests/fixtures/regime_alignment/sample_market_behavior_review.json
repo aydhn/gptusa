@@ -1,0 +1,20 @@
+{
+  "review_id": "rev_123",
+  "context": {
+    "context_id": "ctx_123",
+    "ready_for_phase131": true,
+    "transition_analytics_computed": true,
+    "diagnostics_loaded": true,
+    "profile_specs_ready": true,
+    "behavior_profiles_ready": true,
+    "regime_summaries_ready": true,
+    "diagnostics_interpreted": true,
+    "report_built": true,
+    "report_qa_passed": true,
+    "readiness_gate_ready": true,
+    "activation_allowed": false,
+    "strategy_activation_allowed": false,
+    "produces_trade_signal": false,
+    "investment_advice": false
+  }
+}

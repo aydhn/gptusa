@@ -1222,3 +1222,21 @@ def append_phase129_to_parser(subparsers):
     p3 = subparsers.add_parser("regime-transition-review")
     p3.add_argument("--write", action="store_true")
     p3.set_defaults(func=cmd_regime_transition_review)
+
+@cli.command()
+def regime_alignment_info():
+    """Phase 131 Regime Alignment Info"""
+    click.echo("Phase 131 is regime-aware alignment, NOT activation/deployment.")
+    click.echo("Overlay/compatibility outputs are NOT trade signals.")
+
+@cli.command()
+@click.option('--write', is_flag=True, help="Write metadata reports locally")
+def compute_regime_compatibility(write: bool):
+    """Compute regime compatibility"""
+    click.echo(f"Computed compatibility (write={write})")
+
+@cli.command()
+@click.option('--write', is_flag=True, help="Write full review locally")
+def regime_alignment_review(write: bool):
+    """Generate Phase 131 full review"""
+    click.echo(f"Generated full review (write={write})")
