@@ -1,0 +1,15 @@
+{
+  "review_id": "review_123",
+  "context_id": "ctx_123",
+  "ready_for_phase134": true,
+  "baseline_built": true,
+  "snapshot_built": true,
+  "drift_tracked": true,
+  "degradation_diagnostics_built": true,
+  "readiness_gate_built": true,
+  "readiness_gate_passed": true,
+  "activation_allowed": false,
+  "deployment_allowed": false,
+  "produces_trade_signal": false,
+  "investment_advice": false
+}

@@ -2446,41 +2446,96 @@ class RegimeContextValidationStoreError(RegimeContextValidationError):
 class RegimeContextValidationReportingError(RegimeContextValidationError):
     pass
 
-class RegimeMonitoringError(BotError):
+class RegimeMonitoringError(Exception):
     pass
-class RegimeContextValidationIngestionError(BotError):
+class RegimeContextValidationIngestionError(Exception):
     pass
-class ContextValidationArtifactLoaderError(BotError):
+class ContextValidationArtifactLoaderError(Exception):
     pass
-class MonitoringBaselineBuilderError(BotError):
+class MonitoringBaselineBuilderError(Exception):
     pass
-class MonitoringSnapshotBuilderError(BotError):
+class MonitoringSnapshotBuilderError(Exception):
     pass
-class DriftMetricSpecError(BotError):
+class DriftMetricSpecError(Exception):
     pass
-class DriftTrackingEngineError(BotError):
+class DriftTrackingEngineError(Exception):
     pass
-class CompatibilityDriftTrackerError(BotError):
+class CompatibilityDriftTrackerError(Exception):
     pass
-class ConditionalDiagnosticDriftTrackerError(BotError):
+class ConditionalDiagnosticDriftTrackerError(Exception):
     pass
-class AcceptanceGateDriftTrackerError(BotError):
+class AcceptanceGateDriftTrackerError(Exception):
     pass
-class ContextDegradationDetectorError(BotError):
+class ContextDegradationDetectorError(Exception):
     pass
-class DataQualityDegradationDetectorError(BotError):
+class DataQualityDegradationDetectorError(Exception):
     pass
-class CrossSymbolMonitoringProfileError(BotError):
+class CrossSymbolMonitoringProfileError(Exception):
     pass
-class MonitoringReadinessGateError(BotError):
+class MonitoringReadinessGateError(Exception):
     pass
-class MonitoringSchemaValidationError(BotError):
+class MonitoringSchemaValidationError(Exception):
     pass
-class MonitoringSafetyValidationError(BotError):
+class MonitoringSafetyValidationError(Exception):
     pass
-class RegimeMonitoringStoreError(BotError):
+class RegimeMonitoringStoreError(Exception):
     pass
-class RegimeMonitoringValidationError(BotError):
+class RegimeMonitoringValidationError(Exception):
     pass
-class RegimeMonitoringReportingError(BotError):
+class RegimeMonitoringReportingError(Exception):
+    pass
+
+
+class RegimeResearchFreezeError(Exception):
+    pass
+
+class RegimeMonitoringIngestionError(RegimeResearchFreezeError):
+    pass
+
+class MonitoringArtifactLoaderError(RegimeResearchFreezeError):
+    pass
+
+class MonitoringValidationSpecError(RegimeResearchFreezeError):
+    pass
+
+class MonitoringValidationRunnerError(RegimeResearchFreezeError):
+    pass
+
+class DriftReportBuilderError(RegimeResearchFreezeError):
+    pass
+
+class DriftReportQaValidationError(RegimeResearchFreezeError):
+    pass
+
+class MonitoringConsistencyValidationError(RegimeResearchFreezeError):
+    pass
+
+class DegradationConsistencyValidationError(RegimeResearchFreezeError):
+    pass
+
+class ResearchFreezePackageBuilderError(RegimeResearchFreezeError):
+    pass
+
+class ResearchFreezePackageValidationError(RegimeResearchFreezeError):
+    pass
+
+class ResearchFreezeReadinessGateError(RegimeResearchFreezeError):
+    pass
+
+class ResearchFreezeHashingError(RegimeResearchFreezeError):
+    pass
+
+class ResearchFreezeSchemaValidationError(RegimeResearchFreezeError):
+    pass
+
+class ResearchFreezeSafetyValidationError(RegimeResearchFreezeError):
+    pass
+
+class ResearchFreezeStoreError(RegimeResearchFreezeError):
+    pass
+
+class ResearchFreezeValidationError(RegimeResearchFreezeError):
+    pass
+
+class ResearchFreezeReportingError(RegimeResearchFreezeError):
     pass
