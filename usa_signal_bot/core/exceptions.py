@@ -2445,3 +2445,42 @@ class RegimeContextValidationStoreError(RegimeContextValidationError):
 
 class RegimeContextValidationReportingError(RegimeContextValidationError):
     pass
+
+class RegimeMonitoringError(BotError):
+    pass
+class RegimeContextValidationIngestionError(BotError):
+    pass
+class ContextValidationArtifactLoaderError(BotError):
+    pass
+class MonitoringBaselineBuilderError(BotError):
+    pass
+class MonitoringSnapshotBuilderError(BotError):
+    pass
+class DriftMetricSpecError(BotError):
+    pass
+class DriftTrackingEngineError(BotError):
+    pass
+class CompatibilityDriftTrackerError(BotError):
+    pass
+class ConditionalDiagnosticDriftTrackerError(BotError):
+    pass
+class AcceptanceGateDriftTrackerError(BotError):
+    pass
+class ContextDegradationDetectorError(BotError):
+    pass
+class DataQualityDegradationDetectorError(BotError):
+    pass
+class CrossSymbolMonitoringProfileError(BotError):
+    pass
+class MonitoringReadinessGateError(BotError):
+    pass
+class MonitoringSchemaValidationError(BotError):
+    pass
+class MonitoringSafetyValidationError(BotError):
+    pass
+class RegimeMonitoringStoreError(BotError):
+    pass
+class RegimeMonitoringValidationError(BotError):
+    pass
+class RegimeMonitoringReportingError(BotError):
+    pass

@@ -299,3 +299,25 @@ def format_regime_acceptance_gate_warning_message(gate: Any) -> NotificationMess
 
 def notifications_from_regime_context_validation_review(review: Any) -> list[NotificationMessage]:
     return [format_regime_context_validation_report_message(review)]
+
+
+from usa_signal_bot.regime_classification.monitoring.phase133_models import (
+    RegimeMonitoringFullReview, RegimeDriftTrackingResult, ContextDegradationDiagnostic
+)
+
+def format_regime_monitoring_report_message(review: RegimeMonitoringFullReview) -> NotificationMessage:
+    return NotificationMessage(title="Regime Monitoring Report", body="Phase 133 dry run", type="REGIME_MONITORING_REPORT")
+
+def format_regime_drift_warning_message(result: RegimeDriftTrackingResult) -> NotificationMessage:
+    return NotificationMessage(title="Regime Drift Warning", body="Drift detected", type="REGIME_DRIFT_WARNING")
+
+def format_context_degradation_warning_message(items: list[ContextDegradationDiagnostic]) -> NotificationMessage:
+    return NotificationMessage(title="Context Degradation Warning", body="Degradation detected", type="CONTEXT_DEGRADATION_WARNING")
+
+def notifications_from_regime_monitoring_review(review: RegimeMonitoringFullReview) -> list[NotificationMessage]:
+    msgs = [format_regime_monitoring_report_message(review)]
+    if review.drift_result and review.drift_result.overall_drift_severity.value in ["HIGH", "BLOCKING"]:
+        msgs.append(format_regime_drift_warning_message(review.drift_result))
+    if review.degradation_diagnostics:
+        msgs.append(format_context_degradation_warning_message(review.degradation_diagnostics))
+    return msgs

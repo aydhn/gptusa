@@ -9,6 +9,20 @@ class DataQualityEvaluator:
 
         self.phase130_regime_transition_ingestion_score = 0.0
 
+
+        self.phase133_context_validation_ingestion_score = 0.0
+        self.phase133_artifact_loader_score = 0.0
+        self.phase133_monitoring_baseline_score = 0.0
+        self.phase133_monitoring_snapshot_score = 0.0
+        self.phase133_drift_tracking_score = 0.0
+        self.phase133_context_degradation_score = 0.0
+        self.phase133_readiness_gate_score = 0.0
+        self.phase133_safety_score = 0.0
+        self.phase133_non_execution_compliance_score = 0.0
+        self.phase133_no_model_training_compliance_score = 0.0
+        self.phase133_no_model_prediction_compliance_score = 0.0
+        self.phase133_no_daemon_compliance_score = 0.0
+
     def evaluate_phase114_freeze(self, report):
         if not report.freeze_bundle.freeze_valid:
             self.phase114_provider_freeze_score = 0.0

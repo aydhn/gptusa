@@ -1,0 +1,24 @@
+{
+  "review_id": "rev1",
+  "context": {
+    "context_id": "ctx1",
+    "alignment_ingested": true,
+    "alignment_artifacts_loaded": true,
+    "validation_specs_ready": true,
+    "compatibility_validated": true,
+    "conditional_diagnostics_built": true,
+    "acceptance_gate_built": true,
+    "acceptance_gate_passed": true,
+    "ready_for_phase133": true,
+    "metadata_only": true,
+    "research_data_only": true,
+    "activation_allowed": false,
+    "strategy_activation_allowed": false,
+    "deployment_allowed": false,
+    "active_paper_enabled": false,
+    "produces_trade_signal": false
+  },
+  "acceptance_gate": {
+    "ready_for_phase133": true
+  }
+}

@@ -13,6 +13,21 @@ class MetricsCollector:
     latest_phase131_model_prediction_violation_count: int = 0
     latest_phase131_execution_violation_count: int = 0
     latest_phase131_activation_violation_count: int = 0
+
+    latest_regime_monitoring_context_count: int = 0
+    latest_monitoring_baseline_count: int = 0
+    latest_monitoring_snapshot_count: int = 0
+    latest_drift_observation_count: int = 0
+    latest_high_drift_count: int = 0
+    latest_blocking_drift_count: int = 0
+    latest_context_degradation_count: int = 0
+    latest_context_degradation_blocked_count: int = 0
+    latest_monitoring_readiness_gate_pass_count: int = 0
+    latest_phase133_model_training_violation_count: int = 0
+    latest_phase133_model_prediction_violation_count: int = 0
+    latest_phase133_execution_violation_count: int = 0
+    latest_phase133_activation_violation_count: int = 0
+    latest_phase133_daemon_violation_count: int = 0
     def __init__(self):
         self.latest_provider_freeze_context_count = 0
         self.latest_provider_expansion_freeze_count = 0
@@ -95,6 +110,21 @@ def get_latest_phase117_execution_violation_count(): return 0
 
 
 class MetricsCollector:
+
+    latest_regime_monitoring_context_count: int = 0
+    latest_monitoring_baseline_count: int = 0
+    latest_monitoring_snapshot_count: int = 0
+    latest_drift_observation_count: int = 0
+    latest_high_drift_count: int = 0
+    latest_blocking_drift_count: int = 0
+    latest_context_degradation_count: int = 0
+    latest_context_degradation_blocked_count: int = 0
+    latest_monitoring_readiness_gate_pass_count: int = 0
+    latest_phase133_model_training_violation_count: int = 0
+    latest_phase133_model_prediction_violation_count: int = 0
+    latest_phase133_execution_violation_count: int = 0
+    latest_phase133_activation_violation_count: int = 0
+    latest_phase133_daemon_violation_count: int = 0
     def __init__(self):
         self.metrics = {
 

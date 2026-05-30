@@ -1,0 +1,10 @@
+{
+  "review_id": "rev2",
+  "context": {
+    "ready_for_phase133": false,
+    "produces_trade_signal": true
+  },
+  "acceptance_gate": {
+    "ready_for_phase133": false
+  }
+}
