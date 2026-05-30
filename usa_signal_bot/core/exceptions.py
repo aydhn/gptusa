@@ -2397,3 +2397,51 @@ class RegimeAlignmentReadinessGateError(RegimeAlignmentError): pass
 class RegimeAlignmentStoreError(RegimeAlignmentError): pass
 class RegimeAlignmentValidationError(RegimeAlignmentError): pass
 class RegimeAlignmentReportingError(RegimeAlignmentError): pass
+
+class RegimeContextValidationError(USASignalBotError):
+    pass
+
+class RegimeAlignmentIngestionError(RegimeContextValidationError):
+    pass
+
+class AlignmentArtifactLoaderError(RegimeContextValidationError):
+    pass
+
+class CompatibilityValidationSpecError(RegimeContextValidationError):
+    pass
+
+class CompatibilityValidationRunnerError(RegimeContextValidationError):
+    pass
+
+class ConditionalDiagnosticSpecError(RegimeContextValidationError):
+    pass
+
+class ConditionalDiagnosticsEngineError(RegimeContextValidationError):
+    pass
+
+class ContextConflictValidatorError(RegimeContextValidationError):
+    pass
+
+class DataQualityContextValidatorError(RegimeContextValidationError):
+    pass
+
+class LowCompatibilityReasonMapperError(RegimeContextValidationError):
+    pass
+
+class RegimeAcceptanceGateError(RegimeContextValidationError):
+    pass
+
+class CrossSymbolValidationProfileError(RegimeContextValidationError):
+    pass
+
+class CompatibilityValidationSchemaError(RegimeContextValidationError):
+    pass
+
+class CompatibilityValidationSafetyError(RegimeContextValidationError):
+    pass
+
+class RegimeContextValidationStoreError(RegimeContextValidationError):
+    pass
+
+class RegimeContextValidationReportingError(RegimeContextValidationError):
+    pass

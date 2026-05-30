@@ -274,3 +274,28 @@ def format_behavior_overlay_warning_message(results: Any) -> NotificationMessage
     return NotificationMessage(text="Overlay warning")
 def notifications_from_regime_alignment_review(review: Any) -> list[NotificationMessage]:
     return [format_regime_alignment_report_message(review)]
+
+
+def format_regime_context_validation_report_message(review: Any) -> NotificationMessage:
+    return NotificationMessage(
+        title="Regime Context Validation Report",
+        content="Phase 132 Review.",
+        notification_type=NotificationType.REGIME_CONTEXT_VALIDATION_REPORT
+    )
+
+def format_conditional_diagnostic_warning_message(items: list[Any]) -> NotificationMessage:
+    return NotificationMessage(
+        title="Conditional Diagnostic Warning",
+        content=f"{len(items)} diagnostics.",
+        notification_type=NotificationType.CONDITIONAL_DIAGNOSTIC_WARNING
+    )
+
+def format_regime_acceptance_gate_warning_message(gate: Any) -> NotificationMessage:
+    return NotificationMessage(
+        title="Regime Acceptance Gate Warning",
+        content="Acceptance Gate issues detected.",
+        notification_type=NotificationType.REGIME_ACCEPTANCE_GATE_WARNING
+    )
+
+def notifications_from_regime_context_validation_review(review: Any) -> list[NotificationMessage]:
+    return [format_regime_context_validation_report_message(review)]

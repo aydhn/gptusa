@@ -302,6 +302,137 @@ def phase130_market_behavior_summary(args):
 def phase130_market_behavior_validate(args):
     print("Validating market behavior payload preview")
 
+
+def phase132_regime_context_validation_info(args):
+    print("Phase 132 is active: Regime-Context Compatibility Validation, Conditional Diagnostics, and Regime-Aware Acceptance Gate.")
+    print("This is read-only metadata validation. NOT strategy activation. NOT deployment. NOT model training/prediction. Outputs are NOT trade signals.")
+
+def phase132_regime_context_ingest_alignment(args):
+    pass
+
+def phase132_alignment_artifact_load(args):
+    pass
+
+def phase132_compatibility_validation_specs(args):
+    pass
+
+def phase132_run_compatibility_validation(args):
+    pass
+
+def phase132_conditional_diagnostic_specs(args):
+    pass
+
+def phase132_build_conditional_diagnostics(args):
+    pass
+
+def phase132_validate_context_conflicts(args):
+    pass
+
+def phase132_validate_data_quality_contexts(args):
+    pass
+
+def phase132_map_low_compatibility_reasons(args):
+    pass
+
+def phase132_regime_aware_acceptance_gate(args):
+    pass
+
+def phase132_cross_symbol_validation_profile(args):
+    pass
+
+def phase132_context_validation_schema_check(args):
+    pass
+
+def phase132_context_validation_safety_check(args):
+    pass
+
+def phase132_regime_context_validation_context(args):
+    pass
+
+def phase132_regime_context_validation_review(args):
+    pass
+
+def phase132_regime_context_validation_summary(args):
+    pass
+
+def phase132_regime_context_validation_validate(args):
+    pass
+
+def setup_phase132_cli(subparsers):
+    p = subparsers.add_parser("regime-context-validation-info")
+    p.set_defaults(func=phase132_regime_context_validation_info)
+
+    p = subparsers.add_parser("regime-context-ingest-alignment")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=phase132_regime_context_ingest_alignment)
+
+    p = subparsers.add_parser("alignment-artifact-load")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=phase132_alignment_artifact_load)
+
+    p = subparsers.add_parser("compatibility-validation-specs")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=phase132_compatibility_validation_specs)
+
+    p = subparsers.add_parser("run-compatibility-validation")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=phase132_run_compatibility_validation)
+
+    p = subparsers.add_parser("conditional-diagnostic-specs")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=phase132_conditional_diagnostic_specs)
+
+    p = subparsers.add_parser("build-conditional-diagnostics")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=phase132_build_conditional_diagnostics)
+
+    p = subparsers.add_parser("validate-context-conflicts")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=phase132_validate_context_conflicts)
+
+    p = subparsers.add_parser("validate-data-quality-contexts")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=phase132_validate_data_quality_contexts)
+
+    p = subparsers.add_parser("map-low-compatibility-reasons")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=phase132_map_low_compatibility_reasons)
+
+    p = subparsers.add_parser("regime-aware-acceptance-gate")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=phase132_regime_aware_acceptance_gate)
+
+    p = subparsers.add_parser("cross-symbol-validation-profile")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=phase132_cross_symbol_validation_profile)
+
+    p = subparsers.add_parser("context-validation-schema-check")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=phase132_context_validation_schema_check)
+
+    p = subparsers.add_parser("context-validation-safety-check")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=phase132_context_validation_safety_check)
+
+    p = subparsers.add_parser("regime-context-validation-context")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=phase132_regime_context_validation_context)
+
+    p = subparsers.add_parser("regime-context-validation-review")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=phase132_regime_context_validation_review)
+
+    p = subparsers.add_parser("regime-context-validation-summary")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=phase132_regime_context_validation_summary)
+
+    p = subparsers.add_parser("regime-context-validation-validate")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=phase132_regime_context_validation_validate)
+
+def append_phase132_to_parser(subparsers):
+    setup_phase132_cli(subparsers)
+
 def main():
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest='command')
@@ -1223,20 +1354,20 @@ def append_phase129_to_parser(subparsers):
     p3.add_argument("--write", action="store_true")
     p3.set_defaults(func=cmd_regime_transition_review)
 
-@cli.command()
+# @cli.command()
 def regime_alignment_info():
     """Phase 131 Regime Alignment Info"""
     click.echo("Phase 131 is regime-aware alignment, NOT activation/deployment.")
     click.echo("Overlay/compatibility outputs are NOT trade signals.")
 
-@cli.command()
-@click.option('--write', is_flag=True, help="Write metadata reports locally")
+# @cli.command()
+# @click.option
 def compute_regime_compatibility(write: bool):
     """Compute regime compatibility"""
     click.echo(f"Computed compatibility (write={write})")
 
-@cli.command()
-@click.option('--write', is_flag=True, help="Write full review locally")
+# @cli.command()
+# @click.option
 def regime_alignment_review(write: bool):
     """Generate Phase 131 full review"""
     click.echo(f"Generated full review (write={write})")
