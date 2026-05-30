@@ -6,7 +6,7 @@ from dataclasses import asdict
 from typing import Optional
 
 
-from usa_signal_bot.core.config_schema import Config as AppConfig, AdvancedFeaturesConfig, Phase118FeaturePolicyConfig, Phase118CrossSectionalConfig, Phase118FeatureTableConfig, Phase118NotificationsConfig, CoreRuntimeAcceptanceConfig, AdvancedFoundationFreezeConfig, DataProviderExpansionKickoffGateConfig, Phase105NotificationsConfig
+from usa_signal_bot.core.config_schema import Config, RegimeMonitoringConfig, Phase133MonitoringPolicyConfig, Phase133DriftTrackingConfig, Phase133DegradationDiagnosticsConfig, Phase133NotificationsConfig as AppConfig, AdvancedFeaturesConfig, Phase118FeaturePolicyConfig, Phase118CrossSectionalConfig, Phase118FeatureTableConfig, Phase118NotificationsConfig, CoreRuntimeAcceptanceConfig, AdvancedFoundationFreezeConfig, DataProviderExpansionKickoffGateConfig, Phase105NotificationsConfig
 
 from usa_signal_bot.core.exceptions import ConfigError
 from usa_signal_bot.utils.dict_utils import deep_merge_dicts
@@ -294,6 +294,18 @@ def load_app_config(config_dir: Optional[Path] = None) -> AppConfig:
                  preview_only=nd.get("preview_only", True),
                  telegram_real_send=nd.get("telegram_real_send", False),
              )
+
+        if "regime_monitoring" in merged_cfg_dict:
+            config.regime_monitoring = RegimeMonitoringConfig(**merged_cfg_dict["regime_monitoring"])
+        if "phase133_monitoring_policy" in merged_cfg_dict:
+            config.phase133_monitoring_policy = Phase133MonitoringPolicyConfig(**merged_cfg_dict["phase133_monitoring_policy"])
+        if "phase133_drift_tracking" in merged_cfg_dict:
+            config.phase133_drift_tracking = Phase133DriftTrackingConfig(**merged_cfg_dict["phase133_drift_tracking"])
+        if "phase133_degradation_diagnostics" in merged_cfg_dict:
+            config.phase133_degradation_diagnostics = Phase133DegradationDiagnosticsConfig(**merged_cfg_dict["phase133_degradation_diagnostics"])
+        if "phase133_notifications" in merged_cfg_dict:
+            config.phase133_notifications = Phase133NotificationsConfig(**merged_cfg_dict["phase133_notifications"])
+
         return config
 
     except Exception as e:

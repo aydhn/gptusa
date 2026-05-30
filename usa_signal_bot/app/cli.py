@@ -430,8 +430,117 @@ def setup_phase132_cli(subparsers):
     p.add_argument("--write", action="store_true")
     p.set_defaults(func=phase132_regime_context_validation_validate)
 
-def append_phase132_to_parser(subparsers):
+def append_phase132_to_parser(subparsers)
+    append_phase133_to_parser(subparsers):
     setup_phase132_cli(subparsers)
+
+
+def regime_monitoring_info(args):
+    print("Phase 133: Regime-Aware Monitoring, Drift Tracking, and Context Degradation Diagnostics")
+    print("This is read-only metadata validation. NOT strategy activation. NOT deployment. NOT model training/prediction. NOT live daemon. Outputs are NOT trade signals.")
+
+def regime_monitoring_ingest_context_validation(args):
+    pass
+def context_validation_artifact_load(args):
+    pass
+def build_monitoring_baseline(args):
+    pass
+def build_monitoring_snapshot(args):
+    pass
+def drift_metric_specs(args):
+    pass
+def track_regime_drift(args):
+    pass
+def track_compatibility_drift(args):
+    pass
+def track_conditional_diagnostic_drift(args):
+    pass
+def track_acceptance_gate_drift(args):
+    pass
+def detect_context_degradation(args):
+    pass
+def detect_data_quality_degradation(args):
+    pass
+def cross_symbol_monitoring_profile(args):
+    pass
+def regime_monitoring_readiness_gate(args):
+    pass
+def monitoring_schema_check(args):
+    pass
+def monitoring_safety_check(args):
+    pass
+def regime_monitoring_context(args):
+    pass
+def regime_monitoring_review(args):
+    pass
+def regime_monitoring_summary(args):
+    pass
+def regime_monitoring_validate(args):
+    pass
+
+def setup_phase133_cli(subparsers):
+    p = subparsers.add_parser("regime-monitoring-info")
+    p.set_defaults(func=regime_monitoring_info)
+    p = subparsers.add_parser("regime-monitoring-ingest-context-validation")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=regime_monitoring_ingest_context_validation)
+    p = subparsers.add_parser("context-validation-artifact-load")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=context_validation_artifact_load)
+    p = subparsers.add_parser("build-monitoring-baseline")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=build_monitoring_baseline)
+    p = subparsers.add_parser("build-monitoring-snapshot")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=build_monitoring_snapshot)
+    p = subparsers.add_parser("drift-metric-specs")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=drift_metric_specs)
+    p = subparsers.add_parser("track-regime-drift")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=track_regime_drift)
+    p = subparsers.add_parser("track-compatibility-drift")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=track_compatibility_drift)
+    p = subparsers.add_parser("track-conditional-diagnostic-drift")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=track_conditional_diagnostic_drift)
+    p = subparsers.add_parser("track-acceptance-gate-drift")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=track_acceptance_gate_drift)
+    p = subparsers.add_parser("detect-context-degradation")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=detect_context_degradation)
+    p = subparsers.add_parser("detect-data-quality-degradation")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=detect_data_quality_degradation)
+    p = subparsers.add_parser("cross-symbol-monitoring-profile")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=cross_symbol_monitoring_profile)
+    p = subparsers.add_parser("regime-monitoring-readiness-gate")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=regime_monitoring_readiness_gate)
+    p = subparsers.add_parser("monitoring-schema-check")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=monitoring_schema_check)
+    p = subparsers.add_parser("monitoring-safety-check")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=monitoring_safety_check)
+    p = subparsers.add_parser("regime-monitoring-context")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=regime_monitoring_context)
+    p = subparsers.add_parser("regime-monitoring-review")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=regime_monitoring_review)
+    p = subparsers.add_parser("regime-monitoring-summary")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=regime_monitoring_summary)
+    p = subparsers.add_parser("regime-monitoring-validate")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=regime_monitoring_validate)
+
+def append_phase133_to_parser(subparsers):
+    setup_phase133_cli(subparsers)
 
 def main():
     parser = argparse.ArgumentParser()

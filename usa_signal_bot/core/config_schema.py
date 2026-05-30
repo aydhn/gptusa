@@ -2765,6 +2765,76 @@ class Phase127NotificationsConfig:
     preview_only: bool = True
     telegram_real_send: bool = False
 
+
+
+@dataclass
+class RegimeMonitoringConfig:
+    enabled: bool = True
+    current_phase: int = 133
+    final_phase: int = 160
+    require_phase132_context_validation: bool = True
+    context_validation_artifact_loader_enabled: bool = True
+    baseline_builder_enabled: bool = True
+    snapshot_builder_enabled: bool = True
+    drift_tracking_enabled: bool = True
+    degradation_diagnostics_enabled: bool = True
+    readiness_gate_enabled: bool = True
+    write_regime_monitoring_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_phase133_is_not_activation: bool = True
+    warn_monitoring_is_not_live_daemon: bool = True
+    warn_drift_is_not_trade_signal: bool = True
+
+@dataclass
+class Phase133MonitoringPolicyConfig:
+    compute_values_local_only: bool = True
+    research_data_only: bool = True
+    local_fixture_only_default: bool = True
+    allow_network: bool = False
+    allow_paid_api: bool = False
+    allow_scraping: bool = False
+    allow_html_parsing: bool = False
+    allow_broker: bool = False
+    allow_order: bool = False
+    allow_paper_mutation: bool = False
+    allow_telegram_real_send: bool = False
+    allow_dashboard: bool = False
+    allow_deployment: bool = False
+    allow_model_training: bool = False
+    allow_model_prediction: bool = False
+    allow_heavy_ml_dependencies: bool = False
+    allow_background_daemon: bool = False
+    allow_scheduler: bool = False
+    produce_trade_signals: bool = False
+    produce_order_decisions: bool = False
+    produce_portfolio_weights: bool = False
+    produce_investment_advice: bool = False
+    strategy_activation_allowed: bool = False
+
+@dataclass
+class Phase133DriftTrackingConfig:
+    enabled: bool = True
+    baseline_version: str = "phase133.v1"
+    warning_threshold_default: float = 10.0
+    blocking_threshold_default: float = 25.0
+    require_baseline_hash: bool = True
+    require_snapshot_hash: bool = True
+    ready_for_phase134_allowed: bool = True
+
+@dataclass
+class Phase133DegradationDiagnosticsConfig:
+    enabled: bool = True
+    allowed_recommended_action_types: List[str] = field(default_factory=lambda: ["research_review", "data_quality_review", "documentation_review", "monitor_context", "baseline_refresh_review"])
+    block_execution_action_types: bool = True
+
+@dataclass
+class Phase133NotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    preview_only: bool = True
+    telegram_real_send: bool = False
+
+@dataclass
 class Config:
     advanced_features: AdvancedFeaturesConfig = field(default_factory=AdvancedFeaturesConfig)
     feature_factor_final_closure: FeatureFactorFinalClosureConfig = field(default_factory=FeatureFactorFinalClosureConfig)

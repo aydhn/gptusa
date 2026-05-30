@@ -1,0 +1,1 @@
+This is an order to buy_signal 100 shares.

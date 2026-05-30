@@ -1,67 +1,33 @@
-1. **Explore Existing Config/Enums**: We've used `read_file` tools to understand how `usa_signal_bot/core/enums.py`, `usa_signal_bot/core/exceptions.py`, `usa_signal_bot/core/config_schema.py` and `config/default.yaml` are structured. Also confirmed structure of `usa_signal_bot/app/cli.py`, `usa_signal_bot/core/health.py`, `usa_signal_bot/observability/metrics_collector.py`, `usa_signal_bot/quality/data_quality_evaluator.py`, `usa_signal_bot/notifications/notification_templates.py`. `docs/` and `tests/fixtures/` paths exist.
-2. **Update Core Files**:
-   - Update `usa_signal_bot/core/enums.py` with Phase 130 enumerations (`MarketBehaviorStatus`, `MarketBehaviorDecision`, `MarketBehaviorProfileKind`, etc.).
-   - Update `usa_signal_bot/core/exceptions.py` with Phase 130 specific exception classes.
-   - Update `config/default.yaml` with the `market_behavior_reporting`, `phase130_behavior_policy`, `phase130_report_policy`, and `phase130_notifications` blocks.
-   - Update `usa_signal_bot/core/config_schema.py` with the corresponding dataclasses for the config updates.
-3. **Verify Core File Updates**: Check syntax via `python -m py_compile` and verify diffs for safety.
-4. **Build Phase 130 Models**: Create `usa_signal_bot/regime_classification/behavior_reporting/phase130_models.py` featuring all the Phase 130 dataclasses and serialization logic.
-5. **Implement Logic Modules 1 (Ingestion & Loading)**:
-   - Create `usa_signal_bot/regime_classification/behavior_reporting/regime_transition_ingestion.py`
-   - Create `usa_signal_bot/regime_classification/behavior_reporting/diagnostics_artifact_loader.py`
-6. **Implement Logic Modules 2 (Profiles & Summaries)**:
-   - Create `usa_signal_bot/regime_classification/behavior_reporting/market_behavior_profile_specs.py`
-   - Create `usa_signal_bot/regime_classification/behavior_reporting/market_behavior_profile_builder.py`
-   - Create `usa_signal_bot/regime_classification/behavior_reporting/regime_behavior_summary_builder.py`
-   - Create `usa_signal_bot/regime_classification/behavior_reporting/diagnostics_interpretation_builder.py`
-   - Create `usa_signal_bot/regime_classification/behavior_reporting/cross_symbol_behavior_profiles.py`
-7. **Implement Logic Modules 3 (Reports & Renderers)**:
-   - Create `usa_signal_bot/regime_classification/behavior_reporting/behavior_report_sections.py`
-   - Create `usa_signal_bot/regime_classification/behavior_reporting/behavior_report_document.py`
-   - Create `usa_signal_bot/regime_classification/behavior_reporting/markdown_behavior_report_renderer.py`
-   - Create `usa_signal_bot/regime_classification/behavior_reporting/json_behavior_report_renderer.py`
-   - Create `usa_signal_bot/regime_classification/behavior_reporting/text_behavior_report_renderer.py`
-8. **Implement Logic Modules 4 (Validation & Gates)**:
-   - Create `usa_signal_bot/regime_classification/behavior_reporting/behavior_report_qa_validator.py`
-   - Create `usa_signal_bot/regime_classification/behavior_reporting/behavior_report_readiness_gate.py`
-   - Create `usa_signal_bot/regime_classification/behavior_reporting/market_behavior_safety_validator.py`
-   - Create `usa_signal_bot/regime_classification/behavior_reporting/market_behavior_validation.py`
-9. **Implement Logic Modules 5 (Store & Main)**:
-   - Create `usa_signal_bot/regime_classification/behavior_reporting/market_behavior_store.py`
-   - Create `usa_signal_bot/regime_classification/behavior_reporting/market_behavior_reporting.py`
-   - Create `usa_signal_bot/regime_classification/behavior_reporting/market_behavior_report.py`
-   - Create `usa_signal_bot/regime_classification/behavior_reporting/__init__.py`
-10. **Verify Module Creation**: Run `ls -la usa_signal_bot/regime_classification/behavior_reporting/` to verify all files were created successfully.
-11. **Integrate Health & CLI**:
-    - Update `usa_signal_bot/core/health.py` with Phase 130 checks.
-    - Update `usa_signal_bot/app/cli.py` to register the new commands.
-12. **Integrate Observability, Quality, & Notifications**:
-    - Update `usa_signal_bot/observability/metrics_collector.py`
-    - Update `usa_signal_bot/quality/data_quality_evaluator.py`
-    - Update `usa_signal_bot/notifications/notification_templates.py`
-13. **Verify Integration File Updates**: Check syntax of `health.py`, `cli.py`, `metrics_collector.py`, `data_quality_evaluator.py`, `notification_templates.py` via `python -m py_compile`.
-14. **Documentation 1**:
-    - Create `docs/PHASE_130_MARKET_BEHAVIOR_PROFILING.md`
-    - Create `docs/MARKET_BEHAVIOR_PROFILES.md`
-15. **Documentation 2**:
-    - Create `docs/REGIME_BEHAVIOR_SUMMARY.md`
-    - Create `docs/REGIME_DIAGNOSTICS_REPORT_LAYER.md`
-16. **Documentation 3**:
-    - Create `docs/BEHAVIOR_REPORT_QA_AND_LANGUAGE_SAFETY.md`
-    - Create `docs/MARKET_BEHAVIOR_SAFETY_GUARDS.md`
-17. **Documentation 4**:
-    - Create `docs/PHASE_130_LIMITATIONS.md`
-    - Create `docs/PHASE_130_SUMMARY.md`
-18. **Verify Docs**: `ls -la docs/` to verify file creation.
-19. **Create Test Fixtures**:
-    - Make directory `tests/fixtures/market_behavior/`
-    - Create required fixture files inside (`sample_regime_transition_review.json`, `sample_transition_matrices.json`, `sample_persistence_profiles.json`, `sample_duration_profiles.json`, `sample_churn_diagnostics.json`, `sample_stability_diagnostics.json`, `sample_labeled_regime_table_aapl.csv`, `sample_behavior_report_safe.md`, etc.)
-20. **Test Implementation 1**: Create `tests/test_phase130_models.py`, `tests/test_regime_transition_ingestion.py`, `tests/test_diagnostics_artifact_loader.py`
-21. **Test Implementation 2**: Create `tests/test_market_behavior_profile_specs.py`, `tests/test_market_behavior_profile_builder.py`, `tests/test_regime_behavior_summary_builder.py`, `tests/test_diagnostics_interpretation_builder.py`
-22. **Test Implementation 3**: Create `tests/test_cross_symbol_behavior_profiles.py`, `tests/test_behavior_report_sections.py`, `tests/test_behavior_report_document.py`
-23. **Test Implementation 4**: Create `tests/test_markdown_behavior_report_renderer.py`, `tests/test_json_behavior_report_renderer.py`, `tests/test_text_behavior_report_renderer.py`
-24. **Test Implementation 5**: Create `tests/test_behavior_report_qa_validator.py`, `tests/test_behavior_report_readiness_gate.py`, `tests/test_market_behavior_safety_validator.py`, `tests/test_market_behavior_report.py`
-25. **Test Implementation 6**: Create `tests/test_market_behavior_store.py`, `tests/test_market_behavior_validation.py`, `tests/test_market_behavior_reporting.py`, `tests/test_cli.py` (CLI update test)
-26. **Verify Tests**: `ls -la tests/fixtures/market_behavior/` and `ls -la tests/test_*` to verify test creation. Run `pytest` to execute all tests.
-27. **Pre-commit**: Complete pre-commit steps to ensure proper testing, verification, review, and reflection are done.
-28. **Submit**: Use `submit` to push changes.
+1.  **Update Enums:** Add new enums (`RegimeMonitoringStatus`, `RegimeMonitoringDecision`, `RegimeMonitoringBaselineKind`, `RegimeMonitoringSnapshotKind`, `RegimeDriftMetricKind`, `RegimeDriftDirection`, `RegimeDriftSeverity`, `ContextDegradationKind`, `ContextDegradationStatus`, `RegimeMonitoringReadinessStatus`, `RegimeMonitoringReadinessRuleKind`, `RegimeMonitoringQuality`, `RegimeMonitoringRiskFlag`, `RegimeMonitoringReportType`) to `usa_signal_bot/core/enums.py`. Append `REGIME_MONITORING_REPORT`, `REGIME_DRIFT_WARNING`, `CONTEXT_DEGRADATION_WARNING` to `NotificationType` and append `REGIME_MONITORING_BLOCKED`, `REGIME_DRIFT_BLOCKED`, `CONTEXT_DEGRADATION_BLOCKED` to `AlertType` in `usa_signal_bot/core/enums.py`.
+2.  **Verify Enums:** Use `read_file` to verify the updates in `enums.py`.
+3.  **Create Models:** Create `usa_signal_bot/regime_classification/monitoring/phase133_models.py` with all the specified dataclasses (`RegimeContextValidationIngestionResult`, `RegimeMonitoringBaseline`, etc.).
+4.  **Verify Models:** Use `read_file` to confirm `phase133_models.py` was created correctly.
+5.  **Create Artifact Loader:** Create `usa_signal_bot/regime_classification/monitoring/context_validation_artifact_loader.py` for loading Phase 132 artifacts securely.
+6.  **Verify Artifact Loader:** Use `read_file` to confirm `context_validation_artifact_loader.py` was created.
+7.  **Create Ingestion Module:** Create `usa_signal_bot/regime_classification/monitoring/regime_context_validation_ingestion.py` to ingest Phase 132 outputs.
+8.  **Verify Ingestion Module:** Use `read_file` to confirm `regime_context_validation_ingestion.py` was created.
+9.  **Create Baseline & Snapshot Builders:** Create `usa_signal_bot/regime_classification/monitoring/monitoring_baseline_builder.py` and `usa_signal_bot/regime_classification/monitoring/monitoring_snapshot_builder.py`.
+10. **Verify Baseline & Snapshot Builders:** Use `list_files` to confirm the builder files were created.
+11. **Create Drift Tracking Engine:** Create `usa_signal_bot/regime_classification/monitoring/drift_metric_specs.py`, `usa_signal_bot/regime_classification/monitoring/drift_tracking_engine.py`, `usa_signal_bot/regime_classification/monitoring/compatibility_drift_tracker.py`, `usa_signal_bot/regime_classification/monitoring/conditional_diagnostic_drift_tracker.py`, and `usa_signal_bot/regime_classification/monitoring/acceptance_gate_drift_tracker.py`.
+12. **Verify Drift Tracking Engine:** Use `list_files` to confirm the drift tracking files were created.
+13. **Create Degradation Detectors:** Create `usa_signal_bot/regime_classification/monitoring/context_degradation_detector.py`, `usa_signal_bot/regime_classification/monitoring/data_quality_degradation_detector.py`, and `usa_signal_bot/regime_classification/monitoring/cross_symbol_monitoring_profiles.py`.
+14. **Verify Degradation Detectors:** Use `list_files` to confirm the detector files were created.
+15. **Create Readiness Gate:** Create `usa_signal_bot/regime_classification/monitoring/monitoring_readiness_gate.py`.
+16. **Verify Readiness Gate:** Use `read_file` to confirm `monitoring_readiness_gate.py` was created.
+17. **Create Validators:** Create `usa_signal_bot/regime_classification/monitoring/monitoring_schema_validator.py`, `usa_signal_bot/regime_classification/monitoring/monitoring_safety_validator.py`, and `usa_signal_bot/regime_classification/monitoring/regime_monitoring_validation.py`.
+18. **Verify Validators:** Use `list_files` to confirm the validator files were created.
+19. **Create Report & Store:** Create `usa_signal_bot/regime_classification/monitoring/regime_monitoring_report.py`, `usa_signal_bot/regime_classification/monitoring/regime_monitoring_store.py`, and `usa_signal_bot/regime_classification/monitoring/regime_monitoring_reporting.py`.
+20. **Verify Report & Store:** Use `list_files` to confirm the report and store files were created.
+21. **Update Configurations:** Update `config/default.yaml` and `config/local.example.yaml` with the new config blocks (`regime_monitoring`, `phase133_monitoring_policy`, `phase133_drift_tracking`, `phase133_degradation_diagnostics`, `phase133_notifications`). Update `usa_signal_bot/core/config_schema.py` and `usa_signal_bot/core/config.py` with Phase 133 configs.
+22. **Verify Configurations:** Use `read_file` to verify updates in the config files.
+23. **Update Core Files:** Add health checks to `usa_signal_bot/core/health.py`, exceptions to `usa_signal_bot/core/exceptions.py`.
+24. **Verify Core Files:** Use `read_file` to confirm the edits to these core files were written correctly.
+25. **Update Integrations:** Update `usa_signal_bot/observability/metrics_collector.py` (add metrics like `latest_regime_monitoring_context_count`, etc.), `usa_signal_bot/quality/data_quality_evaluator.py` (add score components for Phase 133), `usa_signal_bot/notifications/notification_templates.py` (add `format_regime_monitoring_report_message`, etc.), and `usa_signal_bot/app/cli.py` (add `setup_phase133_cli` and its corresponding command functions).
+26. **Verify Integrations:** Verify with `read_file` for integration files.
+27. **Create Fixtures:** Create test fixtures under `tests/fixtures/regime_monitoring/`: `sample_regime_context_validation_review.json`, `sample_regime_context_validation_review_blocked.json`, `sample_compatibility_validation_result.json`, `sample_conditional_diagnostics.json`, `sample_conditional_diagnostics_profiles.json`, `sample_acceptance_gate_pass.json`, `sample_acceptance_gate_fail.json`, `sample_monitoring_baseline.json`, `sample_monitoring_snapshot_current.json`, `sample_monitoring_snapshot_previous.json`, `sample_drift_observations_expected.json`, `sample_context_degradation_expected.json`, `sample_invalid_regime_monitoring_payload.json`, `sample_forbidden_monitoring_columns.csv`, `sample_unsafe_monitoring_text.txt`.
+28. **Create Test Files:** Create specific test files: `tests/test_phase133_models.py`, `tests/test_regime_context_validation_ingestion.py`, `tests/test_context_validation_artifact_loader.py`, `tests/test_monitoring_baseline_builder.py`, `tests/test_monitoring_snapshot_builder.py`, `tests/test_drift_metric_specs.py`, `tests/test_drift_tracking_engine.py`, `tests/test_compatibility_drift_tracker.py`, `tests/test_conditional_diagnostic_drift_tracker.py`, `tests/test_acceptance_gate_drift_tracker.py`, `tests/test_context_degradation_detector.py`, `tests/test_data_quality_degradation_detector.py`, `tests/test_cross_symbol_monitoring_profiles.py`, `tests/test_monitoring_readiness_gate.py`, `tests/test_monitoring_schema_validator.py`, `tests/test_monitoring_safety_validator.py`, `tests/test_regime_monitoring_report.py`, `tests/test_regime_monitoring_store.py`, `tests/test_regime_monitoring_validation.py`, `tests/test_regime_monitoring_reporting.py`, `tests/test_cli.py`.
+29. **Verify Test Files:** Use `list_files` to confirm the test files and fixtures were created.
+30. **Create Docs:** Create specific markdown files: `docs/PHASE_133_REGIME_AWARE_MONITORING.md`, `docs/REGIME_MONITORING_BASELINES_AND_SNAPSHOTS.md`, `docs/REGIME_DRIFT_TRACKING.md`, `docs/CONTEXT_DEGRADATION_DIAGNOSTICS.md`, `docs/MONITORING_READINESS_GATE.md`, `docs/REGIME_MONITORING_SAFETY_GUARDS.md`, `docs/PHASE_133_LIMITATIONS.md`, `docs/PHASE_133_SUMMARY.md`.
+31. **Verify Docs:** Use `list_files` to confirm the documentation files were created correctly.
+32. **Run Tests:** Execute the test suite using `pytest` to ensure all changes are correct and regressions are prevented.
+33. **Pre-commit:** Complete pre-commit steps to ensure proper testing, verification, review, and reflection are done.

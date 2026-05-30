@@ -1661,3 +1661,71 @@ phase131_notifications:
   dry_run: true
   preview_only: true
   telegram_real_send: false
+
+
+regime_monitoring:
+  enabled: true
+  current_phase: 133
+  final_phase: 160
+  require_phase132_context_validation: true
+  context_validation_artifact_loader_enabled: true
+  baseline_builder_enabled: true
+  snapshot_builder_enabled: true
+  drift_tracking_enabled: true
+  degradation_diagnostics_enabled: true
+  readiness_gate_enabled: true
+  write_regime_monitoring_reports: true
+  warn_not_investment_advice: true
+  warn_phase133_is_not_activation: true
+  warn_monitoring_is_not_live_daemon: true
+  warn_drift_is_not_trade_signal: true
+
+phase133_monitoring_policy:
+  compute_values_local_only: true
+  research_data_only: true
+  local_fixture_only_default: true
+  allow_network: false
+  allow_paid_api: false
+  allow_scraping: false
+  allow_html_parsing: false
+  allow_broker: false
+  allow_order: false
+  allow_paper_mutation: false
+  allow_telegram_real_send: false
+  allow_dashboard: false
+  allow_deployment: false
+  allow_model_training: false
+  allow_model_prediction: false
+  allow_heavy_ml_dependencies: false
+  allow_background_daemon: false
+  allow_scheduler: false
+  produce_trade_signals: false
+  produce_order_decisions: false
+  produce_portfolio_weights: false
+  produce_investment_advice: false
+  strategy_activation_allowed: false
+
+phase133_drift_tracking:
+  enabled: true
+  baseline_version: "phase133.v1"
+  warning_threshold_default: 10.0
+  blocking_threshold_default: 25.0
+  require_baseline_hash: true
+  require_snapshot_hash: true
+  ready_for_phase134_allowed: true
+
+phase133_degradation_diagnostics:
+  enabled: true
+  allowed_recommended_action_types:
+    - research_review
+    - data_quality_review
+    - documentation_review
+    - monitor_context
+    - baseline_refresh_review
+  block_execution_action_types: true
+
+phase133_notifications:
+  enabled: true
+  dry_run: true
+  preview_only: true
+  telegram_real_send: false
