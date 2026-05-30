@@ -2866,3 +2866,67 @@ phase131_notifications:
   dry_run: true
   preview_only: true
   telegram_real_send: false
+
+regime_context_validation:
+  enabled: true
+  current_phase: 132
+  final_phase: 160
+  require_phase131_regime_alignment: true
+  alignment_artifact_loader_enabled: true
+  compatibility_validation_enabled: true
+  conditional_diagnostics_enabled: true
+  acceptance_gate_enabled: true
+  cross_symbol_validation_enabled: true
+  write_regime_context_validation_reports: true
+  warn_not_investment_advice: true
+  warn_phase132_is_not_activation: true
+  warn_acceptance_gate_is_not_strategy_activation: true
+
+phase132_validation_policy:
+  compute_values_local_only: true
+  research_data_only: true
+  local_fixture_only_default: true
+  allow_network: false
+  allow_paid_api: false
+  allow_scraping: false
+  allow_html_parsing: false
+  allow_broker: false
+  allow_order: false
+  allow_paper_mutation: false
+  allow_telegram_real_send: false
+  allow_dashboard: false
+  allow_deployment: false
+  allow_model_training: false
+  allow_model_prediction: false
+  allow_heavy_ml_dependencies: false
+  produce_trade_signals: false
+  produce_order_decisions: false
+  produce_portfolio_weights: false
+  produce_investment_advice: false
+  strategy_activation_allowed: false
+
+phase132_conditional_diagnostics:
+  enabled: true
+  allow_warning_acceptance: true
+  require_low_compatibility_explanation: true
+  require_uncertain_context_explanation: true
+  require_conflicted_context_explanation: true
+  require_data_quality_limited_explanation: true
+  allowed_recommended_action_types:
+    - research_review
+    - data_quality_review
+    - documentation_review
+    - monitor_context
+
+phase132_acceptance_gate:
+  enabled: true
+  ready_for_phase133_allowed: true
+  block_unexplained_low_compatibility: true
+  block_unexplained_conflicted_context: true
+  block_unexplained_data_quality_limit: true
+
+phase132_notifications:
+  enabled: true
+  dry_run: true
+  preview_only: true
+  telegram_real_send: false

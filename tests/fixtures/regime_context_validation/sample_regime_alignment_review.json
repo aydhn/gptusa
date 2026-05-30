@@ -1,0 +1,17 @@
+{
+  "review_id": "rev_123",
+  "context": {
+    "context_id": "ctx_123",
+    "market_behavior_ingested": true,
+    "frozen_factors_loaded": true,
+    "behavior_artifacts_loaded": true,
+    "alignment_specs_ready": true,
+    "overlays_built": true,
+    "compatibility_computed": true,
+    "diagnostics_built": true,
+    "readiness_gate_ready": true,
+    "ready_for_phase132": true,
+    "metadata_only": true,
+    "research_data_only": true
+  }
+}
