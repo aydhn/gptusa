@@ -321,3 +321,16 @@ def notifications_from_regime_monitoring_review(review: RegimeMonitoringFullRevi
     if review.degradation_diagnostics:
         msgs.append(format_context_degradation_warning_message(review.degradation_diagnostics))
     return msgs
+
+
+def format_regime_research_freeze_report_message(review) -> str:
+    return "DRY RUN PREVIEW: Regime Research Freeze Report - No investment advice."
+
+def format_drift_report_qa_warning_message(results) -> str:
+    return "DRY RUN PREVIEW: Drift Report QA Warning - No investment advice."
+
+def format_research_freeze_package_warning_message(package) -> str:
+    return "DRY RUN PREVIEW: Research Freeze Package Warning - No investment advice."
+
+def notifications_from_research_freeze_review(review) -> list:
+    return [format_regime_research_freeze_report_message(review)]

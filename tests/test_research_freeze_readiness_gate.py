@@ -1,0 +1,10 @@
+from usa_signal_bot.regime_classification.freeze_preparation.research_freeze_readiness_gate import build_research_freeze_readiness_rules
+from usa_signal_bot.regime_classification.freeze_preparation.phase134_models import MonitoringValidationResult, DriftReportDocument, ResearchFreezePackage
+
+def test_build_research_freeze_readiness_rules():
+    val = MonitoringValidationResult(validation_id="v1", created_at_utc="", rules=[], total_rules=0, passed_rules=0, warning_rules=0, failed_rules=0, blocked_rules=0, validation_passed=True, baseline_available=True, snapshot_available=True, drift_result_available=True, degradation_diagnostics_available=True, monitoring_readiness_gate_passed=True, consistency_valid=True, safety_boundary_valid=True, quality="HIGH", research_metadata_only=True, activation_allowed=False, strategy_activation_allowed=False, deployment_allowed=False, model_training_used=False, model_prediction_used=False, produces_trade_signal=False, produces_order_decision=False, produces_portfolio_weights=False, investment_advice=False)
+    doc = DriftReportDocument(document_id="d1", created_at_utc="", title="Doc", sections=[], source_review_id="r1", rendered_markdown="", rendered_text="", rendered_json=None, document_hash="", research_metadata_only=True, investment_advice=False, produces_trade_signal=False, produces_order_decision=False, produces_portfolio_weights=False, qa_status="NOT_CHECKED")
+    pkg = ResearchFreezePackage(package_id="p1", created_at_utc="", package_name="p", package_version="v", artifact_references=[], drift_report=doc, monitoring_validation=val, required_artifact_count=0, available_required_artifact_count=0, missing_required_artifact_count=0, package_hash="", manifest_hash="", package_valid=True, quality="HIGH", research_metadata_only=True, activation_allowed=False, strategy_activation_allowed=False, deployment_allowed=False, model_training_used=False, model_prediction_used=False, produces_trade_signal=False, produces_order_decision=False, produces_portfolio_weights=False, investment_advice=False)
+
+    rules = build_research_freeze_readiness_rules(val, doc, [], pkg)
+    assert len(rules) == 4

@@ -1,0 +1,4 @@
+{
+  "id": "drift_123",
+  "metrics_drift": [{"name": "volatility", "drift_detected": false}]
+}
