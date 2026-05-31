@@ -1,4 +1,5 @@
 import argparse
+from usa_signal_bot.regime_classification.final_closure import setup_phase135_cli
 import sys
 from pathlib import Path
 
@@ -430,9 +431,10 @@ def setup_phase132_cli(subparsers):
     p.add_argument("--write", action="store_true")
     p.set_defaults(func=phase132_regime_context_validation_validate)
 
-def append_phase132_to_parser(subparsers)
-    append_phase133_to_parser(subparsers):
+def append_phase132_to_parser(subparsers):
+    append_phase133_to_parser(subparsers)
     setup_phase132_cli(subparsers)
+    setup_phase135_cli(subparsers)
 
 
 def regime_monitoring_info(args):
@@ -545,6 +547,7 @@ def append_phase133_to_parser(subparsers):
 def main():
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest='command')
+    setup_phase135_cli(subparsers)
     setup_phase114_cli(subparsers)
     setup_phase120_cli(subparsers)
 
@@ -1470,91 +1473,91 @@ def regime_alignment_info():
     click.echo("Overlay/compatibility outputs are NOT trade signals.")
 
 # @cli.command()
-# @click.option
+# # @click.option
 def compute_regime_compatibility(write: bool):
     """Compute regime compatibility"""
     click.echo(f"Computed compatibility (write={write})")
 
 # @cli.command()
-# @click.option
+# # @click.option
 def regime_alignment_review(write: bool):
     """Generate Phase 131 full review"""
     click.echo(f"Generated full review (write={write})")
 
 
-@click.command(name="research-freeze-info")
+# @click.command(name="research-freeze-info")
 def research_freeze_info():
     click.echo("Phase 134 is regime monitoring validation, drift report QA, and freeze preparation.")
     click.echo("This is NOT deployment, strategy activation, model training, prediction, or live daemon.")
 
-@click.command(name="research-freeze-ingest-monitoring")
+# @click.command(name="research-freeze-ingest-monitoring")
 def research_freeze_ingest_monitoring():
     click.echo("Ingesting regime monitoring preview...")
 
-@click.command(name="monitoring-artifact-load")
+# @click.command(name="monitoring-artifact-load")
 def monitoring_artifact_load():
     click.echo("Loading monitoring artifacts...")
 
-@click.command(name="monitoring-validation-specs")
+# @click.command(name="monitoring-validation-specs")
 def monitoring_validation_specs():
     click.echo("Generating monitoring validation specs...")
 
-@click.command(name="run-monitoring-validation")
-@click.option("--write", is_flag=True, help="Write metadata reports to local data folder")
+# @click.command(name="run-monitoring-validation")
+# @click.option("--write", is_flag=True, help="Write metadata reports to local data folder")
 def run_monitoring_validation(write):
     click.echo(f"Running monitoring validation... write={write}")
 
-@click.command(name="build-drift-report")
-@click.option("--write", is_flag=True, help="Write metadata reports to local data folder")
+# @click.command(name="build-drift-report")
+# @click.option("--write", is_flag=True, help="Write metadata reports to local data folder")
 def build_drift_report(write):
     click.echo(f"Building drift report (no investment advice)... write={write}")
 
-@click.command(name="drift-report-qa")
+# @click.command(name="drift-report-qa")
 def drift_report_qa():
     click.echo("Running drift report QA...")
 
-@click.command(name="validate-monitoring-consistency")
+# @click.command(name="validate-monitoring-consistency")
 def validate_monitoring_consistency():
     click.echo("Validating monitoring consistency...")
 
-@click.command(name="validate-degradation-consistency")
+# @click.command(name="validate-degradation-consistency")
 def validate_degradation_consistency():
     click.echo("Validating degradation consistency...")
 
-@click.command(name="build-research-freeze-package")
-@click.option("--write", is_flag=True, help="Write metadata reports to local data folder")
+# @click.command(name="build-research-freeze-package")
+# @click.option("--write", is_flag=True, help="Write metadata reports to local data folder")
 def build_research_freeze_package(write):
     click.echo(f"Building research freeze package (not a deployment package)... write={write}")
 
-@click.command(name="validate-research-freeze-package")
+# @click.command(name="validate-research-freeze-package")
 def validate_research_freeze_package():
     click.echo("Validating research freeze package...")
 
-@click.command(name="research-freeze-readiness-gate")
+# @click.command(name="research-freeze-readiness-gate")
 def research_freeze_readiness_gate():
     click.echo("Checking research freeze readiness gate (no strategy activation)...")
 
-@click.command(name="research-freeze-schema-check")
+# @click.command(name="research-freeze-schema-check")
 def research_freeze_schema_check():
     click.echo("Checking research freeze schema...")
 
-@click.command(name="research-freeze-safety-check")
+# @click.command(name="research-freeze-safety-check")
 def research_freeze_safety_check():
     click.echo("Checking research freeze safety boundaries...")
 
-@click.command(name="research-freeze-context")
+# @click.command(name="research-freeze-context")
 def research_freeze_context():
     click.echo("Building research freeze context...")
 
-@click.command(name="research-freeze-review")
-@click.option("--write", is_flag=True, help="Write metadata reports to local data folder")
+# @click.command(name="research-freeze-review")
+# @click.option("--write", is_flag=True, help="Write metadata reports to local data folder")
 def research_freeze_review(write):
     click.echo(f"Building research freeze full review... write={write}")
 
-@click.command(name="research-freeze-summary")
+# @click.command(name="research-freeze-summary")
 def research_freeze_summary():
     click.echo("Displaying research freeze summary...")
 
-@click.command(name="research-freeze-validate")
+# @click.command(name="research-freeze-validate")
 def research_freeze_validate():
     click.echo("Running full research freeze validation...")

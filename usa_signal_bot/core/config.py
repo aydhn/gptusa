@@ -46,6 +46,24 @@ def load_app_config(config_dir: Optional[Path] = None) -> AppConfig:
     # Simple manual deserialization mapping nested dicts to dataclasses
     try:
         config = AppConfig()
+        if 'regime_final_closure' in merged_cfg_dict:
+            from usa_signal_bot.core.config_schema import RegimeFinalClosureConfig
+            config.regime_final_closure = RegimeFinalClosureConfig(**merged_cfg_dict['regime_final_closure'])
+        if 'phase135_closure_policy' in merged_cfg_dict:
+            from usa_signal_bot.core.config_schema import Phase135ClosurePolicyConfig
+            config.phase135_closure_policy = Phase135ClosurePolicyConfig(**merged_cfg_dict['phase135_closure_policy'])
+        if 'phase135_artifact_chain' in merged_cfg_dict:
+            from usa_signal_bot.core.config_schema import Phase135ArtifactChainConfig
+            config.phase135_artifact_chain = Phase135ArtifactChainConfig(**merged_cfg_dict['phase135_artifact_chain'])
+        if 'phase135_freeze_seal' in merged_cfg_dict:
+            from usa_signal_bot.core.config_schema import Phase135FreezeSealConfig
+            config.phase135_freeze_seal = Phase135FreezeSealConfig(**merged_cfg_dict['phase135_freeze_seal'])
+        if 'phase135_ml_kickoff' in merged_cfg_dict:
+            from usa_signal_bot.core.config_schema import Phase135MLKickoffConfig
+            config.phase135_ml_kickoff = Phase135MLKickoffConfig(**merged_cfg_dict['phase135_ml_kickoff'])
+        if 'phase135_notifications' in merged_cfg_dict:
+            from usa_signal_bot.core.config_schema import Phase135NotificationsConfig
+            config.phase135_notifications = Phase135NotificationsConfig(**merged_cfg_dict['phase135_notifications'])
 
         if "project" in merged_cfg_dict:
             for k, v in merged_cfg_dict["project"].items():
