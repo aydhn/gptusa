@@ -2925,7 +2925,96 @@ class Phase135NotificationsConfig:
     telegram_real_send: bool = False
 
 @dataclass
+
+@dataclass
+class MLDatasetAssemblyConfig:
+    enabled: bool = True
+    current_phase: int = 137
+    final_phase: int = 160
+    require_phase136_ml_foundation: bool = True
+    foundation_ingestion_enabled: bool = True
+    source_resolution_enabled: bool = True
+    feature_matrix_assembly_enabled: bool = True
+    target_matrix_assembly_enabled: bool = True
+    label_matrix_assembly_enabled: bool = True
+    dataset_manifest_enabled: bool = True
+    split_policy_enabled: bool = True
+    split_assignment_enabled: bool = True
+    leakage_audit_enabled: bool = True
+    dataset_quality_enabled: bool = True
+    split_quality_enabled: bool = True
+    readiness_gate_enabled: bool = True
+    write_dataset_assembly_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_phase137_does_not_train_models: bool = True
+    warn_phase137_does_not_predict: bool = True
+    warn_dataset_outputs_are_not_trade_signals: bool = True
+
+@dataclass
+class Phase137DatasetPolicyConfig:
+    compute_values_local_only: bool = True
+    research_data_only: bool = True
+    local_fixture_only_default: bool = True
+    allow_network: bool = False
+    allow_paid_api: bool = False
+    allow_scraping: bool = False
+    allow_html_parsing: bool = False
+    allow_broker: bool = False
+    allow_order: bool = False
+    allow_paper_mutation: bool = False
+    allow_telegram_real_send: bool = False
+    allow_dashboard: bool = False
+    allow_deployment: bool = False
+    allow_model_training: bool = False
+    allow_model_prediction: bool = False
+    allow_heavy_ml_dependencies: bool = False
+    allow_background_daemon: bool = False
+    allow_scheduler: bool = False
+    produce_trade_signals: bool = False
+    produce_order_decisions: bool = False
+    produce_portfolio_weights: bool = False
+    produce_investment_advice: bool = False
+    strategy_activation_allowed: bool = False
+
+@dataclass
+class Phase137SplitPolicyConfig:
+    default_policy_kind: str = "SYMBOL_AWARE_TIME_SPLIT"
+    train_ratio: float = 0.70
+    validation_ratio: float = 0.15
+    test_ratio: float = 0.15
+    embargo_bars: int = 5
+    purge_bars: int = 5
+    time_ordered: bool = True
+    symbol_aware: bool = True
+    random_shuffle_allowed: bool = False
+    leakage_safe_required: bool = True
+
+@dataclass
+class Phase137LeakageAuditConfig:
+    enabled: bool = True
+    require_future_data_leakage_check: bool = True
+    require_target_leakage_check: bool = True
+    require_label_overlap_check: bool = True
+    require_timestamp_alignment_check: bool = True
+    require_train_validation_test_overlap_check: bool = True
+    require_embargo_purge_check: bool = True
+    require_forward_window_overlap_check: bool = True
+    require_forbidden_output_field_check: bool = True
+    block_on_leakage_fail: bool = True
+
+@dataclass
+class Phase137NotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    preview_only: bool = True
+    telegram_real_send: bool = False
+
 class Config:
+    ml_dataset_assembly: MLDatasetAssemblyConfig = field(default_factory=MLDatasetAssemblyConfig)
+    phase137_dataset_policy: Phase137DatasetPolicyConfig = field(default_factory=Phase137DatasetPolicyConfig)
+    phase137_split_policy: Phase137SplitPolicyConfig = field(default_factory=Phase137SplitPolicyConfig)
+    phase137_leakage_audit: Phase137LeakageAuditConfig = field(default_factory=Phase137LeakageAuditConfig)
+    phase137_notifications: Phase137NotificationsConfig = field(default_factory=Phase137NotificationsConfig)
     regime_final_closure: RegimeFinalClosureConfig = field(default_factory=RegimeFinalClosureConfig)
     phase135_closure_policy: Phase135ClosurePolicyConfig = field(default_factory=Phase135ClosurePolicyConfig)
     phase135_artifact_chain: Phase135ArtifactChainConfig = field(default_factory=Phase135ArtifactChainConfig)
@@ -3546,3 +3635,5 @@ phase136_ml_policy: Phase136MLPolicyConfig = field(default_factory=Phase136MLPol
 phase136_dataset_contract: Phase136DatasetContractConfig = field(default_factory=Phase136DatasetContractConfig)
 phase136_leakage_guard: Phase136LeakageGuardConfig = field(default_factory=Phase136LeakageGuardConfig)
 phase136_notifications: Phase136NotificationsConfig = field(default_factory=Phase136NotificationsConfig)
+
+AppConfig = Config
