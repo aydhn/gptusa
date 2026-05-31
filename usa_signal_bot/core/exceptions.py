@@ -2604,3 +2604,79 @@ class MLFoundationSafetyValidationError(MLFoundationError): pass
 class MLFoundationStoreError(MLFoundationError): pass
 class MLFoundationValidationError(MLFoundationError): pass
 class MLFoundationReportingError(MLFoundationError): pass
+
+
+class MLDatasetAssemblyError(USASignalBotError):
+    pass
+
+class MLFoundationIngestionError(MLDatasetAssemblyError):
+    pass
+
+class MLFoundationArtifactLoaderError(MLDatasetAssemblyError):
+    pass
+
+class DatasetSourceResolverError(MLDatasetAssemblyError):
+    pass
+
+class FeatureMatrixAssemblyError(MLDatasetAssemblyError):
+    pass
+
+class TargetMatrixAssemblyError(MLDatasetAssemblyError):
+    pass
+
+class LabelMatrixAssemblyError(MLDatasetAssemblyError):
+    pass
+
+class DatasetManifestBuilderError(MLDatasetAssemblyError):
+    pass
+
+class SplitPolicyBuilderError(MLDatasetAssemblyError):
+    pass
+
+class SplitAssignmentBuilderError(MLDatasetAssemblyError):
+    pass
+
+class LeakageAuditRunnerError(MLDatasetAssemblyError):
+    pass
+
+class DatasetQualityEvaluatorError(MLDatasetAssemblyError):
+    pass
+
+class SplitQualityEvaluatorError(MLDatasetAssemblyError):
+    pass
+
+class DatasetAssemblySchemaValidationError(MLDatasetAssemblyError):
+    pass
+
+class DatasetAssemblySafetyValidationError(MLDatasetAssemblyError):
+    pass
+
+class DatasetAssemblyReadinessGateError(MLDatasetAssemblyError):
+    pass
+
+class DatasetAssemblyStoreError(MLDatasetAssemblyError):
+    pass
+
+class DatasetAssemblyValidationError(MLDatasetAssemblyError):
+    pass
+
+class DatasetAssemblyReportingError(MLDatasetAssemblyError):
+    pass
+
+class RuntimeInitializationError(USASignalBotError):
+    pass
+
+class LoggingSetupError(USASignalBotError):
+    pass
+
+class ConfigLoaderError(USASignalBotError):
+    pass
+
+class DatabaseConnectionError(USASignalBotError):
+    pass
+
+class DependencyInjectionError(USASignalBotError):
+    pass
+
+class AuditError(USASignalBotError):
+    pass

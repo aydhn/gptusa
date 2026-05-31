@@ -3149,3 +3149,81 @@ phase135_notifications:
   dry_run: true
   preview_only: true
   telegram_real_send: false
+
+ml_dataset_assembly:
+  enabled: true
+  current_phase: 137
+  final_phase: 160
+  require_phase136_ml_foundation: true
+  foundation_ingestion_enabled: true
+  source_resolution_enabled: true
+  feature_matrix_assembly_enabled: true
+  target_matrix_assembly_enabled: true
+  label_matrix_assembly_enabled: true
+  dataset_manifest_enabled: true
+  split_policy_enabled: true
+  split_assignment_enabled: true
+  leakage_audit_enabled: true
+  dataset_quality_enabled: true
+  split_quality_enabled: true
+  readiness_gate_enabled: true
+  write_dataset_assembly_reports: true
+  warn_not_investment_advice: true
+  warn_phase137_does_not_train_models: true
+  warn_phase137_does_not_predict: true
+  warn_dataset_outputs_are_not_trade_signals: true
+
+phase137_dataset_policy:
+  compute_values_local_only: true
+  research_data_only: true
+  local_fixture_only_default: true
+  allow_network: false
+  allow_paid_api: false
+  allow_scraping: false
+  allow_html_parsing: false
+  allow_broker: false
+  allow_order: false
+  allow_paper_mutation: false
+  allow_telegram_real_send: false
+  allow_dashboard: false
+  allow_deployment: false
+  allow_model_training: false
+  allow_model_prediction: false
+  allow_heavy_ml_dependencies: false
+  allow_background_daemon: false
+  allow_scheduler: false
+  produce_trade_signals: false
+  produce_order_decisions: false
+  produce_portfolio_weights: false
+  produce_investment_advice: false
+  strategy_activation_allowed: false
+
+phase137_split_policy:
+  default_policy_kind: "SYMBOL_AWARE_TIME_SPLIT"
+  train_ratio: 0.70
+  validation_ratio: 0.15
+  test_ratio: 0.15
+  embargo_bars: 5
+  purge_bars: 5
+  time_ordered: true
+  symbol_aware: true
+  random_shuffle_allowed: false
+  leakage_safe_required: true
+
+phase137_leakage_audit:
+  enabled: true
+  require_future_data_leakage_check: true
+  require_target_leakage_check: true
+  require_label_overlap_check: true
+  require_timestamp_alignment_check: true
+  require_train_validation_test_overlap_check: true
+  require_embargo_purge_check: true
+  require_forward_window_overlap_check: true
+  require_forbidden_output_field_check: true
+  block_on_leakage_fail: true
+
+phase137_notifications:
+  enabled: true
+  dry_run: true
+  preview_only: true
+  telegram_real_send: false
