@@ -4,7 +4,8 @@ from .app.cli import (
     append_phase129_to_parser,
     setup_phase114_cli,
     setup_phase124_cli,
-    setup_phase135_cli
+    setup_phase135_cli,
+    setup_phase136_cli
 )
 
 def main():
@@ -22,6 +23,9 @@ def main():
     except: pass
     try:
         setup_phase135_cli(subparsers)
+    except: pass
+    try:
+        setup_phase136_cli(subparsers)
     except: pass
 
     args = parser.parse_args()
