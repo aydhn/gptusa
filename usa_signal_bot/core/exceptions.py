@@ -2539,3 +2539,48 @@ class ResearchFreezeValidationError(RegimeResearchFreezeError):
 
 class ResearchFreezeReportingError(RegimeResearchFreezeError):
     pass
+
+class RegimeFinalClosureError(USASignalBotError):
+    pass
+
+class RegimeResearchFreezeIngestionError(USASignalBotError):
+    pass
+
+class ResearchFreezeArtifactLoaderError(USASignalBotError):
+    pass
+
+class ArtifactChainValidationError(USASignalBotError):
+    pass
+
+class FinalClosureRuleError(USASignalBotError):
+    pass
+
+class FinalClosureValidationError(USASignalBotError):
+    pass
+
+class FreezeSealGenerationError(USASignalBotError):
+    pass
+
+class FinalSafetyAuditError(USASignalBotError):
+    pass
+
+class MLInputContractBuilderError(USASignalBotError):
+    pass
+
+class MLKickoffReadinessGateError(USASignalBotError):
+    pass
+
+class FinalClosureHashingError(USASignalBotError):
+    pass
+
+class FinalClosureSchemaValidationError(USASignalBotError):
+    pass
+
+class FinalClosureSafetyValidationError(USASignalBotError):
+    pass
+
+class FinalClosureStoreError(USASignalBotError):
+    pass
+
+class FinalClosureReportingError(USASignalBotError):
+    pass

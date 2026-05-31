@@ -15,6 +15,20 @@ class MetricsCollector:
     latest_phase131_activation_violation_count: int = 0
 
     latest_regime_monitoring_context_count: int = 0
+    latest_regime_final_closure_context_count: int = 0
+    latest_artifact_chain_reference_count: int = 0
+    latest_artifact_chain_validation_pass_count: int = 0
+    latest_final_closure_pass_count: int = 0
+    latest_freeze_seal_created_count: int = 0
+    latest_final_safety_audit_pass_count: int = 0
+    latest_ml_input_contract_count: int = 0
+    latest_ml_kickoff_gate_pass_count: int = 0
+    latest_phase135_model_training_violation_count: int = 0
+    latest_phase135_model_prediction_violation_count: int = 0
+    latest_phase135_execution_violation_count: int = 0
+    latest_phase135_activation_violation_count: int = 0
+    latest_phase135_deployment_violation_count: int = 0
+    latest_phase135_daemon_violation_count: int = 0
     latest_monitoring_baseline_count: int = 0
     latest_monitoring_snapshot_count: int = 0
     latest_drift_observation_count: int = 0
@@ -112,6 +126,20 @@ def get_latest_phase117_execution_violation_count(): return 0
 class MetricsCollector:
 
     latest_regime_monitoring_context_count: int = 0
+    latest_regime_final_closure_context_count: int = 0
+    latest_artifact_chain_reference_count: int = 0
+    latest_artifact_chain_validation_pass_count: int = 0
+    latest_final_closure_pass_count: int = 0
+    latest_freeze_seal_created_count: int = 0
+    latest_final_safety_audit_pass_count: int = 0
+    latest_ml_input_contract_count: int = 0
+    latest_ml_kickoff_gate_pass_count: int = 0
+    latest_phase135_model_training_violation_count: int = 0
+    latest_phase135_model_prediction_violation_count: int = 0
+    latest_phase135_execution_violation_count: int = 0
+    latest_phase135_activation_violation_count: int = 0
+    latest_phase135_deployment_violation_count: int = 0
+    latest_phase135_daemon_violation_count: int = 0
     latest_monitoring_baseline_count: int = 0
     latest_monitoring_snapshot_count: int = 0
     latest_drift_observation_count: int = 0
