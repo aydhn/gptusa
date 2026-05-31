@@ -207,3 +207,21 @@ def phase113_non_execution_compliance_score(): pass
         phase134_no_model_training_compliance_score: int = 100
         phase134_no_model_prediction_compliance_score: int = 100
         phase134_no_daemon_compliance_score: int = 100
+
+
+# Phase 136 Quality Scorecard
+self.phase136_final_closure_ingestion_score = 100
+self.phase136_ml_source_registry_score = 100
+self.phase136_ml_feature_contract_score = 100
+self.phase136_ml_target_contract_score = 100
+self.phase136_ml_label_contract_score = 100
+self.phase136_ml_dataset_contract_score = 100
+self.phase136_ml_leakage_guard_score = 100
+self.phase136_ml_non_activation_boundary_score = 100
+self.phase136_ml_governance_score = 100
+self.phase136_ml_foundation_readiness_gate_score = 100
+self.phase136_safety_score = 100
+self.phase136_non_execution_compliance_score = 100
+self.phase136_no_model_training_compliance_score = 100
+self.phase136_no_model_prediction_compliance_score = 100
+self.phase136_no_heavy_ml_dependency_compliance_score = 100

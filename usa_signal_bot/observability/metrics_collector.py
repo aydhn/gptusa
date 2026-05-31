@@ -260,3 +260,23 @@ def collect_phase113_metrics(): pass
         latest_phase134_execution_violation_count: int = 0
         latest_phase134_activation_violation_count: int = 0
         latest_phase134_daemon_violation_count: int = 0
+
+
+# Phase 136 Metrics
+self._metrics.setdefault('latest_ml_foundation_context_count', 0)
+self._metrics.setdefault('latest_ml_source_registry_count', 0)
+self._metrics.setdefault('latest_ml_source_artifact_reference_count', 0)
+self._metrics.setdefault('latest_ml_feature_contract_count', 0)
+self._metrics.setdefault('latest_ml_target_contract_count', 0)
+self._metrics.setdefault('latest_ml_label_contract_count', 0)
+self._metrics.setdefault('latest_ml_dataset_contract_count', 0)
+self._metrics.setdefault('latest_ml_leakage_guard_rule_count', 0)
+self._metrics.setdefault('latest_ml_non_activation_boundary_pass_count', 0)
+self._metrics.setdefault('latest_ml_governance_pass_count', 0)
+self._metrics.setdefault('latest_ml_foundation_readiness_gate_pass_count', 0)
+self._metrics.setdefault('latest_forbidden_ml_output_violation_count', 0)
+self._metrics.setdefault('latest_phase136_model_training_violation_count', 0)
+self._metrics.setdefault('latest_phase136_model_prediction_violation_count', 0)
+self._metrics.setdefault('latest_phase136_execution_violation_count', 0)
+self._metrics.setdefault('latest_phase136_activation_violation_count', 0)
+self._metrics.setdefault('latest_phase136_heavy_ml_dependency_violation_count', 0)

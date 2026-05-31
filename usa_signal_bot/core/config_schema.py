@@ -3456,3 +3456,93 @@ class MarketBehaviorReportingConfig:
     policy: Phase130BehaviorPolicyConfig = field(default_factory=Phase130BehaviorPolicyConfig)
     report_policy: Phase130ReportPolicyConfig = field(default_factory=Phase130ReportPolicyConfig)
     notifications: Phase130NotificationsConfig = field(default_factory=Phase130NotificationsConfig)
+
+
+@dataclass
+class Phase136MLPolicyConfig:
+    compute_values_local_only: bool = True
+    research_data_only: bool = True
+    local_fixture_only_default: bool = True
+    allow_network: bool = False
+    allow_paid_api: bool = False
+    allow_scraping: bool = False
+    allow_html_parsing: bool = False
+    allow_broker: bool = False
+    allow_order: bool = False
+    allow_paper_mutation: bool = False
+    allow_telegram_real_send: bool = False
+    allow_dashboard: bool = False
+    allow_deployment: bool = False
+    allow_model_training: bool = False
+    allow_model_prediction: bool = False
+    allow_heavy_ml_dependencies: bool = False
+    allow_background_daemon: bool = False
+    allow_scheduler: bool = False
+    produce_trade_signals: bool = False
+    produce_order_decisions: bool = False
+    produce_portfolio_weights: bool = False
+    produce_investment_advice: bool = False
+    strategy_activation_allowed: bool = False
+
+@dataclass
+class Phase136DatasetContractConfig:
+    enabled: bool = True
+    contract_version: str = "phase136.v1"
+    split_design_deferred_to_phase137: bool = True
+    dataset_assembly_deferred_to_phase137: bool = True
+    model_training_deferred: bool = True
+    model_prediction_deferred: bool = True
+    require_source_registry: bool = True
+    require_feature_contracts: bool = True
+    require_target_contracts: bool = True
+    require_label_contracts: bool = True
+    require_forbidden_output_fields: bool = True
+    require_contract_hash: bool = True
+
+@dataclass
+class Phase136LeakageGuardConfig:
+    enabled: bool = True
+    phase137_audit_required: bool = True
+    require_future_data_leakage_guard: bool = True
+    require_target_leakage_guard: bool = True
+    require_timestamp_alignment_guard: bool = True
+    require_train_test_overlap_guard: bool = True
+    require_scaler_fit_leakage_guard: bool = True
+    require_feature_selection_leakage_guard: bool = True
+
+@dataclass
+class Phase136NotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    preview_only: bool = True
+    telegram_real_send: bool = False
+
+@dataclass
+class MLFoundationConfig:
+    enabled: bool = True
+    current_phase: int = 136
+    final_phase: int = 160
+    require_phase135_final_closure: bool = True
+    final_closure_ingestion_enabled: bool = True
+    source_registry_enabled: bool = True
+    feature_contract_enabled: bool = True
+    target_contract_enabled: bool = True
+    label_contract_enabled: bool = True
+    dataset_contract_enabled: bool = True
+    leakage_guard_enabled: bool = True
+    non_activation_boundary_enabled: bool = True
+    governance_enabled: bool = True
+    readiness_gate_enabled: bool = True
+    write_ml_foundation_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_phase136_does_not_train_models: bool = True
+    warn_phase136_does_not_predict: bool = True
+    warn_ml_outputs_are_not_trade_signals: bool = True
+
+
+
+ml_foundation: MLFoundationConfig = field(default_factory=MLFoundationConfig)
+phase136_ml_policy: Phase136MLPolicyConfig = field(default_factory=Phase136MLPolicyConfig)
+phase136_dataset_contract: Phase136DatasetContractConfig = field(default_factory=Phase136DatasetContractConfig)
+phase136_leakage_guard: Phase136LeakageGuardConfig = field(default_factory=Phase136LeakageGuardConfig)
+phase136_notifications: Phase136NotificationsConfig = field(default_factory=Phase136NotificationsConfig)

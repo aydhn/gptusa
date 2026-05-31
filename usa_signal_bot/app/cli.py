@@ -435,6 +435,7 @@ def append_phase132_to_parser(subparsers):
     append_phase133_to_parser(subparsers)
     setup_phase132_cli(subparsers)
     setup_phase135_cli(subparsers)
+    setup_phase136_cli(subparsers)
 
 
 def regime_monitoring_info(args):
@@ -544,10 +545,88 @@ def setup_phase133_cli(subparsers):
 def append_phase133_to_parser(subparsers):
     setup_phase133_cli(subparsers)
 
+
+# --- ML Foundation CLI commands ---
+
+def ml_foundation_info(args):
+    """Display information about Phase 136 ML foundation."""
+    from ..ml_research.foundation.ml_foundation_reporting import ml_foundation_limitations_text
+    print(ml_foundation_limitations_text())
+
+def ml_foundation_ingest_final_closure(args):
+    from ..ml_research.foundation.final_closure_ingestion import ingest_latest_final_closure_review_from_store, final_closure_ingestion_to_text
+    from pathlib import Path
+    data_root = Path("data")
+    res = ingest_latest_final_closure_review_from_store(data_root)
+    print(final_closure_ingestion_to_text(res))
+
+def build_ml_dataset_contract_cmd(args):
+    from ..ml_research.foundation.ml_source_registry_builder import build_ml_source_artifact_references, build_ml_source_registry
+    from ..ml_research.foundation.ml_feature_contract_builder import build_default_ml_feature_contracts
+    from ..ml_research.foundation.ml_target_contract_builder import build_default_ml_target_contracts
+    from ..ml_research.foundation.ml_label_contract_builder import build_default_ml_label_contracts
+    from ..ml_research.foundation.ml_dataset_contract_builder import build_ml_dataset_contract, ml_dataset_contract_to_text
+
+    refs = build_ml_source_artifact_references(None, None)
+    registry = build_ml_source_registry(refs)
+    feat_c = build_default_ml_feature_contracts(registry)
+    tgt_c = build_default_ml_target_contracts()
+    lbl_c = build_default_ml_label_contracts()
+    ds_c = build_ml_dataset_contract(registry, feat_c, tgt_c, lbl_c)
+
+    print(ml_dataset_contract_to_text(ds_c))
+
+def ml_foundation_review(args):
+    from ..ml_research.foundation.ml_foundation_report import build_ml_foundation_full_review, ml_foundation_full_review_to_text
+    from ..ml_research.foundation.ml_foundation_store import write_ml_foundation_full_review_json, ml_foundation_reviews_dir
+    from pathlib import Path
+    rev = build_ml_foundation_full_review()
+    if getattr(args, 'write', False):
+        p = ml_foundation_reviews_dir(Path("data")) / f"{rev.review_id}.json"
+        write_ml_foundation_full_review_json(p, rev)
+        print(f"Wrote review to {p}")
+    else:
+        print(ml_foundation_full_review_to_text(rev))
+
+def ml_foundation_readiness_gate(args):
+    from ..ml_research.foundation.ml_foundation_report import build_ml_foundation_context
+    ctx = build_ml_foundation_context()
+    print(f"Ready for Phase 137: {ctx.ready_for_phase137}")
+
+def ml_foundation_summary(args):
+    from ..ml_research.foundation.ml_foundation_store import ml_foundation_store_summary
+    from pathlib import Path
+    res = ml_foundation_store_summary(Path("data"))
+    print(f"Store summary: {res}")
+
+def setup_phase136_cli(subparsers):
+    p_info = subparsers.add_parser("ml-foundation-info", help="Display Phase 136 ML foundation info")
+    p_info.set_defaults(func=ml_foundation_info)
+
+    p_ingest = subparsers.add_parser("ml-foundation-ingest-final-closure", help="Ingest Phase 135 final closure")
+    p_ingest.add_argument("--write", action="store_true", help="Write to storage")
+    p_ingest.set_defaults(func=ml_foundation_ingest_final_closure)
+
+    p_build = subparsers.add_parser("build-ml-dataset-contract", help="Build ML dataset contract")
+    p_build.add_argument("--write", action="store_true", help="Write to storage")
+    p_build.set_defaults(func=build_ml_dataset_contract_cmd)
+
+    p_review = subparsers.add_parser("ml-foundation-review", help="Generate full ML foundation review")
+    p_review.add_argument("--write", action="store_true", help="Write to storage")
+    p_review.set_defaults(func=ml_foundation_review)
+
+    p_gate = subparsers.add_parser("ml-foundation-readiness-gate", help="Check readiness gate")
+    p_gate.set_defaults(func=ml_foundation_readiness_gate)
+
+    p_summary = subparsers.add_parser("ml-foundation-summary", help="Show store summary")
+    p_summary.set_defaults(func=ml_foundation_summary)
+
+
 def main():
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest='command')
     setup_phase135_cli(subparsers)
+    setup_phase136_cli(subparsers)
     setup_phase114_cli(subparsers)
     setup_phase120_cli(subparsers)
 
@@ -1466,19 +1545,19 @@ def append_phase129_to_parser(subparsers):
     p3.add_argument("--write", action="store_true")
     p3.set_defaults(func=cmd_regime_transition_review)
 
-# @cli.command()
+# @click.command()
 def regime_alignment_info():
     """Phase 131 Regime Alignment Info"""
     click.echo("Phase 131 is regime-aware alignment, NOT activation/deployment.")
     click.echo("Overlay/compatibility outputs are NOT trade signals.")
 
-# @cli.command()
+# @click.command()
 # # @click.option
 def compute_regime_compatibility(write: bool):
     """Compute regime compatibility"""
     click.echo(f"Computed compatibility (write={write})")
 
-# @cli.command()
+# @click.command()
 # # @click.option
 def regime_alignment_review(write: bool):
     """Generate Phase 131 full review"""

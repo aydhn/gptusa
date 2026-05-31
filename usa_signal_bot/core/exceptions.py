@@ -2584,3 +2584,23 @@ class FinalClosureStoreError(USASignalBotError):
 
 class FinalClosureReportingError(USASignalBotError):
     pass
+
+
+class MLFoundationError(USASignalBotError): pass
+class RegimeFinalClosureIngestionError(MLFoundationError): pass
+class FinalClosureArtifactLoaderError(MLFoundationError): pass
+class MLSourceRegistryBuilderError(MLFoundationError): pass
+class MLDatasetContractBuilderError(MLFoundationError): pass
+class MLFeatureContractBuilderError(MLFoundationError): pass
+class MLTargetContractBuilderError(MLFoundationError): pass
+class MLLabelContractBuilderError(MLFoundationError): pass
+class MLLeakageGuardSpecError(MLFoundationError): pass
+class ForbiddenMLOutputValidationError(MLFoundationError): pass
+class MLNonActivationBoundaryError(MLFoundationError): pass
+class MLResearchGovernanceError(MLFoundationError): pass
+class MLFoundationReadinessGateError(MLFoundationError): pass
+class MLFoundationSchemaValidationError(MLFoundationError): pass
+class MLFoundationSafetyValidationError(MLFoundationError): pass
+class MLFoundationStoreError(MLFoundationError): pass
+class MLFoundationValidationError(MLFoundationError): pass
+class MLFoundationReportingError(MLFoundationError): pass
