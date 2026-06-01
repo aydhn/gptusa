@@ -347,3 +347,23 @@ self._metrics.setdefault('latest_phase136_heavy_ml_dependency_violation_count', 
 
 # Phase 113 Observability dummy
 def collect_phase113_metrics(): pass
+
+
+class Phase140Metrics:
+    latest_model_comparison_context_count: int = 0
+    latest_model_comparison_input_reference_count: int = 0
+    latest_normalized_metric_count: int = 0
+    latest_model_comparison_score_count: int = 0
+    latest_split_aware_comparison_count: int = 0
+    latest_regime_aware_comparison_count: int = 0
+    latest_model_ranking_entry_count: int = 0
+    latest_candidate_shortlist_count: int = 0
+    latest_calibration_readiness_profile_count: int = 0
+    latest_selection_governance_pass_count: int = 0
+    latest_model_comparison_readiness_gate_pass_count: int = 0
+    latest_phase140_live_inference_violation_count: int = 0
+    latest_phase140_calibration_fitting_violation_count: int = 0
+    latest_phase140_execution_violation_count: int = 0
+    latest_phase140_activation_violation_count: int = 0
+    latest_phase140_deployment_violation_count: int = 0
+    latest_phase140_trading_metric_violation_count: int = 0

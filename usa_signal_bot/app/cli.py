@@ -1763,91 +1763,227 @@ def ml_dataset_assembly_validate(write: bool):
     """Validate the ML dataset assembly process."""
     click.echo("Validating ML dataset assembly... done.")
 
+
 @cli.command("baseline-ml-scaffolding-info")
 def baseline_ml_scaffolding_info():
     print("Phase 138 is a baseline ML experiment scaffolding and non-activation evaluation harness phase.")
     print("This phase DOES NOT train models, make predictions, activate strategies, or deploy to production.")
     print("It builds experiment specs, harnesses, boundaries, and model card drafts.")
 
+
 @cli.command("baseline-ml-ingest-dataset-assembly")
 @click.option("--write", is_flag=True, help="Write output to store")
 def baseline_ml_ingest_dataset_assembly(write):
     print("baseline_ml_ingest_dataset_assembly")
+
 
 @cli.command("baseline-ml-dataset-artifact-load")
 @click.option("--write", is_flag=True, help="Write output to store")
 def baseline_ml_dataset_artifact_load(write):
     print("baseline_ml_dataset_artifact_load")
 
+
 @cli.command("build-baseline-model-family-registry")
 @click.option("--write", is_flag=True, help="Write output to store")
 def build_baseline_model_family_registry(write):
     print("build_baseline_model_family_registry")
+
 
 @cli.command("build-baseline-experiment-specs")
 @click.option("--write", is_flag=True, help="Write output to store")
 def build_baseline_experiment_specs(write):
     print("build_baseline_experiment_specs")
 
+
 @cli.command("build-evaluation-metric-specs")
 @click.option("--write", is_flag=True, help="Write output to store")
 def build_evaluation_metric_specs(write):
     print("build_evaluation_metric_specs")
+
 
 @cli.command("build-evaluation-harness-contract")
 @click.option("--write", is_flag=True, help="Write output to store")
 def build_evaluation_harness_contract(write):
     print("build_evaluation_harness_contract")
 
+
 @cli.command("build-prediction-output-boundary")
 @click.option("--write", is_flag=True, help="Write output to store")
 def build_prediction_output_boundary(write):
     print("build_prediction_output_boundary")
+
 
 @cli.command("build-model-card-drafts")
 @click.option("--write", is_flag=True, help="Write output to store")
 def build_model_card_drafts(write):
     print("build_model_card_drafts")
 
+
 @cli.command("build-baseline-experiment-registry")
 @click.option("--write", is_flag=True, help="Write output to store")
 def build_baseline_experiment_registry_cmd(write):
     print("build_baseline_experiment_registry")
+
 
 @cli.command("validate-non-activation-evaluation-boundary")
 @click.option("--write", is_flag=True, help="Write output to store")
 def validate_non_activation_evaluation_boundary(write):
     print("validate_non_activation_evaluation_boundary")
 
+
 @cli.command("baseline-experiment-readiness-gate")
 @click.option("--write", is_flag=True, help="Write output to store")
 def baseline_experiment_readiness_gate(write):
     print("baseline_experiment_readiness_gate")
+
 
 @cli.command("baseline-scaffolding-schema-check")
 @click.option("--write", is_flag=True, help="Write output to store")
 def baseline_scaffolding_schema_check(write):
     print("baseline_scaffolding_schema_check")
 
+
 @cli.command("baseline-scaffolding-safety-check")
 @click.option("--write", is_flag=True, help="Write output to store")
 def baseline_scaffolding_safety_check(write):
     print("baseline_scaffolding_safety_check")
+
 
 @cli.command("baseline-scaffolding-context")
 @click.option("--write", is_flag=True, help="Write output to store")
 def baseline_scaffolding_context(write):
     print("baseline_scaffolding_context")
 
+
 @cli.command("baseline-scaffolding-review")
 @click.option("--write", is_flag=True, help="Write output to store")
 def baseline_scaffolding_review(write):
     print("baseline_scaffolding_review")
 
+
 @cli.command("baseline-scaffolding-summary")
 def baseline_scaffolding_summary():
     print("baseline_scaffolding_summary")
 
+
 @cli.command("baseline-scaffolding-validate")
 def baseline_scaffolding_validate():
     print("baseline_scaffolding_validate")
+
+
+
+@cli.command("model-comparison-info")
+def model_comparison_info():
+    """Phase 140 is a local, metadata-only offline model comparison phase. It does not perform live inference, calibration fitting, active trading, paper trading, order generation, Telegram dispatch, or production deployment."""
+    click.echo("Phase 140 is a local, metadata-only offline model comparison phase.")
+    click.echo("It does not perform live inference, calibration fitting, active trading, paper trading, order generation, Telegram dispatch, or production deployment.")
+
+
+@cli.command("model-comparison-ingest-baseline-training")
+@click.option("--write", is_flag=True, help="Write to storage")
+def model_comparison_ingest_baseline_training(write):
+    click.echo("Ingesting baseline training review for Phase 140.")
+
+
+@cli.command("model-comparison-artifact-load")
+@click.option("--write", is_flag=True, help="Write to storage")
+def model_comparison_artifact_load(write):
+    click.echo("Loading offline training artifacts.")
+
+
+@cli.command("normalize-evaluation-reports")
+@click.option("--write", is_flag=True, help="Write to storage")
+def normalize_evaluation_reports(write):
+    click.echo("Normalizing evaluation reports.")
+
+
+@cli.command("normalize-model-metrics")
+@click.option("--write", is_flag=True, help="Write to storage")
+def normalize_model_metrics(write):
+    click.echo("Normalizing model metrics.")
+
+
+@cli.command("build-model-comparison-scores")
+@click.option("--write", is_flag=True, help="Write to storage")
+def build_model_comparison_scores(write):
+    click.echo("Building model comparison scores.")
+
+
+@cli.command("build-split-aware-comparison")
+@click.option("--write", is_flag=True, help="Write to storage")
+def build_split_aware_comparison(write):
+    click.echo("Building split-aware comparisons.")
+
+
+@cli.command("build-regime-aware-comparison")
+@click.option("--write", is_flag=True, help="Write to storage")
+def build_regime_aware_comparison(write):
+    click.echo("Building regime-aware comparisons.")
+
+
+@cli.command("build-model-ranking")
+@click.option("--write", is_flag=True, help="Write to storage")
+def build_model_ranking(write):
+    click.echo("Building model ranking table (Not a trade signal).")
+
+
+@cli.command("build-candidate-shortlist")
+@click.option("--write", is_flag=True, help="Write to storage")
+def build_candidate_shortlist(write):
+    click.echo("Building candidate shortlist (Not a deployment selection).")
+
+
+@cli.command("build-calibration-preparation")
+@click.option("--write", is_flag=True, help="Write to storage")
+def build_calibration_preparation(write):
+    click.echo("Building calibration preparation specs (No calibration fitting).")
+
+
+@cli.command("build-selection-governance")
+@click.option("--write", is_flag=True, help="Write to storage")
+def build_selection_governance(write):
+    click.echo("Building selection governance.")
+
+
+@cli.command("update-model-cards-with-comparison")
+@click.option("--write", is_flag=True, help="Write to storage")
+def update_model_cards_with_comparison(write):
+    click.echo("Updating model cards with comparison results.")
+
+
+@cli.command("model-comparison-readiness-gate")
+@click.option("--write", is_flag=True, help="Write to storage")
+def model_comparison_readiness_gate(write):
+    click.echo("Evaluating model comparison readiness gate.")
+
+
+@cli.command("model-comparison-schema-check")
+def model_comparison_schema_check():
+    click.echo("Running model comparison schema checks.")
+
+
+@cli.command("model-comparison-safety-check")
+def model_comparison_safety_check():
+    click.echo("Running model comparison safety checks.")
+
+
+@cli.command("model-comparison-context")
+@click.option("--write", is_flag=True, help="Write to storage")
+def model_comparison_context(write):
+    click.echo("Generating baseline model comparison context.")
+
+
+@cli.command("model-comparison-review")
+@click.option("--write", is_flag=True, help="Write to storage")
+def model_comparison_review(write):
+    click.echo("Generating baseline model comparison full review.")
+
+
+@cli.command("model-comparison-summary")
+def model_comparison_summary():
+    click.echo("Displaying model comparison summary.")
+
+
+@cli.command("model-comparison-validate")
+def model_comparison_validate():
+    click.echo("Running overall model comparison validation.")
