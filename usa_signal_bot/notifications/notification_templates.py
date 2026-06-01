@@ -199,3 +199,24 @@ def notifications_from_baseline_training_review(review: Any) -> list[Notificatio
     if len(review.model_registry.warnings) > 0:
         messages.append(format_non_activation_model_registry_warning_message(review.model_registry))
     return messages
+from typing import Any
+
+class NotificationMessage:
+    def __init__(self, message_type: str, content: str):
+        self.message_type = message_type
+        self.content = content
+
+def format_baseline_model_comparison_report_message(review: Any) -> NotificationMessage:
+    content = f"Baseline Model Comparison Report Generated. ID: {review.review_id}\n(Research metadata only. No active trading.)"
+    return NotificationMessage("BASELINE_MODEL_COMPARISON_REPORT", content)
+
+def format_model_ranking_warning_message(ranking: Any) -> NotificationMessage:
+    content = f"Model Ranking Warning. Rankable entries: {ranking.rankable_entry_count}"
+    return NotificationMessage("MODEL_RANKING_WARNING", content)
+
+def format_calibration_preparation_warning_message(profiles: list) -> NotificationMessage:
+    content = f"Calibration Preparation Warning for {len(profiles)} profiles."
+    return NotificationMessage("CALIBRATION_PREPARATION_WARNING", content)
+
+def notifications_from_model_comparison_review(review: Any) -> list[NotificationMessage]:
+    return [format_baseline_model_comparison_report_message(review)]

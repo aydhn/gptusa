@@ -2786,3 +2786,60 @@ class BaselineTrainingValidationError(USASignalBotError):
 
 class BaselineTrainingReportingError(USASignalBotError):
     pass
+
+class BaselineModelComparisonError(Exception):
+    pass
+
+class BaselineTrainingIngestionError(BaselineModelComparisonError):
+    pass
+
+class BaselineTrainingArtifactLoaderError(BaselineModelComparisonError):
+    pass
+
+class EvaluationReportNormalizerError(BaselineModelComparisonError):
+    pass
+
+class MetricNormalizationEngineError(BaselineModelComparisonError):
+    pass
+
+class ModelComparisonEngineError(BaselineModelComparisonError):
+    pass
+
+class SplitAwareComparisonError(BaselineModelComparisonError):
+    pass
+
+class RegimeAwareComparisonError(BaselineModelComparisonError):
+    pass
+
+class RankingEngineError(BaselineModelComparisonError):
+    pass
+
+class CandidateShortlistBuilderError(BaselineModelComparisonError):
+    pass
+
+class CalibrationPreparationBuilderError(BaselineModelComparisonError):
+    pass
+
+class SelectionGovernanceError(BaselineModelComparisonError):
+    pass
+
+class ModelCardComparisonUpdaterError(BaselineModelComparisonError):
+    pass
+
+class ModelComparisonReadinessGateError(BaselineModelComparisonError):
+    pass
+
+class ModelComparisonSchemaValidationError(BaselineModelComparisonError):
+    pass
+
+class ModelComparisonSafetyValidationError(BaselineModelComparisonError):
+    pass
+
+class ModelComparisonStoreError(BaselineModelComparisonError):
+    pass
+
+class ModelComparisonValidationError(BaselineModelComparisonError):
+    pass
+
+class ModelComparisonReportingError(BaselineModelComparisonError):
+    pass
