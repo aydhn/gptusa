@@ -288,3 +288,22 @@ def format_blend_preparation_warning_message(reports: list[Any]) -> Notification
 
 def notifications_from_ensemble_scaffolding_review(review: Any) -> list[NotificationMessage]:
     return [format_ensemble_scaffolding_report_message(review)]
+
+# Phase 113 Notifications dummy
+def format_provider_governance_report_message(review): pass
+def format_data_lineage_warning_message(graph): pass
+def format_audit_trail_warning_message(manifest): pass
+def notifications_from_provider_governance_review(review): pass
+
+
+def format_ensemble_prototype_report_message(review: 'EnsemblePrototypeFullReview') -> 'NotificationMessage':
+    pass
+
+def format_ensemble_evaluation_warning_message(reports: list) -> 'NotificationMessage':
+    pass
+
+def format_non_activation_ensemble_registry_warning_message(registry) -> 'NotificationMessage':
+    pass
+
+def notifications_from_ensemble_prototype_review(review: 'EnsemblePrototypeFullReview') -> list:
+    return []

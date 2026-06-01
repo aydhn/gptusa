@@ -2886,3 +2886,24 @@ class EnsembleSafetyValidationError(USASignalBotError): pass
 class EnsembleScaffoldingStoreError(USASignalBotError): pass
 class EnsembleScaffoldingValidationError(USASignalBotError): pass
 class EnsembleScaffoldingReportingError(USASignalBotError): pass
+
+class EnsemblePrototypeError(USASignalBotError): pass
+class EnsembleScaffoldingIngestionError(USASignalBotError): pass
+class EnsembleScaffoldingArtifactLoaderError(USASignalBotError): pass
+class EnsembleInputResolverError(USASignalBotError): pass
+class EnsemblePrototypeBuilderError(USASignalBotError): pass
+class OfflineEnsemblePredictionGeneratorError(USASignalBotError): pass
+class BlendDiagnosticsError(USASignalBotError): pass
+class CandidateAgreementDiagnosticsError(USASignalBotError): pass
+class EnsembleCandidateComparisonError(USASignalBotError): pass
+class OfflineEnsembleEvaluationMetricError(USASignalBotError): pass
+class OfflineEnsembleEvaluationReportError(USASignalBotError): pass
+class NonActivationEnsembleRegistryError(USASignalBotError): pass
+class EnsembleModelCardUpdaterError(USASignalBotError): pass
+class EnsemblePrototypeBoundaryError(USASignalBotError): pass
+class EnsemblePrototypeReadinessGateError(USASignalBotError): pass
+class EnsemblePrototypeSchemaValidationError(USASignalBotError): pass
+class EnsemblePrototypeSafetyValidationError(USASignalBotError): pass
+class EnsemblePrototypeStoreError(USASignalBotError): pass
+class EnsemblePrototypeValidationError(USASignalBotError): pass
+class EnsemblePrototypeReportingError(USASignalBotError): pass

@@ -3621,3 +3621,86 @@ ensemble_scaffolding:
     dry_run: true
     preview_only: true
     telegram_real_send: false
+
+
+ensemble_prototype_evaluation:
+  enabled: true
+  current_phase: 143
+  final_phase: 160
+  require_phase142_ensemble_scaffolding: true
+  ensemble_scaffolding_ingestion_enabled: true
+  scaffolding_artifact_loader_enabled: true
+  ensemble_input_resolver_enabled: true
+  prototype_spec_builder_enabled: true
+  offline_ensemble_prediction_enabled: true
+  blend_diagnostics_enabled: true
+  candidate_agreement_enabled: true
+  ensemble_candidate_comparison_enabled: true
+  offline_ensemble_evaluation_enabled: true
+  evaluation_report_enabled: true
+  non_activation_ensemble_registry_enabled: true
+  model_card_update_enabled: true
+  prototype_boundary_enabled: true
+  readiness_gate_enabled: true
+  write_ensemble_prototype_reports: true
+  warn_not_investment_advice: true
+  warn_ensemble_predictions_are_offline_only: true
+  warn_blend_coefficients_are_not_portfolio_weights: true
+  warn_ensemble_registry_is_not_deployment_registry: true
+
+phase143_ensemble_policy:
+  compute_values_local_only: true
+  research_data_only: true
+  offline_ml_research_only: true
+  local_fixture_only_default: true
+  allow_network: false
+  allow_paid_api: false
+  allow_scraping: false
+  allow_html_parsing: false
+  allow_broker: false
+  allow_order: false
+  allow_paper_mutation: false
+  allow_telegram_real_send: false
+  allow_dashboard: false
+  allow_deployment: false
+  allow_live_inference: false
+  allow_online_inference: false
+  allow_offline_ensemble_prediction: true
+  allow_threshold_optimization: false
+  allow_portfolio_optimization: false
+  allow_heavy_ml_dependencies: false
+  allow_background_daemon: false
+  allow_scheduler: false
+  produce_trade_signals: false
+  produce_order_decisions: false
+  produce_portfolio_weights: false
+  produce_investment_advice: false
+  strategy_activation_allowed: false
+
+phase143_ensemble_evaluation:
+  enabled: true
+  evaluate_train_split: true
+  evaluate_validation_split: true
+  evaluate_test_split: true
+  allow_pnl_metrics: false
+  allow_trading_metrics: false
+  allow_backtest_metrics: false
+  require_non_trading_metrics: true
+  require_blend_diagnostics: true
+  require_candidate_agreement: true
+  registry_version: "phase143.v1"
+
+phase143_blend_diagnostics:
+  enabled: true
+  coefficient_sum_required: 1.0
+  coefficient_non_negative_required: true
+  dominant_candidate_threshold: 0.80
+  forbid_portfolio_weight_language: true
+  forbid_allocation_language: true
+  forbid_target_weight_language: true
+
+phase143_notifications:
+  enabled: true
+  dry_run: true
+  preview_only: true
+  telegram_real_send: false

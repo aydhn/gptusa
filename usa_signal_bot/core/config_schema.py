@@ -3986,3 +3986,90 @@ class EnsembleScaffoldingConfig:
     phase142_candidate_grouping: Phase142CandidateGroupingConfig = field(default_factory=Phase142CandidateGroupingConfig)
     phase142_blend_policy: Phase142BlendPolicyConfig = field(default_factory=Phase142BlendPolicyConfig)
     phase142_notifications: Phase142NotificationsConfig = field(default_factory=Phase142NotificationsConfig)
+
+@dataclass
+class EnsemblePrototypeEvaluationConfig:
+    enabled: bool = True
+    current_phase: int = 143
+    final_phase: int = 160
+    require_phase142_ensemble_scaffolding: bool = True
+    ensemble_scaffolding_ingestion_enabled: bool = True
+    scaffolding_artifact_loader_enabled: bool = True
+    ensemble_input_resolver_enabled: bool = True
+    prototype_spec_builder_enabled: bool = True
+    offline_ensemble_prediction_enabled: bool = True
+    blend_diagnostics_enabled: bool = True
+    candidate_agreement_enabled: bool = True
+    ensemble_candidate_comparison_enabled: bool = True
+    offline_ensemble_evaluation_enabled: bool = True
+    evaluation_report_enabled: bool = True
+    non_activation_ensemble_registry_enabled: bool = True
+    model_card_update_enabled: bool = True
+    prototype_boundary_enabled: bool = True
+    readiness_gate_enabled: bool = True
+    write_ensemble_prototype_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_ensemble_predictions_are_offline_only: bool = True
+    warn_blend_coefficients_are_not_portfolio_weights: bool = True
+    warn_ensemble_registry_is_not_deployment_registry: bool = True
+
+@dataclass
+class Phase143EnsemblePolicyConfig:
+    compute_values_local_only: bool = True
+    research_data_only: bool = True
+    offline_ml_research_only: bool = True
+    local_fixture_only_default: bool = True
+    allow_network: bool = False
+    allow_paid_api: bool = False
+    allow_scraping: bool = False
+    allow_html_parsing: bool = False
+    allow_broker: bool = False
+    allow_order: bool = False
+    allow_paper_mutation: bool = False
+    allow_telegram_real_send: bool = False
+    allow_dashboard: bool = False
+    allow_deployment: bool = False
+    allow_live_inference: bool = False
+    allow_online_inference: bool = False
+    allow_offline_ensemble_prediction: bool = True
+    allow_threshold_optimization: bool = False
+    allow_portfolio_optimization: bool = False
+    allow_heavy_ml_dependencies: bool = False
+    allow_background_daemon: bool = False
+    allow_scheduler: bool = False
+    produce_trade_signals: bool = False
+    produce_order_decisions: bool = False
+    produce_portfolio_weights: bool = False
+    produce_investment_advice: bool = False
+    strategy_activation_allowed: bool = False
+
+@dataclass
+class Phase143EnsembleEvaluationConfig:
+    enabled: bool = True
+    evaluate_train_split: bool = True
+    evaluate_validation_split: bool = True
+    evaluate_test_split: bool = True
+    allow_pnl_metrics: bool = False
+    allow_trading_metrics: bool = False
+    allow_backtest_metrics: bool = False
+    require_non_trading_metrics: bool = True
+    require_blend_diagnostics: bool = True
+    require_candidate_agreement: bool = True
+    registry_version: str = "phase143.v1"
+
+@dataclass
+class Phase143BlendDiagnosticsConfig:
+    enabled: bool = True
+    coefficient_sum_required: float = 1.0
+    coefficient_non_negative_required: bool = True
+    dominant_candidate_threshold: float = 0.80
+    forbid_portfolio_weight_language: bool = True
+    forbid_allocation_language: bool = True
+    forbid_target_weight_language: bool = True
+
+@dataclass
+class Phase143NotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    preview_only: bool = True
+    telegram_real_send: bool = False
