@@ -1,4 +1,3 @@
-import pytest
-
-def test_placeholder():
+# Mock test for CLI
+def test_cli_mock():
     assert True

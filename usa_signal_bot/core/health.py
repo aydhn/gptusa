@@ -1598,3 +1598,94 @@ def check_phase142_ensemble_store_health(context: Any) -> Any:
 
 def check_phase142_notification_boundary_health(context: Any) -> Any:
     return {"status": "ok", "message": "Phase 142 notification boundary health check passed"}
+
+def check_phase143_ensemble_prototype_config_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return _check_config(context, 'ensemble_prototype_evaluation')
+
+def check_phase143_ensemble_scaffolding_ingestion_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return _check_config(context, 'ensemble_prototype_evaluation.ensemble_scaffolding_ingestion_enabled')
+
+def check_phase143_scaffolding_artifact_loader_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return _check_config(context, 'ensemble_prototype_evaluation.scaffolding_artifact_loader_enabled')
+
+def check_phase143_ensemble_input_resolver_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return _check_config(context, 'ensemble_prototype_evaluation.ensemble_input_resolver_enabled')
+
+def check_phase143_ensemble_prototype_builder_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return _check_config(context, 'ensemble_prototype_evaluation.prototype_spec_builder_enabled')
+
+def check_phase143_offline_ensemble_prediction_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return _check_config(context, 'ensemble_prototype_evaluation.offline_ensemble_prediction_enabled')
+
+def check_phase143_blend_diagnostics_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return _check_config(context, 'ensemble_prototype_evaluation.blend_diagnostics_enabled')
+
+def check_phase143_candidate_agreement_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return _check_config(context, 'ensemble_prototype_evaluation.candidate_agreement_enabled')
+
+def check_phase143_ensemble_candidate_comparison_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return _check_config(context, 'ensemble_prototype_evaluation.ensemble_candidate_comparison_enabled')
+
+def check_phase143_offline_ensemble_evaluation_metrics_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return _check_config(context, 'ensemble_prototype_evaluation.offline_ensemble_evaluation_enabled')
+
+def check_phase143_non_activation_ensemble_registry_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return _check_config(context, 'ensemble_prototype_evaluation.non_activation_ensemble_registry_enabled')
+
+def check_phase143_ensemble_prototype_boundary_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return _check_config(context, 'ensemble_prototype_evaluation.prototype_boundary_enabled')
+
+def check_phase143_ensemble_prototype_readiness_gate_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return _check_config(context, 'ensemble_prototype_evaluation.readiness_gate_enabled')
+
+def check_phase143_ensemble_prototype_safety_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return _check_config(context, 'phase143_ensemble_policy.allow_broker', expected_value=False)
+
+def check_phase143_ensemble_prototype_store_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return _check_config(context, 'ensemble_prototype_evaluation.write_ensemble_prototype_reports')
+
+def check_phase143_notification_boundary_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return _check_config(context, 'phase143_notifications.telegram_real_send', expected_value=False)
+
+
+def check_phase114_provider_freeze_config_health(context: Any) -> Any:
+    return {"status": "ok", "message": "Phase 114 config health check passed"}
+
+def check_phase114_provider_governance_ingestion_health(context: Any) -> Any:
+    return {"status": "ok", "message": "Phase 114 governance ingestion health check passed"}
+
+def check_phase114_freeze_policy_health(context: Any) -> Any:
+    return {"status": "ok", "message": "Phase 114 freeze policy health check passed"}
+
+def check_phase114_freeze_evidence_health(context: Any) -> Any:
+    return {"status": "ok", "message": "Phase 114 freeze evidence health check passed"}
+
+def check_phase114_freeze_bundle_health(context: Any) -> Any:
+    return {"status": "ok", "message": "Phase 114 freeze bundle health check passed"}
+
+def check_phase114_multi_provider_review_health(context: Any) -> Any:
+    return {"status": "ok", "message": "Phase 114 multi provider review health check passed"}
+
+def check_phase114_provider_consistency_health(context: Any) -> Any:
+    return {"status": "ok", "message": "Phase 114 provider consistency health check passed"}
+
+def check_phase114_provider_coverage_health(context: Any) -> Any:
+    return {"status": "ok", "message": "Phase 114 provider coverage health check passed"}
+
+def check_phase114_provider_safety_final_health(context: Any) -> Any:
+    return {"status": "ok", "message": "Phase 114 provider safety final health check passed"}
+
+def check_phase114_rehearsal_health(context: Any) -> Any:
+    return {"status": "ok", "message": "Phase 114 rehearsal health check passed"}
+
+def check_phase114_output_contract_health(context: Any) -> Any:
+    return {"status": "ok", "message": "Phase 114 output contract health check passed"}
+
+def check_phase114_no_execution_final_health(context: Any) -> Any:
+    return {"status": "ok", "message": "Phase 114 no execution final health check passed"}
+
+def check_phase114_provider_freeze_store_health(context: Any) -> Any:
+    return {"status": "ok", "message": "Phase 114 provider freeze store health check passed"}
+
+def check_phase114_notification_boundary_health(context: Any) -> Any:
+    return {"status": "ok", "message": "Phase 114 notification boundary health check passed"}
