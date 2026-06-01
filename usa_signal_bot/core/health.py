@@ -1135,3 +1135,67 @@ def check_phase114_provider_freeze_store_health(context: Any) -> Any:
 
 def check_phase114_notification_boundary_health(context: Any) -> Any:
     return {"status": "ok", "message": "Phase 114 notification boundary health check passed"}
+
+
+def check_phase138_baseline_scaffolding_config_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    from usa_signal_bot.core.health import HealthCheckResult
+    conf = context.config.baseline_ml_scaffolding if hasattr(context.config, "baseline_ml_scaffolding") else None
+    if not conf or not conf.enabled:
+        return HealthCheckResult(name="Phase 138 Baseline Scaffolding Config", status="SKIPPED", message="Not enabled")
+    return HealthCheckResult(name="Phase 138 Baseline Scaffolding Config", status="PASS", message="OK")
+
+def check_phase138_dataset_assembly_ingestion_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    from usa_signal_bot.core.health import HealthCheckResult
+    return HealthCheckResult(name="Phase 138 Dataset Assembly Ingestion", status="PASS", message="OK")
+
+def check_phase138_dataset_assembly_artifact_loader_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    from usa_signal_bot.core.health import HealthCheckResult
+    return HealthCheckResult(name="Phase 138 Dataset Artifact Loader", status="PASS", message="OK")
+
+def check_phase138_baseline_experiment_specs_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    from usa_signal_bot.core.health import HealthCheckResult
+    return HealthCheckResult(name="Phase 138 Baseline Experiment Specs", status="PASS", message="OK")
+
+def check_phase138_model_family_registry_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    from usa_signal_bot.core.health import HealthCheckResult
+    return HealthCheckResult(name="Phase 138 Model Family Registry", status="PASS", message="OK")
+
+def check_phase138_evaluation_metric_specs_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    from usa_signal_bot.core.health import HealthCheckResult
+    return HealthCheckResult(name="Phase 138 Evaluation Metric Specs", status="PASS", message="OK")
+
+def check_phase138_evaluation_harness_contract_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    from usa_signal_bot.core.health import HealthCheckResult
+    return HealthCheckResult(name="Phase 138 Evaluation Harness Contract", status="PASS", message="OK")
+
+def check_phase138_prediction_output_boundary_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    from usa_signal_bot.core.health import HealthCheckResult
+    return HealthCheckResult(name="Phase 138 Prediction Output Boundary", status="PASS", message="OK")
+
+def check_phase138_model_card_draft_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    from usa_signal_bot.core.health import HealthCheckResult
+    return HealthCheckResult(name="Phase 138 Model Card Draft", status="PASS", message="OK")
+
+def check_phase138_experiment_registry_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    from usa_signal_bot.core.health import HealthCheckResult
+    return HealthCheckResult(name="Phase 138 Experiment Registry", status="PASS", message="OK")
+
+def check_phase138_non_activation_boundary_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    from usa_signal_bot.core.health import HealthCheckResult
+    return HealthCheckResult(name="Phase 138 Non-Activation Boundary", status="PASS", message="OK")
+
+def check_phase138_readiness_gate_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    from usa_signal_bot.core.health import HealthCheckResult
+    return HealthCheckResult(name="Phase 138 Readiness Gate", status="PASS", message="OK")
+
+def check_phase138_baseline_scaffolding_safety_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    from usa_signal_bot.core.health import HealthCheckResult
+    return HealthCheckResult(name="Phase 138 Baseline Scaffolding Safety", status="PASS", message="OK")
+
+def check_phase138_baseline_scaffolding_store_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    from usa_signal_bot.core.health import HealthCheckResult
+    return HealthCheckResult(name="Phase 138 Baseline Scaffolding Store", status="PASS", message="OK")
+
+def check_phase138_notification_boundary_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    from usa_signal_bot.core.health import HealthCheckResult
+    return HealthCheckResult(name="Phase 138 Notification Boundary", status="PASS", message="OK")

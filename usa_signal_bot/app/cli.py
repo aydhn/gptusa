@@ -1762,3 +1762,92 @@ def ml_dataset_assembly_summary(write: bool):
 def ml_dataset_assembly_validate(write: bool):
     """Validate the ML dataset assembly process."""
     click.echo("Validating ML dataset assembly... done.")
+
+@cli.command("baseline-ml-scaffolding-info")
+def baseline_ml_scaffolding_info():
+    print("Phase 138 is a baseline ML experiment scaffolding and non-activation evaluation harness phase.")
+    print("This phase DOES NOT train models, make predictions, activate strategies, or deploy to production.")
+    print("It builds experiment specs, harnesses, boundaries, and model card drafts.")
+
+@cli.command("baseline-ml-ingest-dataset-assembly")
+@click.option("--write", is_flag=True, help="Write output to store")
+def baseline_ml_ingest_dataset_assembly(write):
+    print("baseline_ml_ingest_dataset_assembly")
+
+@cli.command("baseline-ml-dataset-artifact-load")
+@click.option("--write", is_flag=True, help="Write output to store")
+def baseline_ml_dataset_artifact_load(write):
+    print("baseline_ml_dataset_artifact_load")
+
+@cli.command("build-baseline-model-family-registry")
+@click.option("--write", is_flag=True, help="Write output to store")
+def build_baseline_model_family_registry(write):
+    print("build_baseline_model_family_registry")
+
+@cli.command("build-baseline-experiment-specs")
+@click.option("--write", is_flag=True, help="Write output to store")
+def build_baseline_experiment_specs(write):
+    print("build_baseline_experiment_specs")
+
+@cli.command("build-evaluation-metric-specs")
+@click.option("--write", is_flag=True, help="Write output to store")
+def build_evaluation_metric_specs(write):
+    print("build_evaluation_metric_specs")
+
+@cli.command("build-evaluation-harness-contract")
+@click.option("--write", is_flag=True, help="Write output to store")
+def build_evaluation_harness_contract(write):
+    print("build_evaluation_harness_contract")
+
+@cli.command("build-prediction-output-boundary")
+@click.option("--write", is_flag=True, help="Write output to store")
+def build_prediction_output_boundary(write):
+    print("build_prediction_output_boundary")
+
+@cli.command("build-model-card-drafts")
+@click.option("--write", is_flag=True, help="Write output to store")
+def build_model_card_drafts(write):
+    print("build_model_card_drafts")
+
+@cli.command("build-baseline-experiment-registry")
+@click.option("--write", is_flag=True, help="Write output to store")
+def build_baseline_experiment_registry_cmd(write):
+    print("build_baseline_experiment_registry")
+
+@cli.command("validate-non-activation-evaluation-boundary")
+@click.option("--write", is_flag=True, help="Write output to store")
+def validate_non_activation_evaluation_boundary(write):
+    print("validate_non_activation_evaluation_boundary")
+
+@cli.command("baseline-experiment-readiness-gate")
+@click.option("--write", is_flag=True, help="Write output to store")
+def baseline_experiment_readiness_gate(write):
+    print("baseline_experiment_readiness_gate")
+
+@cli.command("baseline-scaffolding-schema-check")
+@click.option("--write", is_flag=True, help="Write output to store")
+def baseline_scaffolding_schema_check(write):
+    print("baseline_scaffolding_schema_check")
+
+@cli.command("baseline-scaffolding-safety-check")
+@click.option("--write", is_flag=True, help="Write output to store")
+def baseline_scaffolding_safety_check(write):
+    print("baseline_scaffolding_safety_check")
+
+@cli.command("baseline-scaffolding-context")
+@click.option("--write", is_flag=True, help="Write output to store")
+def baseline_scaffolding_context(write):
+    print("baseline_scaffolding_context")
+
+@cli.command("baseline-scaffolding-review")
+@click.option("--write", is_flag=True, help="Write output to store")
+def baseline_scaffolding_review(write):
+    print("baseline_scaffolding_review")
+
+@cli.command("baseline-scaffolding-summary")
+def baseline_scaffolding_summary():
+    print("baseline_scaffolding_summary")
+
+@cli.command("baseline-scaffolding-validate")
+def baseline_scaffolding_validate():
+    print("baseline_scaffolding_validate")

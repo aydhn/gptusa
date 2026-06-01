@@ -2680,3 +2680,55 @@ class DependencyInjectionError(USASignalBotError):
 
 class AuditError(USASignalBotError):
     pass
+
+
+class BaselineMLScaffoldingError(USASignalBotError):
+    pass
+
+class MLDatasetAssemblyIngestionError(BaselineMLScaffoldingError):
+    pass
+
+class DatasetAssemblyArtifactLoaderError(BaselineMLScaffoldingError):
+    pass
+
+class BaselineExperimentSpecError(BaselineMLScaffoldingError):
+    pass
+
+class BaselineModelFamilyRegistryError(BaselineMLScaffoldingError):
+    pass
+
+class EvaluationMetricSpecError(BaselineMLScaffoldingError):
+    pass
+
+class EvaluationHarnessContractError(BaselineMLScaffoldingError):
+    pass
+
+class PredictionOutputBoundaryError(BaselineMLScaffoldingError):
+    pass
+
+class ModelCardDraftBuilderError(BaselineMLScaffoldingError):
+    pass
+
+class ExperimentRegistryBuilderError(BaselineMLScaffoldingError):
+    pass
+
+class NonActivationEvaluationBoundaryError(BaselineMLScaffoldingError):
+    pass
+
+class BaselineExperimentReadinessGateError(BaselineMLScaffoldingError):
+    pass
+
+class BaselineScaffoldingSchemaValidationError(BaselineMLScaffoldingError):
+    pass
+
+class BaselineScaffoldingSafetyValidationError(BaselineMLScaffoldingError):
+    pass
+
+class BaselineScaffoldingStoreError(BaselineMLScaffoldingError):
+    pass
+
+class BaselineScaffoldingValidationError(BaselineMLScaffoldingError):
+    pass
+
+class BaselineScaffoldingReportingError(BaselineMLScaffoldingError):
+    pass
