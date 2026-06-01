@@ -1,0 +1,9 @@
+{
+  "review_id": "dsar_blocked_12345678",
+  "ready_for_phase138": false,
+  "research_data_only": true,
+  "metadata_only": true,
+  "context": {
+    "ml_foundation_ingested": false
+  }
+}

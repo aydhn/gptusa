@@ -3227,3 +3227,77 @@ phase137_notifications:
   dry_run: true
   preview_only: true
   telegram_real_send: false
+
+baseline_ml_scaffolding:
+  enabled: true
+  current_phase: 138
+  final_phase: 160
+  require_phase137_dataset_assembly: true
+  dataset_assembly_ingestion_enabled: true
+  dataset_artifact_loader_enabled: true
+  experiment_specs_enabled: true
+  model_family_registry_enabled: true
+  metric_specs_enabled: true
+  evaluation_harness_contract_enabled: true
+  prediction_output_boundary_enabled: true
+  model_card_draft_enabled: true
+  experiment_registry_enabled: true
+  non_activation_boundary_enabled: true
+  readiness_gate_enabled: true
+  write_baseline_scaffolding_reports: true
+  warn_not_investment_advice: true
+  warn_phase138_does_not_train_models: true
+  warn_phase138_does_not_predict: true
+  warn_model_cards_are_drafts: true
+
+phase138_scaffolding_policy:
+  compute_values_local_only: true
+  research_data_only: true
+  local_fixture_only_default: true
+  allow_network: false
+  allow_paid_api: false
+  allow_scraping: false
+  allow_html_parsing: false
+  allow_broker: false
+  allow_order: false
+  allow_paper_mutation: false
+  allow_telegram_real_send: false
+  allow_dashboard: false
+  allow_deployment: false
+  allow_model_training: false
+  allow_model_prediction: false
+  allow_heavy_ml_dependencies: false
+  allow_background_daemon: false
+  allow_scheduler: false
+  produce_trade_signals: false
+  produce_order_decisions: false
+  produce_portfolio_weights: false
+  produce_investment_advice: false
+  strategy_activation_allowed: false
+
+phase138_evaluation_harness:
+  enabled: true
+  harness_version: "phase138.v1"
+  training_allowed_in_phase138: false
+  prediction_allowed_in_phase138: false
+  live_evaluation_allowed: false
+  broker_evaluation_allowed: false
+  paper_mutation_allowed: false
+  require_prediction_output_boundary: true
+  require_metric_specs: true
+  require_model_card_draft: true
+
+phase138_model_card:
+  enabled: true
+  draft_only: true
+  require_training_not_started_notice: true
+  require_prediction_not_started_notice: true
+  require_non_activation_notice: true
+  require_not_investment_advice_notice: true
+  block_trade_advice_language: true
+
+phase138_notifications:
+  enabled: true
+  dry_run: true
+  preview_only: true
+  telegram_real_send: false

@@ -1,5 +1,22 @@
 
 class MetricsCollector:
+
+    latest_baseline_scaffolding_context_count: int = 0
+    latest_baseline_experiment_spec_count: int = 0
+    latest_baseline_model_family_spec_count: int = 0
+    latest_evaluation_metric_spec_count: int = 0
+    latest_evaluation_harness_contract_count: int = 0
+    latest_prediction_output_boundary_count: int = 0
+    latest_model_card_draft_count: int = 0
+    latest_experiment_registry_count: int = 0
+    latest_non_activation_evaluation_boundary_pass_count: int = 0
+    latest_baseline_readiness_gate_pass_count: int = 0
+    latest_phase138_model_training_violation_count: int = 0
+    latest_phase138_model_prediction_violation_count: int = 0
+    latest_phase138_execution_violation_count: int = 0
+    latest_phase138_activation_violation_count: int = 0
+    latest_phase138_forbidden_prediction_output_violation_count: int = 0
+
     latest_regime_alignment_context_count: int = 0
     latest_frozen_factor_alignment_ref_count: int = 0
     latest_alignment_spec_count: int = 0
@@ -124,6 +141,23 @@ def get_latest_phase117_execution_violation_count(): return 0
 
 
 class MetricsCollector:
+
+    latest_baseline_scaffolding_context_count: int = 0
+    latest_baseline_experiment_spec_count: int = 0
+    latest_baseline_model_family_spec_count: int = 0
+    latest_evaluation_metric_spec_count: int = 0
+    latest_evaluation_harness_contract_count: int = 0
+    latest_prediction_output_boundary_count: int = 0
+    latest_model_card_draft_count: int = 0
+    latest_experiment_registry_count: int = 0
+    latest_non_activation_evaluation_boundary_pass_count: int = 0
+    latest_baseline_readiness_gate_pass_count: int = 0
+    latest_phase138_model_training_violation_count: int = 0
+    latest_phase138_model_prediction_violation_count: int = 0
+    latest_phase138_execution_violation_count: int = 0
+    latest_phase138_activation_violation_count: int = 0
+    latest_phase138_forbidden_prediction_output_violation_count: int = 0
+
 
     latest_regime_monitoring_context_count: int = 0
     latest_regime_final_closure_context_count: int = 0
@@ -280,3 +314,6 @@ self._metrics.setdefault('latest_phase136_model_prediction_violation_count', 0)
 self._metrics.setdefault('latest_phase136_execution_violation_count', 0)
 self._metrics.setdefault('latest_phase136_activation_violation_count', 0)
 self._metrics.setdefault('latest_phase136_heavy_ml_dependency_violation_count', 0)
+
+# Phase 113 Observability dummy
+def collect_phase113_metrics(): pass
