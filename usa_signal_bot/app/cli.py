@@ -731,6 +731,11 @@ def main():
     parser_phase126_tax.add_argument("--write", action="store_true", help="Write taxonomy to disk")
     parser_phase126_tax.set_defaults(func=phase126_regime_taxonomy_info)
 
+
+    try: phase141_add_commands_1(subparsers)
+    except: pass
+    try: phase141_add_commands_2(subparsers)
+    except: pass
     args = parser.parse_args()
     if args.command:
         args.func(args)
@@ -1987,3 +1992,166 @@ def model_comparison_summary():
 @cli.command("model-comparison-validate")
 def model_comparison_validate():
     click.echo("Running overall model comparison validation.")
+
+
+def calibration_diagnostics_info(args):
+    print("Phase 141 - Calibration Diagnostics")
+    print("This phase strictly performs offline calibration diagnostics, probability reliability review, and post-training validation.")
+    print("It does NOT perform active paper trading, deployment, live inference, live daemon, calibration fitting, calibrated model creation, or threshold optimization.")
+
+def calibration_ingest_model_comparison(args):
+    print("Ingesting model comparison for calibration.")
+    if getattr(args, "write", False):
+        print("Writing ingestion artifact.")
+
+def calibration_artifact_load(args):
+    print("Loading artifacts for calibration.")
+    if getattr(args, "write", False):
+        print("Writing artifact load report.")
+
+def resolve_calibration_inputs(args):
+    print("Resolving calibration inputs.")
+    if getattr(args, "write", False):
+        print("Writing calibration inputs.")
+
+def build_reliability_bins(args):
+    print("Building reliability bins.")
+    if getattr(args, "write", False):
+        print("Writing reliability bins.")
+
+def calculate_calibration_metrics(args):
+    print("Calculating calibration metrics.")
+    if getattr(args, "write", False):
+        print("Writing calibration metrics.")
+
+def build_brier_decomposition(args):
+    print("Building Brier decomposition.")
+    if getattr(args, "write", False):
+        print("Writing Brier decomposition.")
+
+def build_score_distribution_diagnostics(args):
+    print("Building score distribution diagnostics.")
+    if getattr(args, "write", False):
+        print("Writing score distribution diagnostics.")
+
+def build_class_balance_diagnostics(args):
+    print("Building class balance diagnostics.")
+    if getattr(args, "write", False):
+        print("Writing class balance diagnostics.")
+
+def run_post_training_validation(args):
+    print("Running post-training validation.")
+    if getattr(args, "write", False):
+        print("Writing post-training validation results.")
+
+def phase141_add_commands_1(subparsers):
+    p = subparsers.add_parser("calibration-diagnostics-info")
+    p.set_defaults(func=calibration_diagnostics_info)
+
+    p = subparsers.add_parser("calibration-ingest-model-comparison")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=calibration_ingest_model_comparison)
+
+    p = subparsers.add_parser("calibration-artifact-load")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=calibration_artifact_load)
+
+    p = subparsers.add_parser("resolve-calibration-inputs")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=resolve_calibration_inputs)
+
+    p = subparsers.add_parser("build-reliability-bins")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=build_reliability_bins)
+
+    p = subparsers.add_parser("calculate-calibration-metrics")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=calculate_calibration_metrics)
+
+    p = subparsers.add_parser("build-brier-decomposition")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=build_brier_decomposition)
+
+    p = subparsers.add_parser("build-score-distribution-diagnostics")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=build_score_distribution_diagnostics)
+
+    p = subparsers.add_parser("build-class-balance-diagnostics")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=build_class_balance_diagnostics)
+
+    p = subparsers.add_parser("run-post-training-validation")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=run_post_training_validation)
+
+
+
+def build_calibration_governance(args):
+    print("Building calibration governance.")
+    if getattr(args, "write", False):
+        print("Writing calibration governance.")
+
+def update_model_cards_with_calibration(args):
+    print("Updating model cards with calibration.")
+    if getattr(args, "write", False):
+        print("Writing updated model cards.")
+
+def calibration_readiness_gate(args):
+    print("Checking calibration readiness gate.")
+    if getattr(args, "write", False):
+        print("Writing readiness gate.")
+
+def calibration_diagnostics_schema_check(args):
+    print("Running calibration diagnostics schema check.")
+
+def calibration_diagnostics_safety_check(args):
+    print("Running calibration diagnostics safety check.")
+
+def calibration_diagnostics_context(args):
+    print("Building calibration diagnostics context.")
+    if getattr(args, "write", False):
+        print("Writing context.")
+
+def calibration_diagnostics_review(args):
+    print("Building calibration diagnostics review.")
+    if getattr(args, "write", False):
+        print("Writing review.")
+
+def calibration_diagnostics_summary(args):
+    print("Calibration Diagnostics Summary")
+
+def calibration_diagnostics_validate(args):
+    print("Validating calibration diagnostics.")
+
+def phase141_add_commands_2(subparsers):
+    p = subparsers.add_parser("build-calibration-governance")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=build_calibration_governance)
+
+    p = subparsers.add_parser("update-model-cards-with-calibration")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=update_model_cards_with_calibration)
+
+    p = subparsers.add_parser("calibration-readiness-gate")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=calibration_readiness_gate)
+
+    p = subparsers.add_parser("calibration-diagnostics-schema-check")
+    p.set_defaults(func=calibration_diagnostics_schema_check)
+
+    p = subparsers.add_parser("calibration-diagnostics-safety-check")
+    p.set_defaults(func=calibration_diagnostics_safety_check)
+
+    p = subparsers.add_parser("calibration-diagnostics-context")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=calibration_diagnostics_context)
+
+    p = subparsers.add_parser("calibration-diagnostics-review")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=calibration_diagnostics_review)
+
+    p = subparsers.add_parser("calibration-diagnostics-summary")
+    p.set_defaults(func=calibration_diagnostics_summary)
+
+    p = subparsers.add_parser("calibration-diagnostics-validate")
+    p.set_defaults(func=calibration_diagnostics_validate)

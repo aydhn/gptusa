@@ -128,6 +128,8 @@ class MetricsCollector:
         self.metrics["latest_final_closure_safety_violation_count"] = 0
         self.metrics["latest_phase125_execution_violation_count"] = 0
         self.metrics["latest_phase125_deployment_violation_count"] = 0
+        self.phase141 = Phase141Metrics()
+
 
 
 
@@ -310,6 +312,7 @@ latest_phase129_activation_violation_count = 0
 def collect_phase113_metrics(): pass
 
 
+class Phase135MetricsDummy:
         latest_research_freeze_context_count: int = 0
         latest_monitoring_validation_result_count: int = 0
         latest_drift_report_document_count: int = 0
@@ -367,3 +370,30 @@ class Phase140Metrics:
     latest_phase140_activation_violation_count: int = 0
     latest_phase140_deployment_violation_count: int = 0
     latest_phase140_trading_metric_violation_count: int = 0
+
+
+class Phase141Metrics:
+    def __init__(self):
+        self.metrics = {
+            "latest_calibration_diagnostics_context_count": 0,
+            "latest_calibration_candidate_count": 0,
+            "latest_calibration_input_profile_count": 0,
+            "latest_reliability_bin_count": 0,
+            "latest_calibration_metric_count": 0,
+            "latest_ece_value": 0.0,
+            "latest_mce_value": 0.0,
+            "latest_brier_score": 0.0,
+            "latest_brier_decomposition_count": 0,
+            "latest_score_distribution_diagnostic_count": 0,
+            "latest_class_balance_diagnostic_count": 0,
+            "latest_post_training_validation_pass_count": 0,
+            "latest_calibration_governance_pass_count": 0,
+            "latest_calibration_readiness_gate_pass_count": 0,
+            "latest_phase141_live_inference_violation_count": 0,
+            "latest_phase141_calibration_fitting_violation_count": 0,
+            "latest_phase141_calibrated_model_violation_count": 0,
+            "latest_phase141_threshold_optimization_violation_count": 0,
+            "latest_phase141_execution_violation_count": 0,
+            "latest_phase141_activation_violation_count": 0,
+            "latest_phase141_deployment_violation_count": 0
+        }

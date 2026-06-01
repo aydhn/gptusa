@@ -1,51 +1,39 @@
-1. *Create missing files in `docs` directory.*
-   - Create documentation files: `PHASE_139_LOCAL_BASELINE_ML_TRAINING.md`, `BASELINE_TRAINING_JOBS.md`, `OFFLINE_BASELINE_TRAINERS.md`, `OFFLINE_PREDICTION_ARTIFACTS.md`, `OFFLINE_EVALUATION_METRICS.md`, `NON_ACTIVATION_MODEL_REGISTRY.md`, `BASELINE_MODEL_CARD_UPDATES.md`, `BASELINE_TRAINING_SAFETY_GUARDS.md`, `PHASE_139_LIMITATIONS.md`, `PHASE_139_SUMMARY.md`.
-
-2. *Update `core` module.*
-   - Append new enums in `usa_signal_bot/core/enums.py`.
-   - Update config dataclasses in `usa_signal_bot/core/config_schema.py`.
-   - Add new exceptions in `usa_signal_bot/core/exceptions.py`.
-   - Add new config keys in `usa_signal_bot/core/config.py` and `config/default.yaml`.
-   - Add new health checks in `usa_signal_bot/core/health.py`.
-   - Ensure backwards compatibility in all `core` updates.
-
-3. *Update `app`, `quality`, `observability`, and `notifications` modules.*
-   - Add CLI commands to `usa_signal_bot/app/cli.py`.
-   - Add quality scorecard attributes in `usa_signal_bot/quality/quality_models.py` and update evaluators.
-   - Add metric attributes in `usa_signal_bot/observability/metrics_collector.py`.
-   - Add notification templates in `usa_signal_bot/notifications/notification_templates.py`.
-
-4. *Create `baseline_training` module files in `usa_signal_bot/ml_research/baseline_training`.*
-   - Implement dataclasses in `phase139_models.py`.
-   - Implement scaffolding ingestion in `baseline_scaffolding_ingestion.py`.
-   - Implement scaffolding artifact loader in `baseline_scaffolding_artifact_loader.py`.
-   - Implement dataset loader in `baseline_dataset_loader.py`.
-   - Implement training job builder in `baseline_training_job_builder.py`.
-   - Implement offline trainers in `baseline_trainers.py` (Dummy, Persistence, Moving Average, Lightweight Linear).
-   - Implement offline prediction generator in `offline_prediction_generator.py`.
-   - Implement offline evaluation metrics calculator in `offline_evaluation_metrics.py`.
-   - Implement offline evaluation report in `offline_evaluation_report.py`.
-   - Implement non-activation model registry in `non_activation_model_registry.py`.
-   - Implement model card updater in `model_card_updater.py`.
-   - Implement baseline training boundary in `baseline_training_boundary.py`.
-   - Implement baseline training readiness gate in `baseline_training_readiness_gate.py`.
-   - Implement schema validator in `baseline_training_schema_validator.py`.
-   - Implement safety validator in `baseline_training_safety_validator.py`.
-   - Implement training report in `baseline_training_report.py`.
-   - Implement training store in `baseline_training_store.py`.
-   - Implement training validation in `baseline_training_validation.py`.
-   - Implement training reporting in `baseline_training_reporting.py`.
-   - Add `README.md` for the module.
-
-5. *Create Test fixtures and modules.*
-   - Create test fixtures in `tests/fixtures/ml_baseline_training`.
-   - Create test modules in `tests/` to verify logic and models.
-
-6. *Verify implementation.*
-   - Check there are no heavy ML dependencies (sklearn, torch, xgboost, etc).
-   - Ensure the phase produces no execution language, no live/broker/paper interaction, only offline baseline ML training and non-activation registry updates.
-   - Complete pre-commit step using `pre_commit_instructions` tool.
-   - Run `pytest` to confirm successful implementation of Phase 139.
-
-7. *Complete pre commit steps*
-   - Complete pre commit steps to make sure proper testing, verifications, reviews and reflections are done.
+1. **Update enums.py**: Add enum definitions for Phase 141 (CalibrationDiagnosticsStatus, CalibrationDiagnosticsDecision, CalibrationInputKind, ProbabilityReliabilityKind, ReliabilityBinStrategy, CalibrationMetricKind, CalibrationDiagnosticSeverity, CalibrationDiagnosticStatus, PostTrainingValidationRuleKind, CalibrationGovernanceRuleKind, CalibrationGovernanceStatus, CalibrationReadinessStatus, CalibrationReadinessRuleKind, CalibrationDiagnosticsQuality, CalibrationDiagnosticsRiskFlag, CalibrationDiagnosticsReportType). And update `NotificationType` (add CALIBRATION_DIAGNOSTICS_REPORT, PROBABILITY_RELIABILITY_WARNING, POST_TRAINING_VALIDATION_WARNING) and `AlertType` (add CALIBRATION_DIAGNOSTICS_BLOCKED, PROBABILITY_RELIABILITY_BLOCKED, POST_TRAINING_VALIDATION_BLOCKED) inside `usa_signal_bot/core/enums.py`.
+2. **Update exceptions.py**: Add exception classes for Phase 141 (`CalibrationDiagnosticsError`, `ModelComparisonIngestionError`, `ModelComparisonArtifactLoaderError`, `CalibrationInputResolverError`, `ReliabilityBinningEngineError`, `CalibrationMetricCalculatorError`, `BrierDecompositionError`, `ScoreDistributionDiagnosticsError`, `ClassBalanceDiagnosticsError`, `PostTrainingValidationError`, `CalibrationGovernanceError`, `ModelCardCalibrationUpdaterError`, `CalibrationReadinessGateError`, `CalibrationDiagnosticsSchemaValidationError`, `CalibrationDiagnosticsSafetyValidationError`, `CalibrationDiagnosticsStoreError`, `CalibrationDiagnosticsValidationError`, `CalibrationDiagnosticsReportingError`) to `usa_signal_bot/core/exceptions.py`.
+3. **Update config_schema.py**: Add configuration dataclasses (`CalibrationDiagnosticsConfig`, `Phase141CalibrationPolicyConfig`, `Phase141ReliabilityConfig`, `Phase141PostTrainingValidationConfig`, `Phase141NotificationsConfig`) to `usa_signal_bot/core/config_schema.py`.
+4. **Update config/default.yaml & config/local.example.yaml**: Add the new configuration blocks (`calibration_diagnostics`, `phase141_calibration_policy`, `phase141_reliability`, `phase141_post_training_validation`, `phase141_notifications`).
+5. **Verify core file updates**: Run `python -c "import usa_signal_bot.core.enums; import usa_signal_bot.core.exceptions; import usa_signal_bot.core.config_schema"` to verify imports are still working.
+6. **Create phase141_models.py**: Define dataclass models and factory functions for Phase 141 in `usa_signal_bot/ml_research/calibration_diagnostics/phase141_models.py`.
+7. **Create ingestion and loader modules**: Create `model_comparison_ingestion.py` and `model_comparison_artifact_loader.py` in `usa_signal_bot/ml_research/calibration_diagnostics/`.
+8. **Create resolver and binning modules**: Create `calibration_input_resolver.py` and `reliability_binning_engine.py` in `usa_signal_bot/ml_research/calibration_diagnostics/`.
+9. **Create calculation modules**: Create `calibration_metric_calculator.py` and `brier_decomposition.py` in `usa_signal_bot/ml_research/calibration_diagnostics/`.
+10. **Create diagnostics modules**: Create `score_distribution_diagnostics.py` and `class_balance_diagnostics.py` in `usa_signal_bot/ml_research/calibration_diagnostics/`.
+11. **Create validation and governance modules**: Create `post_training_validation.py` and `calibration_governance.py` in `usa_signal_bot/ml_research/calibration_diagnostics/`.
+12. **Create reporting and readiness modules**: Create `model_card_calibration_updater.py` and `calibration_readiness_gate.py` in `usa_signal_bot/ml_research/calibration_diagnostics/`.
+13. **Create schema and safety modules**: Create `calibration_diagnostics_schema_validator.py` and `calibration_diagnostics_safety_validator.py` in `usa_signal_bot/ml_research/calibration_diagnostics/`.
+14. **Create store and report modules**: Create `calibration_diagnostics_store.py`, `calibration_diagnostics_report.py`, `calibration_diagnostics_validation.py`, `calibration_diagnostics_reporting.py`, and `__init__.py` in `usa_signal_bot/ml_research/calibration_diagnostics/`.
+15. **Verify created modules**: List the files in `usa_signal_bot/ml_research/calibration_diagnostics/` to ensure all were created correctly.
+16. **Update core/health.py 1**: Add health checks for `phase141_calibration_diagnostics_config_health`, `phase141_model_comparison_ingestion_health`, `phase141_model_comparison_artifact_loader_health`, `phase141_calibration_input_resolver_health`, `phase141_reliability_binning_health`, `phase141_calibration_metric_health`, `phase141_brier_decomposition_health`, `phase141_score_distribution_health`.
+17. **Update core/health.py 2**: Add health checks for `phase141_class_balance_health`, `phase141_post_training_validation_health`, `phase141_calibration_governance_health`, `phase141_calibration_readiness_gate_health`, `phase141_calibration_diagnostics_safety_health`, `phase141_calibration_diagnostics_store_health`, `phase141_notification_boundary_health`.
+18. **Update app/cli.py 1**: Add CLI commands `calibration-diagnostics-info`, `calibration-ingest-model-comparison`, `calibration-artifact-load`, `resolve-calibration-inputs`, `build-reliability-bins`, `calculate-calibration-metrics`, `build-brier-decomposition`, `build-score-distribution-diagnostics`, `build-class-balance-diagnostics`, `run-post-training-validation`.
+19. **Update app/cli.py 2**: Add CLI commands `build-calibration-governance`, `update-model-cards-with-calibration`, `calibration-readiness-gate`, `calibration-diagnostics-schema-check`, `calibration-diagnostics-safety-check`, `calibration-diagnostics-context`, `calibration-diagnostics-review`, `calibration-diagnostics-summary`, `calibration-diagnostics-validate`.
+20. **Update observability/metrics_collector.py**: Add 21 new Phase 141 metrics (e.g. `latest_calibration_diagnostics_context_count`, `latest_calibration_candidate_count`, etc.) to `usa_signal_bot/observability/metrics_collector.py`.
+21. **Update quality/data_quality_evaluator.py**: Update quality scorecards and blockers for phase 141 (16 metrics like `phase141_model_comparison_ingestion_score`) to `usa_signal_bot/quality/data_quality_evaluator.py`.
+22. **Update notifications/notification_templates.py**: Add notification templates (`format_calibration_diagnostics_report_message`, `format_probability_reliability_warning_message`, `format_post_training_validation_warning_message`, `notifications_from_calibration_diagnostics_review`) to `usa_signal_bot/notifications/notification_templates.py`.
+23. **Verify integration file updates**: Use `grep` or `python -m py_compile` to verify syntax of updated `health.py`, `cli.py`, `metrics_collector.py`, `data_quality_evaluator.py`, and `notification_templates.py`.
+24. **Create docs 1**: Write `PHASE_141_CALIBRATION_DIAGNOSTICS.md`, `PROBABILITY_RELIABILITY_REVIEW.md`, `RELIABILITY_BINNING_AND_ECE.md`, `BRIER_DECOMPOSITION.md` in `docs/`.
+25. **Create docs 2**: Write `SCORE_DISTRIBUTION_DIAGNOSTICS.md`, `POST_TRAINING_VALIDATION.md`, `CALIBRATION_GOVERNANCE.md` in `docs/`.
+26. **Create docs 3**: Write `CALIBRATION_DIAGNOSTICS_SAFETY_GUARDS.md`, `PHASE_141_LIMITATIONS.md`, `PHASE_141_SUMMARY.md` in `docs/`.
+27. **Verify docs**: List files in `docs/` to ensure new md files are created.
+28. **Create fixtures 1**: Create `sample_model_comparison_review.json`, `sample_model_comparison_review_blocked.json`, `sample_model_ranking_table.json`, `sample_candidate_shortlist.json`, `sample_calibration_readiness_profiles.jsonl` in `tests/fixtures/ml_calibration_diagnostics/`.
+29. **Create fixtures 2**: Create `sample_selection_governance.json`, `sample_offline_prediction_artifacts.jsonl`, `sample_offline_prediction_frame.csv`, `sample_label_matrix.csv`, `sample_target_matrix.csv` in `tests/fixtures/ml_calibration_diagnostics/`.
+30. **Create fixtures 3**: Create `sample_reliability_bins_expected.json`, `sample_calibration_metrics_expected.json`, `sample_brier_decomposition_expected.json`, `sample_score_distribution_expected.json`, `sample_class_balance_expected.json` in `tests/fixtures/ml_calibration_diagnostics/`.
+31. **Create fixtures 4**: Create `sample_post_training_validation_expected.json`, `sample_calibration_governance_expected.json`, `sample_invalid_calibration_diagnostics_payload.json`, `sample_forbidden_calibration_diagnostics_columns.csv`, `sample_unsafe_calibration_diagnostics_text.txt` in `tests/fixtures/ml_calibration_diagnostics/`.
+32. **Create tests 1**: Create `test_phase141_models.py`, `test_model_comparison_ingestion.py`, `test_model_comparison_artifact_loader.py`, `test_calibration_input_resolver.py` in `tests/`.
+33. **Create tests 2**: Create `test_reliability_binning_engine.py`, `test_calibration_metric_calculator.py`, `test_brier_decomposition.py`, `test_score_distribution_diagnostics.py` in `tests/`.
+34. **Create tests 3**: Create `test_class_balance_diagnostics.py`, `test_post_training_validation.py`, `test_calibration_governance.py`, `test_model_card_calibration_updater.py` in `tests/`.
+35. **Create tests 4**: Create `test_calibration_diagnostics_schema_validator.py`, `test_calibration_diagnostics_safety_validator.py`, `test_calibration_readiness_gate.py`, `test_calibration_diagnostics_reporting.py` in `tests/`.
+36. **Create tests 5**: Create `test_calibration_diagnostics_store.py`, `test_calibration_diagnostics_validation.py`, `test_calibration_diagnostics_report.py`, `test_cli.py` in `tests/`.
+37. **Verify tests and fixtures**: List files in `tests/` and `tests/fixtures/ml_calibration_diagnostics/` to ensure test files were created.
+38. **Execute tests**: Run `pytest` to ensure all tests pass.
+39. **Complete pre-commit steps**: Complete pre commit steps to make sure proper testing, verifications, reviews and reflections are done.
