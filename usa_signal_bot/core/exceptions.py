@@ -2732,3 +2732,57 @@ class BaselineScaffoldingValidationError(BaselineMLScaffoldingError):
 
 class BaselineScaffoldingReportingError(BaselineMLScaffoldingError):
     pass
+
+class BaselineTrainingError(USASignalBotError):
+    pass
+
+class BaselineScaffoldingIngestionError(USASignalBotError):
+    pass
+
+class BaselineScaffoldingArtifactLoaderError(USASignalBotError):
+    pass
+
+class BaselineDatasetLoaderError(USASignalBotError):
+    pass
+
+class BaselineTrainingJobBuilderError(USASignalBotError):
+    pass
+
+class BaselineTrainerError(USASignalBotError):
+    pass
+
+class OfflinePredictionGeneratorError(USASignalBotError):
+    pass
+
+class OfflineEvaluationMetricError(USASignalBotError):
+    pass
+
+class OfflineEvaluationReportError(USASignalBotError):
+    pass
+
+class NonActivationModelRegistryError(USASignalBotError):
+    pass
+
+class ModelCardUpdaterError(USASignalBotError):
+    pass
+
+class BaselineTrainingBoundaryError(USASignalBotError):
+    pass
+
+class BaselineTrainingReadinessGateError(USASignalBotError):
+    pass
+
+class BaselineTrainingSchemaValidationError(USASignalBotError):
+    pass
+
+class BaselineTrainingSafetyValidationError(USASignalBotError):
+    pass
+
+class BaselineTrainingStoreError(USASignalBotError):
+    pass
+
+class BaselineTrainingValidationError(USASignalBotError):
+    pass
+
+class BaselineTrainingReportingError(USASignalBotError):
+    pass

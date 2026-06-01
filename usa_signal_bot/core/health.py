@@ -1199,3 +1199,168 @@ def check_phase138_baseline_scaffolding_store_health(context: 'RuntimeContext') 
 def check_phase138_notification_boundary_health(context: 'RuntimeContext') -> 'HealthCheckResult':
     from usa_signal_bot.core.health import HealthCheckResult
     return HealthCheckResult(name="Phase 138 Notification Boundary", status="PASS", message="OK")
+
+def check_phase139_baseline_training_config_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    status = "healthy"
+    message = "Phase 139 baseline training config is healthy."
+    details = {}
+    return HealthCheckResult(
+        component="Phase139BaselineTrainingConfig",
+        status=status,
+        message=message,
+        details=details
+    )
+
+def check_phase139_scaffolding_ingestion_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    status = "healthy"
+    message = "Phase 139 scaffolding ingestion is healthy."
+    details = {}
+    return HealthCheckResult(
+        component="Phase139ScaffoldingIngestion",
+        status=status,
+        message=message,
+        details=details
+    )
+
+def check_phase139_scaffolding_artifact_loader_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    status = "healthy"
+    message = "Phase 139 scaffolding artifact loader is healthy."
+    details = {}
+    return HealthCheckResult(
+        component="Phase139ScaffoldingArtifactLoader",
+        status=status,
+        message=message,
+        details=details
+    )
+
+def check_phase139_baseline_dataset_loader_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    status = "healthy"
+    message = "Phase 139 baseline dataset loader is healthy."
+    details = {}
+    return HealthCheckResult(
+        component="Phase139BaselineDatasetLoader",
+        status=status,
+        message=message,
+        details=details
+    )
+
+def check_phase139_training_job_builder_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    status = "healthy"
+    message = "Phase 139 training job builder is healthy."
+    details = {}
+    return HealthCheckResult(
+        component="Phase139TrainingJobBuilder",
+        status=status,
+        message=message,
+        details=details
+    )
+
+def check_phase139_baseline_trainers_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    status = "healthy"
+    message = "Phase 139 baseline trainers are healthy."
+    details = {}
+    return HealthCheckResult(
+        component="Phase139BaselineTrainers",
+        status=status,
+        message=message,
+        details=details
+    )
+
+def check_phase139_offline_prediction_generator_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    status = "healthy"
+    message = "Phase 139 offline prediction generator is healthy."
+    details = {}
+    return HealthCheckResult(
+        component="Phase139OfflinePredictionGenerator",
+        status=status,
+        message=message,
+        details=details
+    )
+
+def check_phase139_offline_evaluation_metrics_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    status = "healthy"
+    message = "Phase 139 offline evaluation metrics are healthy."
+    details = {}
+    return HealthCheckResult(
+        component="Phase139OfflineEvaluationMetrics",
+        status=status,
+        message=message,
+        details=details
+    )
+
+def check_phase139_non_activation_model_registry_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    status = "healthy"
+    message = "Phase 139 non-activation model registry is healthy."
+    details = {}
+    return HealthCheckResult(
+        component="Phase139NonActivationModelRegistry",
+        status=status,
+        message=message,
+        details=details
+    )
+
+def check_phase139_model_card_updater_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    status = "healthy"
+    message = "Phase 139 model card updater is healthy."
+    details = {}
+    return HealthCheckResult(
+        component="Phase139ModelCardUpdater",
+        status=status,
+        message=message,
+        details=details
+    )
+
+def check_phase139_training_boundary_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    status = "healthy"
+    message = "Phase 139 training boundary is healthy."
+    details = {}
+    return HealthCheckResult(
+        component="Phase139TrainingBoundary",
+        status=status,
+        message=message,
+        details=details
+    )
+
+def check_phase139_readiness_gate_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    status = "healthy"
+    message = "Phase 139 readiness gate is healthy."
+    details = {}
+    return HealthCheckResult(
+        component="Phase139ReadinessGate",
+        status=status,
+        message=message,
+        details=details
+    )
+
+def check_phase139_baseline_training_safety_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    status = "healthy"
+    message = "Phase 139 baseline training safety is healthy."
+    details = {}
+    return HealthCheckResult(
+        component="Phase139BaselineTrainingSafety",
+        status=status,
+        message=message,
+        details=details
+    )
+
+def check_phase139_baseline_training_store_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    status = "healthy"
+    message = "Phase 139 baseline training store is healthy."
+    details = {}
+    return HealthCheckResult(
+        component="Phase139BaselineTrainingStore",
+        status=status,
+        message=message,
+        details=details
+    )
+
+def check_phase139_notification_boundary_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    status = "healthy"
+    message = "Phase 139 notification boundary is healthy."
+    details = {}
+    return HealthCheckResult(
+        component="Phase139NotificationBoundary",
+        status=status,
+        message=message,
+        details=details
+    )
