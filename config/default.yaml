@@ -3539,3 +3539,85 @@ phase141_notifications:
   dry_run: true
   preview_only: true
   telegram_real_send: false
+
+ensemble_scaffolding:
+  enabled: true
+  current_phase: 142
+  final_phase: 160
+  require_phase141_calibration_diagnostics: true
+  calibration_diagnostics_ingestion_enabled: true
+  calibration_artifact_loader_enabled: true
+  candidate_resolver_enabled: true
+  family_specs_enabled: true
+  candidate_grouping_enabled: true
+  blend_policy_enabled: true
+  blend_coefficient_planning_enabled: true
+  prediction_correlation_enabled: true
+  diversity_diagnostics_enabled: true
+  complementarity_profiles_enabled: true
+  calibration_aware_eligibility_enabled: true
+  ensemble_preparation_report_enabled: true
+  ensemble_governance_enabled: true
+  non_activation_boundary_enabled: true
+  model_card_update_enabled: true
+  readiness_gate_enabled: true
+  write_ensemble_scaffolding_reports: true
+  warn_not_investment_advice: true
+  warn_blend_coefficients_are_not_portfolio_weights: true
+  warn_phase142_does_not_fit_ensembles: true
+  warn_phase142_does_not_create_final_ensemble_predictions: true
+  phase142_ensemble_policy:
+    compute_values_local_only: true
+    research_data_only: true
+    offline_ml_research_only: true
+    local_fixture_only_default: true
+    allow_network: false
+    allow_paid_api: false
+    allow_scraping: false
+    allow_html_parsing: false
+    allow_broker: false
+    allow_order: false
+    allow_paper_mutation: false
+    allow_telegram_real_send: false
+    allow_dashboard: false
+    allow_deployment: false
+    allow_live_inference: false
+    allow_online_inference: false
+    allow_ensemble_fitting: false
+    allow_final_ensemble_prediction: false
+    allow_calibration_fitting: false
+    allow_calibrated_model_creation: false
+    allow_threshold_optimization: false
+    allow_portfolio_optimization: false
+    allow_heavy_ml_dependencies: false
+    allow_background_daemon: false
+    allow_scheduler: false
+    produce_trade_signals: false
+    produce_order_decisions: false
+    produce_portfolio_weights: false
+    produce_investment_advice: false
+    strategy_activation_allowed: false
+  phase142_candidate_grouping:
+    enabled: true
+    max_group_size: 3
+    min_group_size: 2
+    build_top_ranked_group: true
+    build_calibration_aware_group: true
+    build_diversity_placeholder_group: true
+    require_research_only_candidates: true
+    require_no_live_eligibility: true
+  phase142_blend_policy:
+    enabled: true
+    coefficient_sum_required: 1.0
+    coefficient_non_negative_required: true
+    coefficient_cap: 0.80
+    forbid_portfolio_weight_language: true
+    forbid_allocation_language: true
+    forbid_target_weight_language: true
+    fitting_performed: false
+    final_ensemble_prediction_created: false
+  phase142_notifications:
+    enabled: true
+    dry_run: true
+    preview_only: true
+    telegram_real_send: false

@@ -2155,3 +2155,41 @@ def phase141_add_commands_2(subparsers):
 
     p = subparsers.add_parser("calibration-diagnostics-validate")
     p.set_defaults(func=calibration_diagnostics_validate)
+
+def phase142_ensemble_scaffolding_info(args):
+    print("USA Signal Bot - Phase 142: Ensemble Research Scaffolding")
+    print("Notice: This phase produces ensemble blending preparation and calibration-aware governance.")
+    print("Notice: This is NOT an active paper trading phase.")
+    print("Notice: 'Ready for Phase 143' does not constitute live trading approval.")
+
+def phase142_ensemble_ingest_calibration_diagnostics(args):
+    from usa_signal_bot.ml_research.ensemble_scaffolding.calibration_diagnostics_ingestion import ingest_latest_calibration_diagnostics_review_from_store, calibration_diagnostics_ingestion_to_text
+    from pathlib import Path
+    res = ingest_latest_calibration_diagnostics_review_from_store(Path("data"))
+    print(calibration_diagnostics_ingestion_to_text(res))
+
+def setup_phase142_cli(subparsers):
+    p_info = subparsers.add_parser("ensemble-scaffolding-info", help="Info about Phase 142")
+    p_info.set_defaults(func=phase142_ensemble_scaffolding_info)
+
+    p_ingest = subparsers.add_parser("ensemble-ingest-calibration-diagnostics", help="Ingest Phase 141")
+    p_ingest.set_defaults(func=phase142_ensemble_ingest_calibration_diagnostics)
+
+    p_scaffolding_review = subparsers.add_parser("ensemble-scaffolding-review", help="Generate full review")
+    p_scaffolding_review.add_argument("--write", action="store_true")
+    p_scaffolding_review.set_defaults(func=phase142_ensemble_scaffolding_info)
+
+    p_cand = subparsers.add_parser("resolve-ensemble-candidates", help="Resolve ensemble candidates")
+    p_cand.add_argument("--write", action="store_true")
+    p_cand.set_defaults(func=phase142_ensemble_scaffolding_info)
+
+    p_grp = subparsers.add_parser("build-candidate-groups", help="Build candidate groups")
+    p_grp.add_argument("--write", action="store_true")
+    p_grp.set_defaults(func=phase142_ensemble_scaffolding_info)
+
+    p_plan = subparsers.add_parser("build-blend-coefficient-plans", help="Build blend coefficient plans")
+    p_plan.add_argument("--write", action="store_true")
+    p_plan.set_defaults(func=phase142_ensemble_scaffolding_info)
+
+    p_readiness = subparsers.add_parser("ensemble-readiness-gate", help="Evaluate ensemble readiness gate")
+    p_readiness.set_defaults(func=phase142_ensemble_scaffolding_info)

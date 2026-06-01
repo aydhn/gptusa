@@ -1,0 +1,1 @@
+# Phase 142 Ensemble Research Scaffolding\n\nPhase 142 produces ensemble blending preparation and calibration-aware governance. It does not perform ensemble fitting, final ensemble prediction, live inference, threshold optimization or deployment.\n\nCLI:\n- python -m usa_signal_bot ensemble-scaffolding-info\n- python -m usa_signal_bot resolve-ensemble-candidates --write\n
