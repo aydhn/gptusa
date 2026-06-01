@@ -1,0 +1,1 @@
+# Candidate Grouping and Diversity\n\nGroups are formed by rank, calibration, and diversity. This is not strategy activation.\n

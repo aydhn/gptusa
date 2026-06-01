@@ -18,6 +18,27 @@ class DataQualityEvaluator:
         self.phase133_context_degradation_score = 0.0
         self.phase133_readiness_gate_score = 0.0
         self.phase133_safety_score = 0.0
+        self.phase142_calibration_diagnostics_ingestion_score = 0.0
+        self.phase142_artifact_loader_score = 0.0
+        self.phase142_ensemble_candidate_score = 0.0
+        self.phase142_family_spec_score = 0.0
+        self.phase142_candidate_group_score = 0.0
+        self.phase142_blend_policy_score = 0.0
+        self.phase142_blend_coefficient_plan_score = 0.0
+        self.phase142_prediction_correlation_score = 0.0
+        self.phase142_diversity_profile_score = 0.0
+        self.phase142_complementarity_profile_score = 0.0
+        self.phase142_calibration_aware_eligibility_score = 0.0
+        self.phase142_ensemble_preparation_report_score = 0.0
+        self.phase142_ensemble_governance_score = 0.0
+        self.phase142_non_activation_boundary_score = 0.0
+        self.phase142_readiness_gate_score = 0.0
+        self.phase142_safety_score = 0.0
+        self.phase142_non_execution_compliance_score = 0.0
+        self.phase142_no_live_inference_compliance_score = 0.0
+        self.phase142_no_ensemble_fitting_compliance_score = 0.0
+        self.phase142_no_deployment_compliance_score = 0.0
+
         self.phase138_dataset_assembly_ingestion_score = 100.0
         self.phase138_dataset_artifact_loader_score = 100.0
         self.phase138_baseline_experiment_spec_score = 100.0

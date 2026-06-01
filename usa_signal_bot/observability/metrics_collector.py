@@ -18,6 +18,28 @@ class MetricsCollector:
     latest_phase138_forbidden_prediction_output_violation_count: int = 0
 
     latest_regime_alignment_context_count: int = 0
+    latest_ensemble_scaffolding_context_count: int = 0
+    latest_ensemble_candidate_count: int = 0
+    latest_ensemble_family_spec_count: int = 0
+    latest_candidate_group_count: int = 0
+    latest_blend_policy_count: int = 0
+    latest_blend_coefficient_plan_count: int = 0
+    latest_prediction_correlation_count: int = 0
+    latest_diversity_profile_count: int = 0
+    latest_complementarity_profile_count: int = 0
+    latest_calibration_aware_eligibility_count: int = 0
+    latest_ensemble_preparation_report_count: int = 0
+    latest_ensemble_governance_pass_count: int = 0
+    latest_non_activation_ensemble_boundary_pass_count: int = 0
+    latest_ensemble_readiness_gate_pass_count: int = 0
+    latest_phase142_ensemble_fitting_violation_count: int = 0
+    latest_phase142_final_ensemble_prediction_violation_count: int = 0
+    latest_phase142_live_inference_violation_count: int = 0
+    latest_phase142_execution_violation_count: int = 0
+    latest_phase142_activation_violation_count: int = 0
+    latest_phase142_deployment_violation_count: int = 0
+    latest_phase142_portfolio_weight_language_violation_count: int = 0
+
     latest_frozen_factor_alignment_ref_count: int = 0
     latest_alignment_spec_count: int = 0
     latest_behavior_overlay_result_count: int = 0

@@ -1,0 +1,1 @@
+# Ensemble Family Specs\n\nDefines Simple Average, Coefficient Blend, Rank-Weighted, Calibration-Aware, and Diversity-Aware research ensembles.\n

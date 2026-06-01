@@ -276,3 +276,15 @@ def notifications_from_calibration_diagnostics_review(review: 'Any') -> list:
     msg3 = format_post_training_validation_warning_message([])
     if msg3: res.append(msg3)
     return res
+
+def format_ensemble_scaffolding_report_message(review: Any) -> NotificationMessage:
+    return NotificationMessage(f"Ensemble Scaffolding Review {review.review_id} generated. Ready for Phase 143: {review.readiness_gate.ready_for_phase143}.")
+
+def format_ensemble_governance_warning_message(governance: Any) -> NotificationMessage:
+    return NotificationMessage(f"Ensemble Governance Warnings: {len(governance.warnings)}")
+
+def format_blend_preparation_warning_message(reports: list[Any]) -> NotificationMessage:
+    return NotificationMessage(f"Blend Preparation warnings found in {len(reports)} reports.")
+
+def notifications_from_ensemble_scaffolding_review(review: Any) -> list[NotificationMessage]:
+    return [format_ensemble_scaffolding_report_message(review)]

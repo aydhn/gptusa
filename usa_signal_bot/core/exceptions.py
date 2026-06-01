@@ -2863,3 +2863,26 @@ class CalibrationDiagnosticsSafetyValidationError(UsaSignalBotError): pass
 class CalibrationDiagnosticsStoreError(UsaSignalBotError): pass
 class CalibrationDiagnosticsValidationError(UsaSignalBotError): pass
 class CalibrationDiagnosticsReportingError(UsaSignalBotError): pass
+
+class EnsembleScaffoldingError(USASignalBotError): pass
+class CalibrationDiagnosticsIngestionError(USASignalBotError): pass
+class CalibrationDiagnosticsArtifactLoaderError(USASignalBotError): pass
+class EnsembleCandidateResolverError(USASignalBotError): pass
+class EnsembleFamilySpecError(USASignalBotError): pass
+class CandidateGroupingBuilderError(USASignalBotError): pass
+class BlendPolicyBuilderError(USASignalBotError): pass
+class BlendCoefficientPlannerError(USASignalBotError): pass
+class PredictionCorrelationDiagnosticsError(USASignalBotError): pass
+class DiversityDiagnosticsError(USASignalBotError): pass
+class ComplementarityProfileBuilderError(USASignalBotError): pass
+class CalibrationAwareEligibilityError(USASignalBotError): pass
+class EnsemblePreparationReportError(USASignalBotError): pass
+class EnsembleGovernanceError(USASignalBotError): pass
+class NonActivationEnsembleBoundaryError(USASignalBotError): pass
+class ModelCardEnsembleUpdaterError(USASignalBotError): pass
+class EnsembleReadinessGateError(USASignalBotError): pass
+class EnsembleSchemaValidationError(USASignalBotError): pass
+class EnsembleSafetyValidationError(USASignalBotError): pass
+class EnsembleScaffoldingStoreError(USASignalBotError): pass
+class EnsembleScaffoldingValidationError(USASignalBotError): pass
+class EnsembleScaffoldingReportingError(USASignalBotError): pass

@@ -3890,3 +3890,99 @@ class CalibrationDiagnosticsConfig:
     phase141_reliability: Phase141ReliabilityConfig = field(default_factory=Phase141ReliabilityConfig)
     phase141_post_training_validation: Phase141PostTrainingValidationConfig = field(default_factory=Phase141PostTrainingValidationConfig)
     phase141_notifications: Phase141NotificationsConfig = field(default_factory=Phase141NotificationsConfig)
+
+
+@dataclass
+class Phase142EnsemblePolicyConfig:
+    compute_values_local_only: bool = True
+    research_data_only: bool = True
+    offline_ml_research_only: bool = True
+    local_fixture_only_default: bool = True
+    allow_network: bool = False
+    allow_paid_api: bool = False
+    allow_scraping: bool = False
+    allow_html_parsing: bool = False
+    allow_broker: bool = False
+    allow_order: bool = False
+    allow_paper_mutation: bool = False
+    allow_telegram_real_send: bool = False
+    allow_dashboard: bool = False
+    allow_deployment: bool = False
+    allow_live_inference: bool = False
+    allow_online_inference: bool = False
+    allow_ensemble_fitting: bool = False
+    allow_final_ensemble_prediction: bool = False
+    allow_calibration_fitting: bool = False
+    allow_calibrated_model_creation: bool = False
+    allow_threshold_optimization: bool = False
+    allow_portfolio_optimization: bool = False
+    allow_heavy_ml_dependencies: bool = False
+    allow_background_daemon: bool = False
+    allow_scheduler: bool = False
+    produce_trade_signals: bool = False
+    produce_order_decisions: bool = False
+    produce_portfolio_weights: bool = False
+    produce_investment_advice: bool = False
+    strategy_activation_allowed: bool = False
+
+@dataclass
+class Phase142CandidateGroupingConfig:
+    enabled: bool = True
+    max_group_size: int = 3
+    min_group_size: int = 2
+    build_top_ranked_group: bool = True
+    build_calibration_aware_group: bool = True
+    build_diversity_placeholder_group: bool = True
+    require_research_only_candidates: bool = True
+    require_no_live_eligibility: bool = True
+
+@dataclass
+class Phase142BlendPolicyConfig:
+    enabled: bool = True
+    coefficient_sum_required: float = 1.0
+    coefficient_non_negative_required: bool = True
+    coefficient_cap: float = 0.8
+    forbid_portfolio_weight_language: bool = True
+    forbid_allocation_language: bool = True
+    forbid_target_weight_language: bool = True
+    fitting_performed: bool = False
+    final_ensemble_prediction_created: bool = False
+
+@dataclass
+class Phase142NotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    preview_only: bool = True
+    telegram_real_send: bool = False
+
+@dataclass
+class EnsembleScaffoldingConfig:
+    enabled: bool = True
+    current_phase: int = 142
+    final_phase: int = 160
+    require_phase141_calibration_diagnostics: bool = True
+    calibration_diagnostics_ingestion_enabled: bool = True
+    calibration_artifact_loader_enabled: bool = True
+    candidate_resolver_enabled: bool = True
+    family_specs_enabled: bool = True
+    candidate_grouping_enabled: bool = True
+    blend_policy_enabled: bool = True
+    blend_coefficient_planning_enabled: bool = True
+    prediction_correlation_enabled: bool = True
+    diversity_diagnostics_enabled: bool = True
+    complementarity_profiles_enabled: bool = True
+    calibration_aware_eligibility_enabled: bool = True
+    ensemble_preparation_report_enabled: bool = True
+    ensemble_governance_enabled: bool = True
+    non_activation_boundary_enabled: bool = True
+    model_card_update_enabled: bool = True
+    readiness_gate_enabled: bool = True
+    write_ensemble_scaffolding_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_blend_coefficients_are_not_portfolio_weights: bool = True
+    warn_phase142_does_not_fit_ensembles: bool = True
+    warn_phase142_does_not_create_final_ensemble_predictions: bool = True
+    phase142_ensemble_policy: Phase142EnsemblePolicyConfig = field(default_factory=Phase142EnsemblePolicyConfig)
+    phase142_candidate_grouping: Phase142CandidateGroupingConfig = field(default_factory=Phase142CandidateGroupingConfig)
+    phase142_blend_policy: Phase142BlendPolicyConfig = field(default_factory=Phase142BlendPolicyConfig)
+    phase142_notifications: Phase142NotificationsConfig = field(default_factory=Phase142NotificationsConfig)

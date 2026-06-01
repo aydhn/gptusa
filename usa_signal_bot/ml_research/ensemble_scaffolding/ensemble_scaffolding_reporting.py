@@ -1,0 +1,21 @@
+from typing import Any, Dict
+from .phase142_models import *
+
+def calibration_diagnostics_ingestion_result_to_text(item: CalibrationDiagnosticsIngestionResult) -> str: return f"Ingestion {item.ingestion_id}"
+def ensemble_candidate_reference_to_text(item: EnsembleCandidateReference) -> str: return f"Candidate {item.candidate_ref_id}"
+def ensemble_family_spec_to_text(item: EnsembleFamilySpec) -> str: return f"Family {item.family_id}"
+def candidate_group_spec_to_text(item: CandidateGroupSpec, limit: int = 300) -> str: return f"Group {item.group_id}"
+def blend_policy_spec_to_text(item: BlendPolicySpec) -> str: return f"Policy {item.policy_id}"
+def blend_coefficient_plan_to_text(item: BlendCoefficientPlan, limit: int = 300) -> str: return f"Plan {item.plan_id}"
+def prediction_correlation_diagnostic_to_text(item: PredictionCorrelationDiagnostic) -> str: return f"Diagnostic {item.diagnostic_id}"
+def candidate_diversity_profile_to_text(item: CandidateDiversityProfile) -> str: return f"Diversity {item.profile_id}"
+def complementarity_profile_to_text(item: ComplementarityProfile) -> str: return f"Complementarity {item.profile_id}"
+def calibration_aware_eligibility_profile_to_text(item: CalibrationAwareEligibilityProfile) -> str: return f"Eligibility {item.profile_id}"
+def ensemble_preparation_report_to_text(item: EnsemblePreparationReport, limit: int = 300) -> str: return f"Report {item.report_id}"
+def ensemble_governance_to_text(item: EnsembleGovernanceResult, limit: int = 300) -> str: return f"Governance Passed: {item.governance_passed}"
+def non_activation_ensemble_boundary_to_text(item: NonActivationEnsembleBoundaryResult, limit: int = 300) -> str: return f"Boundary Passed: {item.boundary_passed}"
+def model_card_ensemble_update_to_text(item: ModelCardEnsembleUpdate, limit: int = 300) -> str: return f"Update {item.update_id}"
+def ensemble_readiness_gate_to_text(item: EnsembleReadinessGate, limit: int = 300) -> str: return f"Gate Ready: {item.ready_for_phase143}"
+def ensemble_scaffolding_context_to_text(item: EnsembleScaffoldingContext, limit: int = 300) -> str: return f"Context {item.context_id}"
+def ensemble_scaffolding_full_review_to_text(item: EnsembleScaffoldingFullReview, limit: int = 300) -> str: return f"Review {item.review_id}"
+def ensemble_scaffolding_store_summary_to_text(summary: Dict[str, Any]) -> str: return f"Store Summary: {summary}"
