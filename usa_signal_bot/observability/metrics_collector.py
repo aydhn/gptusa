@@ -60,6 +60,21 @@ class MetricsCollector:
     latest_phase133_activation_violation_count: int = 0
     latest_phase133_daemon_violation_count: int = 0
     def __init__(self):
+        self.latest_baseline_training_context_count: int = 0
+        self.latest_baseline_training_job_count: int = 0
+        self.latest_fitted_baseline_model_count: int = 0
+        self.latest_offline_prediction_artifact_count: int = 0
+        self.latest_offline_evaluation_report_count: int = 0
+        self.latest_non_activation_model_registry_entry_count: int = 0
+        self.latest_model_card_update_count: int = 0
+        self.latest_baseline_training_boundary_pass_count: int = 0
+        self.latest_baseline_training_readiness_gate_pass_count: int = 0
+        self.latest_phase139_live_inference_violation_count: int = 0
+        self.latest_phase139_execution_violation_count: int = 0
+        self.latest_phase139_activation_violation_count: int = 0
+        self.latest_phase139_deployment_violation_count: int = 0
+        self.latest_phase139_forbidden_prediction_output_violation_count: int = 0
+        self.latest_phase139_heavy_ml_dependency_violation_count: int = 0
         self.latest_provider_freeze_context_count = 0
         self.latest_provider_expansion_freeze_count = 0
         self.latest_provider_freeze_valid_count = 0
@@ -188,6 +203,21 @@ class MetricsCollector:
     latest_phase133_activation_violation_count: int = 0
     latest_phase133_daemon_violation_count: int = 0
     def __init__(self):
+        self.latest_baseline_training_context_count: int = 0
+        self.latest_baseline_training_job_count: int = 0
+        self.latest_fitted_baseline_model_count: int = 0
+        self.latest_offline_prediction_artifact_count: int = 0
+        self.latest_offline_evaluation_report_count: int = 0
+        self.latest_non_activation_model_registry_entry_count: int = 0
+        self.latest_model_card_update_count: int = 0
+        self.latest_baseline_training_boundary_pass_count: int = 0
+        self.latest_baseline_training_readiness_gate_pass_count: int = 0
+        self.latest_phase139_live_inference_violation_count: int = 0
+        self.latest_phase139_execution_violation_count: int = 0
+        self.latest_phase139_activation_violation_count: int = 0
+        self.latest_phase139_deployment_violation_count: int = 0
+        self.latest_phase139_forbidden_prediction_output_violation_count: int = 0
+        self.latest_phase139_heavy_ml_dependency_violation_count: int = 0
         self.metrics = {
 
             "latest_market_behavior_context_count": 0,

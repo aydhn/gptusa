@@ -3301,3 +3301,81 @@ phase138_notifications:
   dry_run: true
   preview_only: true
   telegram_real_send: false
+
+
+baseline_training:
+  enabled: true
+  current_phase: 139
+  final_phase: 160
+  require_phase138_baseline_scaffolding: true
+  scaffolding_ingestion_enabled: true
+  scaffolding_artifact_loader_enabled: true
+  dataset_loader_enabled: true
+  training_job_builder_enabled: true
+  baseline_trainers_enabled: true
+  offline_prediction_enabled: true
+  offline_evaluation_enabled: true
+  evaluation_report_enabled: true
+  non_activation_model_registry_enabled: true
+  model_card_update_enabled: true
+  training_boundary_enabled: true
+  readiness_gate_enabled: true
+  write_baseline_training_reports: true
+  warn_not_investment_advice: true
+  warn_phase139_training_is_offline_only: true
+  warn_phase139_predictions_are_offline_evaluation_only: true
+  warn_model_registry_is_not_deployment_registry: true
+
+phase139_training_policy:
+  compute_values_local_only: true
+  research_data_only: true
+  offline_ml_research_only: true
+  local_fixture_only_default: true
+  allow_network: false
+  allow_paid_api: false
+  allow_scraping: false
+  allow_html_parsing: false
+  allow_broker: false
+  allow_order: false
+  allow_paper_mutation: false
+  allow_telegram_real_send: false
+  allow_dashboard: false
+  allow_deployment: false
+  allow_local_offline_model_training: true
+  allow_offline_evaluation_prediction: true
+  allow_live_inference: false
+  allow_online_inference: false
+  allow_heavy_ml_dependencies: false
+  allow_background_daemon: false
+  allow_scheduler: false
+  produce_trade_signals: false
+  produce_order_decisions: false
+  produce_portfolio_weights: false
+  produce_investment_advice: false
+  strategy_activation_allowed: false
+
+phase139_baseline_models:
+  enabled: true
+  train_dummy_classification: true
+  train_dummy_regression: true
+  train_persistence_baseline: true
+  train_moving_average_baseline: true
+  train_lightweight_linear_baseline: true
+  require_deterministic_artifacts: true
+  model_registry_version: "phase139.v1"
+
+phase139_offline_evaluation:
+  enabled: true
+  evaluate_train_split: true
+  evaluate_validation_split: true
+  evaluate_test_split: true
+  allow_pnl_metrics: false
+  allow_trading_metrics: false
+  allow_backtest_metrics: false
+  require_non_trading_metrics: true
+
+phase139_notifications:
+  enabled: true
+  dry_run: true
+  preview_only: true
+  telegram_real_send: false

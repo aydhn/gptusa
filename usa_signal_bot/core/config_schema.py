@@ -3716,3 +3716,86 @@ class Phase138NotificationsConfig:
     dry_run: bool = True
     preview_only: bool = True
     telegram_real_send: bool = False
+
+
+@dataclass
+class BaselineTrainingConfig:
+    enabled: bool = False
+    current_phase: int = 139
+    final_phase: int = 160
+    require_phase138_baseline_scaffolding: bool = True
+    scaffolding_ingestion_enabled: bool = True
+    scaffolding_artifact_loader_enabled: bool = True
+    dataset_loader_enabled: bool = True
+    training_job_builder_enabled: bool = True
+    baseline_trainers_enabled: bool = True
+    offline_prediction_enabled: bool = True
+    offline_evaluation_enabled: bool = True
+    evaluation_report_enabled: bool = True
+    non_activation_model_registry_enabled: bool = True
+    model_card_update_enabled: bool = True
+    training_boundary_enabled: bool = True
+    readiness_gate_enabled: bool = True
+    write_baseline_training_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_phase139_training_is_offline_only: bool = True
+    warn_phase139_predictions_are_offline_evaluation_only: bool = True
+    warn_model_registry_is_not_deployment_registry: bool = True
+
+@dataclass
+class Phase139TrainingPolicyConfig:
+    compute_values_local_only: bool = True
+    research_data_only: bool = True
+    offline_ml_research_only: bool = True
+    local_fixture_only_default: bool = True
+    allow_network: bool = False
+    allow_paid_api: bool = False
+    allow_scraping: bool = False
+    allow_html_parsing: bool = False
+    allow_broker: bool = False
+    allow_order: bool = False
+    allow_paper_mutation: bool = False
+    allow_telegram_real_send: bool = False
+    allow_dashboard: bool = False
+    allow_deployment: bool = False
+    allow_local_offline_model_training: bool = True
+    allow_offline_evaluation_prediction: bool = True
+    allow_live_inference: bool = False
+    allow_online_inference: bool = False
+    allow_heavy_ml_dependencies: bool = False
+    allow_background_daemon: bool = False
+    allow_scheduler: bool = False
+    produce_trade_signals: bool = False
+    produce_order_decisions: bool = False
+    produce_portfolio_weights: bool = False
+    produce_investment_advice: bool = False
+    strategy_activation_allowed: bool = False
+
+@dataclass
+class Phase139BaselineModelsConfig:
+    enabled: bool = False
+    train_dummy_classification: bool = False
+    train_dummy_regression: bool = False
+    train_persistence_baseline: bool = False
+    train_moving_average_baseline: bool = False
+    train_lightweight_linear_baseline: bool = False
+    require_deterministic_artifacts: bool = True
+    model_registry_version: str = "phase139.v1"
+
+@dataclass
+class Phase139OfflineEvaluationConfig:
+    enabled: bool = False
+    evaluate_train_split: bool = True
+    evaluate_validation_split: bool = True
+    evaluate_test_split: bool = True
+    allow_pnl_metrics: bool = False
+    allow_trading_metrics: bool = False
+    allow_backtest_metrics: bool = False
+    require_non_trading_metrics: bool = True
+
+@dataclass
+class Phase139NotificationsConfig:
+    enabled: bool = False
+    dry_run: bool = True
+    preview_only: bool = True
+    telegram_real_send: bool = False

@@ -147,3 +147,55 @@ def notifications_from_baseline_ml_scaffolding_review(review: 'BaselineMLScaffol
         messages.append(format_model_card_draft_warning_message(bad_cards))
 
     return messages
+
+def format_baseline_training_report_message(review: Any) -> NotificationMessage:
+    lines = [
+        "🔬 Baseline Training Report",
+        f"Review ID: {review.review_id}",
+        f"Jobs: {len(review.training_jobs)}",
+        f"Models: {len(review.fitted_models)}",
+        f"Predictions: {len(review.prediction_artifacts)}",
+        f"Reports: {len(review.evaluation_reports)}",
+        f"Ready for Phase 140: {review.readiness_gate.ready_for_phase140}"
+    ]
+    return NotificationMessage(
+        type=NotificationType.BASELINE_TRAINING_REPORT,
+        subject="Baseline Training Report",
+        content="\n".join(lines),
+        metadata={"review_id": review.review_id}
+    )
+
+def format_offline_evaluation_warning_message(reports: list[Any]) -> NotificationMessage:
+    lines = [
+        "⚠️ Offline Evaluation Warnings",
+        f"Found warnings in {len(reports)} reports."
+    ]
+    return NotificationMessage(
+        type=NotificationType.OFFLINE_EVALUATION_WARNING,
+        subject="Offline Evaluation Warning",
+        content="\n".join(lines),
+        metadata={"report_count": len(reports)}
+    )
+
+def format_non_activation_model_registry_warning_message(registry: Any) -> NotificationMessage:
+    lines = [
+        "⚠️ Model Registry Warnings",
+        f"Registry ID: {registry.registry_id}",
+        f"Warnings: {len(registry.warnings)}"
+    ]
+    return NotificationMessage(
+        type=NotificationType.NON_ACTIVATION_MODEL_REGISTRY_WARNING,
+        subject="Model Registry Warning",
+        content="\n".join(lines),
+        metadata={"registry_id": registry.registry_id}
+    )
+
+def notifications_from_baseline_training_review(review: Any) -> list[NotificationMessage]:
+    messages = []
+    messages.append(format_baseline_training_report_message(review))
+    reports_with_warnings = [r for r in review.evaluation_reports if len(r.warnings) > 0]
+    if reports_with_warnings:
+        messages.append(format_offline_evaluation_warning_message(reports_with_warnings))
+    if len(review.model_registry.warnings) > 0:
+        messages.append(format_non_activation_model_registry_warning_message(review.model_registry))
+    return messages

@@ -1,33 +1,51 @@
-1.  **Update Enums:** Add new enums (`RegimeMonitoringStatus`, `RegimeMonitoringDecision`, `RegimeMonitoringBaselineKind`, `RegimeMonitoringSnapshotKind`, `RegimeDriftMetricKind`, `RegimeDriftDirection`, `RegimeDriftSeverity`, `ContextDegradationKind`, `ContextDegradationStatus`, `RegimeMonitoringReadinessStatus`, `RegimeMonitoringReadinessRuleKind`, `RegimeMonitoringQuality`, `RegimeMonitoringRiskFlag`, `RegimeMonitoringReportType`) to `usa_signal_bot/core/enums.py`. Append `REGIME_MONITORING_REPORT`, `REGIME_DRIFT_WARNING`, `CONTEXT_DEGRADATION_WARNING` to `NotificationType` and append `REGIME_MONITORING_BLOCKED`, `REGIME_DRIFT_BLOCKED`, `CONTEXT_DEGRADATION_BLOCKED` to `AlertType` in `usa_signal_bot/core/enums.py`.
-2.  **Verify Enums:** Use `read_file` to verify the updates in `enums.py`.
-3.  **Create Models:** Create `usa_signal_bot/regime_classification/monitoring/phase133_models.py` with all the specified dataclasses (`RegimeContextValidationIngestionResult`, `RegimeMonitoringBaseline`, etc.).
-4.  **Verify Models:** Use `read_file` to confirm `phase133_models.py` was created correctly.
-5.  **Create Artifact Loader:** Create `usa_signal_bot/regime_classification/monitoring/context_validation_artifact_loader.py` for loading Phase 132 artifacts securely.
-6.  **Verify Artifact Loader:** Use `read_file` to confirm `context_validation_artifact_loader.py` was created.
-7.  **Create Ingestion Module:** Create `usa_signal_bot/regime_classification/monitoring/regime_context_validation_ingestion.py` to ingest Phase 132 outputs.
-8.  **Verify Ingestion Module:** Use `read_file` to confirm `regime_context_validation_ingestion.py` was created.
-9.  **Create Baseline & Snapshot Builders:** Create `usa_signal_bot/regime_classification/monitoring/monitoring_baseline_builder.py` and `usa_signal_bot/regime_classification/monitoring/monitoring_snapshot_builder.py`.
-10. **Verify Baseline & Snapshot Builders:** Use `list_files` to confirm the builder files were created.
-11. **Create Drift Tracking Engine:** Create `usa_signal_bot/regime_classification/monitoring/drift_metric_specs.py`, `usa_signal_bot/regime_classification/monitoring/drift_tracking_engine.py`, `usa_signal_bot/regime_classification/monitoring/compatibility_drift_tracker.py`, `usa_signal_bot/regime_classification/monitoring/conditional_diagnostic_drift_tracker.py`, and `usa_signal_bot/regime_classification/monitoring/acceptance_gate_drift_tracker.py`.
-12. **Verify Drift Tracking Engine:** Use `list_files` to confirm the drift tracking files were created.
-13. **Create Degradation Detectors:** Create `usa_signal_bot/regime_classification/monitoring/context_degradation_detector.py`, `usa_signal_bot/regime_classification/monitoring/data_quality_degradation_detector.py`, and `usa_signal_bot/regime_classification/monitoring/cross_symbol_monitoring_profiles.py`.
-14. **Verify Degradation Detectors:** Use `list_files` to confirm the detector files were created.
-15. **Create Readiness Gate:** Create `usa_signal_bot/regime_classification/monitoring/monitoring_readiness_gate.py`.
-16. **Verify Readiness Gate:** Use `read_file` to confirm `monitoring_readiness_gate.py` was created.
-17. **Create Validators:** Create `usa_signal_bot/regime_classification/monitoring/monitoring_schema_validator.py`, `usa_signal_bot/regime_classification/monitoring/monitoring_safety_validator.py`, and `usa_signal_bot/regime_classification/monitoring/regime_monitoring_validation.py`.
-18. **Verify Validators:** Use `list_files` to confirm the validator files were created.
-19. **Create Report & Store:** Create `usa_signal_bot/regime_classification/monitoring/regime_monitoring_report.py`, `usa_signal_bot/regime_classification/monitoring/regime_monitoring_store.py`, and `usa_signal_bot/regime_classification/monitoring/regime_monitoring_reporting.py`.
-20. **Verify Report & Store:** Use `list_files` to confirm the report and store files were created.
-21. **Update Configurations:** Update `config/default.yaml` and `config/local.example.yaml` with the new config blocks (`regime_monitoring`, `phase133_monitoring_policy`, `phase133_drift_tracking`, `phase133_degradation_diagnostics`, `phase133_notifications`). Update `usa_signal_bot/core/config_schema.py` and `usa_signal_bot/core/config.py` with Phase 133 configs.
-22. **Verify Configurations:** Use `read_file` to verify updates in the config files.
-23. **Update Core Files:** Add health checks to `usa_signal_bot/core/health.py`, exceptions to `usa_signal_bot/core/exceptions.py`.
-24. **Verify Core Files:** Use `read_file` to confirm the edits to these core files were written correctly.
-25. **Update Integrations:** Update `usa_signal_bot/observability/metrics_collector.py` (add metrics like `latest_regime_monitoring_context_count`, etc.), `usa_signal_bot/quality/data_quality_evaluator.py` (add score components for Phase 133), `usa_signal_bot/notifications/notification_templates.py` (add `format_regime_monitoring_report_message`, etc.), and `usa_signal_bot/app/cli.py` (add `setup_phase133_cli` and its corresponding command functions).
-26. **Verify Integrations:** Verify with `read_file` for integration files.
-27. **Create Fixtures:** Create test fixtures under `tests/fixtures/regime_monitoring/`: `sample_regime_context_validation_review.json`, `sample_regime_context_validation_review_blocked.json`, `sample_compatibility_validation_result.json`, `sample_conditional_diagnostics.json`, `sample_conditional_diagnostics_profiles.json`, `sample_acceptance_gate_pass.json`, `sample_acceptance_gate_fail.json`, `sample_monitoring_baseline.json`, `sample_monitoring_snapshot_current.json`, `sample_monitoring_snapshot_previous.json`, `sample_drift_observations_expected.json`, `sample_context_degradation_expected.json`, `sample_invalid_regime_monitoring_payload.json`, `sample_forbidden_monitoring_columns.csv`, `sample_unsafe_monitoring_text.txt`.
-28. **Create Test Files:** Create specific test files: `tests/test_phase133_models.py`, `tests/test_regime_context_validation_ingestion.py`, `tests/test_context_validation_artifact_loader.py`, `tests/test_monitoring_baseline_builder.py`, `tests/test_monitoring_snapshot_builder.py`, `tests/test_drift_metric_specs.py`, `tests/test_drift_tracking_engine.py`, `tests/test_compatibility_drift_tracker.py`, `tests/test_conditional_diagnostic_drift_tracker.py`, `tests/test_acceptance_gate_drift_tracker.py`, `tests/test_context_degradation_detector.py`, `tests/test_data_quality_degradation_detector.py`, `tests/test_cross_symbol_monitoring_profiles.py`, `tests/test_monitoring_readiness_gate.py`, `tests/test_monitoring_schema_validator.py`, `tests/test_monitoring_safety_validator.py`, `tests/test_regime_monitoring_report.py`, `tests/test_regime_monitoring_store.py`, `tests/test_regime_monitoring_validation.py`, `tests/test_regime_monitoring_reporting.py`, `tests/test_cli.py`.
-29. **Verify Test Files:** Use `list_files` to confirm the test files and fixtures were created.
-30. **Create Docs:** Create specific markdown files: `docs/PHASE_133_REGIME_AWARE_MONITORING.md`, `docs/REGIME_MONITORING_BASELINES_AND_SNAPSHOTS.md`, `docs/REGIME_DRIFT_TRACKING.md`, `docs/CONTEXT_DEGRADATION_DIAGNOSTICS.md`, `docs/MONITORING_READINESS_GATE.md`, `docs/REGIME_MONITORING_SAFETY_GUARDS.md`, `docs/PHASE_133_LIMITATIONS.md`, `docs/PHASE_133_SUMMARY.md`.
-31. **Verify Docs:** Use `list_files` to confirm the documentation files were created correctly.
-32. **Run Tests:** Execute the test suite using `pytest` to ensure all changes are correct and regressions are prevented.
-33. **Pre-commit:** Complete pre-commit steps to ensure proper testing, verification, review, and reflection are done.
+1. *Create missing files in `docs` directory.*
+   - Create documentation files: `PHASE_139_LOCAL_BASELINE_ML_TRAINING.md`, `BASELINE_TRAINING_JOBS.md`, `OFFLINE_BASELINE_TRAINERS.md`, `OFFLINE_PREDICTION_ARTIFACTS.md`, `OFFLINE_EVALUATION_METRICS.md`, `NON_ACTIVATION_MODEL_REGISTRY.md`, `BASELINE_MODEL_CARD_UPDATES.md`, `BASELINE_TRAINING_SAFETY_GUARDS.md`, `PHASE_139_LIMITATIONS.md`, `PHASE_139_SUMMARY.md`.
+
+2. *Update `core` module.*
+   - Append new enums in `usa_signal_bot/core/enums.py`.
+   - Update config dataclasses in `usa_signal_bot/core/config_schema.py`.
+   - Add new exceptions in `usa_signal_bot/core/exceptions.py`.
+   - Add new config keys in `usa_signal_bot/core/config.py` and `config/default.yaml`.
+   - Add new health checks in `usa_signal_bot/core/health.py`.
+   - Ensure backwards compatibility in all `core` updates.
+
+3. *Update `app`, `quality`, `observability`, and `notifications` modules.*
+   - Add CLI commands to `usa_signal_bot/app/cli.py`.
+   - Add quality scorecard attributes in `usa_signal_bot/quality/quality_models.py` and update evaluators.
+   - Add metric attributes in `usa_signal_bot/observability/metrics_collector.py`.
+   - Add notification templates in `usa_signal_bot/notifications/notification_templates.py`.
+
+4. *Create `baseline_training` module files in `usa_signal_bot/ml_research/baseline_training`.*
+   - Implement dataclasses in `phase139_models.py`.
+   - Implement scaffolding ingestion in `baseline_scaffolding_ingestion.py`.
+   - Implement scaffolding artifact loader in `baseline_scaffolding_artifact_loader.py`.
+   - Implement dataset loader in `baseline_dataset_loader.py`.
+   - Implement training job builder in `baseline_training_job_builder.py`.
+   - Implement offline trainers in `baseline_trainers.py` (Dummy, Persistence, Moving Average, Lightweight Linear).
+   - Implement offline prediction generator in `offline_prediction_generator.py`.
+   - Implement offline evaluation metrics calculator in `offline_evaluation_metrics.py`.
+   - Implement offline evaluation report in `offline_evaluation_report.py`.
+   - Implement non-activation model registry in `non_activation_model_registry.py`.
+   - Implement model card updater in `model_card_updater.py`.
+   - Implement baseline training boundary in `baseline_training_boundary.py`.
+   - Implement baseline training readiness gate in `baseline_training_readiness_gate.py`.
+   - Implement schema validator in `baseline_training_schema_validator.py`.
+   - Implement safety validator in `baseline_training_safety_validator.py`.
+   - Implement training report in `baseline_training_report.py`.
+   - Implement training store in `baseline_training_store.py`.
+   - Implement training validation in `baseline_training_validation.py`.
+   - Implement training reporting in `baseline_training_reporting.py`.
+   - Add `README.md` for the module.
+
+5. *Create Test fixtures and modules.*
+   - Create test fixtures in `tests/fixtures/ml_baseline_training`.
+   - Create test modules in `tests/` to verify logic and models.
+
+6. *Verify implementation.*
+   - Check there are no heavy ML dependencies (sklearn, torch, xgboost, etc).
+   - Ensure the phase produces no execution language, no live/broker/paper interaction, only offline baseline ML training and non-activation registry updates.
+   - Complete pre-commit step using `pre_commit_instructions` tool.
+   - Run `pytest` to confirm successful implementation of Phase 139.
+
+7. *Complete pre commit steps*
+   - Complete pre commit steps to make sure proper testing, verifications, reviews and reflections are done.
