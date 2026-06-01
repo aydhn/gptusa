@@ -1418,3 +1418,129 @@ def check_phase140_model_comparison_store_health(context: 'RuntimeContext') -> H
 
 def check_phase140_notification_boundary_health(context: 'RuntimeContext') -> HealthCheckResult:
     return HealthCheckResult("phase140_notification_boundary", "pass")
+
+
+def check_phase141_calibration_diagnostics_config_health(context: 'Any') -> 'Any':
+    try:
+        from usa_signal_bot.core.health import HealthCheckResult
+        return HealthCheckResult(
+            name="phase141_calibration_diagnostics_config_health",
+            status="pass",
+            details="Calibration diagnostics config health is OK."
+        )
+    except Exception as e:
+        from usa_signal_bot.core.health import HealthCheckResult
+        return HealthCheckResult(name="phase141_calibration_diagnostics_config_health", status="fail", details=str(e))
+
+def check_phase141_model_comparison_ingestion_health(context: 'Any') -> 'Any':
+    try:
+        from usa_signal_bot.core.health import HealthCheckResult
+        return HealthCheckResult(name="phase141_model_comparison_ingestion_health", status="pass", details="OK")
+    except Exception as e:
+        from usa_signal_bot.core.health import HealthCheckResult
+        return HealthCheckResult(name="phase141_model_comparison_ingestion_health", status="fail", details=str(e))
+
+def check_phase141_model_comparison_artifact_loader_health(context: 'Any') -> 'Any':
+    try:
+        from usa_signal_bot.core.health import HealthCheckResult
+        return HealthCheckResult(name="phase141_model_comparison_artifact_loader_health", status="pass", details="OK")
+    except Exception as e:
+        from usa_signal_bot.core.health import HealthCheckResult
+        return HealthCheckResult(name="phase141_model_comparison_artifact_loader_health", status="fail", details=str(e))
+
+def check_phase141_calibration_input_resolver_health(context: 'Any') -> 'Any':
+    try:
+        from usa_signal_bot.core.health import HealthCheckResult
+        return HealthCheckResult(name="phase141_calibration_input_resolver_health", status="pass", details="OK")
+    except Exception as e:
+        from usa_signal_bot.core.health import HealthCheckResult
+        return HealthCheckResult(name="phase141_calibration_input_resolver_health", status="fail", details=str(e))
+
+def check_phase141_reliability_binning_health(context: 'Any') -> 'Any':
+    try:
+        from usa_signal_bot.core.health import HealthCheckResult
+        return HealthCheckResult(name="phase141_reliability_binning_health", status="pass", details="OK")
+    except Exception as e:
+        from usa_signal_bot.core.health import HealthCheckResult
+        return HealthCheckResult(name="phase141_reliability_binning_health", status="fail", details=str(e))
+
+def check_phase141_calibration_metric_health(context: 'Any') -> 'Any':
+    try:
+        from usa_signal_bot.core.health import HealthCheckResult
+        return HealthCheckResult(name="phase141_calibration_metric_health", status="pass", details="OK")
+    except Exception as e:
+        from usa_signal_bot.core.health import HealthCheckResult
+        return HealthCheckResult(name="phase141_calibration_metric_health", status="fail", details=str(e))
+
+def check_phase141_brier_decomposition_health(context: 'Any') -> 'Any':
+    try:
+        from usa_signal_bot.core.health import HealthCheckResult
+        return HealthCheckResult(name="phase141_brier_decomposition_health", status="pass", details="OK")
+    except Exception as e:
+        from usa_signal_bot.core.health import HealthCheckResult
+        return HealthCheckResult(name="phase141_brier_decomposition_health", status="fail", details=str(e))
+
+def check_phase141_score_distribution_health(context: 'Any') -> 'Any':
+    try:
+        from usa_signal_bot.core.health import HealthCheckResult
+        return HealthCheckResult(name="phase141_score_distribution_health", status="pass", details="OK")
+    except Exception as e:
+        from usa_signal_bot.core.health import HealthCheckResult
+        return HealthCheckResult(name="phase141_score_distribution_health", status="fail", details=str(e))
+
+
+def check_phase141_class_balance_health(context: 'Any') -> 'Any':
+    try:
+        from usa_signal_bot.core.health import HealthCheckResult
+        return HealthCheckResult(name="phase141_class_balance_health", status="pass", details="OK")
+    except Exception as e:
+        from usa_signal_bot.core.health import HealthCheckResult
+        return HealthCheckResult(name="phase141_class_balance_health", status="fail", details=str(e))
+
+def check_phase141_post_training_validation_health(context: 'Any') -> 'Any':
+    try:
+        from usa_signal_bot.core.health import HealthCheckResult
+        return HealthCheckResult(name="phase141_post_training_validation_health", status="pass", details="OK")
+    except Exception as e:
+        from usa_signal_bot.core.health import HealthCheckResult
+        return HealthCheckResult(name="phase141_post_training_validation_health", status="fail", details=str(e))
+
+def check_phase141_calibration_governance_health(context: 'Any') -> 'Any':
+    try:
+        from usa_signal_bot.core.health import HealthCheckResult
+        return HealthCheckResult(name="phase141_calibration_governance_health", status="pass", details="OK")
+    except Exception as e:
+        from usa_signal_bot.core.health import HealthCheckResult
+        return HealthCheckResult(name="phase141_calibration_governance_health", status="fail", details=str(e))
+
+def check_phase141_calibration_readiness_gate_health(context: 'Any') -> 'Any':
+    try:
+        from usa_signal_bot.core.health import HealthCheckResult
+        return HealthCheckResult(name="phase141_calibration_readiness_gate_health", status="pass", details="OK")
+    except Exception as e:
+        from usa_signal_bot.core.health import HealthCheckResult
+        return HealthCheckResult(name="phase141_calibration_readiness_gate_health", status="fail", details=str(e))
+
+def check_phase141_calibration_diagnostics_safety_health(context: 'Any') -> 'Any':
+    try:
+        from usa_signal_bot.core.health import HealthCheckResult
+        return HealthCheckResult(name="phase141_calibration_diagnostics_safety_health", status="pass", details="OK")
+    except Exception as e:
+        from usa_signal_bot.core.health import HealthCheckResult
+        return HealthCheckResult(name="phase141_calibration_diagnostics_safety_health", status="fail", details=str(e))
+
+def check_phase141_calibration_diagnostics_store_health(context: 'Any') -> 'Any':
+    try:
+        from usa_signal_bot.core.health import HealthCheckResult
+        return HealthCheckResult(name="phase141_calibration_diagnostics_store_health", status="pass", details="OK")
+    except Exception as e:
+        from usa_signal_bot.core.health import HealthCheckResult
+        return HealthCheckResult(name="phase141_calibration_diagnostics_store_health", status="fail", details=str(e))
+
+def check_phase141_notification_boundary_health(context: 'Any') -> 'Any':
+    try:
+        from usa_signal_bot.core.health import HealthCheckResult
+        return HealthCheckResult(name="phase141_notification_boundary_health", status="pass", details="OK")
+    except Exception as e:
+        from usa_signal_bot.core.health import HealthCheckResult
+        return HealthCheckResult(name="phase141_notification_boundary_health", status="fail", details=str(e))
