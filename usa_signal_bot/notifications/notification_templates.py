@@ -359,3 +359,17 @@ def notifications_from_ml_governance_closure_review(review: AdvancedMLClosureFul
             level=NotificationLevel.WARNING
         ))
     return notifications
+
+from typing import Any
+
+def format_backtest_foundation_report_message(review: Any) -> Any:
+    return {"message": "Phase 146 foundation report generated.", "type": "BACKTEST_FOUNDATION_REPORT"}
+
+def format_transaction_cost_model_warning_message(model: Any) -> Any:
+    return {"message": "Transaction cost model warning.", "type": "BACKTEST_FOUNDATION_WARNING"}
+
+def format_backtest_safety_boundary_warning_message(boundary: Any) -> Any:
+    return {"message": "Backtest safety boundary warning.", "type": "BACKTEST_FOUNDATION_WARNING"}
+
+def notifications_from_backtest_foundation_review(review: Any) -> list[Any]:
+    return [format_backtest_foundation_report_message(review)]

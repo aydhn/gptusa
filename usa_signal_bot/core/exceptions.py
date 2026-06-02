@@ -3097,3 +3097,28 @@ class MLGovernanceClosureValidationError(MLGovernanceClosureError):
 
 class MLGovernanceClosureReportingError(MLGovernanceClosureError):
     pass
+
+
+class BacktestFoundationError(USASignalBotError): pass
+class AdvancedMLClosureIngestionError(BacktestFoundationError): pass
+class AdvancedMLClosureArtifactLoaderError(BacktestFoundationError): pass
+class BacktestInputResolverError(BacktestFoundationError): pass
+class BacktestDatasetContractError(BacktestFoundationError): pass
+class ResearchInputBoundaryError(BacktestFoundationError): pass
+class BacktestEventTimelineError(BacktestFoundationError): pass
+class ExecutionAssumptionError(BacktestFoundationError): pass
+class TransactionCostModelError(BacktestFoundationError): pass
+class CommissionModelError(BacktestFoundationError): pass
+class SpreadModelError(BacktestFoundationError): pass
+class SlippageModelError(BacktestFoundationError): pass
+class LiquidityGuardError(BacktestFoundationError): pass
+class PartialFillAssumptionError(BacktestFoundationError): pass
+class ExecutionLatencyAssumptionError(BacktestFoundationError): pass
+class MarketSimulationContractError(BacktestFoundationError): pass
+class BacktestSafetyBoundaryError(BacktestFoundationError): pass
+class BacktestReadinessGateError(BacktestFoundationError): pass
+class BacktestSchemaValidationError(BacktestFoundationError): pass
+class BacktestSafetyValidationError(BacktestFoundationError): pass
+class BacktestFoundationStoreError(BacktestFoundationError): pass
+class BacktestFoundationValidationError(BacktestFoundationError): pass
+class BacktestFoundationReportingError(BacktestFoundationError): pass

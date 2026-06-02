@@ -3883,3 +3883,80 @@ phase145_notifications:
   dry_run: true
   preview_only: true
   telegram_real_send: false
+
+
+backtest_foundation:
+  enabled: true
+  current_phase: 146
+  final_phase: 160
+  require_phase145_ml_closure: true
+  advanced_ml_closure_ingestion_enabled: true
+  artifact_loader_enabled: true
+  input_resolver_enabled: true
+  dataset_contract_enabled: true
+  research_input_boundary_enabled: true
+  event_timeline_enabled: true
+  execution_assumptions_enabled: true
+  transaction_cost_model_enabled: true
+  commission_model_enabled: true
+  spread_model_enabled: true
+  slippage_model_enabled: true
+  liquidity_guard_enabled: true
+  partial_fill_assumptions_enabled: true
+  execution_latency_assumptions_enabled: true
+  market_simulation_contract_enabled: true
+  safety_boundary_enabled: true
+  readiness_gate_enabled: true
+  write_backtest_foundation_reports: true
+  warn_not_investment_advice: true
+  warn_phase146_does_not_run_backtests: true
+  warn_cost_models_are_research_assumptions: true
+
+phase146_backtest_policy:
+  compute_values_local_only: true
+  research_data_only: true
+  offline_backtest_research_only: true
+  local_fixture_only_default: true
+  allow_network: false
+  allow_paid_api: false
+  allow_scraping: false
+  allow_html_parsing: false
+  allow_broker: false
+  allow_order: false
+  allow_paper_mutation: false
+  allow_telegram_real_send: false
+  allow_dashboard: false
+  allow_deployment: false
+  allow_live_trading: false
+  allow_paper_trading: false
+  allow_strategy_activation: false
+  allow_portfolio_allocation: false
+  allow_full_backtest_run: false
+  allow_walk_forward: false
+  allow_stress_test: false
+  allow_monte_carlo: false
+  allow_scheduler: false
+  allow_background_daemon: false
+  produce_trade_signals: false
+  produce_order_decisions: false
+  produce_portfolio_weights: false
+  produce_investment_advice: false
+
+phase146_execution_assumptions:
+  default_time_model: BAR_CLOSE_TO_NEXT_OPEN
+  default_execution_kind: MARKET_ON_NEXT_OPEN
+  allow_same_bar_execution: false
+  allow_next_bar_execution: true
+  default_transaction_cost_bps: 1.0
+  default_spread_bps: 2.0
+  default_slippage_bps: 3.0
+  min_dollar_volume: 1000000
+  max_volume_participation: 0.01
+  min_price: 1.0
+  latency_bars: 1
+
+phase146_notifications:
+  enabled: true
+  dry_run: true
+  preview_only: true
+  telegram_real_send: false
