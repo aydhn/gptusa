@@ -307,3 +307,26 @@ def format_non_activation_ensemble_registry_warning_message(registry) -> 'Notifi
 
 def notifications_from_ensemble_prototype_review(review: 'EnsemblePrototypeFullReview') -> list:
     return []
+
+def format_drift_monitoring_report_message(*args, **kwargs):
+    from usa_signal_bot.notifications.notification_adapters import NotificationMessage
+    from usa_signal_bot.core.enums import NotificationType
+    return NotificationMessage(message_type=NotificationType.SYSTEM_INFO, body="Phase 144 placeholder")
+
+
+def format_drift_baseline_warning_message(*args, **kwargs):
+    from usa_signal_bot.notifications.notification_adapters import NotificationMessage
+    from usa_signal_bot.core.enums import NotificationType
+    return NotificationMessage(message_type=NotificationType.SYSTEM_INFO, body="Phase 144 placeholder")
+
+
+def format_post_ensemble_governance_warning_message(*args, **kwargs):
+    from usa_signal_bot.notifications.notification_adapters import NotificationMessage
+    from usa_signal_bot.core.enums import NotificationType
+    return NotificationMessage(message_type=NotificationType.SYSTEM_INFO, body="Phase 144 placeholder")
+
+
+def notifications_from_drift_monitoring_review(*args, **kwargs):
+    from usa_signal_bot.notifications.notification_adapters import NotificationMessage
+    from usa_signal_bot.core.enums import NotificationType
+    return NotificationMessage(message_type=NotificationType.SYSTEM_INFO, body="Phase 144 placeholder")

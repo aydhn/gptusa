@@ -70,3 +70,245 @@ def main():
         if args.write:
             print("Write mode simulated.")
         return
+
+@cli.command(name="drift-monitoring-info")
+@click.option("--write", is_flag=True, help="Write output to data directory")
+def drift_monitoring_info(write: bool):
+    """Phase 144 placeholder."""
+    click.echo("Phase 144 placeholder.")
+    if "drift-monitoring-info" == "drift-monitoring-info":
+        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
+
+
+@cli.command(name="drift-ingest-ensemble-prototype")
+@click.option("--write", is_flag=True, help="Write output to data directory")
+def drift_ingest_ensemble_prototype(write: bool):
+    """Phase 144 placeholder."""
+    click.echo("Phase 144 placeholder.")
+    if "drift-ingest-ensemble-prototype" == "drift-monitoring-info":
+        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
+
+
+@cli.command(name="drift-artifact-load")
+@click.option("--write", is_flag=True, help="Write output to data directory")
+def drift_artifact_load(write: bool):
+    """Phase 144 placeholder."""
+    click.echo("Phase 144 placeholder.")
+    if "drift-artifact-load" == "drift-monitoring-info":
+        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
+
+
+@cli.command(name="resolve-drift-inputs")
+@click.option("--write", is_flag=True, help="Write output to data directory")
+def resolve_drift_inputs(write: bool):
+    """Phase 144 placeholder."""
+    click.echo("Phase 144 placeholder.")
+    if "resolve-drift-inputs" == "drift-monitoring-info":
+        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
+
+
+@cli.command(name="build-monitoring-window-policy")
+@click.option("--write", is_flag=True, help="Write output to data directory")
+def build_monitoring_window_policy(write: bool):
+    """Phase 144 placeholder."""
+    click.echo("Phase 144 placeholder.")
+    if "build-monitoring-window-policy" == "drift-monitoring-info":
+        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
+
+
+@cli.command(name="build-drift-baseline-specs")
+@click.option("--write", is_flag=True, help="Write output to data directory")
+def build_drift_baseline_specs(write: bool):
+    """Phase 144 placeholder."""
+    click.echo("Phase 144 placeholder.")
+    if "build-drift-baseline-specs" == "drift-monitoring-info":
+        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
+
+
+@cli.command(name="build-feature-drift-baseline")
+@click.option("--write", is_flag=True, help="Write output to data directory")
+def build_feature_drift_baseline(write: bool):
+    """Phase 144 placeholder."""
+    click.echo("Phase 144 placeholder.")
+    if "build-feature-drift-baseline" == "drift-monitoring-info":
+        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
+
+
+@cli.command(name="build-prediction-drift-baseline")
+@click.option("--write", is_flag=True, help="Write output to data directory")
+def build_prediction_drift_baseline(write: bool):
+    """Phase 144 placeholder."""
+    click.echo("Phase 144 placeholder.")
+    if "build-prediction-drift-baseline" == "drift-monitoring-info":
+        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
+
+
+@cli.command(name="build-score-distribution-drift")
+@click.option("--write", is_flag=True, help="Write output to data directory")
+def build_score_distribution_drift(write: bool):
+    """Phase 144 placeholder."""
+    click.echo("Phase 144 placeholder.")
+    if "build-score-distribution-drift" == "drift-monitoring-info":
+        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
+
+
+@cli.command(name="build-calibration-drift-baseline")
+@click.option("--write", is_flag=True, help="Write output to data directory")
+def build_calibration_drift_baseline(write: bool):
+    """Phase 144 placeholder."""
+    click.echo("Phase 144 placeholder.")
+    if "build-calibration-drift-baseline" == "drift-monitoring-info":
+        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
+
+
+@cli.command(name="build-residual-drift-baseline")
+@click.option("--write", is_flag=True, help="Write output to data directory")
+def build_residual_drift_baseline(write: bool):
+    """Phase 144 placeholder."""
+    click.echo("Phase 144 placeholder.")
+    if "build-residual-drift-baseline" == "drift-monitoring-info":
+        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
+
+
+@cli.command(name="build-label-distribution-drift")
+@click.option("--write", is_flag=True, help="Write output to data directory")
+def build_label_distribution_drift(write: bool):
+    """Phase 144 placeholder."""
+    click.echo("Phase 144 placeholder.")
+    if "build-label-distribution-drift" == "drift-monitoring-info":
+        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
+
+
+@cli.command(name="build-regime-drift-baseline")
+@click.option("--write", is_flag=True, help="Write output to data directory")
+def build_regime_drift_baseline(write: bool):
+    """Phase 144 placeholder."""
+    click.echo("Phase 144 placeholder.")
+    if "build-regime-drift-baseline" == "drift-monitoring-info":
+        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
+
+
+@cli.command(name="calculate-drift-metrics")
+@click.option("--write", is_flag=True, help="Write output to data directory")
+def calculate_drift_metrics(write: bool):
+    """Phase 144 placeholder."""
+    click.echo("Phase 144 placeholder.")
+    if "calculate-drift-metrics" == "drift-monitoring-info":
+        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
+
+
+@cli.command(name="build-monitoring-snapshot")
+@click.option("--write", is_flag=True, help="Write output to data directory")
+def build_monitoring_snapshot(write: bool):
+    """Phase 144 placeholder."""
+    click.echo("Phase 144 placeholder.")
+    if "build-monitoring-snapshot" == "drift-monitoring-info":
+        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
+
+
+@cli.command(name="build-alert-rule-metadata")
+@click.option("--write", is_flag=True, help="Write output to data directory")
+def build_alert_rule_metadata(write: bool):
+    """Phase 144 placeholder."""
+    click.echo("Phase 144 placeholder.")
+    if "build-alert-rule-metadata" == "drift-monitoring-info":
+        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
+
+
+@cli.command(name="build-monitoring-metadata-package")
+@click.option("--write", is_flag=True, help="Write output to data directory")
+def build_monitoring_metadata_package(write: bool):
+    """Phase 144 placeholder."""
+    click.echo("Phase 144 placeholder.")
+    if "build-monitoring-metadata-package" == "drift-monitoring-info":
+        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
+
+
+@cli.command(name="build-post-ensemble-governance")
+@click.option("--write", is_flag=True, help="Write output to data directory")
+def build_post_ensemble_governance(write: bool):
+    """Phase 144 placeholder."""
+    click.echo("Phase 144 placeholder.")
+    if "build-post-ensemble-governance" == "drift-monitoring-info":
+        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
+
+
+@cli.command(name="validate-non-activation-drift-boundary")
+@click.option("--write", is_flag=True, help="Write output to data directory")
+def validate_non_activation_drift_boundary(write: bool):
+    """Phase 144 placeholder."""
+    click.echo("Phase 144 placeholder.")
+    if "validate-non-activation-drift-boundary" == "drift-monitoring-info":
+        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
+
+
+@cli.command(name="update-model-cards-with-drift")
+@click.option("--write", is_flag=True, help="Write output to data directory")
+def update_model_cards_with_drift(write: bool):
+    """Phase 144 placeholder."""
+    click.echo("Phase 144 placeholder.")
+    if "update-model-cards-with-drift" == "drift-monitoring-info":
+        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
+
+
+@cli.command(name="drift-readiness-gate")
+@click.option("--write", is_flag=True, help="Write output to data directory")
+def drift_readiness_gate(write: bool):
+    """Phase 144 placeholder."""
+    click.echo("Phase 144 placeholder.")
+    if "drift-readiness-gate" == "drift-monitoring-info":
+        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
+
+
+@cli.command(name="drift-schema-check")
+@click.option("--write", is_flag=True, help="Write output to data directory")
+def drift_schema_check(write: bool):
+    """Phase 144 placeholder."""
+    click.echo("Phase 144 placeholder.")
+    if "drift-schema-check" == "drift-monitoring-info":
+        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
+
+
+@cli.command(name="drift-safety-check")
+@click.option("--write", is_flag=True, help="Write output to data directory")
+def drift_safety_check(write: bool):
+    """Phase 144 placeholder."""
+    click.echo("Phase 144 placeholder.")
+    if "drift-safety-check" == "drift-monitoring-info":
+        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
+
+
+@cli.command(name="drift-monitoring-context")
+@click.option("--write", is_flag=True, help="Write output to data directory")
+def drift_monitoring_context(write: bool):
+    """Phase 144 placeholder."""
+    click.echo("Phase 144 placeholder.")
+    if "drift-monitoring-context" == "drift-monitoring-info":
+        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
+
+
+@cli.command(name="drift-monitoring-review")
+@click.option("--write", is_flag=True, help="Write output to data directory")
+def drift_monitoring_review(write: bool):
+    """Phase 144 placeholder."""
+    click.echo("Phase 144 placeholder.")
+    if "drift-monitoring-review" == "drift-monitoring-info":
+        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
+
+
+@cli.command(name="drift-monitoring-summary")
+@click.option("--write", is_flag=True, help="Write output to data directory")
+def drift_monitoring_summary(write: bool):
+    """Phase 144 placeholder."""
+    click.echo("Phase 144 placeholder.")
+    if "drift-monitoring-summary" == "drift-monitoring-info":
+        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
+
+
+@cli.command(name="drift-monitoring-validate")
+@click.option("--write", is_flag=True, help="Write output to data directory")
+def drift_monitoring_validate(write: bool):
+    """Phase 144 placeholder."""
+    click.echo("Phase 144 placeholder.")
+    if "drift-monitoring-validate" == "drift-monitoring-info":
+        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")

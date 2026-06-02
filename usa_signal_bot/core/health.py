@@ -1689,3 +1689,178 @@ def check_phase114_provider_freeze_store_health(context: Any) -> Any:
 
 def check_phase114_notification_boundary_health(context: Any) -> Any:
     return {"status": "ok", "message": "Phase 114 notification boundary health check passed"}
+
+def check_phase144_drift_monitoring_config_health(context: 'RuntimeContext') -> HealthCheckResult:
+    return HealthCheckResult(
+        component_name="phase144_drift_monitoring_config",
+        status=HealthStatus.HEALTHY,
+        message="Phase 144 placeholder."
+    )
+
+
+def check_phase144_ensemble_prototype_ingestion_health(context: 'RuntimeContext') -> HealthCheckResult:
+    return HealthCheckResult(
+        component_name="phase144_ensemble_prototype_ingestion",
+        status=HealthStatus.HEALTHY,
+        message="Phase 144 placeholder."
+    )
+
+
+def check_phase144_ensemble_artifact_loader_health(context: 'RuntimeContext') -> HealthCheckResult:
+    return HealthCheckResult(
+        component_name="phase144_ensemble_artifact_loader",
+        status=HealthStatus.HEALTHY,
+        message="Phase 144 placeholder."
+    )
+
+
+def check_phase144_drift_input_resolver_health(context: 'RuntimeContext') -> HealthCheckResult:
+    return HealthCheckResult(
+        component_name="phase144_drift_input_resolver",
+        status=HealthStatus.HEALTHY,
+        message="Phase 144 placeholder."
+    )
+
+
+def check_phase144_monitoring_window_policy_health(context: 'RuntimeContext') -> HealthCheckResult:
+    return HealthCheckResult(
+        component_name="phase144_monitoring_window_policy",
+        status=HealthStatus.HEALTHY,
+        message="Phase 144 placeholder."
+    )
+
+
+def check_phase144_drift_baseline_specs_health(context: 'RuntimeContext') -> HealthCheckResult:
+    return HealthCheckResult(
+        component_name="phase144_drift_baseline_specs",
+        status=HealthStatus.HEALTHY,
+        message="Phase 144 placeholder."
+    )
+
+
+def check_phase144_feature_drift_health(context: 'RuntimeContext') -> HealthCheckResult:
+    return HealthCheckResult(
+        component_name="phase144_feature_drift",
+        status=HealthStatus.HEALTHY,
+        message="Phase 144 placeholder."
+    )
+
+
+def check_phase144_prediction_drift_health(context: 'RuntimeContext') -> HealthCheckResult:
+    return HealthCheckResult(
+        component_name="phase144_prediction_drift",
+        status=HealthStatus.HEALTHY,
+        message="Phase 144 placeholder."
+    )
+
+
+def check_phase144_score_distribution_drift_health(context: 'RuntimeContext') -> HealthCheckResult:
+    return HealthCheckResult(
+        component_name="phase144_score_distribution_drift",
+        status=HealthStatus.HEALTHY,
+        message="Phase 144 placeholder."
+    )
+
+
+def check_phase144_calibration_drift_health(context: 'RuntimeContext') -> HealthCheckResult:
+    return HealthCheckResult(
+        component_name="phase144_calibration_drift",
+        status=HealthStatus.HEALTHY,
+        message="Phase 144 placeholder."
+    )
+
+
+def check_phase144_residual_drift_health(context: 'RuntimeContext') -> HealthCheckResult:
+    return HealthCheckResult(
+        component_name="phase144_residual_drift",
+        status=HealthStatus.HEALTHY,
+        message="Phase 144 placeholder."
+    )
+
+
+def check_phase144_label_distribution_drift_health(context: 'RuntimeContext') -> HealthCheckResult:
+    return HealthCheckResult(
+        component_name="phase144_label_distribution_drift",
+        status=HealthStatus.HEALTHY,
+        message="Phase 144 placeholder."
+    )
+
+
+def check_phase144_regime_drift_health(context: 'RuntimeContext') -> HealthCheckResult:
+    return HealthCheckResult(
+        component_name="phase144_regime_drift",
+        status=HealthStatus.HEALTHY,
+        message="Phase 144 placeholder."
+    )
+
+
+def check_phase144_monitoring_snapshot_health(context: 'RuntimeContext') -> HealthCheckResult:
+    return HealthCheckResult(
+        component_name="phase144_monitoring_snapshot",
+        status=HealthStatus.HEALTHY,
+        message="Phase 144 placeholder."
+    )
+
+
+def check_phase144_alert_rule_metadata_health(context: 'RuntimeContext') -> HealthCheckResult:
+    return HealthCheckResult(
+        component_name="phase144_alert_rule_metadata",
+        status=HealthStatus.HEALTHY,
+        message="Phase 144 placeholder."
+    )
+
+
+def check_phase144_monitoring_metadata_package_health(context: 'RuntimeContext') -> HealthCheckResult:
+    return HealthCheckResult(
+        component_name="phase144_monitoring_metadata_package",
+        status=HealthStatus.HEALTHY,
+        message="Phase 144 placeholder."
+    )
+
+
+def check_phase144_post_ensemble_governance_health(context: 'RuntimeContext') -> HealthCheckResult:
+    return HealthCheckResult(
+        component_name="phase144_post_ensemble_governance",
+        status=HealthStatus.HEALTHY,
+        message="Phase 144 placeholder."
+    )
+
+
+def check_phase144_non_activation_drift_boundary_health(context: 'RuntimeContext') -> HealthCheckResult:
+    return HealthCheckResult(
+        component_name="phase144_non_activation_drift_boundary",
+        status=HealthStatus.HEALTHY,
+        message="Phase 144 placeholder."
+    )
+
+
+def check_phase144_drift_readiness_gate_health(context: 'RuntimeContext') -> HealthCheckResult:
+    return HealthCheckResult(
+        component_name="phase144_drift_readiness_gate",
+        status=HealthStatus.HEALTHY,
+        message="Phase 144 placeholder."
+    )
+
+
+def check_phase144_drift_safety_health(context: 'RuntimeContext') -> HealthCheckResult:
+    return HealthCheckResult(
+        component_name="phase144_drift_safety",
+        status=HealthStatus.HEALTHY,
+        message="Phase 144 placeholder."
+    )
+
+
+def check_phase144_drift_store_health(context: 'RuntimeContext') -> HealthCheckResult:
+    return HealthCheckResult(
+        component_name="phase144_drift_store",
+        status=HealthStatus.HEALTHY,
+        message="Phase 144 placeholder."
+    )
+
+
+def check_phase144_notification_boundary_health(context: 'RuntimeContext') -> HealthCheckResult:
+    return HealthCheckResult(
+        component_name="phase144_notification_boundary",
+        status=HealthStatus.HEALTHY,
+        message="Phase 144 placeholder."
+    )
