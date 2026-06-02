@@ -1,0 +1,39 @@
+from usa_signal_bot.ml_research.ml_governance_closure.phase145_models import (
+    DriftMonitoringIngestionResult,
+    ExplainabilityInputReference,
+    FeatureAttributionProxy,
+    FactorContributionSummary,
+    ModelBehaviorExplanation,
+    RegimeAwareExplanation,
+    CalibrationAwareExplanation,
+    EnsembleExplanation,
+    ExplainabilityReport,
+    AdvancedMLArtifactLineage,
+    MLGovernanceClosureResult,
+    AdvancedMLFinalAuditResult,
+    NonActivationMLClosureBoundaryResult,
+    FinalMLModelCardClosure,
+    AdvancedMLAcceptanceGate,
+    AdvancedMLClosureContext,
+    AdvancedMLClosureFullReview
+)
+
+__all__ = [
+    "DriftMonitoringIngestionResult",
+    "ExplainabilityInputReference",
+    "FeatureAttributionProxy",
+    "FactorContributionSummary",
+    "ModelBehaviorExplanation",
+    "RegimeAwareExplanation",
+    "CalibrationAwareExplanation",
+    "EnsembleExplanation",
+    "ExplainabilityReport",
+    "AdvancedMLArtifactLineage",
+    "MLGovernanceClosureResult",
+    "AdvancedMLFinalAuditResult",
+    "NonActivationMLClosureBoundaryResult",
+    "FinalMLModelCardClosure",
+    "AdvancedMLAcceptanceGate",
+    "AdvancedMLClosureContext",
+    "AdvancedMLClosureFullReview"
+]
