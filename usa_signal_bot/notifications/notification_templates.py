@@ -330,3 +330,32 @@ def notifications_from_drift_monitoring_review(*args, **kwargs):
     from usa_signal_bot.notifications.notification_adapters import NotificationMessage
     from usa_signal_bot.core.enums import NotificationType
     return NotificationMessage(message_type=NotificationType.SYSTEM_INFO, body="Phase 144 placeholder")
+
+from usa_signal_bot.ml_research.ml_governance_closure.phase145_models import (
+    AdvancedMLClosureFullReview,
+    ExplainabilityReport,
+    AdvancedMLFinalAuditResult
+)
+
+def format_ml_governance_closure_report_message(review: AdvancedMLClosureFullReview) -> 'NotificationMessage':
+    passed = review.context.ready_for_phase146
+    message = f"ML Governance Closure {'Passed' if passed else 'Failed'} for review {review.review_id}."
+    return NotificationMessage(message=message, title="ML Governance Closure", level=NotificationLevel.INFO)
+
+def format_explainability_warning_message(report: ExplainabilityReport) -> 'NotificationMessage':
+    message = f"Explainability report {report.report_id} contains warnings. Ensure outputs are metadata only."
+    return NotificationMessage(message=message, title="Explainability Warning", level=NotificationLevel.WARNING)
+
+def format_advanced_ml_final_audit_warning_message(audit: AdvancedMLFinalAuditResult) -> 'NotificationMessage':
+    message = f"Final audit {audit.audit_id} contains {audit.failed_items} failed items."
+    return NotificationMessage(message=message, title="Advanced ML Final Audit Warning", level=NotificationLevel.WARNING)
+
+def notifications_from_ml_governance_closure_review(review: AdvancedMLClosureFullReview) -> list['NotificationMessage']:
+    notifications = [format_ml_governance_closure_report_message(review)]
+    if not review.context.ready_for_phase146:
+        notifications.append(NotificationMessage(
+            message=f"Acceptance gate failed for review {review.review_id}.",
+            title="Acceptance Gate Failed",
+            level=NotificationLevel.WARNING
+        ))
+    return notifications

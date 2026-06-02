@@ -42,6 +42,69 @@ def main():
         p = subparsers.add_parser(cmd, help=f"Phase 143 {cmd}")
         p.add_argument("--write", action="store_true")
 
+
+    parser_ml_closure_info = subparsers.add_parser("ml-closure-info", help="Display information about Phase 145 ML Governance Closure.")
+
+    parser_ingest = subparsers.add_parser("ml-closure-ingest-drift-monitoring", help="Ingest Drift Monitoring output (Simulated)")
+    parser_ingest.add_argument("--write", action="store_true")
+
+    parser_load = subparsers.add_parser("ml-closure-artifact-load", help="Load Artifacts (Simulated)")
+    parser_load.add_argument("--write", action="store_true")
+
+    parser_resolve = subparsers.add_parser("resolve-explainability-inputs", help="Resolve Explainability Inputs (Simulated)")
+    parser_resolve.add_argument("--write", action="store_true")
+
+    parser_feat_attr = subparsers.add_parser("build-feature-attribution-proxy", help="Build Feature Attribution Proxy (Simulated)")
+    parser_feat_attr.add_argument("--write", action="store_true")
+
+    parser_fact_cont = subparsers.add_parser("build-factor-contribution-summary", help="Build Factor Contribution Summary (Simulated)")
+    parser_fact_cont.add_argument("--write", action="store_true")
+
+    parser_mod_behav = subparsers.add_parser("build-model-behavior-explanation", help="Build Model Behavior Explanation (Simulated)")
+    parser_mod_behav.add_argument("--write", action="store_true")
+
+    parser_regime_exp = subparsers.add_parser("build-regime-aware-explanation", help="Build Regime Aware Explanation (Simulated)")
+    parser_regime_exp.add_argument("--write", action="store_true")
+
+    parser_cal_exp = subparsers.add_parser("build-calibration-aware-explanation", help="Build Calibration Aware Explanation (Simulated)")
+    parser_cal_exp.add_argument("--write", action="store_true")
+
+    parser_ens_exp = subparsers.add_parser("build-ensemble-explanation", help="Build Ensemble Explanation (Simulated)")
+    parser_ens_exp.add_argument("--write", action="store_true")
+
+    parser_exp_rep = subparsers.add_parser("build-explainability-report", help="Build Explainability Report (Simulated)")
+    parser_exp_rep.add_argument("--write", action="store_true")
+
+    parser_art_lin = subparsers.add_parser("build-advanced-ml-artifact-lineage", help="Build Advanced ML Artifact Lineage (Simulated)")
+    parser_art_lin.add_argument("--write", action="store_true")
+
+    parser_gov_clos = subparsers.add_parser("build-ml-governance-closure", help="Build ML Governance Closure (Simulated)")
+    parser_gov_clos.add_argument("--write", action="store_true")
+
+    parser_fin_aud = subparsers.add_parser("build-advanced-ml-final-audit", help="Build Advanced ML Final Audit (Simulated)")
+    parser_fin_aud.add_argument("--write", action="store_true")
+
+    parser_na_bound = subparsers.add_parser("validate-non-activation-ml-closure-boundary", help="Validate Non Activation ML Closure Boundary (Simulated)")
+    parser_na_bound.add_argument("--write", action="store_true")
+
+    parser_fin_mc = subparsers.add_parser("build-final-ml-model-card-closure", help="Build Final ML Model Card Closure (Simulated)")
+    parser_fin_mc.add_argument("--write", action="store_true")
+
+    parser_acc_gate = subparsers.add_parser("advanced-ml-acceptance-gate", help="Run Advanced ML Acceptance Gate (Simulated)")
+    parser_acc_gate.add_argument("--write", action="store_true")
+
+    parser_sch_chk = subparsers.add_parser("ml-closure-schema-check", help="Check ML Closure Schema (Simulated)")
+    parser_saf_chk = subparsers.add_parser("ml-closure-safety-check", help="Check ML Closure Safety (Simulated)")
+
+    parser_ctx = subparsers.add_parser("ml-closure-context", help="Build ML Closure Context (Simulated)")
+    parser_ctx.add_argument("--write", action="store_true")
+
+    parser_rev = subparsers.add_parser("ml-closure-review", help="Build ML Closure Review (Simulated)")
+    parser_rev.add_argument("--write", action="store_true")
+
+    parser_sum = subparsers.add_parser("ml-closure-summary", help="Show ML Closure Summary (Simulated)")
+    parser_val = subparsers.add_parser("ml-closure-validate", help="Validate ML Closure (Simulated)")
+
     args = parser.parse_args()
 
     if args.command == "ensemble-prototype-info":
@@ -71,244 +134,193 @@ def main():
             print("Write mode simulated.")
         return
 
-@cli.command(name="drift-monitoring-info")
-@click.option("--write", is_flag=True, help="Write output to data directory")
-def drift_monitoring_info(write: bool):
-    """Phase 144 placeholder."""
-    click.echo("Phase 144 placeholder.")
-    if "drift-monitoring-info" == "drift-monitoring-info":
-        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
 
 
-@cli.command(name="drift-ingest-ensemble-prototype")
-@click.option("--write", is_flag=True, help="Write output to data directory")
-def drift_ingest_ensemble_prototype(write: bool):
-    """Phase 144 placeholder."""
-    click.echo("Phase 144 placeholder.")
-    if "drift-ingest-ensemble-prototype" == "drift-monitoring-info":
-        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
 
 
-@cli.command(name="drift-artifact-load")
-@click.option("--write", is_flag=True, help="Write output to data directory")
-def drift_artifact_load(write: bool):
-    """Phase 144 placeholder."""
-    click.echo("Phase 144 placeholder.")
-    if "drift-artifact-load" == "drift-monitoring-info":
-        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
 
 
-@cli.command(name="resolve-drift-inputs")
-@click.option("--write", is_flag=True, help="Write output to data directory")
-def resolve_drift_inputs(write: bool):
-    """Phase 144 placeholder."""
-    click.echo("Phase 144 placeholder.")
-    if "resolve-drift-inputs" == "drift-monitoring-info":
-        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
 
 
-@cli.command(name="build-monitoring-window-policy")
-@click.option("--write", is_flag=True, help="Write output to data directory")
-def build_monitoring_window_policy(write: bool):
-    """Phase 144 placeholder."""
-    click.echo("Phase 144 placeholder.")
-    if "build-monitoring-window-policy" == "drift-monitoring-info":
-        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
 
 
-@cli.command(name="build-drift-baseline-specs")
-@click.option("--write", is_flag=True, help="Write output to data directory")
-def build_drift_baseline_specs(write: bool):
-    """Phase 144 placeholder."""
-    click.echo("Phase 144 placeholder.")
-    if "build-drift-baseline-specs" == "drift-monitoring-info":
-        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
 
 
-@cli.command(name="build-feature-drift-baseline")
-@click.option("--write", is_flag=True, help="Write output to data directory")
-def build_feature_drift_baseline(write: bool):
-    """Phase 144 placeholder."""
-    click.echo("Phase 144 placeholder.")
-    if "build-feature-drift-baseline" == "drift-monitoring-info":
-        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
 
 
-@cli.command(name="build-prediction-drift-baseline")
-@click.option("--write", is_flag=True, help="Write output to data directory")
-def build_prediction_drift_baseline(write: bool):
-    """Phase 144 placeholder."""
-    click.echo("Phase 144 placeholder.")
-    if "build-prediction-drift-baseline" == "drift-monitoring-info":
-        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
 
 
-@cli.command(name="build-score-distribution-drift")
-@click.option("--write", is_flag=True, help="Write output to data directory")
-def build_score_distribution_drift(write: bool):
-    """Phase 144 placeholder."""
-    click.echo("Phase 144 placeholder.")
-    if "build-score-distribution-drift" == "drift-monitoring-info":
-        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
 
 
-@cli.command(name="build-calibration-drift-baseline")
-@click.option("--write", is_flag=True, help="Write output to data directory")
-def build_calibration_drift_baseline(write: bool):
-    """Phase 144 placeholder."""
-    click.echo("Phase 144 placeholder.")
-    if "build-calibration-drift-baseline" == "drift-monitoring-info":
-        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
 
 
-@cli.command(name="build-residual-drift-baseline")
-@click.option("--write", is_flag=True, help="Write output to data directory")
-def build_residual_drift_baseline(write: bool):
-    """Phase 144 placeholder."""
-    click.echo("Phase 144 placeholder.")
-    if "build-residual-drift-baseline" == "drift-monitoring-info":
-        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
 
 
-@cli.command(name="build-label-distribution-drift")
-@click.option("--write", is_flag=True, help="Write output to data directory")
-def build_label_distribution_drift(write: bool):
-    """Phase 144 placeholder."""
-    click.echo("Phase 144 placeholder.")
-    if "build-label-distribution-drift" == "drift-monitoring-info":
-        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
 
 
-@cli.command(name="build-regime-drift-baseline")
-@click.option("--write", is_flag=True, help="Write output to data directory")
-def build_regime_drift_baseline(write: bool):
-    """Phase 144 placeholder."""
-    click.echo("Phase 144 placeholder.")
-    if "build-regime-drift-baseline" == "drift-monitoring-info":
-        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
 
 
-@cli.command(name="calculate-drift-metrics")
-@click.option("--write", is_flag=True, help="Write output to data directory")
-def calculate_drift_metrics(write: bool):
-    """Phase 144 placeholder."""
-    click.echo("Phase 144 placeholder.")
-    if "calculate-drift-metrics" == "drift-monitoring-info":
-        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
 
 
-@cli.command(name="build-monitoring-snapshot")
-@click.option("--write", is_flag=True, help="Write output to data directory")
-def build_monitoring_snapshot(write: bool):
-    """Phase 144 placeholder."""
-    click.echo("Phase 144 placeholder.")
-    if "build-monitoring-snapshot" == "drift-monitoring-info":
-        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
 
 
-@cli.command(name="build-alert-rule-metadata")
-@click.option("--write", is_flag=True, help="Write output to data directory")
-def build_alert_rule_metadata(write: bool):
-    """Phase 144 placeholder."""
-    click.echo("Phase 144 placeholder.")
-    if "build-alert-rule-metadata" == "drift-monitoring-info":
-        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
 
 
-@cli.command(name="build-monitoring-metadata-package")
-@click.option("--write", is_flag=True, help="Write output to data directory")
-def build_monitoring_metadata_package(write: bool):
-    """Phase 144 placeholder."""
-    click.echo("Phase 144 placeholder.")
-    if "build-monitoring-metadata-package" == "drift-monitoring-info":
-        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
 
 
-@cli.command(name="build-post-ensemble-governance")
-@click.option("--write", is_flag=True, help="Write output to data directory")
-def build_post_ensemble_governance(write: bool):
-    """Phase 144 placeholder."""
-    click.echo("Phase 144 placeholder.")
-    if "build-post-ensemble-governance" == "drift-monitoring-info":
-        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
 
 
-@cli.command(name="validate-non-activation-drift-boundary")
-@click.option("--write", is_flag=True, help="Write output to data directory")
-def validate_non_activation_drift_boundary(write: bool):
-    """Phase 144 placeholder."""
-    click.echo("Phase 144 placeholder.")
-    if "validate-non-activation-drift-boundary" == "drift-monitoring-info":
-        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
 
 
-@cli.command(name="update-model-cards-with-drift")
-@click.option("--write", is_flag=True, help="Write output to data directory")
-def update_model_cards_with_drift(write: bool):
-    """Phase 144 placeholder."""
-    click.echo("Phase 144 placeholder.")
-    if "update-model-cards-with-drift" == "drift-monitoring-info":
-        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
 
 
-@cli.command(name="drift-readiness-gate")
-@click.option("--write", is_flag=True, help="Write output to data directory")
-def drift_readiness_gate(write: bool):
-    """Phase 144 placeholder."""
-    click.echo("Phase 144 placeholder.")
-    if "drift-readiness-gate" == "drift-monitoring-info":
-        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
 
 
-@cli.command(name="drift-schema-check")
-@click.option("--write", is_flag=True, help="Write output to data directory")
-def drift_schema_check(write: bool):
-    """Phase 144 placeholder."""
-    click.echo("Phase 144 placeholder.")
-    if "drift-schema-check" == "drift-monitoring-info":
-        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
 
 
-@cli.command(name="drift-safety-check")
-@click.option("--write", is_flag=True, help="Write output to data directory")
-def drift_safety_check(write: bool):
-    """Phase 144 placeholder."""
-    click.echo("Phase 144 placeholder.")
-    if "drift-safety-check" == "drift-monitoring-info":
-        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
 
 
-@cli.command(name="drift-monitoring-context")
-@click.option("--write", is_flag=True, help="Write output to data directory")
-def drift_monitoring_context(write: bool):
-    """Phase 144 placeholder."""
-    click.echo("Phase 144 placeholder.")
-    if "drift-monitoring-context" == "drift-monitoring-info":
-        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
 
 
-@cli.command(name="drift-monitoring-review")
-@click.option("--write", is_flag=True, help="Write output to data directory")
-def drift_monitoring_review(write: bool):
-    """Phase 144 placeholder."""
-    click.echo("Phase 144 placeholder.")
-    if "drift-monitoring-review" == "drift-monitoring-info":
-        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
 
 
-@cli.command(name="drift-monitoring-summary")
-@click.option("--write", is_flag=True, help="Write output to data directory")
-def drift_monitoring_summary(write: bool):
-    """Phase 144 placeholder."""
-    click.echo("Phase 144 placeholder.")
-    if "drift-monitoring-summary" == "drift-monitoring-info":
-        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
 
 
-@cli.command(name="drift-monitoring-validate")
-@click.option("--write", is_flag=True, help="Write output to data directory")
-def drift_monitoring_validate(write: bool):
-    """Phase 144 placeholder."""
-    click.echo("Phase 144 placeholder.")
-    if "drift-monitoring-validate" == "drift-monitoring-info":
-        click.echo("Phase 144 is an offline drift baseline, monitoring metadata, and post-ensemble governance phase. No active paper trading, deployment, live inference, live monitoring, live daemon, or alert sender.")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    if args.command == "ml-closure-info":
+        print("Phase 145 - Advanced ML Band Final Audit and ML Governance Closure")
+        print("This phase is for explainability metadata, final ML governance closure and Advanced ML band final audit.")
+        print("It DOES NOT run active paper trading, deployment, live inference, live monitoring, live daemon, or backtests.")
+        sys.exit(0)
+    elif args.command == "ml-closure-ingest-drift-monitoring":
+        print("Ingesting Drift Monitoring output...")
+        if getattr(args, "write", False): print("Writing to store...")
+        print("Done (Simulated)")
+        sys.exit(0)
+    elif args.command == "ml-closure-artifact-load":
+        print("Loading artifacts...")
+        if getattr(args, "write", False): print("Writing to store...")
+        print("Done (Simulated)")
+        sys.exit(0)
+    elif args.command == "resolve-explainability-inputs":
+        print("Resolving explainability inputs...")
+        if getattr(args, "write", False): print("Writing to store...")
+        print("Done (Simulated)")
+        sys.exit(0)
+    elif args.command == "build-feature-attribution-proxy":
+        print("Building feature attribution proxies... Note: These are NOT trade signals.")
+        if getattr(args, "write", False): print("Writing to store...")
+        print("Done (Simulated)")
+        sys.exit(0)
+    elif args.command == "build-factor-contribution-summary":
+        print("Building factor contribution summaries... Note: These are NOT portfolio weights or allocations.")
+        if getattr(args, "write", False): print("Writing to store...")
+        print("Done (Simulated)")
+        sys.exit(0)
+    elif args.command == "build-model-behavior-explanation":
+        print("Building model behavior explanations...")
+        if getattr(args, "write", False): print("Writing to store...")
+        print("Done (Simulated)")
+        sys.exit(0)
+    elif args.command == "build-regime-aware-explanation":
+        print("Building regime aware explanations...")
+        if getattr(args, "write", False): print("Writing to store...")
+        print("Done (Simulated)")
+        sys.exit(0)
+    elif args.command == "build-calibration-aware-explanation":
+        print("Building calibration aware explanations...")
+        if getattr(args, "write", False): print("Writing to store...")
+        print("Done (Simulated)")
+        sys.exit(0)
+    elif args.command == "build-ensemble-explanation":
+        print("Building ensemble explanations...")
+        if getattr(args, "write", False): print("Writing to store...")
+        print("Done (Simulated)")
+        sys.exit(0)
+    elif args.command == "build-explainability-report":
+        print("Building explainability report...")
+        if getattr(args, "write", False): print("Writing to store...")
+        print("Done (Simulated)")
+        sys.exit(0)
+    elif args.command == "build-advanced-ml-artifact-lineage":
+        print("Building advanced ML artifact lineage...")
+        if getattr(args, "write", False): print("Writing to store...")
+        print("Done (Simulated)")
+        sys.exit(0)
+    elif args.command == "build-ml-governance-closure":
+        print("Building ML governance closure... Note: This does NOT produce strategy activation.")
+        if getattr(args, "write", False): print("Writing to store...")
+        print("Done (Simulated)")
+        sys.exit(0)
+    elif args.command == "build-advanced-ml-final-audit":
+        print("Building advanced ML final audit...")
+        if getattr(args, "write", False): print("Writing to store...")
+        print("Done (Simulated)")
+        sys.exit(0)
+    elif args.command == "validate-non-activation-ml-closure-boundary":
+        print("Validating non-activation ML closure boundary...")
+        if getattr(args, "write", False): print("Writing to store...")
+        print("Done (Simulated)")
+        sys.exit(0)
+    elif args.command == "build-final-ml-model-card-closure":
+        print("Building final ML model card closure...")
+        if getattr(args, "write", False): print("Writing to store...")
+        print("Done (Simulated)")
+        sys.exit(0)
+    elif args.command == "advanced-ml-acceptance-gate":
+        print("Running advanced ML acceptance gate... Note: This DOES NOT start live inference, live monitoring, backtest, or deployment.")
+        if getattr(args, "write", False): print("Writing to store...")
+        print("Done (Simulated)")
+        sys.exit(0)
+    elif args.command == "ml-closure-schema-check":
+        print("Checking ML closure schema...")
+        print("Done (Simulated)")
+        sys.exit(0)
+    elif args.command == "ml-closure-safety-check":
+        print("Checking ML closure safety...")
+        print("Done (Simulated)")
+        sys.exit(0)
+    elif args.command == "ml-closure-context":
+        print("Building ML closure context...")
+        if getattr(args, "write", False): print("Writing to store...")
+        print("Done (Simulated)")
+        sys.exit(0)
+    elif args.command == "ml-closure-review":
+        print("Building ML closure review...")
+        if getattr(args, "write", False): print("Writing to store...")
+        print("Done (Simulated)")
+        sys.exit(0)
+    elif args.command == "ml-closure-summary":
+        print("Showing ML closure summary...")
+        print("Done (Simulated)")
+        sys.exit(0)
+    elif args.command == "ml-closure-validate":
+        print("Validating ML closure...")
+        print("Done (Simulated)")
+        sys.exit(0)

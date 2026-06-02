@@ -2908,126 +2908,192 @@ class EnsemblePrototypeStoreError(USASignalBotError): pass
 class EnsemblePrototypeValidationError(USASignalBotError): pass
 class EnsemblePrototypeReportingError(USASignalBotError): pass
 
-class DriftMonitoringError(BaseUSASignalBotException):
+class DriftMonitoringError(Exception):
     """DriftMonitoringError implementation."""
     pass
 
 
-class EnsemblePrototypeIngestionError(BaseUSASignalBotException):
+class EnsemblePrototypeIngestionError(Exception):
     """EnsemblePrototypeIngestionError implementation."""
     pass
 
 
-class EnsemblePrototypeArtifactLoaderError(BaseUSASignalBotException):
+class EnsemblePrototypeArtifactLoaderError(Exception):
     """EnsemblePrototypeArtifactLoaderError implementation."""
     pass
 
 
-class DriftInputResolverError(BaseUSASignalBotException):
+class DriftInputResolverError(Exception):
     """DriftInputResolverError implementation."""
     pass
 
 
-class MonitoringWindowPolicyError(BaseUSASignalBotException):
+class MonitoringWindowPolicyError(Exception):
     """MonitoringWindowPolicyError implementation."""
     pass
 
 
-class DriftBaselineSpecError(BaseUSASignalBotException):
+class DriftBaselineSpecError(Exception):
     """DriftBaselineSpecError implementation."""
     pass
 
 
-class FeatureDriftBaselineError(BaseUSASignalBotException):
+class FeatureDriftBaselineError(Exception):
     """FeatureDriftBaselineError implementation."""
     pass
 
 
-class PredictionDriftBaselineError(BaseUSASignalBotException):
+class PredictionDriftBaselineError(Exception):
     """PredictionDriftBaselineError implementation."""
     pass
 
 
-class ScoreDistributionDriftError(BaseUSASignalBotException):
+class ScoreDistributionDriftError(Exception):
     """ScoreDistributionDriftError implementation."""
     pass
 
 
-class CalibrationDriftBaselineError(BaseUSASignalBotException):
+class CalibrationDriftBaselineError(Exception):
     """CalibrationDriftBaselineError implementation."""
     pass
 
 
-class ResidualDriftBaselineError(BaseUSASignalBotException):
+class ResidualDriftBaselineError(Exception):
     """ResidualDriftBaselineError implementation."""
     pass
 
 
-class LabelDistributionDriftError(BaseUSASignalBotException):
+class LabelDistributionDriftError(Exception):
     """LabelDistributionDriftError implementation."""
     pass
 
 
-class RegimeDriftBaselineError(BaseUSASignalBotException):
+class RegimeDriftBaselineError(Exception):
     """RegimeDriftBaselineError implementation."""
     pass
 
 
-class DriftMetricCalculatorError(BaseUSASignalBotException):
+class DriftMetricCalculatorError(Exception):
     """DriftMetricCalculatorError implementation."""
     pass
 
 
-class AlertRuleMetadataBuilderError(BaseUSASignalBotException):
+class AlertRuleMetadataBuilderError(Exception):
     """AlertRuleMetadataBuilderError implementation."""
     pass
 
 
-class MonitoringMetadataPackageError(BaseUSASignalBotException):
+class MonitoringMetadataPackageError(Exception):
     """MonitoringMetadataPackageError implementation."""
     pass
 
 
-class PostEnsembleGovernanceError(BaseUSASignalBotException):
+class PostEnsembleGovernanceError(Exception):
     """PostEnsembleGovernanceError implementation."""
     pass
 
 
-class NonActivationDriftBoundaryError(BaseUSASignalBotException):
+class NonActivationDriftBoundaryError(Exception):
     """NonActivationDriftBoundaryError implementation."""
     pass
 
 
-class ModelCardDriftUpdaterError(BaseUSASignalBotException):
+class ModelCardDriftUpdaterError(Exception):
     """ModelCardDriftUpdaterError implementation."""
     pass
 
 
-class DriftReadinessGateError(BaseUSASignalBotException):
+class DriftReadinessGateError(Exception):
     """DriftReadinessGateError implementation."""
     pass
 
 
-class DriftSchemaValidationError(BaseUSASignalBotException):
+class DriftSchemaValidationError(Exception):
     """DriftSchemaValidationError implementation."""
     pass
 
 
-class DriftSafetyValidationError(BaseUSASignalBotException):
+class DriftSafetyValidationError(Exception):
     """DriftSafetyValidationError implementation."""
     pass
 
 
-class DriftMonitoringStoreError(BaseUSASignalBotException):
+class DriftMonitoringStoreError(Exception):
     """DriftMonitoringStoreError implementation."""
     pass
 
 
-class DriftMonitoringValidationError(BaseUSASignalBotException):
+class DriftMonitoringValidationError(Exception):
     """DriftMonitoringValidationError implementation."""
     pass
 
 
-class DriftMonitoringReportingError(BaseUSASignalBotException):
+class DriftMonitoringReportingError(Exception):
     """DriftMonitoringReportingError implementation."""
+    pass
+
+class MLGovernanceClosureError(USASignalBotError):
+    pass
+
+class DriftMonitoringIngestionError(MLGovernanceClosureError):
+    pass
+
+class DriftMonitoringArtifactLoaderError(MLGovernanceClosureError):
+    pass
+
+class ExplainabilityInputResolverError(MLGovernanceClosureError):
+    pass
+
+class FeatureAttributionProxyError(MLGovernanceClosureError):
+    pass
+
+class FactorContributionSummaryError(MLGovernanceClosureError):
+    pass
+
+class ModelBehaviorExplanationError(MLGovernanceClosureError):
+    pass
+
+class RegimeAwareExplanationError(MLGovernanceClosureError):
+    pass
+
+class CalibrationAwareExplanationError(MLGovernanceClosureError):
+    pass
+
+class EnsembleExplanationError(MLGovernanceClosureError):
+    pass
+
+class ExplainabilityReportError(MLGovernanceClosureError):
+    pass
+
+class AdvancedMLArtifactLineageError(MLGovernanceClosureError):
+    pass
+
+class AdvancedMLFinalAuditError(MLGovernanceClosureError):
+    pass
+
+class MLGovernanceClosureResultError(MLGovernanceClosureError):
+    pass
+
+class NonActivationMLClosureBoundaryError(MLGovernanceClosureError):
+    pass
+
+class FinalModelCardClosureError(MLGovernanceClosureError):
+    pass
+
+class AdvancedMLAcceptanceGateError(MLGovernanceClosureError):
+    pass
+
+class MLClosureSchemaValidationError(MLGovernanceClosureError):
+    pass
+
+class MLClosureSafetyValidationError(MLGovernanceClosureError):
+    pass
+
+class MLGovernanceClosureStoreError(MLGovernanceClosureError):
+    pass
+
+class MLGovernanceClosureValidationError(MLGovernanceClosureError):
+    pass
+
+class MLGovernanceClosureReportingError(MLGovernanceClosureError):
     pass

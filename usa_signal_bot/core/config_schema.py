@@ -3009,6 +3009,105 @@ class Phase137NotificationsConfig:
     preview_only: bool = True
     telegram_real_send: bool = False
 
+
+@dataclass
+class MLGovernanceClosureConfig:
+    enabled: bool = True
+    current_phase: int = 145
+    final_phase: int = 160
+    require_phase144_drift_monitoring: bool = True
+    drift_monitoring_ingestion_enabled: bool = True
+    drift_artifact_loader_enabled: bool = True
+    explainability_input_resolver_enabled: bool = True
+    feature_attribution_proxy_enabled: bool = True
+    factor_contribution_enabled: bool = True
+    model_behavior_explanation_enabled: bool = True
+    regime_aware_explanation_enabled: bool = True
+    calibration_aware_explanation_enabled: bool = True
+    ensemble_explanation_enabled: bool = True
+    explainability_report_enabled: bool = True
+    artifact_lineage_enabled: bool = True
+    ml_governance_closure_enabled: bool = True
+    advanced_ml_final_audit_enabled: bool = True
+    non_activation_boundary_enabled: bool = True
+    final_model_card_closure_enabled: bool = True
+    acceptance_gate_enabled: bool = True
+    write_ml_governance_closure_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_explainability_is_metadata_only: bool = True
+    warn_feature_attribution_is_not_trade_signal: bool = True
+    warn_governance_closure_is_not_deployment: bool = True
+    warn_phase145_does_not_run_backtests: bool = True
+
+@dataclass
+class Phase145MLClosurePolicyConfig:
+    compute_values_local_only: bool = True
+    research_data_only: bool = True
+    offline_ml_research_only: bool = True
+    explainability_metadata_only: bool = True
+    local_fixture_only_default: bool = True
+    allow_network: bool = False
+    allow_paid_api: bool = False
+    allow_scraping: bool = False
+    allow_html_parsing: bool = False
+    allow_broker: bool = False
+    allow_order: bool = False
+    allow_paper_mutation: bool = False
+    allow_telegram_real_send: bool = False
+    allow_dashboard: bool = False
+    allow_deployment: bool = False
+    allow_live_monitoring: bool = False
+    allow_alert_sender: bool = False
+    allow_live_inference: bool = False
+    allow_online_inference: bool = False
+    allow_scheduler: bool = False
+    allow_background_daemon: bool = False
+    allow_threshold_optimization: bool = False
+    allow_portfolio_optimization: bool = False
+    allow_backtest_execution: bool = False
+    allow_heavy_ml_dependencies: bool = False
+    allow_shap_lime_dependencies: bool = False
+    produce_trade_signals: bool = False
+    produce_order_decisions: bool = False
+    produce_portfolio_weights: bool = False
+    produce_investment_advice: bool = False
+    strategy_activation_allowed: bool = False
+
+@dataclass
+class Phase145ExplainabilityConfig:
+    enabled: bool = True
+    max_feature_attributions: int = 50
+    max_factor_summaries: int = 30
+    use_feature_summary_proxy: bool = True
+    use_factor_summary_proxy: bool = True
+    use_correlation_proxy: bool = True
+    use_stability_proxy: bool = True
+    use_regime_aware_proxy: bool = True
+    use_calibration_aware_proxy: bool = True
+    use_ensemble_contribution_proxy: bool = True
+    shap_enabled: bool = False
+    lime_enabled: bool = False
+    heavy_dependency_enabled: bool = False
+
+@dataclass
+class Phase145FinalAuditConfig:
+    enabled: bool = True
+    required_phase_start: int = 136
+    required_phase_end: int = 145
+    require_all_phase_reviews: bool = True
+    require_all_readiness_gates_passed: bool = True
+    require_non_activation_boundary: bool = True
+    require_final_model_card_closure: bool = True
+    require_phase146_handoff: bool = True
+
+@dataclass
+class Phase145NotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    preview_only: bool = True
+    telegram_real_send: bool = False
+
+@dataclass
 class Config:
     ml_dataset_assembly: MLDatasetAssemblyConfig = field(default_factory=MLDatasetAssemblyConfig)
     phase137_dataset_policy: Phase137DatasetPolicyConfig = field(default_factory=Phase137DatasetPolicyConfig)

@@ -3790,3 +3790,96 @@ phase144_notifications:
   dry_run: true
   preview_only: true
   telegram_real_send: false
+
+
+ml_governance_closure:
+  enabled: true
+  current_phase: 145
+  final_phase: 160
+  require_phase144_drift_monitoring: true
+  drift_monitoring_ingestion_enabled: true
+  drift_artifact_loader_enabled: true
+  explainability_input_resolver_enabled: true
+  feature_attribution_proxy_enabled: true
+  factor_contribution_enabled: true
+  model_behavior_explanation_enabled: true
+  regime_aware_explanation_enabled: true
+  calibration_aware_explanation_enabled: true
+  ensemble_explanation_enabled: true
+  explainability_report_enabled: true
+  artifact_lineage_enabled: true
+  ml_governance_closure_enabled: true
+  advanced_ml_final_audit_enabled: true
+  non_activation_boundary_enabled: true
+  final_model_card_closure_enabled: true
+  acceptance_gate_enabled: true
+  write_ml_governance_closure_reports: true
+  warn_not_investment_advice: true
+  warn_explainability_is_metadata_only: true
+  warn_feature_attribution_is_not_trade_signal: true
+  warn_governance_closure_is_not_deployment: true
+  warn_phase145_does_not_run_backtests: true
+
+phase145_ml_closure_policy:
+  compute_values_local_only: true
+  research_data_only: true
+  offline_ml_research_only: true
+  explainability_metadata_only: true
+  local_fixture_only_default: true
+  allow_network: false
+  allow_paid_api: false
+  allow_scraping: false
+  allow_html_parsing: false
+  allow_broker: false
+  allow_order: false
+  allow_paper_mutation: false
+  allow_telegram_real_send: false
+  allow_dashboard: false
+  allow_deployment: false
+  allow_live_monitoring: false
+  allow_alert_sender: false
+  allow_live_inference: false
+  allow_online_inference: false
+  allow_scheduler: false
+  allow_background_daemon: false
+  allow_threshold_optimization: false
+  allow_portfolio_optimization: false
+  allow_backtest_execution: false
+  allow_heavy_ml_dependencies: false
+  allow_shap_lime_dependencies: false
+  produce_trade_signals: false
+  produce_order_decisions: false
+  produce_portfolio_weights: false
+  produce_investment_advice: false
+  strategy_activation_allowed: false
+
+phase145_explainability:
+  enabled: true
+  max_feature_attributions: 50
+  max_factor_summaries: 30
+  use_feature_summary_proxy: true
+  use_factor_summary_proxy: true
+  use_correlation_proxy: true
+  use_stability_proxy: true
+  use_regime_aware_proxy: true
+  use_calibration_aware_proxy: true
+  use_ensemble_contribution_proxy: true
+  shap_enabled: false
+  lime_enabled: false
+  heavy_dependency_enabled: false
+
+phase145_final_audit:
+  enabled: true
+  required_phase_start: 136
+  required_phase_end: 145
+  require_all_phase_reviews: true
+  require_all_readiness_gates_passed: true
+  require_non_activation_boundary: true
+  require_final_model_card_closure: true
+  require_phase146_handoff: true
+
+phase145_notifications:
+  enabled: true
+  dry_run: true
+  preview_only: true
+  telegram_real_send: false
