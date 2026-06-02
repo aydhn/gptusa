@@ -3109,6 +3109,7 @@ class Phase145NotificationsConfig:
 
 @dataclass
 class Config:
+    realistic_backtest_run: RealisticBacktestRunConfig = field(default_factory=RealisticBacktestRunConfig)
     ml_dataset_assembly: MLDatasetAssemblyConfig = field(default_factory=MLDatasetAssemblyConfig)
     phase137_dataset_policy: Phase137DatasetPolicyConfig = field(default_factory=Phase137DatasetPolicyConfig)
     phase137_split_policy: Phase137SplitPolicyConfig = field(default_factory=Phase137SplitPolicyConfig)
@@ -3735,6 +3736,90 @@ phase136_ml_policy: Phase136MLPolicyConfig = field(default_factory=Phase136MLPol
 phase136_dataset_contract: Phase136DatasetContractConfig = field(default_factory=Phase136DatasetContractConfig)
 phase136_leakage_guard: Phase136LeakageGuardConfig = field(default_factory=Phase136LeakageGuardConfig)
 phase136_notifications: Phase136NotificationsConfig = field(default_factory=Phase136NotificationsConfig)
+
+
+@dataclass
+class Phase147BacktestRunPolicyConfig:
+    compute_values_local_only: bool = True
+    research_data_only: bool = True
+    offline_backtest_research_only: bool = True
+    local_fixture_only_default: bool = True
+    allow_offline_deterministic_backtest_run: bool = True
+    allow_network: bool = False
+    allow_paid_api: bool = False
+    allow_scraping: bool = False
+    allow_html_parsing: bool = False
+    allow_broker: bool = False
+    allow_real_order_creation: bool = False
+    allow_paper_mutation: bool = False
+    allow_telegram_real_send: bool = False
+    allow_dashboard: bool = False
+    allow_deployment: bool = False
+    allow_live_trading: bool = False
+    allow_paper_trading: bool = False
+    allow_strategy_activation: bool = False
+    allow_portfolio_optimization: bool = False
+    allow_walk_forward: bool = False
+    allow_stress_test: bool = False
+    allow_monte_carlo: bool = False
+    allow_benchmark_comparison: bool = False
+    allow_scheduler: bool = False
+    allow_background_daemon: bool = False
+    produce_live_signals: bool = False
+    produce_order_decisions: bool = False
+    produce_portfolio_weights: bool = False
+    produce_investment_advice: bool = False
+
+@dataclass
+class Phase147RunDefaultsConfig:
+    initial_cash: float = 100000.0
+    currency: str = "USD"
+    deterministic_seed: int = 147
+    exposure_side: str = "LONG_ONLY_RESEARCH"
+    max_single_symbol_exposure_fraction: float = 1.0
+    allow_fractional_shares: bool = False
+    allow_short_exposure: bool = False
+    allow_leverage: bool = False
+    default_fill_policy: str = "NEXT_BAR_OPEN"
+    require_deterministic_hashes: bool = True
+
+@dataclass
+class Phase147NotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    preview_only: bool = True
+    telegram_real_send: bool = False
+
+@dataclass
+class RealisticBacktestRunConfig:
+    enabled: bool = True
+    current_phase: int = 147
+    final_phase: int = 160
+    require_phase146_backtest_foundation: bool = True
+    backtest_foundation_ingestion_enabled: bool = True
+    artifact_loader_enabled: bool = True
+    input_resolver_enabled: bool = True
+    run_config_enabled: bool = True
+    research_decision_stream_enabled: bool = True
+    simulation_clock_enabled: bool = True
+    price_event_stream_enabled: bool = True
+    simulated_execution_enabled: bool = True
+    cost_application_enabled: bool = True
+    liquidity_partial_fill_enabled: bool = True
+    exposure_timeline_enabled: bool = True
+    equity_curve_enabled: bool = True
+    drawdown_curve_enabled: bool = True
+    ledger_enabled: bool = True
+    basic_performance_enabled: bool = True
+    safety_boundary_enabled: bool = True
+    validation_gate_enabled: bool = True
+    write_backtest_run_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_simulated_fills_are_not_orders: bool = True
+    warn_backtest_run_is_offline_only: bool = True
+    policy: Phase147BacktestRunPolicyConfig = field(default_factory=Phase147BacktestRunPolicyConfig)
+    run_defaults: Phase147RunDefaultsConfig = field(default_factory=Phase147RunDefaultsConfig)
+    notifications: Phase147NotificationsConfig = field(default_factory=Phase147NotificationsConfig)
 
 AppConfig = Config
 

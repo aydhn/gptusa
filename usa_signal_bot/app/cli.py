@@ -105,7 +105,44 @@ def main():
     parser_sum = subparsers.add_parser("ml-closure-summary", help="Show ML Closure Summary (Simulated)")
     parser_val = subparsers.add_parser("ml-closure-validate", help="Validate ML Closure (Simulated)")
 
+
+    parser_phase147_info = subparsers.add_parser("backtest-run-info", help="Phase 147 info")
+
+    for cmd in ["backtest-run-ingest-foundation", "backtest-run-artifact-load", "resolve-backtest-run-inputs",
+                "build-backtest-run-config", "build-research-decision-stream", "build-simulation-clock",
+                "build-price-event-stream", "run-offline-simulated-execution", "apply-cost-spread-slippage",
+                "evaluate-liquidity-partial-fills", "build-exposure-timeline", "build-equity-curve",
+                "build-drawdown-curve", "build-backtest-ledger", "build-basic-performance-summary",
+                "validate-backtest-run-safety-boundary", "backtest-run-validation-gate", "backtest-run-schema-check",
+                "backtest-run-safety-check", "backtest-run-context", "backtest-run-review"]:
+        p = subparsers.add_parser(cmd, help=f"Phase 147 {cmd}")
+        p.add_argument("--write", action="store_true")
+
+    subparsers.add_parser("backtest-run-summary", help="Phase 147 summary")
+    subparsers.add_parser("backtest-run-validate", help="Phase 147 validate")
+
     args = parser.parse_args()
+
+
+    if args.command == "backtest-run-info":
+        print("Phase 147 - Offline Deterministic Realistic Backtest Engine and Single-Strategy Backtest Run")
+        print("This phase DOES NOT perform live trading, paper trading, broker execution, or deployment.")
+        print("It provides a strict local offline backtest environment.")
+        return
+
+    if args.command and args.command in [
+        "backtest-run-ingest-foundation", "backtest-run-artifact-load", "resolve-backtest-run-inputs",
+        "build-backtest-run-config", "build-research-decision-stream", "build-simulation-clock",
+        "build-price-event-stream", "run-offline-simulated-execution", "apply-cost-spread-slippage",
+        "evaluate-liquidity-partial-fills", "build-exposure-timeline", "build-equity-curve",
+        "build-drawdown-curve", "build-backtest-ledger", "build-basic-performance-summary",
+        "validate-backtest-run-safety-boundary", "backtest-run-validation-gate", "backtest-run-schema-check",
+        "backtest-run-safety-check", "backtest-run-context", "backtest-run-review", "backtest-run-summary",
+        "backtest-run-validate"]:
+        print(f"Executing {args.command} (Phase 147) [Mock]")
+        if getattr(args, "write", False):
+            print("Write mode simulated.")
+        return
 
     if args.command == "ensemble-prototype-info":
         print("Phase 143 is an offline ensemble prototype evaluation, blend diagnostics, and non-activation ensemble registry phase. It is NOT active paper trading, deployment, live inference, or live daemon.")
