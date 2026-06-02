@@ -3704,3 +3704,89 @@ phase143_notifications:
   dry_run: true
   preview_only: true
   telegram_real_send: false
+
+
+drift_monitoring:
+  enabled: true
+  current_phase: 144
+  final_phase: 160
+  require_phase143_ensemble_prototype: true
+  ensemble_prototype_ingestion_enabled: true
+  ensemble_artifact_loader_enabled: true
+  drift_input_resolver_enabled: true
+  monitoring_window_policy_enabled: true
+  drift_baseline_specs_enabled: true
+  feature_drift_enabled: true
+  prediction_drift_enabled: true
+  score_distribution_drift_enabled: true
+  calibration_drift_enabled: true
+  residual_drift_enabled: true
+  label_distribution_drift_enabled: true
+  regime_drift_enabled: true
+  drift_metric_calculator_enabled: true
+  monitoring_snapshot_enabled: true
+  alert_rule_metadata_enabled: true
+  monitoring_metadata_package_enabled: true
+  post_ensemble_governance_enabled: true
+  non_activation_boundary_enabled: true
+  model_card_update_enabled: true
+  readiness_gate_enabled: true
+  write_drift_monitoring_reports: true
+  warn_not_investment_advice: true
+  warn_drift_scores_are_not_trade_signals: true
+  warn_monitoring_metadata_is_not_live_monitoring: true
+  warn_alert_rules_are_preview_only: true
+
+phase144_drift_policy:
+  compute_values_local_only: true
+  research_data_only: true
+  offline_ml_research_only: true
+  metadata_only_monitoring: true
+  local_fixture_only_default: true
+  allow_network: false
+  allow_paid_api: false
+  allow_scraping: false
+  allow_html_parsing: false
+  allow_broker: false
+  allow_order: false
+  allow_paper_mutation: false
+  allow_telegram_real_send: false
+  allow_dashboard: false
+  allow_deployment: false
+  allow_live_monitoring: false
+  allow_alert_sender: false
+  allow_live_inference: false
+  allow_online_inference: false
+  allow_scheduler: false
+  allow_background_daemon: false
+  allow_threshold_optimization: false
+  allow_portfolio_optimization: false
+  allow_heavy_ml_dependencies: false
+  produce_trade_signals: false
+  produce_order_decisions: false
+  produce_portfolio_weights: false
+  produce_investment_advice: false
+  strategy_activation_allowed: false
+
+phase144_monitoring_window:
+  enabled: true
+  default_reference_splits: ["train", "validation"]
+  default_monitoring_splits: ["test"]
+  min_reference_rows: 10
+  min_monitoring_rows: 5
+  rolling_window_metadata_only: true
+  calendar_window_metadata_only: true
+
+phase144_alert_metadata:
+  enabled: true
+  notification_preview_only: true
+  alert_sender_enabled: false
+  telegram_real_send_enabled: false
+  scheduler_enabled: false
+  daemon_started: false
+
+phase144_notifications:
+  enabled: true
+  dry_run: true
+  preview_only: true
+  telegram_real_send: false

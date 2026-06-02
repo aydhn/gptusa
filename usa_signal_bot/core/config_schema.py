@@ -4073,3 +4073,98 @@ class Phase143NotificationsConfig:
     dry_run: bool = True
     preview_only: bool = True
     telegram_real_send: bool = False
+
+
+@dataclass
+class Phase144DriftPolicyConfig:
+    compute_values_local_only: bool = True
+    research_data_only: bool = True
+    offline_ml_research_only: bool = True
+    metadata_only_monitoring: bool = True
+    local_fixture_only_default: bool = True
+    allow_network: bool = False
+    allow_paid_api: bool = False
+    allow_scraping: bool = False
+    allow_html_parsing: bool = False
+    allow_broker: bool = False
+    allow_order: bool = False
+    allow_paper_mutation: bool = False
+    allow_telegram_real_send: bool = False
+    allow_dashboard: bool = False
+    allow_deployment: bool = False
+    allow_live_monitoring: bool = False
+    allow_alert_sender: bool = False
+    allow_live_inference: bool = False
+    allow_online_inference: bool = False
+    allow_scheduler: bool = False
+    allow_background_daemon: bool = False
+    allow_threshold_optimization: bool = False
+    allow_portfolio_optimization: bool = False
+    allow_heavy_ml_dependencies: bool = False
+    produce_trade_signals: bool = False
+    produce_order_decisions: bool = False
+    produce_portfolio_weights: bool = False
+    produce_investment_advice: bool = False
+    strategy_activation_allowed: bool = False
+
+
+@dataclass
+class Phase144MonitoringWindowConfig:
+    enabled: bool = True
+    default_reference_splits: list[str] = field(default_factory=lambda: ["train", "validation"])
+    default_monitoring_splits: list[str] = field(default_factory=lambda: ["test"])
+    min_reference_rows: int = 10
+    min_monitoring_rows: int = 5
+    rolling_window_metadata_only: bool = True
+    calendar_window_metadata_only: bool = True
+
+
+@dataclass
+class Phase144AlertMetadataConfig:
+    enabled: bool = True
+    notification_preview_only: bool = True
+    alert_sender_enabled: bool = False
+    telegram_real_send_enabled: bool = False
+    scheduler_enabled: bool = False
+    daemon_started: bool = False
+
+
+@dataclass
+class Phase144NotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    preview_only: bool = True
+    telegram_real_send: bool = False
+
+
+@dataclass
+class DriftMonitoringConfig:
+    enabled: bool = True
+    current_phase: int = 144
+    final_phase: int = 160
+    require_phase143_ensemble_prototype: bool = True
+    ensemble_prototype_ingestion_enabled: bool = True
+    ensemble_artifact_loader_enabled: bool = True
+    drift_input_resolver_enabled: bool = True
+    monitoring_window_policy_enabled: bool = True
+    drift_baseline_specs_enabled: bool = True
+    feature_drift_enabled: bool = True
+    prediction_drift_enabled: bool = True
+    score_distribution_drift_enabled: bool = True
+    calibration_drift_enabled: bool = True
+    residual_drift_enabled: bool = True
+    label_distribution_drift_enabled: bool = True
+    regime_drift_enabled: bool = True
+    drift_metric_calculator_enabled: bool = True
+    monitoring_snapshot_enabled: bool = True
+    alert_rule_metadata_enabled: bool = True
+    monitoring_metadata_package_enabled: bool = True
+    post_ensemble_governance_enabled: bool = True
+    non_activation_boundary_enabled: bool = True
+    model_card_update_enabled: bool = True
+    readiness_gate_enabled: bool = True
+    write_drift_monitoring_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_drift_scores_are_not_trade_signals: bool = True
+    warn_monitoring_metadata_is_not_live_monitoring: bool = True
+    warn_alert_rules_are_preview_only: bool = True

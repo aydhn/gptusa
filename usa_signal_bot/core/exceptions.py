@@ -2907,3 +2907,127 @@ class EnsemblePrototypeSafetyValidationError(USASignalBotError): pass
 class EnsemblePrototypeStoreError(USASignalBotError): pass
 class EnsemblePrototypeValidationError(USASignalBotError): pass
 class EnsemblePrototypeReportingError(USASignalBotError): pass
+
+class DriftMonitoringError(BaseUSASignalBotException):
+    """DriftMonitoringError implementation."""
+    pass
+
+
+class EnsemblePrototypeIngestionError(BaseUSASignalBotException):
+    """EnsemblePrototypeIngestionError implementation."""
+    pass
+
+
+class EnsemblePrototypeArtifactLoaderError(BaseUSASignalBotException):
+    """EnsemblePrototypeArtifactLoaderError implementation."""
+    pass
+
+
+class DriftInputResolverError(BaseUSASignalBotException):
+    """DriftInputResolverError implementation."""
+    pass
+
+
+class MonitoringWindowPolicyError(BaseUSASignalBotException):
+    """MonitoringWindowPolicyError implementation."""
+    pass
+
+
+class DriftBaselineSpecError(BaseUSASignalBotException):
+    """DriftBaselineSpecError implementation."""
+    pass
+
+
+class FeatureDriftBaselineError(BaseUSASignalBotException):
+    """FeatureDriftBaselineError implementation."""
+    pass
+
+
+class PredictionDriftBaselineError(BaseUSASignalBotException):
+    """PredictionDriftBaselineError implementation."""
+    pass
+
+
+class ScoreDistributionDriftError(BaseUSASignalBotException):
+    """ScoreDistributionDriftError implementation."""
+    pass
+
+
+class CalibrationDriftBaselineError(BaseUSASignalBotException):
+    """CalibrationDriftBaselineError implementation."""
+    pass
+
+
+class ResidualDriftBaselineError(BaseUSASignalBotException):
+    """ResidualDriftBaselineError implementation."""
+    pass
+
+
+class LabelDistributionDriftError(BaseUSASignalBotException):
+    """LabelDistributionDriftError implementation."""
+    pass
+
+
+class RegimeDriftBaselineError(BaseUSASignalBotException):
+    """RegimeDriftBaselineError implementation."""
+    pass
+
+
+class DriftMetricCalculatorError(BaseUSASignalBotException):
+    """DriftMetricCalculatorError implementation."""
+    pass
+
+
+class AlertRuleMetadataBuilderError(BaseUSASignalBotException):
+    """AlertRuleMetadataBuilderError implementation."""
+    pass
+
+
+class MonitoringMetadataPackageError(BaseUSASignalBotException):
+    """MonitoringMetadataPackageError implementation."""
+    pass
+
+
+class PostEnsembleGovernanceError(BaseUSASignalBotException):
+    """PostEnsembleGovernanceError implementation."""
+    pass
+
+
+class NonActivationDriftBoundaryError(BaseUSASignalBotException):
+    """NonActivationDriftBoundaryError implementation."""
+    pass
+
+
+class ModelCardDriftUpdaterError(BaseUSASignalBotException):
+    """ModelCardDriftUpdaterError implementation."""
+    pass
+
+
+class DriftReadinessGateError(BaseUSASignalBotException):
+    """DriftReadinessGateError implementation."""
+    pass
+
+
+class DriftSchemaValidationError(BaseUSASignalBotException):
+    """DriftSchemaValidationError implementation."""
+    pass
+
+
+class DriftSafetyValidationError(BaseUSASignalBotException):
+    """DriftSafetyValidationError implementation."""
+    pass
+
+
+class DriftMonitoringStoreError(BaseUSASignalBotException):
+    """DriftMonitoringStoreError implementation."""
+    pass
+
+
+class DriftMonitoringValidationError(BaseUSASignalBotException):
+    """DriftMonitoringValidationError implementation."""
+    pass
+
+
+class DriftMonitoringReportingError(BaseUSASignalBotException):
+    """DriftMonitoringReportingError implementation."""
+    pass
