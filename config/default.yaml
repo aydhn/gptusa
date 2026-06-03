@@ -2696,7 +2696,6 @@ zero_mutation_audit:
   require_after_baseline: true
   require_before_baseline: true
   require_hash_unchanged: true
-
 regime_transition_analytics:
   enabled: true
   current_phase: 129
@@ -2712,7 +2711,6 @@ regime_transition_analytics:
   warn_not_investment_advice: true
   warn_phase129_is_not_activation: true
   warn_transition_matrix_is_not_trade_signal: true
-
 phase129_transition_policy:
   compute_values_local_only: true
   research_data_only: true
@@ -2735,24 +2733,20 @@ phase129_transition_policy:
   produce_portfolio_weights: false
   produce_investment_advice: false
   strategy_activation_allowed: false
-
 phase129_transition_metrics:
   enabled: true
   default_rolling_windows:
-    - 20
-    - 60
-    - 120
+  - 20
+  - 60
+  - 120
   compute_cross_symbol_transitions: true
   compute_transition_entropy_proxy: true
   compute_transition_concentration: true
-
 phase129_notifications:
   enabled: true
   dry_run: true
   preview_only: true
   telegram_real_send: false
-
-
 market_behavior_reporting:
   enabled: true
   current_phase: 130
@@ -2768,7 +2762,6 @@ market_behavior_reporting:
   warn_not_investment_advice: true
   warn_phase130_is_not_activation: true
   warn_behavior_profiles_are_not_trade_signals: true
-
 phase130_behavior_policy:
   compute_values_local_only: true
   research_data_only: true
@@ -2791,12 +2784,11 @@ phase130_behavior_policy:
   produce_portfolio_weights: false
   produce_investment_advice: false
   strategy_activation_allowed: false
-
 phase130_report_policy:
   formats:
-    - MARKDOWN
-    - JSON
-    - TEXT
+  - MARKDOWN
+  - JSON
+  - TEXT
   require_qa_pass: true
   block_investment_advice_language: true
   block_trade_signal_language: true
@@ -2806,14 +2798,11 @@ phase130_report_policy:
   block_broker_execution_language: true
   block_deployment_language: true
   overwrite_reports_default: false
-
 phase130_notifications:
   enabled: true
   dry_run: true
   preview_only: true
   telegram_real_send: false
-
-
 regime_alignment:
   enabled: true
   current_phase: 131
@@ -2830,7 +2819,6 @@ regime_alignment:
   warn_not_investment_advice: true
   warn_phase131_is_not_activation: true
   warn_compatibility_scores_are_not_trade_signals: true
-
 phase131_alignment_policy:
   compute_values_local_only: true
   research_data_only: true
@@ -2853,20 +2841,17 @@ phase131_alignment_policy:
   produce_portfolio_weights: false
   produce_investment_advice: false
   strategy_activation_allowed: false
-
 phase131_compatibility:
   enabled: true
   minimum_required_compatibility_results: 1
   compatibility_scores_are_metadata_only: true
   build_cross_symbol_profile: true
   ready_for_phase132_allowed: true
-
 phase131_notifications:
   enabled: true
   dry_run: true
   preview_only: true
   telegram_real_send: false
-
 regime_context_validation:
   enabled: true
   current_phase: 132
@@ -2881,7 +2866,6 @@ regime_context_validation:
   warn_not_investment_advice: true
   warn_phase132_is_not_activation: true
   warn_acceptance_gate_is_not_strategy_activation: true
-
 phase132_validation_policy:
   compute_values_local_only: true
   research_data_only: true
@@ -2904,7 +2888,6 @@ phase132_validation_policy:
   produce_portfolio_weights: false
   produce_investment_advice: false
   strategy_activation_allowed: false
-
 phase132_conditional_diagnostics:
   enabled: true
   allow_warning_acceptance: true
@@ -2913,25 +2896,21 @@ phase132_conditional_diagnostics:
   require_conflicted_context_explanation: true
   require_data_quality_limited_explanation: true
   allowed_recommended_action_types:
-    - research_review
-    - data_quality_review
-    - documentation_review
-    - monitor_context
-
+  - research_review
+  - data_quality_review
+  - documentation_review
+  - monitor_context
 phase132_acceptance_gate:
   enabled: true
   ready_for_phase133_allowed: true
   block_unexplained_low_compatibility: true
   block_unexplained_conflicted_context: true
   block_unexplained_data_quality_limit: true
-
 phase132_notifications:
   enabled: true
   dry_run: true
   preview_only: true
   telegram_real_send: false
-
-
 regime_monitoring:
   enabled: true
   current_phase: 133
@@ -2948,7 +2927,6 @@ regime_monitoring:
   warn_phase133_is_not_activation: true
   warn_monitoring_is_not_live_daemon: true
   warn_drift_is_not_trade_signal: true
-
 phase133_monitoring_policy:
   compute_values_local_only: true
   research_data_only: true
@@ -2973,33 +2951,28 @@ phase133_monitoring_policy:
   produce_portfolio_weights: false
   produce_investment_advice: false
   strategy_activation_allowed: false
-
 phase133_drift_tracking:
   enabled: true
-  baseline_version: "phase133.v1"
+  baseline_version: phase133.v1
   warning_threshold_default: 10.0
   blocking_threshold_default: 25.0
   require_baseline_hash: true
   require_snapshot_hash: true
   ready_for_phase134_allowed: true
-
 phase133_degradation_diagnostics:
   enabled: true
   allowed_recommended_action_types:
-    - research_review
-    - data_quality_review
-    - documentation_review
-    - monitor_context
-    - baseline_refresh_review
+  - research_review
+  - data_quality_review
+  - documentation_review
+  - monitor_context
+  - baseline_refresh_review
   block_execution_action_types: true
-
 phase133_notifications:
   enabled: true
   dry_run: true
   preview_only: true
   telegram_real_send: false
-
-
 regime_research_freeze:
   enabled: true
   current_phase: 134
@@ -3015,7 +2988,6 @@ regime_research_freeze:
   warn_not_investment_advice: true
   warn_phase134_is_not_activation: true
   warn_freeze_package_is_not_deployment: true
-
 phase134_freeze_policy:
   compute_values_local_only: true
   research_data_only: true
@@ -3040,7 +3012,6 @@ phase134_freeze_policy:
   produce_portfolio_weights: false
   produce_investment_advice: false
   strategy_activation_allowed: false
-
 phase134_drift_report_qa:
   enabled: true
   require_qa_pass: true
@@ -3053,21 +3024,18 @@ phase134_drift_report_qa:
   block_deployment_language: true
   block_live_monitoring_language: true
   overwrite_reports_default: false
-
 phase134_freeze_package:
   enabled: true
-  package_version: "phase134.v1"
+  package_version: phase134.v1
   require_required_artifact_coverage: true
   require_package_hash: true
   require_manifest_hash: true
   ready_for_phase135_allowed: true
-
 phase134_notifications:
   enabled: true
   dry_run: true
   preview_only: true
   telegram_real_send: false
-
 regime_final_closure:
   enabled: true
   current_phase: 135
@@ -3085,7 +3053,6 @@ regime_final_closure:
   warn_phase135_is_not_activation: true
   warn_freeze_seal_is_not_deployment: true
   warn_ml_kickoff_does_not_train_models: true
-
 phase135_closure_policy:
   compute_values_local_only: true
   research_data_only: true
@@ -3110,7 +3077,6 @@ phase135_closure_policy:
   produce_portfolio_weights: false
   produce_investment_advice: false
   strategy_activation_allowed: false
-
 phase135_artifact_chain:
   enabled: true
   require_phase126_foundation: true
@@ -3124,16 +3090,14 @@ phase135_artifact_chain:
   require_phase134_research_freeze: true
   require_hashes: true
   require_read_only_references: true
-
 phase135_freeze_seal:
   enabled: true
-  seal_version: "phase135.v1"
+  seal_version: phase135.v1
   sealed_phase_start: 126
   sealed_phase_end: 135
   next_phase: 136
   require_final_safety_audit_pass: true
   require_artifact_chain_valid: true
-
 phase135_ml_kickoff:
   enabled: true
   ready_for_phase136_allowed: true
@@ -3143,13 +3107,11 @@ phase135_ml_kickoff:
   allow_training_in_phase135: false
   allow_prediction_in_phase135: false
   require_non_activation_boundary: true
-
 phase135_notifications:
   enabled: true
   dry_run: true
   preview_only: true
   telegram_real_send: false
-
 ml_dataset_assembly:
   enabled: true
   current_phase: 137
@@ -3172,7 +3134,6 @@ ml_dataset_assembly:
   warn_phase137_does_not_train_models: true
   warn_phase137_does_not_predict: true
   warn_dataset_outputs_are_not_trade_signals: true
-
 phase137_dataset_policy:
   compute_values_local_only: true
   research_data_only: true
@@ -3197,10 +3158,9 @@ phase137_dataset_policy:
   produce_portfolio_weights: false
   produce_investment_advice: false
   strategy_activation_allowed: false
-
 phase137_split_policy:
-  default_policy_kind: "SYMBOL_AWARE_TIME_SPLIT"
-  train_ratio: 0.70
+  default_policy_kind: SYMBOL_AWARE_TIME_SPLIT
+  train_ratio: 0.7
   validation_ratio: 0.15
   test_ratio: 0.15
   embargo_bars: 5
@@ -3209,7 +3169,6 @@ phase137_split_policy:
   symbol_aware: true
   random_shuffle_allowed: false
   leakage_safe_required: true
-
 phase137_leakage_audit:
   enabled: true
   require_future_data_leakage_check: true
@@ -3221,13 +3180,11 @@ phase137_leakage_audit:
   require_forward_window_overlap_check: true
   require_forbidden_output_field_check: true
   block_on_leakage_fail: true
-
 phase137_notifications:
   enabled: true
   dry_run: true
   preview_only: true
   telegram_real_send: false
-
 baseline_ml_scaffolding:
   enabled: true
   current_phase: 138
@@ -3249,7 +3206,6 @@ baseline_ml_scaffolding:
   warn_phase138_does_not_train_models: true
   warn_phase138_does_not_predict: true
   warn_model_cards_are_drafts: true
-
 phase138_scaffolding_policy:
   compute_values_local_only: true
   research_data_only: true
@@ -3274,10 +3230,9 @@ phase138_scaffolding_policy:
   produce_portfolio_weights: false
   produce_investment_advice: false
   strategy_activation_allowed: false
-
 phase138_evaluation_harness:
   enabled: true
-  harness_version: "phase138.v1"
+  harness_version: phase138.v1
   training_allowed_in_phase138: false
   prediction_allowed_in_phase138: false
   live_evaluation_allowed: false
@@ -3286,7 +3241,6 @@ phase138_evaluation_harness:
   require_prediction_output_boundary: true
   require_metric_specs: true
   require_model_card_draft: true
-
 phase138_model_card:
   enabled: true
   draft_only: true
@@ -3295,14 +3249,11 @@ phase138_model_card:
   require_non_activation_notice: true
   require_not_investment_advice_notice: true
   block_trade_advice_language: true
-
 phase138_notifications:
   enabled: true
   dry_run: true
   preview_only: true
   telegram_real_send: false
-
-
 baseline_training:
   enabled: true
   current_phase: 139
@@ -3325,7 +3276,6 @@ baseline_training:
   warn_phase139_training_is_offline_only: true
   warn_phase139_predictions_are_offline_evaluation_only: true
   warn_model_registry_is_not_deployment_registry: true
-
 phase139_training_policy:
   compute_values_local_only: true
   research_data_only: true
@@ -3353,7 +3303,6 @@ phase139_training_policy:
   produce_portfolio_weights: false
   produce_investment_advice: false
   strategy_activation_allowed: false
-
 phase139_baseline_models:
   enabled: true
   train_dummy_classification: true
@@ -3362,8 +3311,7 @@ phase139_baseline_models:
   train_moving_average_baseline: true
   train_lightweight_linear_baseline: true
   require_deterministic_artifacts: true
-  model_registry_version: "phase139.v1"
-
+  model_registry_version: phase139.v1
 phase139_offline_evaluation:
   enabled: true
   evaluate_train_split: true
@@ -3373,13 +3321,11 @@ phase139_offline_evaluation:
   allow_trading_metrics: false
   allow_backtest_metrics: false
   require_non_trading_metrics: true
-
 phase139_notifications:
   enabled: true
   dry_run: true
   preview_only: true
   telegram_real_send: false
-
 baseline_model_comparison:
   enabled: true
   current_phase: 140
@@ -3403,7 +3349,6 @@ baseline_model_comparison:
   warn_ranking_is_not_trade_signal: true
   warn_shortlist_is_not_deployment_selection: true
   warn_calibration_preparation_does_not_fit_calibrators: true
-
 phase140_comparison_policy:
   compute_values_local_only: true
   research_data_only: true
@@ -3430,7 +3375,6 @@ phase140_comparison_policy:
   produce_portfolio_weights: false
   produce_investment_advice: false
   strategy_activation_allowed: false
-
 phase140_ranking:
   enabled: true
   max_candidate_count: 3
@@ -3440,10 +3384,9 @@ phase140_ranking:
   allow_backtest_metrics: false
   rank_validation_split_weight: 0.45
   rank_test_split_weight: 0.35
-  rank_stability_weight: 0.10
+  rank_stability_weight: 0.1
   rank_regime_consistency_weight: 0.05
   rank_governance_weight: 0.05
-
 phase140_calibration_preparation:
   enabled: true
   fitting_performed: false
@@ -3452,14 +3395,11 @@ phase140_calibration_preparation:
   require_score_distribution_check: true
   require_class_balance_check: true
   require_phase141_ready_package: true
-
 phase140_notifications:
   enabled: true
   dry_run: true
   preview_only: true
   telegram_real_send: false
-
-
 calibration_diagnostics:
   enabled: true
   current_phase: 141
@@ -3482,7 +3422,6 @@ calibration_diagnostics:
   warn_diagnostics_are_not_trade_signals: true
   warn_phase141_does_not_fit_calibrators: true
   warn_phase141_does_not_create_calibrated_models: true
-
 phase141_calibration_policy:
   compute_values_local_only: true
   research_data_only: true
@@ -3511,7 +3450,6 @@ phase141_calibration_policy:
   produce_portfolio_weights: false
   produce_investment_advice: false
   strategy_activation_allowed: false
-
 phase141_reliability:
   enabled: true
   default_bin_count: 10
@@ -3523,7 +3461,6 @@ phase141_reliability:
   require_score_distribution: true
   require_class_balance: true
   probability_missing_allowed_with_warning: true
-
 phase141_post_training_validation:
   enabled: true
   require_model_registry_consistency: true
@@ -3533,13 +3470,11 @@ phase141_post_training_validation:
   require_no_live_inference: true
   require_no_calibration_fitting: true
   require_no_deployment: true
-
 phase141_notifications:
   enabled: true
   dry_run: true
   preview_only: true
   telegram_real_send: false
-
 ensemble_scaffolding:
   enabled: true
   current_phase: 142
@@ -3610,7 +3545,7 @@ ensemble_scaffolding:
     enabled: true
     coefficient_sum_required: 1.0
     coefficient_non_negative_required: true
-    coefficient_cap: 0.80
+    coefficient_cap: 0.8
     forbid_portfolio_weight_language: true
     forbid_allocation_language: true
     forbid_target_weight_language: true
@@ -3621,8 +3556,6 @@ ensemble_scaffolding:
     dry_run: true
     preview_only: true
     telegram_real_send: false
-
-
 ensemble_prototype_evaluation:
   enabled: true
   current_phase: 143
@@ -3647,7 +3580,6 @@ ensemble_prototype_evaluation:
   warn_ensemble_predictions_are_offline_only: true
   warn_blend_coefficients_are_not_portfolio_weights: true
   warn_ensemble_registry_is_not_deployment_registry: true
-
 phase143_ensemble_policy:
   compute_values_local_only: true
   research_data_only: true
@@ -3676,7 +3608,6 @@ phase143_ensemble_policy:
   produce_portfolio_weights: false
   produce_investment_advice: false
   strategy_activation_allowed: false
-
 phase143_ensemble_evaluation:
   enabled: true
   evaluate_train_split: true
@@ -3688,24 +3619,20 @@ phase143_ensemble_evaluation:
   require_non_trading_metrics: true
   require_blend_diagnostics: true
   require_candidate_agreement: true
-  registry_version: "phase143.v1"
-
+  registry_version: phase143.v1
 phase143_blend_diagnostics:
   enabled: true
   coefficient_sum_required: 1.0
   coefficient_non_negative_required: true
-  dominant_candidate_threshold: 0.80
+  dominant_candidate_threshold: 0.8
   forbid_portfolio_weight_language: true
   forbid_allocation_language: true
   forbid_target_weight_language: true
-
 phase143_notifications:
   enabled: true
   dry_run: true
   preview_only: true
   telegram_real_send: false
-
-
 drift_monitoring:
   enabled: true
   current_phase: 144
@@ -3736,7 +3663,6 @@ drift_monitoring:
   warn_drift_scores_are_not_trade_signals: true
   warn_monitoring_metadata_is_not_live_monitoring: true
   warn_alert_rules_are_preview_only: true
-
 phase144_drift_policy:
   compute_values_local_only: true
   research_data_only: true
@@ -3767,16 +3693,17 @@ phase144_drift_policy:
   produce_portfolio_weights: false
   produce_investment_advice: false
   strategy_activation_allowed: false
-
 phase144_monitoring_window:
   enabled: true
-  default_reference_splits: ["train", "validation"]
-  default_monitoring_splits: ["test"]
+  default_reference_splits:
+  - train
+  - validation
+  default_monitoring_splits:
+  - test
   min_reference_rows: 10
   min_monitoring_rows: 5
   rolling_window_metadata_only: true
   calendar_window_metadata_only: true
-
 phase144_alert_metadata:
   enabled: true
   notification_preview_only: true
@@ -3784,14 +3711,11 @@ phase144_alert_metadata:
   telegram_real_send_enabled: false
   scheduler_enabled: false
   daemon_started: false
-
 phase144_notifications:
   enabled: true
   dry_run: true
   preview_only: true
   telegram_real_send: false
-
-
 ml_governance_closure:
   enabled: true
   current_phase: 145
@@ -3819,7 +3743,6 @@ ml_governance_closure:
   warn_feature_attribution_is_not_trade_signal: true
   warn_governance_closure_is_not_deployment: true
   warn_phase145_does_not_run_backtests: true
-
 phase145_ml_closure_policy:
   compute_values_local_only: true
   research_data_only: true
@@ -3852,7 +3775,6 @@ phase145_ml_closure_policy:
   produce_portfolio_weights: false
   produce_investment_advice: false
   strategy_activation_allowed: false
-
 phase145_explainability:
   enabled: true
   max_feature_attributions: 50
@@ -3867,7 +3789,6 @@ phase145_explainability:
   shap_enabled: false
   lime_enabled: false
   heavy_dependency_enabled: false
-
 phase145_final_audit:
   enabled: true
   required_phase_start: 136
@@ -3877,14 +3798,11 @@ phase145_final_audit:
   require_non_activation_boundary: true
   require_final_model_card_closure: true
   require_phase146_handoff: true
-
 phase145_notifications:
   enabled: true
   dry_run: true
   preview_only: true
   telegram_real_send: false
-
-
 backtest_foundation:
   enabled: true
   current_phase: 146
@@ -3911,7 +3829,6 @@ backtest_foundation:
   warn_not_investment_advice: true
   warn_phase146_does_not_run_backtests: true
   warn_cost_models_are_research_assumptions: true
-
 phase146_backtest_policy:
   compute_values_local_only: true
   research_data_only: true
@@ -3941,7 +3858,6 @@ phase146_backtest_policy:
   produce_order_decisions: false
   produce_portfolio_weights: false
   produce_investment_advice: false
-
 phase146_execution_assumptions:
   default_time_model: BAR_CLOSE_TO_NEXT_OPEN
   default_execution_kind: MARKET_ON_NEXT_OPEN
@@ -3954,14 +3870,11 @@ phase146_execution_assumptions:
   max_volume_participation: 0.01
   min_price: 1.0
   latency_bars: 1
-
 phase146_notifications:
   enabled: true
   dry_run: true
   preview_only: true
   telegram_real_send: false
-
-
 realistic_backtest_run:
   enabled: true
   current_phase: 147
@@ -4034,3 +3947,73 @@ realistic_backtest_run:
     dry_run: true
     preview_only: true
     telegram_real_send: false
+backtest_analytics:
+  enabled: true
+  current_phase: 148
+  final_phase: 160
+  require_phase147_backtest_run: true
+  backtest_run_ingestion_enabled: true
+  artifact_loader_enabled: true
+  input_resolver_enabled: true
+  return_series_enabled: true
+  rolling_analytics_enabled: true
+  advanced_performance_metrics_enabled: true
+  trade_diagnostics_enabled: true
+  fill_diagnostics_enabled: true
+  cost_diagnostics_enabled: true
+  exposure_diagnostics_enabled: true
+  drawdown_diagnostics_enabled: true
+  ledger_reconciliation_enabled: true
+  determinism_validation_enabled: true
+  run_validation_report_enabled: true
+  analytics_report_enabled: true
+  safety_boundary_enabled: true
+  phase149_readiness_gate_enabled: true
+  write_backtest_analytics_reports: true
+  warn_not_investment_advice: true
+  warn_metrics_are_research_only: true
+  warn_trade_diagnostics_are_simulated_only: true
+phase148_analytics_policy:
+  compute_values_local_only: true
+  research_data_only: true
+  offline_backtest_research_only: true
+  local_fixture_only_default: true
+  read_only_backtest_run_artifacts: true
+  allow_network: false
+  allow_paid_api: false
+  allow_scraping: false
+  allow_html_parsing: false
+  allow_broker: false
+  allow_real_order_creation: false
+  allow_paper_mutation: false
+  allow_telegram_real_send: false
+  allow_dashboard: false
+  allow_deployment: false
+  allow_live_trading: false
+  allow_paper_trading: false
+  allow_strategy_activation: false
+  allow_portfolio_optimization: false
+  allow_walk_forward: false
+  allow_stress_test: false
+  allow_monte_carlo: false
+  allow_benchmark_comparison: false
+  allow_scheduler: false
+  allow_background_daemon: false
+  produce_live_signals: false
+  produce_order_decisions: false
+  produce_portfolio_weights: false
+  produce_investment_advice: false
+phase148_metric_defaults:
+  periods_per_year: 252
+  rolling_windows:
+  - 5
+  - 20
+  - 60
+  risk_free_rate_assumption: 0.0
+  use_external_risk_free_rate: false
+  require_deterministic_hashes: true
+phase148_notifications:
+  enabled: true
+  dry_run: true
+  preview_only: true
+  telegram_real_send: false
