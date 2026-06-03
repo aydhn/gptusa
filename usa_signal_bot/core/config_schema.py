@@ -4428,3 +4428,87 @@ class Phase148NotificationsConfig:
     dry_run: bool = True
     preview_only: bool = True
     telegram_real_send: bool = False
+
+
+@dataclass
+class WalkForwardConfig:
+    enabled: bool = False
+    current_phase: int = 150
+    final_phase: int = 160
+    require_phase149_benchmark_comparison: bool = True
+    benchmark_comparison_ingestion_enabled: bool = True
+    artifact_loader_enabled: bool = True
+    input_resolver_enabled: bool = True
+    window_policy_enabled: bool = True
+    anchored_splits_enabled: bool = True
+    rolling_splits_enabled: bool = True
+    fold_replay_configs_enabled: bool = True
+    fold_replay_enabled: bool = True
+    fold_performance_metrics_enabled: bool = True
+    fold_benchmark_comparison_enabled: bool = True
+    oos_robustness_metrics_enabled: bool = True
+    temporal_stability_enabled: bool = True
+    degradation_diagnostics_enabled: bool = True
+    robustness_summary_enabled: bool = True
+    validation_report_enabled: bool = True
+    temporal_stability_audit_enabled: bool = True
+    safety_boundary_enabled: bool = True
+    phase151_readiness_gate_enabled: bool = True
+    write_walk_forward_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_walk_forward_is_research_only: bool = True
+    warn_no_strategy_activation: bool = True
+    warn_no_stress_monte_carlo_in_phase150: bool = True
+
+@dataclass
+class Phase150WalkForwardPolicyConfig:
+    compute_values_local_only: bool = True
+    research_data_only: bool = True
+    offline_backtest_research_only: bool = True
+    local_fixture_only_default: bool = True
+    read_only_benchmark_artifacts: bool = True
+    allow_walk_forward: bool = True
+    allow_network: bool = False
+    allow_paid_api: bool = False
+    allow_scraping: bool = False
+    allow_html_parsing: bool = False
+    allow_broker: bool = False
+    allow_real_order_creation: bool = False
+    allow_paper_mutation: bool = False
+    allow_telegram_real_send: bool = False
+    allow_dashboard: bool = False
+    allow_deployment: bool = False
+    allow_live_trading: bool = False
+    allow_paper_trading: bool = False
+    allow_strategy_activation: bool = False
+    allow_portfolio_optimization: bool = False
+    allow_portfolio_allocation_output: bool = False
+    allow_stress_test: bool = False
+    allow_monte_carlo: bool = False
+    allow_scheduler: bool = False
+    allow_background_daemon: bool = False
+    produce_live_signals: bool = False
+    produce_order_decisions: bool = False
+    produce_portfolio_weights: bool = False
+    produce_investment_advice: bool = False
+
+@dataclass
+class Phase150WindowDefaultsConfig:
+    min_train_periods: int = 60
+    oos_periods: int = 20
+    step_periods: int = 20
+    max_folds: int = 10
+    anchored_enabled: bool = True
+    rolling_enabled: bool = True
+    holdout_enabled: bool = False
+    deterministic_seed: int = 150
+    initial_cash: float = 100000.0
+    require_no_lookahead: bool = True
+    require_deterministic_hashes: bool = True
+
+@dataclass
+class Phase150NotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    preview_only: bool = True
+    telegram_real_send: bool = False
