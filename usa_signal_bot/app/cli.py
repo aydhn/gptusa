@@ -515,3 +515,78 @@ def backtest_foundation_summary():
 @cli.command("backtest-foundation-validate")
 def backtest_foundation_validate():
     click.echo("Backtest foundation validation OK.")
+
+
+def backtest_analytics_info(args):
+    print("Phase 148: Offline Advanced Backtest Analytics and Run Diagnostics.")
+    print("This phase is strictly local/offline. It does not perform live/paper trading, broker execution, or deployment.")
+    print("It also does not perform benchmark comparison, walk-forward, stress testing, or Monte-Carlo simulation.")
+
+def backtest_analytics_ingest_run(args):
+    pass
+
+def backtest_analytics_artifact_load(args):
+    pass
+
+def resolve_backtest_analytics_inputs(args):
+    pass
+
+def build_return_series(args):
+    pass
+
+def build_rolling_analytics(args):
+    pass
+
+def calculate_advanced_performance_metrics(args):
+    pass
+
+def build_trade_diagnostics(args):
+    pass
+
+def build_fill_diagnostics(args):
+    pass
+
+def build_cost_diagnostics(args):
+    pass
+
+def build_exposure_diagnostics(args):
+    pass
+
+def build_drawdown_diagnostics(args):
+    pass
+
+def reconcile_backtest_ledger(args):
+    pass
+
+def validate_backtest_determinism(args):
+    pass
+
+def build_run_validation_report(args):
+    pass
+
+def build_backtest_analytics_report(args):
+    pass
+
+def validate_backtest_analytics_safety_boundary(args):
+    pass
+
+def phase149_readiness_gate(args):
+    pass
+
+def backtest_analytics_schema_check(args):
+    pass
+
+def backtest_analytics_safety_check(args):
+    pass
+
+def backtest_analytics_context(args):
+    pass
+
+def backtest_analytics_review(args):
+    pass
+
+def backtest_analytics_summary(args):
+    pass
+
+def backtest_analytics_validate(args):
+    pass

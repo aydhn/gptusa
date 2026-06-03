@@ -3146,3 +3146,73 @@ class BacktestRunSafetyValidationError(BacktestRunError): pass
 class BacktestRunStoreError(BacktestRunError): pass
 class BacktestRunValidationError(BacktestRunError): pass
 class BacktestRunReportingError(BacktestRunError): pass
+
+
+class BacktestAnalyticsError(USASignalBotError):
+    pass
+
+class BacktestRunIngestionError(BacktestAnalyticsError):
+    pass
+
+class BacktestRunArtifactLoaderError(BacktestAnalyticsError):
+    pass
+
+class AnalyticsInputResolverError(BacktestAnalyticsError):
+    pass
+
+class ReturnSeriesBuilderError(BacktestAnalyticsError):
+    pass
+
+class RollingAnalyticsError(BacktestAnalyticsError):
+    pass
+
+class AdvancedPerformanceMetricsError(BacktestAnalyticsError):
+    pass
+
+class TradeDiagnosticsError(BacktestAnalyticsError):
+    pass
+
+class FillDiagnosticsError(BacktestAnalyticsError):
+    pass
+
+class CostDiagnosticsError(BacktestAnalyticsError):
+    pass
+
+class ExposureDiagnosticsError(BacktestAnalyticsError):
+    pass
+
+class DrawdownDiagnosticsError(BacktestAnalyticsError):
+    pass
+
+class LedgerReconciliationError(BacktestAnalyticsError):
+    pass
+
+class DeterminismValidationError(BacktestAnalyticsError):
+    pass
+
+class RunValidationReportError(BacktestAnalyticsError):
+    pass
+
+class BacktestAnalyticsReportError(BacktestAnalyticsError):
+    pass
+
+class PerformanceAnalyticsSafetyBoundaryError(BacktestAnalyticsError):
+    pass
+
+class Phase149ReadinessGateError(BacktestAnalyticsError):
+    pass
+
+class BacktestAnalyticsSchemaValidationError(BacktestAnalyticsError):
+    pass
+
+class BacktestAnalyticsSafetyValidationError(BacktestAnalyticsError):
+    pass
+
+class BacktestAnalyticsStoreError(BacktestAnalyticsError):
+    pass
+
+class BacktestAnalyticsValidationError(BacktestAnalyticsError):
+    pass
+
+class BacktestAnalyticsReportingError(BacktestAnalyticsError):
+    pass

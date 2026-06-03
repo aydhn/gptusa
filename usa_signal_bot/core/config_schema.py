@@ -4352,3 +4352,79 @@ class DriftMonitoringConfig:
     warn_drift_scores_are_not_trade_signals: bool = True
     warn_monitoring_metadata_is_not_live_monitoring: bool = True
     warn_alert_rules_are_preview_only: bool = True
+
+
+@dataclass
+class BacktestAnalyticsConfig:
+    enabled: bool = True
+    current_phase: int = 148
+    final_phase: int = 160
+    require_phase147_backtest_run: bool = True
+    backtest_run_ingestion_enabled: bool = True
+    artifact_loader_enabled: bool = True
+    input_resolver_enabled: bool = True
+    return_series_enabled: bool = True
+    rolling_analytics_enabled: bool = True
+    advanced_performance_metrics_enabled: bool = True
+    trade_diagnostics_enabled: bool = True
+    fill_diagnostics_enabled: bool = True
+    cost_diagnostics_enabled: bool = True
+    exposure_diagnostics_enabled: bool = True
+    drawdown_diagnostics_enabled: bool = True
+    ledger_reconciliation_enabled: bool = True
+    determinism_validation_enabled: bool = True
+    run_validation_report_enabled: bool = True
+    analytics_report_enabled: bool = True
+    safety_boundary_enabled: bool = True
+    phase149_readiness_gate_enabled: bool = True
+    write_backtest_analytics_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_metrics_are_research_only: bool = True
+    warn_trade_diagnostics_are_simulated_only: bool = True
+
+@dataclass
+class Phase148AnalyticsPolicyConfig:
+    compute_values_local_only: bool = True
+    research_data_only: bool = True
+    offline_backtest_research_only: bool = True
+    local_fixture_only_default: bool = True
+    read_only_backtest_run_artifacts: bool = True
+    allow_network: bool = False
+    allow_paid_api: bool = False
+    allow_scraping: bool = False
+    allow_html_parsing: bool = False
+    allow_broker: bool = False
+    allow_real_order_creation: bool = False
+    allow_paper_mutation: bool = False
+    allow_telegram_real_send: bool = False
+    allow_dashboard: bool = False
+    allow_deployment: bool = False
+    allow_live_trading: bool = False
+    allow_paper_trading: bool = False
+    allow_strategy_activation: bool = False
+    allow_portfolio_optimization: bool = False
+    allow_walk_forward: bool = False
+    allow_stress_test: bool = False
+    allow_monte_carlo: bool = False
+    allow_benchmark_comparison: bool = False
+    allow_scheduler: bool = False
+    allow_background_daemon: bool = False
+    produce_live_signals: bool = False
+    produce_order_decisions: bool = False
+    produce_portfolio_weights: bool = False
+    produce_investment_advice: bool = False
+
+@dataclass
+class Phase148MetricDefaultsConfig:
+    periods_per_year: int = 252
+    rolling_windows: list[int] = field(default_factory=lambda: [5, 20, 60])
+    risk_free_rate_assumption: float = 0.0
+    use_external_risk_free_rate: bool = False
+    require_deterministic_hashes: bool = True
+
+@dataclass
+class Phase148NotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    preview_only: bool = True
+    telegram_real_send: bool = False

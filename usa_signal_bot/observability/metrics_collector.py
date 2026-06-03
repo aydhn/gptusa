@@ -484,3 +484,25 @@ def collect_phase113_metrics(): pass
     latest_phase143_deployment_violation_count = Gauge('usa_signal_bot_phase143_deployment_violation_count', '...')
     latest_phase143_threshold_optimization_violation_count = Gauge('usa_signal_bot_phase143_threshold_optimization_violation_count', '...')
     latest_phase143_portfolio_weight_language_violation_count = Gauge('usa_signal_bot_phase143_portfolio_weight_language_violation_count', '...')
+
+# Phase 148 metrics
+# latest_backtest_analytics_context_count
+# latest_return_series_point_count
+# latest_rolling_analytics_point_count
+# latest_advanced_performance_metric_count
+# latest_trade_diagnostic_count
+# latest_fill_diagnostic_count
+# latest_cost_diagnostic_count
+# latest_exposure_diagnostic_count
+# latest_drawdown_diagnostic_count
+# latest_ledger_reconciliation_pass_count
+# latest_determinism_validation_pass_count
+# latest_phase149_readiness_gate_pass_count
+# latest_phase148_live_trading_violation_count
+# latest_phase148_paper_trading_violation_count
+# latest_phase148_real_order_violation_count
+# latest_phase148_broker_execution_violation_count
+# latest_phase148_walk_forward_violation_count
+# latest_phase148_stress_test_violation_count
+# latest_phase148_monte_carlo_violation_count
+# latest_phase148_benchmark_comparison_violation_count
