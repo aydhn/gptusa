@@ -1,6 +1,26 @@
 
 class MetricsCollector:
 
+    latest_backtest_run_context_count: int = 0
+    latest_research_decision_record_count: int = 0
+    latest_price_event_count: int = 0
+    latest_simulated_fill_count: int = 0
+    latest_cost_ledger_record_count: int = 0
+    latest_exposure_state_count: int = 0
+    latest_equity_curve_point_count: int = 0
+    latest_drawdown_point_count: int = 0
+    latest_basic_performance_summary_count: int = 0
+    latest_backtest_run_validation_gate_pass_count: int = 0
+    latest_phase147_live_trading_violation_count: int = 0
+    latest_phase147_paper_trading_violation_count: int = 0
+    latest_phase147_real_order_violation_count: int = 0
+    latest_phase147_broker_execution_violation_count: int = 0
+    latest_phase147_walk_forward_violation_count: int = 0
+    latest_phase147_stress_test_violation_count: int = 0
+    latest_phase147_monte_carlo_violation_count: int = 0
+    latest_phase147_benchmark_comparison_violation_count: int = 0
+
+
     latest_baseline_scaffolding_context_count: int = 0
     latest_baseline_experiment_spec_count: int = 0
     latest_baseline_model_family_spec_count: int = 0
@@ -180,6 +200,26 @@ def get_latest_phase117_execution_violation_count(): return 0
 
 
 class MetricsCollector:
+
+    latest_backtest_run_context_count: int = 0
+    latest_research_decision_record_count: int = 0
+    latest_price_event_count: int = 0
+    latest_simulated_fill_count: int = 0
+    latest_cost_ledger_record_count: int = 0
+    latest_exposure_state_count: int = 0
+    latest_equity_curve_point_count: int = 0
+    latest_drawdown_point_count: int = 0
+    latest_basic_performance_summary_count: int = 0
+    latest_backtest_run_validation_gate_pass_count: int = 0
+    latest_phase147_live_trading_violation_count: int = 0
+    latest_phase147_paper_trading_violation_count: int = 0
+    latest_phase147_real_order_violation_count: int = 0
+    latest_phase147_broker_execution_violation_count: int = 0
+    latest_phase147_walk_forward_violation_count: int = 0
+    latest_phase147_stress_test_violation_count: int = 0
+    latest_phase147_monte_carlo_violation_count: int = 0
+    latest_phase147_benchmark_comparison_violation_count: int = 0
+
 
     latest_baseline_scaffolding_context_count: int = 0
     latest_baseline_experiment_spec_count: int = 0

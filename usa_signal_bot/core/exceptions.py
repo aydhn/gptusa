@@ -3122,3 +3122,27 @@ class BacktestSafetyValidationError(BacktestFoundationError): pass
 class BacktestFoundationStoreError(BacktestFoundationError): pass
 class BacktestFoundationValidationError(BacktestFoundationError): pass
 class BacktestFoundationReportingError(BacktestFoundationError): pass
+
+
+class BacktestRunError(USASignalBotError): pass
+class BacktestFoundationIngestionError(BacktestRunError): pass
+class BacktestRunInputResolverError(BacktestRunError): pass
+class BacktestRunConfigError(BacktestRunError): pass
+class ResearchDecisionStreamError(BacktestRunError): pass
+class DeterministicSimulationClockError(BacktestRunError): pass
+class PriceEventStreamError(BacktestRunError): pass
+class ExecutionSimulatorError(BacktestRunError): pass
+class CostSpreadSlippageApplierError(BacktestRunError): pass
+class LiquidityPartialFillEvaluatorError(BacktestRunError): pass
+class ExposureStateTrackerError(BacktestRunError): pass
+class EquityCurveBuilderError(BacktestRunError): pass
+class DrawdownCurveBuilderError(BacktestRunError): pass
+class BacktestLedgerBuilderError(BacktestRunError): pass
+class BasicPerformanceSummaryError(BacktestRunError): pass
+class BacktestRunSafetyBoundaryError(BacktestRunError): pass
+class BacktestRunValidationGateError(BacktestRunError): pass
+class BacktestRunSchemaValidationError(BacktestRunError): pass
+class BacktestRunSafetyValidationError(BacktestRunError): pass
+class BacktestRunStoreError(BacktestRunError): pass
+class BacktestRunValidationError(BacktestRunError): pass
+class BacktestRunReportingError(BacktestRunError): pass

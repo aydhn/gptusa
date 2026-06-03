@@ -1,2 +1,1 @@
-class NotificationAdapters:
-    pass
+# mock adapters file

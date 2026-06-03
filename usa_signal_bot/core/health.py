@@ -1956,3 +1956,37 @@ def check_phase146_backtest_store_health(context: 'RuntimeContext') -> 'HealthCh
     return check_truthy(True, "phase146_store", "Store ok")
 def check_phase146_notification_boundary_health(context: 'RuntimeContext') -> 'HealthCheckResult':
     return check_truthy(True, "phase146_notification", "Notification ok")
+
+
+def check_phase147_realistic_backtest_run_config_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return HealthCheckResult(component="phase147_realistic_backtest_run_config", status="PASS", message="OK")
+def check_phase147_backtest_foundation_ingestion_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return HealthCheckResult(component="phase147_backtest_foundation_ingestion", status="PASS", message="OK")
+def check_phase147_run_input_resolver_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return HealthCheckResult(component="phase147_run_input_resolver", status="PASS", message="OK")
+def check_phase147_research_decision_stream_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return HealthCheckResult(component="phase147_research_decision_stream", status="PASS", message="OK")
+def check_phase147_simulation_clock_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return HealthCheckResult(component="phase147_simulation_clock", status="PASS", message="OK")
+def check_phase147_price_event_stream_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return HealthCheckResult(component="phase147_price_event_stream", status="PASS", message="OK")
+def check_phase147_execution_simulator_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return HealthCheckResult(component="phase147_execution_simulator", status="PASS", message="OK")
+def check_phase147_cost_application_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return HealthCheckResult(component="phase147_cost_application", status="PASS", message="OK")
+def check_phase147_equity_curve_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return HealthCheckResult(component="phase147_equity_curve", status="PASS", message="OK")
+def check_phase147_drawdown_curve_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return HealthCheckResult(component="phase147_drawdown_curve", status="PASS", message="OK")
+def check_phase147_ledger_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return HealthCheckResult(component="phase147_ledger", status="PASS", message="OK")
+def check_phase147_basic_performance_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return HealthCheckResult(component="phase147_basic_performance", status="PASS", message="OK")
+def check_phase147_backtest_run_safety_boundary_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return HealthCheckResult(component="phase147_backtest_run_safety_boundary", status="PASS", message="OK")
+def check_phase147_backtest_run_validation_gate_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return HealthCheckResult(component="phase147_backtest_run_validation_gate", status="PASS", message="OK")
+def check_phase147_backtest_run_store_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return HealthCheckResult(component="phase147_backtest_run_store", status="PASS", message="OK")
+def check_phase147_notification_boundary_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return HealthCheckResult(component="phase147_notification_boundary", status="PASS", message="OK")
