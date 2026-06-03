@@ -3109,7 +3109,7 @@ class Phase145NotificationsConfig:
 
 @dataclass
 class Config:
-    realistic_backtest_run: RealisticBacktestRunConfig = field(default_factory=RealisticBacktestRunConfig)
+    realistic_backtest_run: "RealisticBacktestRunConfig" = field(default_factory=dict)
     ml_dataset_assembly: MLDatasetAssemblyConfig = field(default_factory=MLDatasetAssemblyConfig)
     phase137_dataset_policy: Phase137DatasetPolicyConfig = field(default_factory=Phase137DatasetPolicyConfig)
     phase137_split_policy: Phase137SplitPolicyConfig = field(default_factory=Phase137SplitPolicyConfig)
