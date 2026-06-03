@@ -1522,3 +1522,12 @@ def main():
         sys.exit(0)
 
 
+
+
+# Phase 151 dummy cli stubs
+def phase151_stress_robustness_info():
+    print("Phase 151: Offline Stress Testing, Scenario Analysis, and Monte Carlo Robustness")
+    print("WARNING: This is NOT live trading. No broker execution, no portfolio optimization.")
+
+def setup_phase151_cli(parser):
+    pass
