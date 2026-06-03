@@ -1,0 +1,18 @@
+# Walk Forward Safety Boundary
+- Offline walk-forward only.
+- Read-only benchmark artifacts.
+- Local inputs only.
+- No live trading.
+- No paper trading.
+- No broker execution.
+- No real order creation.
+- No paper state mutation.
+- No Telegram real send.
+- No strategy activation.
+- No portfolio optimization.
+- No portfolio allocation output.
+- No deployment.
+- No network.
+- No dashboard.
+- No daemon/scheduler.
+- No stress test/Monte Carlo in Phase 150.

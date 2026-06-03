@@ -3225,3 +3225,29 @@ class BacktestPortfolioError(Exception): pass
 
 
 class DataValidationError(Exception): pass
+
+
+class WalkForwardError(USASignalBotError): pass
+class BenchmarkComparisonIngestionError(WalkForwardError): pass
+class BenchmarkComparisonArtifactLoaderError(WalkForwardError): pass
+class WalkForwardInputResolverError(WalkForwardError): pass
+class WalkForwardWindowPolicyError(WalkForwardError): pass
+class AnchoredSplitBuilderError(WalkForwardError): pass
+class RollingSplitBuilderError(WalkForwardError): pass
+class FoldReplayConfigError(WalkForwardError): pass
+class FoldReplayRunnerError(WalkForwardError): pass
+class FoldPerformanceMetricsError(WalkForwardError): pass
+class FoldBenchmarkComparisonError(WalkForwardError): pass
+class OOSRobustnessMetricsError(WalkForwardError): pass
+class TemporalStabilityAnalyzerError(WalkForwardError): pass
+class DegradationDiagnosticsError(WalkForwardError): pass
+class RobustnessSummaryError(WalkForwardError): pass
+class WalkForwardValidationReportError(WalkForwardError): pass
+class TemporalStabilityAuditError(WalkForwardError): pass
+class WalkForwardSafetyBoundaryError(WalkForwardError): pass
+class Phase151ReadinessGateError(WalkForwardError): pass
+class WalkForwardSchemaValidationError(WalkForwardError): pass
+class WalkForwardSafetyValidationError(WalkForwardError): pass
+class WalkForwardStoreError(WalkForwardError): pass
+class WalkForwardValidationError(WalkForwardError): pass
+class WalkForwardReportingError(WalkForwardError): pass
