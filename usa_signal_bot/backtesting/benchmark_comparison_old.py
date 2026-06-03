@@ -3,7 +3,14 @@ from typing import Optional
 from datetime import datetime
 import json
 
-from usa_signal_bot.core.enums import BenchmarkComparisonStatus, RelativePerformanceBucket
+from usa_signal_bot.core.enums import BenchmarkComparisonStatus, BenchmarkType
+
+class RelativePerformanceBucket:
+    OUTPERFORMED = 'OUTPERFORMED'
+    UNDERPERFORMED = 'UNDERPERFORMED'
+    MATCHED = 'MATCHED'
+    INSUFFICIENT_DATA = 'INSUFFICIENT_DATA'
+
 from usa_signal_bot.backtesting.benchmark_models import BenchmarkEquityCurve, BenchmarkComparisonReport
 from usa_signal_bot.backtesting.equity_curve import EquityCurve, EquityCurvePoint
 

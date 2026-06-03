@@ -3216,3 +3216,12 @@ class BacktestAnalyticsValidationError(BacktestAnalyticsError):
 
 class BacktestAnalyticsReportingError(BacktestAnalyticsError):
     pass
+
+
+class BacktestMetricError(Exception): pass
+
+
+class BacktestPortfolioError(Exception): pass
+
+
+class DataValidationError(Exception): pass
