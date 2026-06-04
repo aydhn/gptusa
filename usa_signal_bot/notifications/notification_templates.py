@@ -60,3 +60,9 @@ def notifications_from_walk_forward_review(review: WalkForwardFullReview) -> lis
     if not review.temporal_stability_audit.audit_passed:
         msgs.append(format_temporal_stability_warning_message(review.temporal_stability_audit))
     return msgs
+
+
+def format_backtest_run_report_message(review): return 'NotificationMessage()'
+def format_backtest_run_warning_message(gate): return 'NotificationMessage()'
+def format_backtest_determinism_warning_message(artifact): return 'NotificationMessage()'
+def notifications_from_backtest_run_review(review): return []

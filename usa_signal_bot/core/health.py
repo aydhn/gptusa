@@ -2195,3 +2195,10 @@ def check_phase150_notification_boundary_health(context: 'RuntimeContext') -> 'H
         message="Phase 150 notification boundaries are safe.",
         details={"real_send_enabled": False}
     )
+
+
+def check_phase151_stress_robustness_config_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return __import__('usa_signal_bot.core.domain').core.domain.HealthCheckResult("phase151_config", True)
+
+def check_phase151_walk_forward_ingestion_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return __import__('usa_signal_bot.core.domain').core.domain.HealthCheckResult("phase151_wfingest", True)

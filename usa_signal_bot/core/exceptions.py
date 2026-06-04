@@ -1,3 +1,6 @@
+class BotError(Exception):
+    pass
+
 class UsaSignalBotError(Exception):
     pass
 
@@ -3251,3 +3254,82 @@ class WalkForwardSafetyValidationError(WalkForwardError): pass
 class WalkForwardStoreError(WalkForwardError): pass
 class WalkForwardValidationError(WalkForwardError): pass
 class WalkForwardReportingError(WalkForwardError): pass
+
+
+class StressRobustnessError(BotError):
+    pass
+
+class WalkForwardIngestionError(StressRobustnessError):
+    pass
+
+class WalkForwardArtifactLoaderError(StressRobustnessError):
+    pass
+
+class StressInputResolverError(StressRobustnessError):
+    pass
+
+class StressScenarioPolicyError(StressRobustnessError):
+    pass
+
+class StressScenarioBuilderError(StressRobustnessError):
+    pass
+
+class ScenarioPathBuilderError(StressRobustnessError):
+    pass
+
+class ScenarioReplayRunnerError(StressRobustnessError):
+    pass
+
+class ScenarioPerformanceMetricsError(StressRobustnessError):
+    pass
+
+class ScenarioDrawdownDiagnosticsError(StressRobustnessError):
+    pass
+
+class CostLiquiditySensitivityError(StressRobustnessError):
+    pass
+
+class MonteCarloPolicyError(StressRobustnessError):
+    pass
+
+class MonteCarloPathGeneratorError(StressRobustnessError):
+    pass
+
+class MonteCarloReplayRunnerError(StressRobustnessError):
+    pass
+
+class MonteCarloDistributionAnalyzerError(StressRobustnessError):
+    pass
+
+class TailRiskDiagnosticsError(StressRobustnessError):
+    pass
+
+class RobustnessScorecardError(StressRobustnessError):
+    pass
+
+class StressValidationReportError(StressRobustnessError):
+    pass
+
+class MonteCarloRobustnessReportError(StressRobustnessError):
+    pass
+
+class StressSafetyBoundaryError(StressRobustnessError):
+    pass
+
+class Phase152ReadinessGateError(StressRobustnessError):
+    pass
+
+class StressSchemaValidationError(StressRobustnessError):
+    pass
+
+class StressSafetyValidationError(StressRobustnessError):
+    pass
+
+class StressRobustnessStoreError(StressRobustnessError):
+    pass
+
+class StressRobustnessValidationError(StressRobustnessError):
+    pass
+
+class StressRobustnessReportingError(StressRobustnessError):
+    pass
