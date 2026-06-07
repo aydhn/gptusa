@@ -1531,3 +1531,10 @@ def phase151_stress_robustness_info():
 
 def setup_phase151_cli(parser):
     pass
+
+def setup_phase152_cli(subparsers):
+    try:
+        from usa_signal_bot.app.cli_phase152_patch import register_phase152_commands
+        register_phase152_commands(subparsers)
+    except ImportError:
+        pass
