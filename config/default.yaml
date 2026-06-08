@@ -4334,3 +4334,95 @@ phase154_notifications:
   dry_run: true
   preview_only: true
   telegram_real_send: false
+
+optimizer_prototype:
+  enabled: true
+  current_phase: 156
+  final_phase: 160
+  require_phase155_portfolio_construction: true
+  portfolio_construction_ingestion_enabled: true
+  artifact_loader_enabled: true
+  input_resolver_enabled: true
+  optimizer_candidate_builder_enabled: true
+  optimizer_policy_enabled: true
+  objective_contracts_enabled: true
+  constraint_contracts_enabled: true
+  equal_baseline_optimizer_enabled: true
+  score_maximizing_optimizer_enabled: true
+  risk_budget_optimizer_enabled: true
+  concentration_minimizing_optimizer_enabled: true
+  robustness_first_optimizer_enabled: true
+  turnover_aware_optimizer_enabled: true
+  sandbox_weight_normalization_enabled: true
+  objective_score_evaluator_enabled: true
+  objective_comparison_report_enabled: true
+  optimizer_diagnostics_enabled: true
+  optimizer_validation_report_enabled: true
+  safety_boundary_enabled: true
+  phase157_readiness_gate_enabled: true
+  write_optimizer_prototype_reports: true
+  warn_not_investment_advice: true
+  warn_optimizer_sandbox_only: true
+  warn_no_actual_target_weights: true
+  warn_no_actual_allocation: true
+  warn_no_capital_deployment: true
+
+phase156_optimizer_policy:
+  compute_values_local_only: true
+  research_data_only: true
+  optimizer_sandbox_only: true
+  local_fixture_only_default: true
+  read_only_construction_artifacts: true
+  allow_optimizer_sandbox: true
+  allow_sandbox_optimizer_weights: true
+  allow_actual_target_weights: false
+  allow_actual_portfolio_weights: false
+  allow_actual_allocation: false
+  allow_actual_position_size: false
+  allow_order_size: false
+  allow_capital_deployment: false
+  allow_actual_portfolio_optimization: false
+  allow_rebalancing_execution: false
+  allow_network: false
+  allow_paid_api: false
+  allow_scraping: false
+  allow_html_parsing: false
+  allow_broker: false
+  allow_real_order_creation: false
+  allow_paper_mutation: false
+  allow_telegram_real_send: false
+  allow_dashboard: false
+  allow_deployment: false
+  allow_live_trading: false
+  allow_paper_trading: false
+  allow_strategy_activation: false
+  allow_scheduler: false
+  allow_background_daemon: false
+  produce_live_signals: false
+  produce_order_decisions: false
+  produce_actual_portfolio_weights: false
+  produce_actual_target_weights: false
+  produce_actual_allocation: false
+  produce_order_sizes: false
+  produce_investment_advice: false
+
+phase156_optimizer_defaults:
+  max_sandbox_optimizer_weight: 0.10
+  min_sandbox_optimizer_weight: 0.0
+  max_group_sandbox_optimizer_weight: 0.40
+  max_turnover_sandbox: 0.25
+  max_risk_budget_usage: 0.30
+  deterministic_seed: 156
+  no_actual_target_weights: true
+  no_actual_portfolio_weights: true
+  no_actual_allocation: true
+  no_actual_position_size: true
+  no_order_size: true
+  no_capital_allocation: true
+  require_deterministic_hashes: true
+
+phase156_notifications:
+  enabled: true
+  dry_run: true
+  preview_only: true
+  telegram_real_send: false

@@ -140,3 +140,24 @@ def notifications_from_portfolio_construction_review(review: PortfolioConstructi
     if not review.safety_boundary.boundary_passed:
         msgs.append(format_allocation_sandbox_safety_warning_message(review.safety_boundary))
     return msgs
+
+
+def format_backtest_run_report_message(review): return 'NotificationMessage()'
+def format_backtest_run_warning_message(gate): return 'NotificationMessage()'
+def format_backtest_determinism_warning_message(artifact): return 'NotificationMessage()'
+def notifications_from_backtest_run_review(review): return []
+
+from typing import Any, List
+from usa_signal_bot.portfolio.optimization.phase156_models import OptimizerPrototypeFullReview, OptimizerPrototypeContext, OptimizerSafetyBoundaryResult
+
+def format_optimizer_prototype_report_message(review: OptimizerPrototypeFullReview) -> Any:
+    return {"message": "Phase 156 Optimizer Prototype Report", "valid": len(review.errors) == 0}
+
+def format_optimizer_prototype_warning_message(context: OptimizerPrototypeContext) -> Any:
+    return {"message": "Phase 156 Optimizer Prototype Warning", "errors": context.errors}
+
+def format_optimizer_safety_warning_message(boundary: OptimizerSafetyBoundaryResult) -> Any:
+    return {"message": "Phase 156 Optimizer Safety Warning", "passed": boundary.boundary_passed}
+
+def notifications_from_optimizer_prototype_review(review: OptimizerPrototypeFullReview) -> List[Any]:
+    return [format_optimizer_prototype_report_message(review)]
