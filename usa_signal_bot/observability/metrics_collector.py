@@ -506,3 +506,20 @@ latest_phase143_portfolio_weight_language_violation_count = Gauge('usa_signal_bo
 # latest_phase148_stress_test_violation_count
 # latest_phase148_monte_carlo_violation_count
 # latest_phase148_benchmark_comparison_violation_count
+
+def get_latest_portfolio_foundation_context_count() -> int: return 0
+def get_latest_portfolio_input_reference_count() -> int: return 0
+def get_latest_candidate_universe_candidate_count() -> int: return 0
+def get_latest_portfolio_eligibility_rule_count() -> int: return 0
+def get_latest_portfolio_constraint_count() -> int: return 0
+def get_latest_risk_budget_contract_item_count() -> int: return 0
+def get_latest_position_sizing_boundary_rule_count() -> int: return 0
+def get_latest_phase154_readiness_gate_pass_count() -> int: return 0
+def get_latest_phase153_live_trading_violation_count() -> int: return 0
+def get_latest_phase153_paper_trading_violation_count() -> int: return 0
+def get_latest_phase153_real_order_violation_count() -> int: return 0
+def get_latest_phase153_broker_execution_violation_count() -> int: return 0
+def get_latest_phase153_position_sizing_violation_count() -> int: return 0
+def get_latest_phase153_target_weight_violation_count() -> int: return 0
+def get_latest_phase153_allocation_output_violation_count() -> int: return 0
+def get_latest_phase153_capital_deployment_violation_count() -> int: return 0

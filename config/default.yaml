@@ -4181,3 +4181,86 @@ phase152_notifications:
   dry_run: true
   preview_only: true
   telegram_real_send: false
+
+portfolio_foundation:
+  enabled: true
+  current_phase: 153
+  final_phase: 160
+  require_phase152_backtest_closure: true
+  backtest_closure_ingestion_enabled: true
+  handoff_loader_enabled: true
+  input_resolver_enabled: true
+  candidate_universe_contract_enabled: true
+  eligibility_rules_enabled: true
+  constraint_catalog_enabled: true
+  risk_budget_contract_enabled: true
+  position_sizing_boundary_enabled: true
+  portfolio_construction_boundary_enabled: true
+  candidate_universe_diagnostics_enabled: true
+  constraint_validation_report_enabled: true
+  risk_budget_validation_report_enabled: true
+  sizing_boundary_validation_report_enabled: true
+  safety_boundary_enabled: true
+  phase154_readiness_gate_enabled: true
+  write_portfolio_foundation_reports: true
+  warn_not_investment_advice: true
+  warn_contract_only_phase153: true
+  warn_no_actual_position_sizing_phase153: true
+  warn_no_allocation_phase153: true
+
+phase153_portfolio_policy:
+  compute_values_local_only: true
+  research_data_only: true
+  portfolio_research_contract_only: true
+  local_fixture_only_default: true
+  read_only_phase153_handoff: true
+  allow_portfolio_foundation_contracts: true
+  allow_candidate_universe_contract: true
+  allow_risk_budget_contract: true
+  allow_position_sizing_boundary: true
+  allow_actual_portfolio_construction: false
+  allow_actual_position_sizing: false
+  allow_portfolio_optimization: false
+  allow_rebalancing: false
+  allow_target_weights: false
+  allow_allocation_output: false
+  allow_capital_deployment: false
+  allow_network: false
+  allow_paid_api: false
+  allow_scraping: false
+  allow_html_parsing: false
+  allow_broker: false
+  allow_real_order_creation: false
+  allow_paper_mutation: false
+  allow_telegram_real_send: false
+  allow_dashboard: false
+  allow_deployment: false
+  allow_live_trading: false
+  allow_paper_trading: false
+  allow_strategy_activation: false
+  allow_scheduler: false
+  allow_background_daemon: false
+  produce_live_signals: false
+  produce_order_decisions: false
+  produce_portfolio_weights: false
+  produce_position_sizes: false
+  produce_investment_advice: false
+
+phase153_contract_defaults:
+  min_required_candidates: 1
+  max_allowed_candidates: 1000
+  long_only_contract: true
+  no_leverage_contract: true
+  no_shorting_contract: true
+  no_derivatives_contract: true
+  no_margin_contract: true
+  no_actual_weights: true
+  no_actual_allocation: true
+  no_actual_position_size: true
+  require_deterministic_hashes: true
+
+phase153_notifications:
+  enabled: true
+  dry_run: true
+  preview_only: true
+  telegram_real_send: false

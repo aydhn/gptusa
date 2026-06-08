@@ -1,7 +1,4 @@
-# Mock test for CLI
-def test_cli_mock():
+from usa_signal_bot.app.cli import main
+def test_cli_placeholder():
+    # Basic smoke test for CLI syntax checking is handled via importing it
     assert True
-
-# Tests for test_cli.py
-def test_placeholder():
-    pass

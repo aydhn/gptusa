@@ -72,3 +72,18 @@ def format_backtest_run_report_message(review): return 'NotificationMessage()'
 def format_backtest_run_warning_message(gate): return 'NotificationMessage()'
 def format_backtest_determinism_warning_message(artifact): return 'NotificationMessage()'
 def notifications_from_backtest_run_review(review): return []
+
+def format_portfolio_foundation_report_message(review: Any) -> NotificationMessage:
+    msg = NotificationMessage()
+    return msg
+
+def format_portfolio_foundation_warning_message(context: Any) -> NotificationMessage:
+    msg = NotificationMessage()
+    return msg
+
+def format_position_sizing_boundary_warning_message(report: Any) -> NotificationMessage:
+    msg = NotificationMessage()
+    return msg
+
+def notifications_from_portfolio_foundation_review(review: Any) -> list[NotificationMessage]:
+    return [format_portfolio_foundation_report_message(review)]
