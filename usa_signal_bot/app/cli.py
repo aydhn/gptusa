@@ -28,6 +28,12 @@ def main():
     parser_ensemble_pred = subparsers.add_parser("generate-offline-ensemble-predictions", help="Generate predictions")
     parser_ensemble_pred.add_argument("--write", action="store_true")
 
+    parser_info_155 = subparsers.add_parser("portfolio-construction-info", help="Print info about Phase 155")
+    parser_policy_155 = subparsers.add_parser("build-portfolio-construction-policy", help="Build policy")
+    parser_policy_155.add_argument("--write", action="store_true")
+    parser_review_155 = subparsers.add_parser("portfolio-construction-review", help="Run full Phase 155 review")
+    parser_review_155.add_argument("--write", action="store_true")
+
     parser_ensemble_diag = subparsers.add_parser("build-blend-diagnostics", help="Build diagnostics")
     parser_ensemble_diag.add_argument("--write", action="store_true")
 
@@ -1609,7 +1615,7 @@ def setup_phase152_cli(subparsers):
 
     parser_pf_validate = subparsers.add_parser("portfolio-foundation-validate", help="Validate full setup")
 
-@cli.command("sizing-prototype-info")
+#@app.command("sizing-prototype-info")
 def sizing_prototype_info():
     """Display info about Phase 154 Deterministic Position Sizing Prototypes."""
     print("Phase 154: Deterministic Position Sizing Prototypes, Sizing Diagnostics and Sizing Safety Validation.")
@@ -1619,158 +1625,210 @@ def sizing_prototype_info():
     print("NO capital deployment or active portfolio optimization occurs here.")
     print("Ready for Phase 155 determines if sandbox allocation can commence.")
 
-@cli.command("sizing-ingest-portfolio-foundation")
-@click.option("--write", is_flag=True, help="Write to storage")
+#@app.command("sizing-ingest-portfolio-foundation")
+#@click.option("--write", is_flag=True, help="Write to storage")
 def sizing_ingest_portfolio_foundation(write):
     print("Ingesting Portfolio Foundation Artifacts...")
     if write:
         print("Written to storage (mock).")
 
-@cli.command("sizing-artifact-load")
-@click.option("--write", is_flag=True, help="Write to storage")
+#@app.command("sizing-artifact-load")
+#@click.option("--write", is_flag=True, help="Write to storage")
 def sizing_artifact_load(write):
     print("Loading Artifacts...")
     if write:
         print("Written to storage (mock).")
 
-@cli.command("resolve-sizing-inputs")
-@click.option("--write", is_flag=True, help="Write to storage")
+#@app.command("resolve-sizing-inputs")
+#@click.option("--write", is_flag=True, help="Write to storage")
 def resolve_sizing_inputs(write):
     print("Resolving Sizing Inputs...")
     if write:
         print("Written to storage (mock).")
 
-@cli.command("build-sizing-policy")
-@click.option("--write", is_flag=True, help="Write to storage")
+#@app.command("build-sizing-policy")
+#@click.option("--write", is_flag=True, help="Write to storage")
 def build_sizing_policy(write):
     print("Building Sizing Policy...")
     if write:
         print("Written to storage (mock).")
 
-@cli.command("build-sizing-method-contracts")
-@click.option("--write", is_flag=True, help="Write to storage")
+#@app.command("build-sizing-method-contracts")
+#@click.option("--write", is_flag=True, help="Write to storage")
 def build_sizing_method_contracts(write):
     print("Building Method Contracts...")
     if write:
         print("Written to storage (mock).")
 
-@cli.command("build-fixed-fractional-sizing")
-@click.option("--write", is_flag=True, help="Write to storage")
+#@app.command("build-fixed-fractional-sizing")
+#@click.option("--write", is_flag=True, help="Write to storage")
 def build_fixed_fractional_sizing(write):
     print("Building Fixed Fractional Prototypes...")
     if write:
         print("Written to storage (mock).")
 
-@cli.command("build-volatility-adjusted-sizing")
-@click.option("--write", is_flag=True, help="Write to storage")
+#@app.command("build-volatility-adjusted-sizing")
+#@click.option("--write", is_flag=True, help="Write to storage")
 def build_volatility_adjusted_sizing(write):
     print("Building Volatility Adjusted Prototypes...")
     if write:
         print("Written to storage (mock).")
 
-@cli.command("build-drawdown-adjusted-sizing")
-@click.option("--write", is_flag=True, help="Write to storage")
+#@app.command("build-drawdown-adjusted-sizing")
+#@click.option("--write", is_flag=True, help="Write to storage")
 def build_drawdown_adjusted_sizing(write):
     print("Building Drawdown Adjusted Prototypes...")
     if write:
         print("Written to storage (mock).")
 
-@cli.command("build-cost-aware-sizing")
-@click.option("--write", is_flag=True, help="Write to storage")
+#@app.command("build-cost-aware-sizing")
+#@click.option("--write", is_flag=True, help="Write to storage")
 def build_cost_aware_sizing(write):
     print("Building Cost Aware Prototypes...")
     if write:
         print("Written to storage (mock).")
 
-@cli.command("build-liquidity-aware-sizing")
-@click.option("--write", is_flag=True, help="Write to storage")
+#@app.command("build-liquidity-aware-sizing")
+#@click.option("--write", is_flag=True, help="Write to storage")
 def build_liquidity_aware_sizing(write):
     print("Building Liquidity Aware Prototypes...")
     if write:
         print("Written to storage (mock).")
 
-@cli.command("build-robustness-adjusted-sizing")
-@click.option("--write", is_flag=True, help="Write to storage")
+#@app.command("build-robustness-adjusted-sizing")
+#@click.option("--write", is_flag=True, help="Write to storage")
 def build_robustness_adjusted_sizing(write):
     print("Building Robustness Adjusted Prototypes...")
     if write:
         print("Written to storage (mock).")
 
-@cli.command("apply-sizing-cap-floor-rules")
-@click.option("--write", is_flag=True, help="Write to storage")
+#@app.command("apply-sizing-cap-floor-rules")
+#@click.option("--write", is_flag=True, help="Write to storage")
 def apply_sizing_cap_floor_rules(write):
     print("Applying Cap/Floor Rules...")
     if write:
         print("Written to storage (mock).")
 
-@cli.command("build-sizing-comparison-matrix")
-@click.option("--write", is_flag=True, help="Write to storage")
+#@app.command("build-sizing-comparison-matrix")
+#@click.option("--write", is_flag=True, help="Write to storage")
 def build_sizing_comparison_matrix(write):
     print("Building Comparison Matrix...")
     if write:
         print("Written to storage (mock).")
 
-@cli.command("build-sizing-diagnostics")
-@click.option("--write", is_flag=True, help="Write to storage")
+#@app.command("build-sizing-diagnostics")
+#@click.option("--write", is_flag=True, help="Write to storage")
 def build_sizing_diagnostics(write):
     print("Building Diagnostics...")
     if write:
         print("Written to storage (mock).")
 
-@cli.command("build-sizing-sensitivity-report")
-@click.option("--write", is_flag=True, help="Write to storage")
+#@app.command("build-sizing-sensitivity-report")
+#@click.option("--write", is_flag=True, help="Write to storage")
 def build_sizing_sensitivity_report(write):
     print("Building Sensitivity Report...")
     if write:
         print("Written to storage (mock).")
 
-@cli.command("build-risk-budget-adherence-report")
-@click.option("--write", is_flag=True, help="Write to storage")
+#@app.command("build-risk-budget-adherence-report")
+#@click.option("--write", is_flag=True, help="Write to storage")
 def build_risk_budget_adherence_report(write):
     print("Building Risk Budget Adherence Report...")
     if write:
         print("Written to storage (mock).")
 
-@cli.command("validate-sizing-safety-boundary")
-@click.option("--write", is_flag=True, help="Write to storage")
+#@app.command("validate-sizing-safety-boundary")
+#@click.option("--write", is_flag=True, help="Write to storage")
 def validate_sizing_safety_boundary(write):
     print("Validating Safety Boundary...")
     if write:
         print("Written to storage (mock).")
 
-@cli.command("phase155-readiness-gate")
-@click.option("--write", is_flag=True, help="Write to storage")
+#@app.command("phase155-readiness-gate")
+#@click.option("--write", is_flag=True, help="Write to storage")
 def phase155_readiness_gate(write):
     print("Checking Phase 155 Readiness Gate...")
     if write:
         print("Written to storage (mock).")
 
-@cli.command("sizing-schema-check")
+#@app.command("sizing-schema-check")
 def sizing_schema_check():
     print("Schema Check Passed.")
 
-@cli.command("sizing-safety-check")
+#@app.command("sizing-safety-check")
 def sizing_safety_check():
     print("Safety Check Passed.")
 
-@cli.command("sizing-prototype-context")
-@click.option("--write", is_flag=True, help="Write to storage")
+#@app.command("sizing-prototype-context")
+#@click.option("--write", is_flag=True, help="Write to storage")
 def sizing_prototype_context(write):
     print("Sizing Prototype Context...")
     if write:
         print("Written to storage (mock).")
 
-@cli.command("sizing-prototype-review")
-@click.option("--write", is_flag=True, help="Write to storage")
+#@app.command("sizing-prototype-review")
+#@click.option("--write", is_flag=True, help="Write to storage")
 def sizing_prototype_review(write):
     print("Sizing Prototype Full Review...")
     if write:
         print("Written to storage (mock).")
 
-@cli.command("sizing-prototype-summary")
+#@app.command("sizing-prototype-summary")
 def sizing_prototype_summary():
     print("Sizing Prototype Summary.")
 
-@cli.command("sizing-prototype-validate")
+#@app.command("sizing-prototype-validate")
 def sizing_prototype_validate():
     print("Sizing Prototype Valid.")
+
+#@app.command("portfolio-construction-info")
+def portfolio_construction_info():
+    """Print info about Phase 155"""
+    typer.echo("Phase 155 Portfolio Construction Prototype & Allocation Sandbox")
+    typer.echo(portfolio_construction_limitations_text())
+
+#@app.command("build-portfolio-construction-policy")
+def build_policy(write: bool = False):
+    """Build and preview a default sandbox policy"""
+    policy = build_default_portfolio_construction_policy()
+    typer.echo(f"Policy Built: {policy.policy_name}")
+    typer.echo(f"Max Sandbox Weight: {policy.max_sandbox_weight_fraction}")
+
+#@app.command("build-equal-sandbox-allocation")
+def build_equal_sandbox(write: bool = False):
+    """Build equal sandbox allocation using default policy"""
+    policy = build_default_portfolio_construction_policy()
+    results = build_equal_sandbox_allocation([], policy)
+    typer.echo(f"Built equal allocation with {len(results)} records.")
+
+#@app.command("build-prototype-exposure-table")
+def build_exposure_table(write: bool = False):
+    """Build prototype exposure table"""
+    table = build_prototype_exposure_table([], [])
+    typer.echo(f"Built exposure table with hash: {table.table_hash}")
+
+#@app.command("portfolio-construction-review")
+def portfolio_review(write: bool = False):
+    """Run full portfolio construction review"""
+    context = build_portfolio_construction_context()
+    policy = build_default_portfolio_construction_policy()
+    contracts = build_sandbox_allocation_method_contracts(policy)
+    table = build_prototype_exposure_table([], [])
+    comp = build_allocation_sandbox_comparison_report([], table, [])
+    val = build_portfolio_construction_validation_report(policy, contracts, comp)
+    rules = build_allocation_sandbox_safety_boundary_rules()
+    bound = build_allocation_sandbox_safety_boundary_result(rules)
+    gate = build_phase156_readiness_gate(policy, contracts, comp, val, bound)
+
+    context.policy = policy
+    context.method_contracts = contracts
+    context.exposure_table = table
+    context.comparison_report = comp
+    context.validation_report = val
+    context.safety_boundary = bound
+    context.phase156_readiness_gate = gate
+
+    review = build_portfolio_construction_full_review(context)
+    typer.echo(f"Review ID: {review.review_id}")
+    typer.echo(f"Safety Passed: {bound.boundary_passed}")
+    typer.echo(f"Ready for Phase 156: {gate.ready_for_phase156}")
