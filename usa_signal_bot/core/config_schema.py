@@ -4605,3 +4605,90 @@ class Phase152NotificationsConfig:
     dry_run: bool = True
     preview_only: bool = True
     telegram_real_send: bool = False
+
+@dataclass
+class PortfolioFoundationConfig:
+    enabled: bool = True
+    current_phase: int = 153
+    final_phase: int = 160
+    require_phase152_backtest_closure: bool = True
+    backtest_closure_ingestion_enabled: bool = True
+    handoff_loader_enabled: bool = True
+    input_resolver_enabled: bool = True
+    candidate_universe_contract_enabled: bool = True
+    eligibility_rules_enabled: bool = True
+    constraint_catalog_enabled: bool = True
+    risk_budget_contract_enabled: bool = True
+    position_sizing_boundary_enabled: bool = True
+    portfolio_construction_boundary_enabled: bool = True
+    candidate_universe_diagnostics_enabled: bool = True
+    constraint_validation_report_enabled: bool = True
+    risk_budget_validation_report_enabled: bool = True
+    sizing_boundary_validation_report_enabled: bool = True
+    safety_boundary_enabled: bool = True
+    phase154_readiness_gate_enabled: bool = True
+    write_portfolio_foundation_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_contract_only_phase153: bool = True
+    warn_no_actual_position_sizing_phase153: bool = True
+    warn_no_allocation_phase153: bool = True
+
+@dataclass
+class Phase153PortfolioPolicyConfig:
+    compute_values_local_only: bool = True
+    research_data_only: bool = True
+    portfolio_research_contract_only: bool = True
+    local_fixture_only_default: bool = True
+    read_only_phase153_handoff: bool = True
+    allow_portfolio_foundation_contracts: bool = True
+    allow_candidate_universe_contract: bool = True
+    allow_risk_budget_contract: bool = True
+    allow_position_sizing_boundary: bool = True
+    allow_actual_portfolio_construction: bool = False
+    allow_actual_position_sizing: bool = False
+    allow_portfolio_optimization: bool = False
+    allow_rebalancing: bool = False
+    allow_target_weights: bool = False
+    allow_allocation_output: bool = False
+    allow_capital_deployment: bool = False
+    allow_network: bool = False
+    allow_paid_api: bool = False
+    allow_scraping: bool = False
+    allow_html_parsing: bool = False
+    allow_broker: bool = False
+    allow_real_order_creation: bool = False
+    allow_paper_mutation: bool = False
+    allow_telegram_real_send: bool = False
+    allow_dashboard: bool = False
+    allow_deployment: bool = False
+    allow_live_trading: bool = False
+    allow_paper_trading: bool = False
+    allow_strategy_activation: bool = False
+    allow_scheduler: bool = False
+    allow_background_daemon: bool = False
+    produce_live_signals: bool = False
+    produce_order_decisions: bool = False
+    produce_portfolio_weights: bool = False
+    produce_position_sizes: bool = False
+    produce_investment_advice: bool = False
+
+@dataclass
+class Phase153ContractDefaultsConfig:
+    min_required_candidates: int = 1
+    max_allowed_candidates: int = 1000
+    long_only_contract: bool = True
+    no_leverage_contract: bool = True
+    no_shorting_contract: bool = True
+    no_derivatives_contract: bool = True
+    no_margin_contract: bool = True
+    no_actual_weights: bool = True
+    no_actual_allocation: bool = True
+    no_actual_position_size: bool = True
+    require_deterministic_hashes: bool = True
+
+@dataclass
+class Phase153NotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    preview_only: bool = True
+    telegram_real_send: bool = False

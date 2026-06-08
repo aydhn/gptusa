@@ -247,6 +247,14 @@ def main():
         import sys
         sys.exit(0)
 
+
+    if args.command == "portfolio-foundation-info":
+        print("Phase 153 is the Portfolio Construction Foundation, Position Sizing Boundary and Risk Budgeting Contract phase.")
+        print("It is strictly a contract-only phase.")
+        print("It does NOT perform actual portfolio construction, sizing, or capital allocation.")
+        print("It does NOT generate investment advice, target weights, or live/paper/broker orders.")
+        print("Its sole purpose is to establish boundaries for Phase 154 sizing prototypes.")
+        return
     if args.command == "ensemble-prototype-info":
         print("Phase 143 is an offline ensemble prototype evaluation, blend diagnostics, and non-activation ensemble registry phase. It is NOT active paper trading, deployment, live inference, or live daemon.")
         print(ensemble_prototype_limitations_text())
@@ -1538,3 +1546,65 @@ def setup_phase152_cli(subparsers):
         register_phase152_commands(subparsers)
     except ImportError:
         pass
+
+
+    parser_pf_info = subparsers.add_parser("portfolio-foundation-info", help="Print info about Phase 153")
+
+    parser_pf_ingest = subparsers.add_parser("portfolio-ingest-backtest-closure", help="Ingest backtest closure")
+    parser_pf_ingest.add_argument("--write", action="store_true")
+
+    parser_pf_load_handoff = subparsers.add_parser("portfolio-load-handoff", help="Load handoff package")
+    parser_pf_load_handoff.add_argument("--write", action="store_true")
+
+    parser_pf_resolve_inputs = subparsers.add_parser("resolve-portfolio-inputs", help="Resolve portfolio inputs")
+    parser_pf_resolve_inputs.add_argument("--write", action="store_true")
+
+    parser_pf_build_contract = subparsers.add_parser("build-candidate-universe-contract", help="Build universe contract")
+    parser_pf_build_contract.add_argument("--write", action="store_true")
+
+    parser_pf_build_eligibility = subparsers.add_parser("build-portfolio-eligibility-rules", help="Build eligibility rules")
+    parser_pf_build_eligibility.add_argument("--write", action="store_true")
+
+    parser_pf_build_catalog = subparsers.add_parser("build-portfolio-constraint-catalog", help="Build constraint catalog")
+    parser_pf_build_catalog.add_argument("--write", action="store_true")
+
+    parser_pf_build_budget = subparsers.add_parser("build-risk-budget-contract", help="Build risk budget contract")
+    parser_pf_build_budget.add_argument("--write", action="store_true")
+
+    parser_pf_build_boundary = subparsers.add_parser("build-position-sizing-boundary", help="Build sizing boundary")
+    parser_pf_build_boundary.add_argument("--write", action="store_true")
+
+    parser_pf_build_const_bound = subparsers.add_parser("build-portfolio-construction-boundary", help="Build construction boundary")
+    parser_pf_build_const_bound.add_argument("--write", action="store_true")
+
+    parser_pf_build_diag = subparsers.add_parser("build-candidate-universe-diagnostics", help="Build universe diagnostics")
+    parser_pf_build_diag.add_argument("--write", action="store_true")
+
+    parser_pf_build_const_val = subparsers.add_parser("build-constraint-validation-report", help="Build constraint validation")
+    parser_pf_build_const_val.add_argument("--write", action="store_true")
+
+    parser_pf_build_risk_val = subparsers.add_parser("build-risk-budget-validation-report", help="Build risk budget validation")
+    parser_pf_build_risk_val.add_argument("--write", action="store_true")
+
+    parser_pf_build_size_val = subparsers.add_parser("build-sizing-boundary-validation-report", help="Build sizing boundary validation")
+    parser_pf_build_size_val.add_argument("--write", action="store_true")
+
+    parser_pf_safety = subparsers.add_parser("validate-portfolio-foundation-safety-boundary", help="Validate safety boundary")
+    parser_pf_safety.add_argument("--write", action="store_true")
+
+    parser_pf_gate = subparsers.add_parser("phase154-readiness-gate", help="Evaluate phase 154 readiness gate")
+    parser_pf_gate.add_argument("--write", action="store_true")
+
+    parser_pf_schema_check = subparsers.add_parser("portfolio-foundation-schema-check", help="Check schema")
+
+    parser_pf_safety_check = subparsers.add_parser("portfolio-foundation-safety-check", help="Check safety")
+
+    parser_pf_context = subparsers.add_parser("portfolio-foundation-context", help="Build context")
+    parser_pf_context.add_argument("--write", action="store_true")
+
+    parser_pf_review = subparsers.add_parser("portfolio-foundation-review", help="Run full review")
+    parser_pf_review.add_argument("--write", action="store_true")
+
+    parser_pf_summary = subparsers.add_parser("portfolio-foundation-summary", help="Print summary")
+
+    parser_pf_validate = subparsers.add_parser("portfolio-foundation-validate", help="Validate full setup")
