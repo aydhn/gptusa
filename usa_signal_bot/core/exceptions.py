@@ -247,3 +247,81 @@ class PortfolioConstructionValidationError(PortfolioConstructionError):
 
 class PortfolioConstructionReportingError(PortfolioConstructionError):
     pass
+
+class OptimizerPrototypeError(USASignalBotError):
+    pass
+
+class PortfolioConstructionIngestionError(OptimizerPrototypeError):
+    pass
+
+class PortfolioConstructionArtifactLoaderError(OptimizerPrototypeError):
+    pass
+
+class OptimizerInputResolverError(OptimizerPrototypeError):
+    pass
+
+class OptimizerCandidateBuilderError(OptimizerPrototypeError):
+    pass
+
+class OptimizerPolicyError(OptimizerPrototypeError):
+    pass
+
+class OptimizerObjectiveContractError(OptimizerPrototypeError):
+    pass
+
+class OptimizerConstraintContractError(OptimizerPrototypeError):
+    pass
+
+class EqualBaselineOptimizerError(OptimizerPrototypeError):
+    pass
+
+class ScoreMaximizingOptimizerError(OptimizerPrototypeError):
+    pass
+
+class RiskBudgetOptimizerError(OptimizerPrototypeError):
+    pass
+
+class ConcentrationMinimizingOptimizerError(OptimizerPrototypeError):
+    pass
+
+class RobustnessFirstOptimizerError(OptimizerPrototypeError):
+    pass
+
+class TurnoverAwareOptimizerError(OptimizerPrototypeError):
+    pass
+
+class SandboxWeightNormalizationError(OptimizerPrototypeError):
+    pass
+
+class ObjectiveScoreEvaluatorError(OptimizerPrototypeError):
+    pass
+
+class ObjectiveComparisonReportError(OptimizerPrototypeError):
+    pass
+
+class OptimizerDiagnosticsError(OptimizerPrototypeError):
+    pass
+
+class OptimizerValidationReportError(OptimizerPrototypeError):
+    pass
+
+class OptimizerSafetyBoundaryError(OptimizerPrototypeError):
+    pass
+
+class Phase157ReadinessGateError(OptimizerPrototypeError):
+    pass
+
+class OptimizerSchemaValidationError(OptimizerPrototypeError):
+    pass
+
+class OptimizerSafetyValidationError(OptimizerPrototypeError):
+    pass
+
+class OptimizerPrototypeStoreError(OptimizerPrototypeError):
+    pass
+
+class OptimizerPrototypeValidationError(OptimizerPrototypeError):
+    pass
+
+class OptimizerPrototypeReportingError(OptimizerPrototypeError):
+    pass

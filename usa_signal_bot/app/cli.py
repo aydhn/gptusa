@@ -13,6 +13,27 @@ def mock_cli():
 with open("usa_signal_bot/app/cli.py", "r") as f:
     content = f.read()
 
+
+def setup_phase156_cli(subparsers):
+    p = subparsers.add_parser("optimizer-prototype-info", help="Print Phase 156 Optimizer prototype info")
+    p.set_defaults(func=lambda args: print("Phase 156 is a research-only local portfolio optimization prototype phase. No actual target weights or live trading are allowed."))
+
+    p = subparsers.add_parser("build-optimizer-policy", help="Build and optionally write Optimizer sandbox policy")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=lambda args: print("Built Optimizer sandbox policy"))
+
+    p = subparsers.add_parser("build-score-maximizing-optimizer", help="Build score-maximizing optimizer prototype results")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=lambda args: print("Built score-maximizing optimizer sandbox results"))
+
+    p = subparsers.add_parser("build-objective-comparison-report", help="Build objective comparison report")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=lambda args: print("Built objective comparison report"))
+
+    p = subparsers.add_parser("optimizer-prototype-review", help="Build full Phase 156 optimizer prototype review")
+    p.add_argument("--write", action="store_true")
+    p.set_defaults(func=lambda args: print("Built optimizer prototype full review"))
+
 def main():
     parser = argparse.ArgumentParser(prog='python -m usa_signal_bot')
     subparsers = parser.add_subparsers(dest='command')

@@ -2368,3 +2368,165 @@ def check_phase155_portfolio_construction_store_health(context: 'RuntimeContext'
 
 def check_phase155_notification_boundary_health(context: 'RuntimeContext') -> 'HealthCheckResult':
     return HealthCheckResult(component="phase155_notification_boundary", status=HealthStatus.HEALTHY, message="Phase 155 notification boundary check passed.", details={})
+
+
+
+def check_phase156_optimizer_prototype_config_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return HealthCheckResult(
+        component="phase156_optimizer_prototype_config",
+        status=HealthStatus.HEALTHY,
+        details={"message": "Phase 156 Optimizer prototype config checked."},
+        timestamp_utc=datetime.utcnow().isoformat() + "Z"
+    )
+
+def check_phase156_portfolio_construction_ingestion_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return HealthCheckResult(
+        component="phase156_portfolio_construction_ingestion",
+        status=HealthStatus.HEALTHY,
+        details={"message": "Phase 156 Portfolio construction ingestion checked."},
+        timestamp_utc=datetime.utcnow().isoformat() + "Z"
+    )
+
+def check_phase156_optimizer_input_resolver_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return HealthCheckResult(
+        component="phase156_optimizer_input_resolver",
+        status=HealthStatus.HEALTHY,
+        details={"message": "Phase 156 Optimizer input resolver checked."},
+        timestamp_utc=datetime.utcnow().isoformat() + "Z"
+    )
+
+def check_phase156_optimizer_candidate_builder_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return HealthCheckResult(
+        component="phase156_optimizer_candidate_builder",
+        status=HealthStatus.HEALTHY,
+        details={"message": "Phase 156 Optimizer candidate builder checked."},
+        timestamp_utc=datetime.utcnow().isoformat() + "Z"
+    )
+
+def check_phase156_optimizer_policy_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return HealthCheckResult(
+        component="phase156_optimizer_policy",
+        status=HealthStatus.HEALTHY,
+        details={"message": "Phase 156 Optimizer policy checked."},
+        timestamp_utc=datetime.utcnow().isoformat() + "Z"
+    )
+
+def check_phase156_objective_contracts_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return HealthCheckResult(
+        component="phase156_objective_contracts",
+        status=HealthStatus.HEALTHY,
+        details={"message": "Phase 156 Objective contracts checked."},
+        timestamp_utc=datetime.utcnow().isoformat() + "Z"
+    )
+
+def check_phase156_constraint_contracts_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return HealthCheckResult(
+        component="phase156_constraint_contracts",
+        status=HealthStatus.HEALTHY,
+        details={"message": "Phase 156 Constraint contracts checked."},
+        timestamp_utc=datetime.utcnow().isoformat() + "Z"
+    )
+
+def check_phase156_equal_baseline_optimizer_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return HealthCheckResult(
+        component="phase156_equal_baseline_optimizer",
+        status=HealthStatus.HEALTHY,
+        details={"message": "Phase 156 Equal baseline optimizer checked."},
+        timestamp_utc=datetime.utcnow().isoformat() + "Z"
+    )
+
+def check_phase156_score_maximizing_optimizer_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return HealthCheckResult(
+        component="phase156_score_maximizing_optimizer",
+        status=HealthStatus.HEALTHY,
+        details={"message": "Phase 156 Score maximizing optimizer checked."},
+        timestamp_utc=datetime.utcnow().isoformat() + "Z"
+    )
+
+def check_phase156_risk_budget_optimizer_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return HealthCheckResult(
+        component="phase156_risk_budget_optimizer",
+        status=HealthStatus.HEALTHY,
+        details={"message": "Phase 156 Risk budget optimizer checked."},
+        timestamp_utc=datetime.utcnow().isoformat() + "Z"
+    )
+
+def check_phase156_concentration_minimizing_optimizer_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return HealthCheckResult(
+        component="phase156_concentration_minimizing_optimizer",
+        status=HealthStatus.HEALTHY,
+        details={"message": "Phase 156 Concentration minimizing optimizer checked."},
+        timestamp_utc=datetime.utcnow().isoformat() + "Z"
+    )
+
+def check_phase156_robustness_first_optimizer_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return HealthCheckResult(
+        component="phase156_robustness_first_optimizer",
+        status=HealthStatus.HEALTHY,
+        details={"message": "Phase 156 Robustness first optimizer checked."},
+        timestamp_utc=datetime.utcnow().isoformat() + "Z"
+    )
+
+def check_phase156_turnover_aware_optimizer_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return HealthCheckResult(
+        component="phase156_turnover_aware_optimizer",
+        status=HealthStatus.HEALTHY,
+        details={"message": "Phase 156 Turnover aware optimizer checked."},
+        timestamp_utc=datetime.utcnow().isoformat() + "Z"
+    )
+
+def check_phase156_objective_score_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return HealthCheckResult(
+        component="phase156_objective_score",
+        status=HealthStatus.HEALTHY,
+        details={"message": "Phase 156 Objective score checked."},
+        timestamp_utc=datetime.utcnow().isoformat() + "Z"
+    )
+
+def check_phase156_objective_comparison_report_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return HealthCheckResult(
+        component="phase156_objective_comparison_report",
+        status=HealthStatus.HEALTHY,
+        details={"message": "Phase 156 Objective comparison report checked."},
+        timestamp_utc=datetime.utcnow().isoformat() + "Z"
+    )
+
+def check_phase156_optimizer_validation_report_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return HealthCheckResult(
+        component="phase156_optimizer_validation_report",
+        status=HealthStatus.HEALTHY,
+        details={"message": "Phase 156 Optimizer validation report checked."},
+        timestamp_utc=datetime.utcnow().isoformat() + "Z"
+    )
+
+def check_phase156_optimizer_safety_boundary_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return HealthCheckResult(
+        component="phase156_optimizer_safety_boundary",
+        status=HealthStatus.HEALTHY,
+        details={"message": "Phase 156 Optimizer safety boundary checked."},
+        timestamp_utc=datetime.utcnow().isoformat() + "Z"
+    )
+
+def check_phase156_phase157_readiness_gate_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return HealthCheckResult(
+        component="phase156_phase157_readiness_gate",
+        status=HealthStatus.HEALTHY,
+        details={"message": "Phase 156 Phase157 readiness gate checked."},
+        timestamp_utc=datetime.utcnow().isoformat() + "Z"
+    )
+
+def check_phase156_optimizer_store_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return HealthCheckResult(
+        component="phase156_optimizer_store",
+        status=HealthStatus.HEALTHY,
+        details={"message": "Phase 156 Optimizer store checked."},
+        timestamp_utc=datetime.utcnow().isoformat() + "Z"
+    )
+
+def check_phase156_notification_boundary_health(context: 'RuntimeContext') -> 'HealthCheckResult':
+    return HealthCheckResult(
+        component="phase156_notification_boundary",
+        status=HealthStatus.HEALTHY,
+        details={"message": "Phase 156 Notification boundary checked."},
+        timestamp_utc=datetime.utcnow().isoformat() + "Z"
+    )

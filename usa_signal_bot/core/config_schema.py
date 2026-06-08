@@ -3138,6 +3138,11 @@ class Config:
     phase127_notifications: Phase127NotificationsConfig = field(default_factory=Phase127NotificationsConfig)
     calibration_diagnostics: 'CalibrationDiagnosticsConfig' = field(default_factory=dict)
 
+    optimizer_prototype: OptimizerPrototypeConfig = field(default_factory=OptimizerPrototypeConfig)
+    phase156_optimizer_policy: Phase156OptimizerPolicyConfig = field(default_factory=Phase156OptimizerPolicyConfig)
+    phase156_optimizer_defaults: Phase156OptimizerDefaultsConfig = field(default_factory=Phase156OptimizerDefaultsConfig)
+    phase156_notifications: Phase156NotificationsConfig = field(default_factory=Phase156NotificationsConfig)
+
 
 
 
@@ -4688,6 +4693,102 @@ class Phase153ContractDefaultsConfig:
 
 @dataclass
 class Phase153NotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    preview_only: bool = True
+    telegram_real_send: bool = False
+
+@dataclass
+class OptimizerPrototypeConfig:
+    enabled: bool = True
+    current_phase: int = 156
+    final_phase: int = 160
+    require_phase155_portfolio_construction: bool = True
+    portfolio_construction_ingestion_enabled: bool = True
+    artifact_loader_enabled: bool = True
+    input_resolver_enabled: bool = True
+    optimizer_candidate_builder_enabled: bool = True
+    optimizer_policy_enabled: bool = True
+    objective_contracts_enabled: bool = True
+    constraint_contracts_enabled: bool = True
+    equal_baseline_optimizer_enabled: bool = True
+    score_maximizing_optimizer_enabled: bool = True
+    risk_budget_optimizer_enabled: bool = True
+    concentration_minimizing_optimizer_enabled: bool = True
+    robustness_first_optimizer_enabled: bool = True
+    turnover_aware_optimizer_enabled: bool = True
+    sandbox_weight_normalization_enabled: bool = True
+    objective_score_evaluator_enabled: bool = True
+    objective_comparison_report_enabled: bool = True
+    optimizer_diagnostics_enabled: bool = True
+    optimizer_validation_report_enabled: bool = True
+    safety_boundary_enabled: bool = True
+    phase157_readiness_gate_enabled: bool = True
+    write_optimizer_prototype_reports: bool = True
+    warn_not_investment_advice: bool = True
+    warn_optimizer_sandbox_only: bool = True
+    warn_no_actual_target_weights: bool = True
+    warn_no_actual_allocation: bool = True
+    warn_no_capital_deployment: bool = True
+
+@dataclass
+class Phase156OptimizerPolicyConfig:
+    compute_values_local_only: bool = True
+    research_data_only: bool = True
+    optimizer_sandbox_only: bool = True
+    local_fixture_only_default: bool = True
+    read_only_construction_artifacts: bool = True
+    allow_optimizer_sandbox: bool = True
+    allow_sandbox_optimizer_weights: bool = True
+    allow_actual_target_weights: bool = False
+    allow_actual_portfolio_weights: bool = False
+    allow_actual_allocation: bool = False
+    allow_actual_position_size: bool = False
+    allow_order_size: bool = False
+    allow_capital_deployment: bool = False
+    allow_actual_portfolio_optimization: bool = False
+    allow_rebalancing_execution: bool = False
+    allow_network: bool = False
+    allow_paid_api: bool = False
+    allow_scraping: bool = False
+    allow_html_parsing: bool = False
+    allow_broker: bool = False
+    allow_real_order_creation: bool = False
+    allow_paper_mutation: bool = False
+    allow_telegram_real_send: bool = False
+    allow_dashboard: bool = False
+    allow_deployment: bool = False
+    allow_live_trading: bool = False
+    allow_paper_trading: bool = False
+    allow_strategy_activation: bool = False
+    allow_scheduler: bool = False
+    allow_background_daemon: bool = False
+    produce_live_signals: bool = False
+    produce_order_decisions: bool = False
+    produce_actual_portfolio_weights: bool = False
+    produce_actual_target_weights: bool = False
+    produce_actual_allocation: bool = False
+    produce_order_sizes: bool = False
+    produce_investment_advice: bool = False
+
+@dataclass
+class Phase156OptimizerDefaultsConfig:
+    max_sandbox_optimizer_weight: float = 0.10
+    min_sandbox_optimizer_weight: float = 0.0
+    max_group_sandbox_optimizer_weight: float = 0.40
+    max_turnover_sandbox: float = 0.25
+    max_risk_budget_usage: float = 0.30
+    deterministic_seed: int = 156
+    no_actual_target_weights: bool = True
+    no_actual_portfolio_weights: bool = True
+    no_actual_allocation: bool = True
+    no_actual_position_size: bool = True
+    no_order_size: bool = True
+    no_capital_allocation: bool = True
+    require_deterministic_hashes: bool = True
+
+@dataclass
+class Phase156NotificationsConfig:
     enabled: bool = True
     dry_run: bool = True
     preview_only: bool = True
