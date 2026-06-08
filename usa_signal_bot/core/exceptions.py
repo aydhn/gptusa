@@ -89,3 +89,75 @@ class PortfolioFoundationReportingError(PortfolioFoundationError):
     pass
 class EnsembleScaffoldingIngestionError(Exception):
     pass
+
+class SizingPrototypeError(AppError):
+    pass
+
+class PortfolioFoundationIngestionError(SizingPrototypeError):
+    pass
+
+class PortfolioFoundationArtifactLoaderError(SizingPrototypeError):
+    pass
+
+class SizingInputResolverError(SizingPrototypeError):
+    pass
+
+class SizingPolicyError(SizingPrototypeError):
+    pass
+
+class SizingMethodContractError(SizingPrototypeError):
+    pass
+
+class FixedFractionalSizingError(SizingPrototypeError):
+    pass
+
+class VolatilityAdjustedSizingError(SizingPrototypeError):
+    pass
+
+class DrawdownAdjustedSizingError(SizingPrototypeError):
+    pass
+
+class CostAwareSizingError(SizingPrototypeError):
+    pass
+
+class LiquidityAwareSizingError(SizingPrototypeError):
+    pass
+
+class RobustnessAdjustedSizingError(SizingPrototypeError):
+    pass
+
+class SizingCapFloorRulesError(SizingPrototypeError):
+    pass
+
+class SizingComparisonMatrixError(SizingPrototypeError):
+    pass
+
+class SizingDiagnosticsError(SizingPrototypeError):
+    pass
+
+class SizingSensitivityReportError(SizingPrototypeError):
+    pass
+
+class RiskBudgetAdherenceReportError(SizingPrototypeError):
+    pass
+
+class SizingSafetyBoundaryError(SizingPrototypeError):
+    pass
+
+class Phase155ReadinessGateError(SizingPrototypeError):
+    pass
+
+class SizingSchemaValidationError(SizingPrototypeError):
+    pass
+
+class SizingSafetyValidationError(SizingPrototypeError):
+    pass
+
+class SizingPrototypeStoreError(SizingPrototypeError):
+    pass
+
+class SizingPrototypeValidationError(SizingPrototypeError):
+    pass
+
+class SizingPrototypeReportingError(SizingPrototypeError):
+    pass

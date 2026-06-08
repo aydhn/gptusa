@@ -87,3 +87,18 @@ def format_position_sizing_boundary_warning_message(report: Any) -> Notification
 
 def notifications_from_portfolio_foundation_review(review: Any) -> list[NotificationMessage]:
     return [format_portfolio_foundation_report_message(review)]
+
+def format_sizing_prototype_report_message(review: 'SizingPrototypeFullReview') -> 'NotificationMessage':
+    from usa_signal_bot.notifications.notification_adapters import NotificationMessage
+    return NotificationMessage(title="Sizing Prototype Report", body="Phase 154 prototype completed.")
+
+def format_sizing_prototype_warning_message(context: 'SizingPrototypeContext') -> 'NotificationMessage':
+    from usa_signal_bot.notifications.notification_adapters import NotificationMessage
+    return NotificationMessage(title="Sizing Prototype Warning", body="Phase 154 warning.")
+
+def format_sizing_safety_warning_message(boundary: 'SizingSafetyBoundaryResult') -> 'NotificationMessage':
+    from usa_signal_bot.notifications.notification_adapters import NotificationMessage
+    return NotificationMessage(title="Sizing Safety Warning", body="Phase 154 safety boundary alert.")
+
+def notifications_from_sizing_prototype_review(review: 'SizingPrototypeFullReview') -> list['NotificationMessage']:
+    return [format_sizing_prototype_report_message(review)]

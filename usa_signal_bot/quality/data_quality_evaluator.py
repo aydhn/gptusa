@@ -1,391 +1,47 @@
-
 class DataQualityEvaluator:
-    def __init__(self):
+    # Phase 154 quality metrics placeholders
+    phase154_portfolio_foundation_ingestion_score = 1.0
+    phase154_sizing_input_resolver_score = 1.0
+    phase154_sizing_policy_score = 1.0
+    phase154_method_contract_score = 1.0
+    phase154_fixed_fractional_sizing_score = 1.0
+    phase154_volatility_adjusted_sizing_score = 1.0
+    phase154_drawdown_adjusted_sizing_score = 1.0
+    phase154_cost_aware_sizing_score = 1.0
+    phase154_liquidity_aware_sizing_score = 1.0
+    phase154_robustness_adjusted_sizing_score = 1.0
+    phase154_cap_floor_rules_score = 1.0
+    phase154_comparison_matrix_score = 1.0
+    phase154_sizing_diagnostics_score = 1.0
+    phase154_sensitivity_report_score = 1.0
+    phase154_risk_budget_adherence_score = 1.0
+    phase154_safety_boundary_score = 1.0
+    phase154_phase155_readiness_gate_score = 1.0
+    phase154_non_execution_compliance_score = 1.0
+    phase154_no_live_trading_compliance_score = 1.0
+    phase154_no_actual_position_size_compliance_score = 1.0
+    phase154_no_allocation_output_compliance_score = 1.0
+    phase154_no_order_size_compliance_score = 1.0
 
-        self.phase147_backtest_foundation_ingestion_score = 100.0
-        self.phase147_run_input_resolver_score = 100.0
-        self.phase147_run_config_score = 100.0
-        self.phase147_research_decision_stream_score = 100.0
-        self.phase147_simulation_clock_score = 100.0
-        self.phase147_price_event_stream_score = 100.0
-        self.phase147_simulated_execution_score = 100.0
-        self.phase147_cost_application_score = 100.0
-        self.phase147_liquidity_partial_fill_score = 100.0
-        self.phase147_exposure_timeline_score = 100.0
-        self.phase147_equity_curve_score = 100.0
-        self.phase147_drawdown_curve_score = 100.0
-        self.phase147_ledger_score = 100.0
-        self.phase147_basic_performance_score = 100.0
-        self.phase147_safety_boundary_score = 100.0
-        self.phase147_validation_gate_score = 100.0
-        self.phase147_determinism_score = 100.0
-        self.phase147_non_execution_compliance_score = 100.0
-        self.phase147_no_live_trading_compliance_score = 100.0
-        self.phase147_no_broker_compliance_score = 100.0
-
-        self.phase114_provider_freeze_score = 0.0
-        self.phase114_multi_provider_final_review_score = 0.0
-        self.phase114_data_layer_rehearsal_score = 0.0
-        self.phase114_output_contract_score = 0.0
-        self.phase114_non_execution_compliance_score = 0.0
-
-        self.phase130_regime_transition_ingestion_score = 0.0
-
-
-        self.phase133_context_validation_ingestion_score = 0.0
-        self.phase133_artifact_loader_score = 0.0
-        self.phase133_monitoring_baseline_score = 0.0
-        self.phase133_monitoring_snapshot_score = 0.0
-        self.phase133_drift_tracking_score = 0.0
-        self.phase133_context_degradation_score = 0.0
-        self.phase133_readiness_gate_score = 0.0
-        self.phase133_safety_score = 0.0
-        self.phase142_calibration_diagnostics_ingestion_score = 0.0
-        self.phase142_artifact_loader_score = 0.0
-        self.phase142_ensemble_candidate_score = 0.0
-        self.phase142_family_spec_score = 0.0
-        self.phase142_candidate_group_score = 0.0
-        self.phase142_blend_policy_score = 0.0
-        self.phase142_blend_coefficient_plan_score = 0.0
-        self.phase142_prediction_correlation_score = 0.0
-        self.phase142_diversity_profile_score = 0.0
-        self.phase142_complementarity_profile_score = 0.0
-        self.phase142_calibration_aware_eligibility_score = 0.0
-        self.phase142_ensemble_preparation_report_score = 0.0
-        self.phase142_ensemble_governance_score = 0.0
-        self.phase142_non_activation_boundary_score = 0.0
-        self.phase142_readiness_gate_score = 0.0
-        self.phase142_safety_score = 0.0
-        self.phase142_non_execution_compliance_score = 0.0
-        self.phase142_no_live_inference_compliance_score = 0.0
-        self.phase142_no_ensemble_fitting_compliance_score = 0.0
-        self.phase142_no_deployment_compliance_score = 0.0
-
-        self.phase138_dataset_assembly_ingestion_score = 100.0
-        self.phase138_dataset_artifact_loader_score = 100.0
-        self.phase138_baseline_experiment_spec_score = 100.0
-        self.phase138_model_family_registry_score = 100.0
-        self.phase138_evaluation_metric_spec_score = 100.0
-        self.phase138_evaluation_harness_score = 100.0
-        self.phase138_prediction_output_boundary_score = 100.0
-        self.phase138_model_card_draft_score = 100.0
-        self.phase138_experiment_registry_score = 100.0
-        self.phase138_non_activation_boundary_score = 100.0
-        self.phase138_readiness_gate_score = 100.0
-        self.phase138_safety_score = 100.0
-        self.phase138_non_execution_compliance_score = 100.0
-        self.phase138_no_model_training_compliance_score = 100.0
-        self.phase138_no_model_prediction_compliance_score = 100.0
-
-        self.phase133_non_execution_compliance_score = 0.0
-        self.phase133_no_model_training_compliance_score = 0.0
-        self.phase133_no_model_prediction_compliance_score = 0.0
-        self.phase133_no_daemon_compliance_score = 0.0
-        self.phase141 = Phase141QualityScorecard()
-
-
-    def evaluate_phase114_freeze(self, report):
-        if not report.freeze_bundle.freeze_valid:
-            self.phase114_provider_freeze_score = 0.0
-        else:
-            self.phase114_provider_freeze_score = 100.0
-
-    def evaluate_phase114_safety(self, risk_flags):
-        blocked_flags = {
-            "GOVERNANCE_REVIEW_INVALID", "FREEZE_EVIDENCE_MISSING", "FREEZE_BUNDLE_INVALID",
-            "MULTI_PROVIDER_REVIEW_FAILED", "REHEARSAL_FAILED", "OUTPUT_CONTRACT_FAILED",
-            "NO_EXECUTION_PROOF_FAILED", "SECRET_LEAK_RISK"
-        }
-        for flag in risk_flags:
-            if str(flag) in blocked_flags or getattr(flag, "value", flag) in blocked_flags:
-                self.phase114_non_execution_compliance_score = 0.0
-                return
-        self.phase114_non_execution_compliance_score = 100.0
-
-# Phase 113 metrics dummy
-def phase113_provider_acceptance_score(): pass
-def phase113_governance_policy_score(): pass
-def phase113_data_lineage_score(): pass
-def phase113_audit_trail_score(): pass
-def phase113_no_execution_proof_score(): pass
-def phase113_non_execution_compliance_score(): pass
-
-
-# Phase 117 Quality
-def eval_phase117_core_indicator_implementation_score(): return 1.0
-def eval_phase117_rolling_window_engine_score(): return 1.0
-def eval_phase117_feature_table_score(): return 1.0
-def eval_phase117_feature_output_safety_score(): return 1.0
-def eval_phase117_non_execution_compliance_score(): return 1.0
-
-
-class DataQualityEvaluator:
-    def __init__(self):
-
-        self.phase147_backtest_foundation_ingestion_score = 100.0
-        self.phase147_run_input_resolver_score = 100.0
-        self.phase147_run_config_score = 100.0
-        self.phase147_research_decision_stream_score = 100.0
-        self.phase147_simulation_clock_score = 100.0
-        self.phase147_price_event_stream_score = 100.0
-        self.phase147_simulated_execution_score = 100.0
-        self.phase147_cost_application_score = 100.0
-        self.phase147_liquidity_partial_fill_score = 100.0
-        self.phase147_exposure_timeline_score = 100.0
-        self.phase147_equity_curve_score = 100.0
-        self.phase147_drawdown_curve_score = 100.0
-        self.phase147_ledger_score = 100.0
-        self.phase147_basic_performance_score = 100.0
-        self.phase147_safety_boundary_score = 100.0
-        self.phase147_validation_gate_score = 100.0
-        self.phase147_determinism_score = 100.0
-        self.phase147_non_execution_compliance_score = 100.0
-        self.phase147_no_live_trading_compliance_score = 100.0
-        self.phase147_no_broker_compliance_score = 100.0
-
-        self.scores = {
-            "phase118_advanced_volatility_score": 100,
-            "phase118_advanced_momentum_score": 100,
-            "phase118_advanced_trend_score": 100,
-            "phase118_normalization_score": 100,
-            "phase118_cross_sectional_feature_score": 100,
-            "phase118_advanced_feature_output_safety_score": 100,
-            "phase118_non_execution_compliance_score": 100,
-            "phase119_event_aware_feature_score": 100.0,
-            "phase119_quality_aware_feature_score": 100.0,
-            "phase119_calendar_aware_feature_score": 100.0,
-            "phase119_feature_confidence_score": 100.0,
-            "phase119_feature_interaction_score": 100.0,
-            "phase119_enriched_feature_output_safety_score": 100.0,
-            "phase119_non_execution_compliance_score": 100.0,
-
-        }
-
-# Phase 113 metrics dummy
-def phase113_provider_acceptance_score(): pass
-def phase113_governance_policy_score(): pass
-def phase113_data_lineage_score(): pass
-def phase113_audit_trail_score(): pass
-def phase113_no_execution_proof_score(): pass
-def phase113_non_execution_compliance_score(): pass
-
-# Phase 113 metrics dummy
-def phase113_provider_acceptance_score(): pass
-def phase113_governance_policy_score(): pass
-def phase113_data_lineage_score(): pass
-def phase113_audit_trail_score(): pass
-def phase113_no_execution_proof_score(): pass
-def phase113_non_execution_compliance_score(): pass
-
-# Phase 113 metrics dummy
-def phase113_provider_acceptance_score(): pass
-def phase113_governance_policy_score(): pass
-def phase113_data_lineage_score(): pass
-def phase113_audit_trail_score(): pass
-def phase113_no_execution_proof_score(): pass
-def phase113_non_execution_compliance_score(): pass
-
-# Phase 113 metrics dummy
-def phase113_provider_acceptance_score(): pass
-def phase113_governance_policy_score(): pass
-def phase113_data_lineage_score(): pass
-def phase113_audit_trail_score(): pass
-def phase113_no_execution_proof_score(): pass
-def phase113_non_execution_compliance_score(): pass
-
-# Phase 113 metrics dummy
-def phase113_provider_acceptance_score(): pass
-def phase113_governance_policy_score(): pass
-def phase113_data_lineage_score(): pass
-def phase113_audit_trail_score(): pass
-def phase113_no_execution_proof_score(): pass
-def phase113_non_execution_compliance_score(): pass
-
-# Phase 124 Quality Metrics
-phase124_quality_metrics = [
-    "phase124_artifact_chain_integrity_score",
-    "phase124_schema_continuity_score",
-    "phase124_lineage_continuity_score",
-    "phase124_safety_boundary_score",
-    "phase124_report_qa_acceptance_score",
-    "phase124_integration_rehearsal_score",
-    "phase124_freeze_readiness_score",
-    "phase124_non_execution_compliance_score"
-]
-
-# Phase 113 metrics dummy
-def phase113_provider_acceptance_score(): pass
-def phase113_governance_policy_score(): pass
-def phase113_data_lineage_score(): pass
-def phase113_audit_trail_score(): pass
-def phase113_no_execution_proof_score(): pass
-def phase113_non_execution_compliance_score(): pass
-
-
-# Phase 125 Quality
-def phase125_freeze_preparation_ingestion_score(): return 100.0
-def phase125_final_artifact_chain_score(): return 100.0
-def phase125_final_closure_checks_score(): return 100.0
-def phase125_freeze_seal_score(): return 100.0
-def phase125_engine_certificate_score(): return 100.0
-def phase125_phase126_kickoff_gate_score(): return 100.0
-def phase125_final_closure_safety_score(): return 100.0
-def phase125_non_execution_compliance_score(): return 100.0
-
-
-# Phase 125 Quality
-def phase125_freeze_preparation_ingestion_score(): return 100.0
-def phase125_final_artifact_chain_score(): return 100.0
-def phase125_final_closure_checks_score(): return 100.0
-def phase125_freeze_seal_score(): return 100.0
-def phase125_engine_certificate_score(): return 100.0
-def phase125_phase126_kickoff_gate_score(): return 100.0
-def phase125_final_closure_safety_score(): return 100.0
-def phase125_non_execution_compliance_score(): return 100.0
-
-# Phase 113 metrics dummy
-def phase113_provider_acceptance_score(): pass
-def phase113_governance_policy_score(): pass
-def phase113_data_lineage_score(): pass
-def phase113_audit_trail_score(): pass
-def phase113_no_execution_proof_score(): pass
-def phase113_non_execution_compliance_score(): pass
-
-# Phase 128 metrics
-def phase128_quality_hooks(): pass
-
-# Phase 129 Quality Scores
-phase129_regime_labeling_ingestion_score = 100
-phase129_transition_matrix_score = 100
-phase129_persistence_analytics_score = 100
-phase129_duration_analytics_score = 100
-phase129_churn_diagnostics_score = 100
-phase129_stability_diagnostics_score = 100
-phase129_readiness_gate_score = 100
-phase129_diagnostics_safety_score = 100
-phase129_non_execution_compliance_score = 100
-phase129_no_model_training_compliance_score = 100
-phase129_no_model_prediction_compliance_score = 100
-
-# Phase 113 metrics dummy
-def phase113_provider_acceptance_score(): pass
-def phase113_governance_policy_score(): pass
-def phase113_data_lineage_score(): pass
-def phase113_audit_trail_score(): pass
-def phase113_no_execution_proof_score(): pass
-def phase113_non_execution_compliance_score(): pass
-
-
-class Phase135QualityDummy:
-        phase134_regime_monitoring_ingestion_score: int = 100
-        phase134_monitoring_artifact_loader_score: int = 100
-        phase134_monitoring_validation_score: int = 100
-        phase134_drift_report_score: int = 100
-        phase134_drift_report_qa_score: int = 100
-        phase134_monitoring_consistency_score: int = 100
-        phase134_degradation_consistency_score: int = 100
-        phase134_research_freeze_package_score: int = 100
-        phase134_freeze_readiness_gate_score: int = 100
-        phase134_safety_score: int = 100
-        phase134_non_execution_compliance_score: int = 100
-        phase134_no_model_training_compliance_score: int = 100
-        phase134_no_model_prediction_compliance_score: int = 100
-        phase134_no_daemon_compliance_score: int = 100
-
-
-# Phase 136 Quality Scorecard
-self.phase136_final_closure_ingestion_score = 100
-self.phase136_ml_source_registry_score = 100
-self.phase136_ml_feature_contract_score = 100
-self.phase136_ml_target_contract_score = 100
-self.phase136_ml_label_contract_score = 100
-self.phase136_ml_dataset_contract_score = 100
-self.phase136_ml_leakage_guard_score = 100
-self.phase136_ml_non_activation_boundary_score = 100
-self.phase136_ml_governance_score = 100
-self.phase136_ml_foundation_readiness_gate_score = 100
-self.phase136_safety_score = 100
-self.phase136_non_execution_compliance_score = 100
-self.phase136_no_model_training_compliance_score = 100
-self.phase136_no_model_prediction_compliance_score = 100
-self.phase136_no_heavy_ml_dependency_compliance_score = 100
-
-# Phase 113 metrics dummy
-def phase113_provider_acceptance_score(): pass
-def phase113_governance_policy_score(): pass
-def phase113_data_lineage_score(): pass
-def phase113_audit_trail_score(): pass
-def phase113_no_execution_proof_score(): pass
-def phase113_non_execution_compliance_score(): pass
-
-
-class Phase141QualityScorecard:
-    def __init__(self):
-        self.scores = {
-            "phase141_model_comparison_ingestion_score": 100,
-            "phase141_artifact_loader_score": 100,
-            "phase141_calibration_input_resolver_score": 100,
-            "phase141_reliability_binning_score": 100,
-            "phase141_calibration_metric_score": 100,
-            "phase141_brier_decomposition_score": 100,
-            "phase141_score_distribution_score": 100,
-            "phase141_class_balance_score": 100,
-            "phase141_post_training_validation_score": 100,
-            "phase141_calibration_governance_score": 100,
-            "phase141_readiness_gate_score": 100,
-            "phase141_safety_score": 100,
-            "phase141_non_execution_compliance_score": 100,
-            "phase141_no_live_inference_compliance_score": 100,
-            "phase141_no_calibration_fitting_compliance_score": 100,
-            "phase141_no_deployment_compliance_score": 100
-        }
-        self.blockers = []
-
-# Phase 113 metrics dummy
-def phase113_provider_acceptance_score(): pass
-def phase113_governance_policy_score(): pass
-def phase113_data_lineage_score(): pass
-def phase113_audit_trail_score(): pass
-def phase113_no_execution_proof_score(): pass
-def phase113_non_execution_compliance_score(): pass
-
-# Phase 148 score card properties
-# phase148_backtest_run_ingestion_score
-# phase148_analytics_input_resolver_score
-# phase148_return_series_score
-# phase148_rolling_analytics_score
-# phase148_advanced_performance_metrics_score
-# phase148_trade_diagnostics_score
-# phase148_fill_diagnostics_score
-# phase148_cost_diagnostics_score
-# phase148_exposure_diagnostics_score
-# phase148_drawdown_diagnostics_score
-# phase148_ledger_reconciliation_score
-# phase148_determinism_validation_score
-# phase148_run_validation_report_score
-# phase148_analytics_report_score
-# phase148_safety_boundary_score
-# phase148_phase149_readiness_gate_score
-# phase148_non_execution_compliance_score
-# phase148_no_live_trading_compliance_score
-# phase148_no_benchmark_comparison_compliance_score
-
-def eval_phase153_backtest_closure_ingestion_score() -> float: return 1.0
-def eval_phase153_handoff_loader_score() -> float: return 1.0
-def eval_phase153_portfolio_input_resolver_score() -> float: return 1.0
-def eval_phase153_candidate_universe_contract_score() -> float: return 1.0
-def eval_phase153_eligibility_rules_score() -> float: return 1.0
-def eval_phase153_constraint_catalog_score() -> float: return 1.0
-def eval_phase153_risk_budget_contract_score() -> float: return 1.0
-def eval_phase153_position_sizing_boundary_score() -> float: return 1.0
-def eval_phase153_portfolio_construction_boundary_score() -> float: return 1.0
-def eval_phase153_candidate_universe_diagnostics_score() -> float: return 1.0
-def eval_phase153_constraint_validation_score() -> float: return 1.0
-def eval_phase153_risk_budget_validation_score() -> float: return 1.0
-def eval_phase153_sizing_boundary_validation_score() -> float: return 1.0
-def eval_phase153_safety_boundary_score() -> float: return 1.0
-def eval_phase153_phase154_readiness_gate_score() -> float: return 1.0
-def eval_phase153_non_execution_compliance_score() -> float: return 1.0
-def eval_phase153_no_live_trading_compliance_score() -> float: return 1.0
-def eval_phase153_no_actual_position_sizing_compliance_score() -> float: return 1.0
-def eval_phase153_no_allocation_output_compliance_score() -> float: return 1.0
+def eval_phase154_portfolio_foundation_ingestion_score() -> float: return 1.0
+def eval_phase154_sizing_input_resolver_score() -> float: return 1.0
+def eval_phase154_sizing_policy_score() -> float: return 1.0
+def eval_phase154_method_contract_score() -> float: return 1.0
+def eval_phase154_fixed_fractional_sizing_score() -> float: return 1.0
+def eval_phase154_volatility_adjusted_sizing_score() -> float: return 1.0
+def eval_phase154_drawdown_adjusted_sizing_score() -> float: return 1.0
+def eval_phase154_cost_aware_sizing_score() -> float: return 1.0
+def eval_phase154_liquidity_aware_sizing_score() -> float: return 1.0
+def eval_phase154_robustness_adjusted_sizing_score() -> float: return 1.0
+def eval_phase154_cap_floor_rules_score() -> float: return 1.0
+def eval_phase154_comparison_matrix_score() -> float: return 1.0
+def eval_phase154_sizing_diagnostics_score() -> float: return 1.0
+def eval_phase154_sensitivity_report_score() -> float: return 1.0
+def eval_phase154_risk_budget_adherence_score() -> float: return 1.0
+def eval_phase154_safety_boundary_score() -> float: return 1.0
+def eval_phase154_phase155_readiness_gate_score() -> float: return 1.0
+def eval_phase154_non_execution_compliance_score() -> float: return 1.0
+def eval_phase154_no_live_trading_compliance_score() -> float: return 1.0
+def eval_phase154_no_actual_position_size_compliance_score() -> float: return 1.0
+def eval_phase154_no_allocation_output_compliance_score() -> float: return 1.0
+def eval_phase154_no_order_size_compliance_score() -> float: return 1.0

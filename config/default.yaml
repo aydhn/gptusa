@@ -4017,7 +4017,6 @@ phase148_notifications:
   dry_run: true
   preview_only: true
   telegram_real_send: false
-
 walk_forward:
   enabled: true
   current_phase: 150
@@ -4046,7 +4045,6 @@ walk_forward:
   warn_walk_forward_is_research_only: true
   warn_no_strategy_activation: true
   warn_no_stress_monte_carlo_in_phase150: true
-
 phase150_walk_forward_policy:
   compute_values_local_only: true
   research_data_only: true
@@ -4077,7 +4075,6 @@ phase150_walk_forward_policy:
   produce_order_decisions: false
   produce_portfolio_weights: false
   produce_investment_advice: false
-
 phase150_window_defaults:
   min_train_periods: 60
   oos_periods: 20
@@ -4090,13 +4087,11 @@ phase150_window_defaults:
   initial_cash: 100000.0
   require_no_lookahead: true
   require_deterministic_hashes: true
-
 phase150_notifications:
   enabled: true
   dry_run: true
   preview_only: true
   telegram_real_send: false
-
 backtest_closure:
   enabled: true
   current_phase: 152
@@ -4126,7 +4121,6 @@ backtest_closure:
   warn_closure_is_not_deployment: true
   warn_handoff_is_read_only: true
   warn_no_portfolio_construction_in_phase152: true
-
 phase152_closure_policy:
   compute_values_local_only: true
   research_data_only: true
@@ -4161,7 +4155,6 @@ phase152_closure_policy:
   produce_order_decisions: false
   produce_portfolio_weights: false
   produce_investment_advice: false
-
 phase152_handoff_defaults:
   start_phase: 146
   end_phase: 152
@@ -4175,13 +4168,11 @@ phase152_handoff_defaults:
   include_safety_summary: true
   require_no_portfolio_fields: true
   require_deterministic_hashes: true
-
 phase152_notifications:
   enabled: true
   dry_run: true
   preview_only: true
   telegram_real_send: false
-
 portfolio_foundation:
   enabled: true
   current_phase: 153
@@ -4207,7 +4198,6 @@ portfolio_foundation:
   warn_contract_only_phase153: true
   warn_no_actual_position_sizing_phase153: true
   warn_no_allocation_phase153: true
-
 phase153_portfolio_policy:
   compute_values_local_only: true
   research_data_only: true
@@ -4245,7 +4235,6 @@ phase153_portfolio_policy:
   produce_portfolio_weights: false
   produce_position_sizes: false
   produce_investment_advice: false
-
 phase153_contract_defaults:
   min_required_candidates: 1
   max_allowed_candidates: 1000
@@ -4258,8 +4247,89 @@ phase153_contract_defaults:
   no_actual_allocation: true
   no_actual_position_size: true
   require_deterministic_hashes: true
-
 phase153_notifications:
+  enabled: true
+  dry_run: true
+  preview_only: true
+  telegram_real_send: false
+sizing_prototype:
+  enabled: true
+  current_phase: 154
+  final_phase: 160
+  require_phase153_portfolio_foundation: true
+  portfolio_foundation_ingestion_enabled: true
+  artifact_loader_enabled: true
+  input_resolver_enabled: true
+  sizing_policy_enabled: true
+  method_contracts_enabled: true
+  fixed_fractional_sizing_enabled: true
+  volatility_adjusted_sizing_enabled: true
+  drawdown_adjusted_sizing_enabled: true
+  cost_aware_sizing_enabled: true
+  liquidity_aware_sizing_enabled: true
+  robustness_adjusted_sizing_enabled: true
+  cap_floor_rules_enabled: true
+  comparison_matrix_enabled: true
+  sizing_diagnostics_enabled: true
+  sensitivity_report_enabled: true
+  risk_budget_adherence_report_enabled: true
+  safety_boundary_enabled: true
+  phase155_readiness_gate_enabled: true
+  write_sizing_prototype_reports: true
+  warn_not_investment_advice: true
+  warn_research_prototype_only: true
+  warn_no_actual_position_size: true
+  warn_no_target_weights: true
+  warn_no_allocation: true
+phase154_sizing_policy:
+  compute_values_local_only: true
+  research_data_only: true
+  sizing_research_prototype_only: true
+  local_fixture_only_default: true
+  read_only_portfolio_foundation_artifacts: true
+  allow_sizing_prototypes: true
+  allow_actual_position_sizing: false
+  allow_actual_portfolio_construction: false
+  allow_portfolio_optimization: false
+  allow_rebalancing: false
+  allow_target_weights: false
+  allow_allocation_output: false
+  allow_order_size: false
+  allow_capital_deployment: false
+  allow_network: false
+  allow_paid_api: false
+  allow_scraping: false
+  allow_html_parsing: false
+  allow_broker: false
+  allow_real_order_creation: false
+  allow_paper_mutation: false
+  allow_telegram_real_send: false
+  allow_dashboard: false
+  allow_deployment: false
+  allow_live_trading: false
+  allow_paper_trading: false
+  allow_strategy_activation: false
+  allow_scheduler: false
+  allow_background_daemon: false
+  produce_live_signals: false
+  produce_order_decisions: false
+  produce_portfolio_weights: false
+  produce_position_sizes: false
+  produce_order_sizes: false
+  produce_investment_advice: false
+phase154_sizing_defaults:
+  base_prototype_fraction: 0.01
+  max_prototype_fraction: 0.05
+  min_prototype_fraction: 0.0
+  max_risk_budget_usage_fraction: 0.25
+  deterministic_seed: 154
+  no_actual_position_size: true
+  no_target_weights: true
+  no_allocation_output: true
+  no_order_size: true
+  no_capital_allocation: true
+  require_deterministic_hashes: true
+phase154_notifications:
   enabled: true
   dry_run: true
   preview_only: true

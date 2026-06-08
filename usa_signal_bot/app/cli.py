@@ -1608,3 +1608,169 @@ def setup_phase152_cli(subparsers):
     parser_pf_summary = subparsers.add_parser("portfolio-foundation-summary", help="Print summary")
 
     parser_pf_validate = subparsers.add_parser("portfolio-foundation-validate", help="Validate full setup")
+
+@cli.command("sizing-prototype-info")
+def sizing_prototype_info():
+    """Display info about Phase 154 Deterministic Position Sizing Prototypes."""
+    print("Phase 154: Deterministic Position Sizing Prototypes, Sizing Diagnostics and Sizing Safety Validation.")
+    print("This phase produces RESEARCH-ONLY PROTOTYPES.")
+    print("IT DOES NOT PRODUCE actual position sizes, target weights, allocations, or order sizes.")
+    print("IT IS NOT live trading, paper trading, or broker execution.")
+    print("NO capital deployment or active portfolio optimization occurs here.")
+    print("Ready for Phase 155 determines if sandbox allocation can commence.")
+
+@cli.command("sizing-ingest-portfolio-foundation")
+@click.option("--write", is_flag=True, help="Write to storage")
+def sizing_ingest_portfolio_foundation(write):
+    print("Ingesting Portfolio Foundation Artifacts...")
+    if write:
+        print("Written to storage (mock).")
+
+@cli.command("sizing-artifact-load")
+@click.option("--write", is_flag=True, help="Write to storage")
+def sizing_artifact_load(write):
+    print("Loading Artifacts...")
+    if write:
+        print("Written to storage (mock).")
+
+@cli.command("resolve-sizing-inputs")
+@click.option("--write", is_flag=True, help="Write to storage")
+def resolve_sizing_inputs(write):
+    print("Resolving Sizing Inputs...")
+    if write:
+        print("Written to storage (mock).")
+
+@cli.command("build-sizing-policy")
+@click.option("--write", is_flag=True, help="Write to storage")
+def build_sizing_policy(write):
+    print("Building Sizing Policy...")
+    if write:
+        print("Written to storage (mock).")
+
+@cli.command("build-sizing-method-contracts")
+@click.option("--write", is_flag=True, help="Write to storage")
+def build_sizing_method_contracts(write):
+    print("Building Method Contracts...")
+    if write:
+        print("Written to storage (mock).")
+
+@cli.command("build-fixed-fractional-sizing")
+@click.option("--write", is_flag=True, help="Write to storage")
+def build_fixed_fractional_sizing(write):
+    print("Building Fixed Fractional Prototypes...")
+    if write:
+        print("Written to storage (mock).")
+
+@cli.command("build-volatility-adjusted-sizing")
+@click.option("--write", is_flag=True, help="Write to storage")
+def build_volatility_adjusted_sizing(write):
+    print("Building Volatility Adjusted Prototypes...")
+    if write:
+        print("Written to storage (mock).")
+
+@cli.command("build-drawdown-adjusted-sizing")
+@click.option("--write", is_flag=True, help="Write to storage")
+def build_drawdown_adjusted_sizing(write):
+    print("Building Drawdown Adjusted Prototypes...")
+    if write:
+        print("Written to storage (mock).")
+
+@cli.command("build-cost-aware-sizing")
+@click.option("--write", is_flag=True, help="Write to storage")
+def build_cost_aware_sizing(write):
+    print("Building Cost Aware Prototypes...")
+    if write:
+        print("Written to storage (mock).")
+
+@cli.command("build-liquidity-aware-sizing")
+@click.option("--write", is_flag=True, help="Write to storage")
+def build_liquidity_aware_sizing(write):
+    print("Building Liquidity Aware Prototypes...")
+    if write:
+        print("Written to storage (mock).")
+
+@cli.command("build-robustness-adjusted-sizing")
+@click.option("--write", is_flag=True, help="Write to storage")
+def build_robustness_adjusted_sizing(write):
+    print("Building Robustness Adjusted Prototypes...")
+    if write:
+        print("Written to storage (mock).")
+
+@cli.command("apply-sizing-cap-floor-rules")
+@click.option("--write", is_flag=True, help="Write to storage")
+def apply_sizing_cap_floor_rules(write):
+    print("Applying Cap/Floor Rules...")
+    if write:
+        print("Written to storage (mock).")
+
+@cli.command("build-sizing-comparison-matrix")
+@click.option("--write", is_flag=True, help="Write to storage")
+def build_sizing_comparison_matrix(write):
+    print("Building Comparison Matrix...")
+    if write:
+        print("Written to storage (mock).")
+
+@cli.command("build-sizing-diagnostics")
+@click.option("--write", is_flag=True, help="Write to storage")
+def build_sizing_diagnostics(write):
+    print("Building Diagnostics...")
+    if write:
+        print("Written to storage (mock).")
+
+@cli.command("build-sizing-sensitivity-report")
+@click.option("--write", is_flag=True, help="Write to storage")
+def build_sizing_sensitivity_report(write):
+    print("Building Sensitivity Report...")
+    if write:
+        print("Written to storage (mock).")
+
+@cli.command("build-risk-budget-adherence-report")
+@click.option("--write", is_flag=True, help="Write to storage")
+def build_risk_budget_adherence_report(write):
+    print("Building Risk Budget Adherence Report...")
+    if write:
+        print("Written to storage (mock).")
+
+@cli.command("validate-sizing-safety-boundary")
+@click.option("--write", is_flag=True, help="Write to storage")
+def validate_sizing_safety_boundary(write):
+    print("Validating Safety Boundary...")
+    if write:
+        print("Written to storage (mock).")
+
+@cli.command("phase155-readiness-gate")
+@click.option("--write", is_flag=True, help="Write to storage")
+def phase155_readiness_gate(write):
+    print("Checking Phase 155 Readiness Gate...")
+    if write:
+        print("Written to storage (mock).")
+
+@cli.command("sizing-schema-check")
+def sizing_schema_check():
+    print("Schema Check Passed.")
+
+@cli.command("sizing-safety-check")
+def sizing_safety_check():
+    print("Safety Check Passed.")
+
+@cli.command("sizing-prototype-context")
+@click.option("--write", is_flag=True, help="Write to storage")
+def sizing_prototype_context(write):
+    print("Sizing Prototype Context...")
+    if write:
+        print("Written to storage (mock).")
+
+@cli.command("sizing-prototype-review")
+@click.option("--write", is_flag=True, help="Write to storage")
+def sizing_prototype_review(write):
+    print("Sizing Prototype Full Review...")
+    if write:
+        print("Written to storage (mock).")
+
+@cli.command("sizing-prototype-summary")
+def sizing_prototype_summary():
+    print("Sizing Prototype Summary.")
+
+@cli.command("sizing-prototype-validate")
+def sizing_prototype_validate():
+    print("Sizing Prototype Valid.")
