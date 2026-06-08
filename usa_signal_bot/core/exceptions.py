@@ -1,3 +1,5 @@
+class AppError(Exception):
+    pass
 class BacktestClosureError(Exception): pass
 class StressRobustnessIngestionError(BacktestClosureError): pass
 class CrossPhaseArtifactLoaderError(BacktestClosureError): pass
@@ -160,4 +162,88 @@ class SizingPrototypeValidationError(SizingPrototypeError):
     pass
 
 class SizingPrototypeReportingError(SizingPrototypeError):
+    pass
+
+class PortfolioConstructionError(AppError):
+    pass
+
+class SizingPrototypeIngestionError(PortfolioConstructionError):
+    pass
+
+class SizingPrototypeArtifactLoaderError(PortfolioConstructionError):
+    pass
+
+class PortfolioConstructionInputResolverError(PortfolioConstructionError):
+    pass
+
+class SandboxCandidateBuilderError(PortfolioConstructionError):
+    pass
+
+class PortfolioConstructionPolicyError(PortfolioConstructionError):
+    pass
+
+class SandboxAllocationMethodContractError(PortfolioConstructionError):
+    pass
+
+class ConstraintAwareScoringError(PortfolioConstructionError):
+    pass
+
+class EqualSandboxAllocationError(PortfolioConstructionError):
+    pass
+
+class SizingScoreSandboxAllocationError(PortfolioConstructionError):
+    pass
+
+class RiskBudgetSandboxAllocationError(PortfolioConstructionError):
+    pass
+
+class RobustnessSandboxAllocationError(PortfolioConstructionError):
+    pass
+
+class ConstraintNormalizationEngineError(PortfolioConstructionError):
+    pass
+
+class PrototypeExposureTableError(PortfolioConstructionError):
+    pass
+
+class DiversificationDiagnosticsError(PortfolioConstructionError):
+    pass
+
+class ConcentrationDiagnosticsError(PortfolioConstructionError):
+    pass
+
+class TurnoverSandboxDiagnosticsError(PortfolioConstructionError):
+    pass
+
+class ConstraintBreachDiagnosticsError(PortfolioConstructionError):
+    pass
+
+class RiskBudgetSandboxDiagnosticsError(PortfolioConstructionError):
+    pass
+
+class AllocationSandboxComparisonReportError(PortfolioConstructionError):
+    pass
+
+class PortfolioConstructionValidationReportError(PortfolioConstructionError):
+    pass
+
+class AllocationSandboxSafetyBoundaryError(PortfolioConstructionError):
+    pass
+
+class Phase156ReadinessGateError(PortfolioConstructionError):
+    pass
+
+class PortfolioConstructionSchemaValidationError(PortfolioConstructionError):
+    pass
+
+class PortfolioConstructionSafetyValidationError(PortfolioConstructionError):
+    pass
+
+class PortfolioConstructionStoreError(PortfolioConstructionError):
+    pass
+
+class PortfolioConstructionValidationError(PortfolioConstructionError):
+    pass
+
+class PortfolioConstructionReportingError(PortfolioConstructionError):
     pass

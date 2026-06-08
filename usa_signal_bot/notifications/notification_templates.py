@@ -102,3 +102,41 @@ def format_sizing_safety_warning_message(boundary: 'SizingSafetyBoundaryResult')
 
 def notifications_from_sizing_prototype_review(review: 'SizingPrototypeFullReview') -> list['NotificationMessage']:
     return [format_sizing_prototype_report_message(review)]
+
+def format_portfolio_construction_sandbox_report_message(review: PortfolioConstructionFullReview) -> NotificationMessage:
+    from usa_signal_bot.portfolio.construction.portfolio_construction_report import portfolio_construction_full_review_to_text
+    text = portfolio_construction_full_review_to_text(review)
+    return NotificationMessage(
+        type=NotificationType.PORTFOLIO_CONSTRUCTION_SANDBOX_REPORT,
+        subject="Portfolio Construction Sandbox Report",
+        body=text,
+        level=NotificationLevel.INFO,
+        metadata={"review_id": review.review_id}
+    )
+
+def format_portfolio_construction_sandbox_warning_message(context: PortfolioConstructionContext) -> NotificationMessage:
+    return NotificationMessage(
+        type=NotificationType.PORTFOLIO_CONSTRUCTION_SANDBOX_WARNING,
+        subject="Portfolio Construction Sandbox Warning",
+        body=f"Phase 155 readiness failed for context {context.context_id}.",
+        level=NotificationLevel.WARNING,
+        metadata={"context_id": context.context_id}
+    )
+
+def format_allocation_sandbox_safety_warning_message(boundary: AllocationSandboxSafetyBoundaryResult) -> NotificationMessage:
+    failed = [r.name for r in boundary.rules if not r.passed]
+    return NotificationMessage(
+        type=NotificationType.ALLOCATION_SANDBOX_SAFETY_WARNING,
+        subject="Allocation Sandbox Safety Boundary Alert",
+        body=f"Safety boundary {boundary.boundary_id} failed. Rules: {failed}",
+        level=NotificationLevel.ERROR,
+        metadata={"boundary_id": boundary.boundary_id}
+    )
+
+def notifications_from_portfolio_construction_review(review: PortfolioConstructionFullReview) -> List[NotificationMessage]:
+    msgs = [format_portfolio_construction_sandbox_report_message(review)]
+    if not review.phase156_readiness_gate.ready_for_phase156:
+        msgs.append(format_portfolio_construction_sandbox_warning_message(review.context))
+    if not review.safety_boundary.boundary_passed:
+        msgs.append(format_allocation_sandbox_safety_warning_message(review.safety_boundary))
+    return msgs
