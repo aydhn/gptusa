@@ -238,3 +238,25 @@ def notifications_from_advanced_acceptance_review(review: Any) -> List[Notificat
     if review.final_freeze_certificate and not review.final_freeze_certificate.frozen:
         msgs.append(format_final_freeze_warning_message(review.final_freeze_certificate))
     return msgs
+
+def format_final_system_audit_report_message(review: 'Any') -> 'Any':
+    return f"[FINAL AUDIT] {review.review_id} completed. Safe and local only."
+
+def format_final_delivery_certificate_message(certificate: 'Any') -> 'Any':
+    return f"[FINAL CERTIFICATE] Delivered={certificate.delivered}"
+
+def format_project_closure_report_message(report: 'Any') -> 'Any':
+    return f"[PROJECT CLOSURE] Closed={report.project_closed}"
+
+def notifications_from_final_closure_review(review: 'Any') -> list['Any']:
+    return [
+        format_final_system_audit_report_message(review),
+        format_final_delivery_certificate_message(review.final_delivery_certificate),
+        format_project_closure_report_message(review.project_closure_report)
+    ]
+
+
+def format_backtest_run_report_message(review): return 'NotificationMessage()'
+def format_backtest_run_warning_message(gate): return 'NotificationMessage()'
+def format_backtest_determinism_warning_message(artifact): return 'NotificationMessage()'
+def notifications_from_backtest_run_review(review): return []

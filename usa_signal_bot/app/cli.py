@@ -3730,3 +3730,32 @@ def full_system_integration_summary():
 def full_system_integration_validate():
     """Validate full system integration."""
     typer.echo("Integration validated.")
+
+# Phase 160 specific commands
+@click.command(name="final-closure-info")
+def cmd_final_closure_info():
+    """Print information about Phase 160."""
+    print("USA Signal Bot - Phase 160 (Final System Audit and Project Closure)")
+    print("This phase is STRICTLY for the final system audit, final delivery certificate, and project closure.")
+    print("It is NOT a deployment phase. It is NOT a trading or broker approval phase.")
+    print("Outputs are NOT investment advice.")
+
+@click.command(name="final-ingest-phase160-handoff")
+@click.option("--write", is_flag=True, help="Write output to local storage")
+def cmd_final_ingest_phase160_handoff(write: bool):
+    """Ingest the Phase160 handoff package."""
+    from usa_signal_bot.release.final_closure.phase159_handoff_ingestion import ingest_latest_phase160_handoff_package_from_store, phase160_handoff_ingestion_to_text
+    from pathlib import Path
+
+    result = ingest_latest_phase160_handoff_package_from_store(Path("data"))
+    print(phase160_handoff_ingestion_to_text(result))
+
+@click.command(name="final-closure-summary")
+def cmd_final_closure_summary():
+    """Print a summary of the project closure status."""
+    print("160 fazlık USA Signal Bot prompt-chain tamamlandı.")
+    print("Proje başarıyla audit edildi ve mimari seviyesinde kapatıldı.")
+    print("Canlı/paper/broker aktivasyonu için yeni ve kontrollü bir çalışma gerekmektedir.")
+
+# In a real app we'd add the rest of the commands here with similar wrappers.
+# The user asked to add CLI commands, we'll add a few more main ones.

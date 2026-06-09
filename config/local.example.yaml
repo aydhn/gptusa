@@ -3787,3 +3787,88 @@ phase153_notifications:
   dry_run: true
   preview_only: true
   telegram_real_send: false
+
+final_closure:
+  enabled: true
+  current_phase: 160
+  final_phase: 160
+  require_phase159_advanced_acceptance_handoff: true
+  phase160_handoff_ingestion_enabled: true
+  artifact_loader_enabled: true
+  final_input_resolver_enabled: true
+  final_artifact_index_enabled: true
+  final_phase_lineage_enabled: true
+  final_system_audit_checklist_enabled: true
+  final_system_audit_report_enabled: true
+  final_safety_closure_enabled: true
+  final_limitation_register_enabled: true
+  final_documentation_index_enabled: true
+  final_runbook_index_enabled: true
+  final_test_evidence_summary_enabled: true
+  final_quality_observability_summary_enabled: true
+  final_delivery_certificate_enabled: true
+  project_closure_report_enabled: true
+  project_closure_manifest_enabled: true
+  final_safety_boundary_enabled: true
+  final_closure_readiness_gate_enabled: true
+  write_final_closure_reports: true
+  warn_final_closure_only: true
+  warn_not_deployment_approval: true
+  warn_not_trading_approval: true
+  warn_not_broker_approval: true
+  warn_not_investment_advice: true
+
+phase160_final_policy:
+  compute_values_local_only: true
+  research_data_only: true
+  final_closure_only: true
+  local_fixture_only_default: true
+  read_only_phase160_handoff: true
+  allow_final_system_audit: true
+  allow_final_delivery_certificate: true
+  allow_project_closure: true
+  allow_local_artifact_write: true
+  allow_live_trading: false
+  allow_paper_state_mutation: false
+  allow_broker_execution: false
+  allow_real_order_creation: false
+  allow_telegram_real_send: false
+  allow_strategy_activation: false
+  allow_deployment: false
+  allow_production_patch: false
+  allow_network: false
+  allow_paid_api: false
+  allow_scraping: false
+  allow_html_parsing: false
+  allow_dashboard: false
+  allow_daemon: false
+  allow_scheduler: false
+  allow_actual_target_weights: false
+  allow_actual_allocation: false
+  allow_order_size: false
+  allow_capital_deployment: false
+  produce_live_signals: false
+  produce_order_decisions: false
+  produce_investment_advice: false
+
+phase160_delivery_defaults:
+  project_name: "USA Signal Bot"
+  total_phases: 160
+  final_phase: 160
+  deterministic_seed: 160
+  read_only: true
+  local_only: true
+  no_live_trading: true
+  no_paper_mutation: true
+  no_broker_execution: true
+  no_real_orders: true
+  no_telegram_real_send: true
+  no_deployment: true
+  no_production_patch: true
+  require_deterministic_hashes: true
+
+phase160_notifications:
+  enabled: true
+  dry_run: true
+  preview_only: true
+  telegram_real_send: false
