@@ -36,3 +36,23 @@ class MetricsCollector:
     latest_phase156_order_size_violation_count: int = 0
     latest_phase156_capital_deployment_violation_count: int = 0
     latest_phase156_actual_optimization_violation_count: int = 0
+
+
+    # Phase 158 Metrics
+    latest_full_system_integration_context_count: int = 0
+    latest_integration_input_reference_count: int = 0
+    latest_system_artifact_inventory_count: int = 0
+    latest_integration_dependency_edge_count: int = 0
+    latest_e2e_rehearsal_scenario_count: int = 0
+    latest_dry_run_execution_step_count: int = 0
+    latest_integration_check_report_count: int = 0
+    latest_final_delivery_checklist_item_count: int = 0
+    latest_phase159_readiness_gate_pass_count: int = 0
+    latest_phase158_live_trading_violation_count: int = 0
+    latest_phase158_paper_mutation_violation_count: int = 0
+    latest_phase158_broker_execution_violation_count: int = 0
+    latest_phase158_real_order_violation_count: int = 0
+    latest_phase158_telegram_real_send_violation_count: int = 0
+    latest_phase158_deployment_violation_count: int = 0
+    latest_phase158_network_violation_count: int = 0
+    latest_phase158_safety_boundary_pass_count: int = 0
