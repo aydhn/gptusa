@@ -398,3 +398,28 @@ class FullSystemIntegrationValidationError(FullSystemIntegrationError):
 
 class FullSystemIntegrationReportingError(FullSystemIntegrationError):
     pass
+
+
+class AdvancedAcceptanceError(USASignalBotError): pass
+class Phase158IntegrationIngestionError(AdvancedAcceptanceError): pass
+class Phase158IntegrationArtifactLoaderError(AdvancedAcceptanceError): pass
+class AdvancedAcceptanceInputResolverError(AdvancedAcceptanceError): pass
+class AcceptanceScenarioMatrixError(AdvancedAcceptanceError): pass
+class AdvancedDryRunRehearsalExecutorError(AdvancedAcceptanceError): pass
+class AcceptanceEvidenceBundleError(AdvancedAcceptanceError): pass
+class RegressionAcceptanceReportError(AdvancedAcceptanceError): pass
+class SafetyAcceptanceReportError(AdvancedAcceptanceError): pass
+class SystemAreaAcceptanceReportError(AdvancedAcceptanceError): pass
+class ReleaseCandidateAuditError(AdvancedAcceptanceError): pass
+class ReleaseCandidateRiskRegisterError(AdvancedAcceptanceError): pass
+class FinalFreezeChecklistError(AdvancedAcceptanceError): pass
+class FinalFreezeBoundaryError(AdvancedAcceptanceError): pass
+class FinalFreezeCertificateError(AdvancedAcceptanceError): pass
+class Phase160HandoffContractError(AdvancedAcceptanceError): pass
+class Phase160HandoffPackageError(AdvancedAcceptanceError): pass
+class Phase160ReadinessGateError(AdvancedAcceptanceError): pass
+class AdvancedAcceptanceSchemaValidationError(AdvancedAcceptanceError): pass
+class AdvancedAcceptanceSafetyValidationError(AdvancedAcceptanceError): pass
+class AdvancedAcceptanceStoreError(AdvancedAcceptanceError): pass
+class AdvancedAcceptanceValidationError(AdvancedAcceptanceError): pass
+class AdvancedAcceptanceReportingError(AdvancedAcceptanceError): pass

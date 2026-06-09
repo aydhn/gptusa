@@ -96,3 +96,25 @@ class Phase156DataQualityEvaluator:
     phase158_no_paper_mutation_compliance_score: int = 100
     phase158_no_broker_compliance_score: int = 100
     phase158_no_deployment_compliance_score: int = 100
+
+    # Phase 159 Quality Metrics
+    phase159_phase158_ingestion_score: int = 100
+    phase159_scenario_matrix_score: int = 100
+    phase159_advanced_dry_run_score: int = 100
+    phase159_evidence_bundle_score: int = 100
+    phase159_regression_acceptance_score: int = 100
+    phase159_safety_acceptance_score: int = 100
+    phase159_system_area_acceptance_score: int = 100
+    phase159_release_candidate_audit_score: int = 100
+    phase159_risk_register_score: int = 100
+    phase159_final_freeze_checklist_score: int = 100
+    phase159_final_freeze_boundary_score: int = 100
+    phase159_final_freeze_certificate_score: int = 100
+    phase159_phase160_handoff_score: int = 100
+    phase159_phase160_readiness_gate_score: int = 100
+    phase159_non_execution_compliance_score: int = 100
+    phase159_no_live_trading_compliance_score: int = 100
+    phase159_no_paper_mutation_compliance_score: int = 100
+    phase159_no_broker_compliance_score: int = 100
+    phase159_no_deployment_compliance_score: int = 100
+    phase159_no_production_patch_compliance_score: int = 100

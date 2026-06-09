@@ -4882,3 +4882,93 @@ class Phase158NotificationsConfig:
     dry_run: bool = True
     preview_only: bool = True
     telegram_real_send: bool = False
+
+@dataclass
+class AdvancedAcceptanceConfig:
+    enabled: bool = True
+    current_phase: int = 159
+    final_phase: int = 160
+    require_phase158_full_system_integration: bool = True
+    phase158_ingestion_enabled: bool = True
+    artifact_loader_enabled: bool = True
+    input_resolver_enabled: bool = True
+    scenario_matrix_enabled: bool = True
+    advanced_dry_run_executor_enabled: bool = True
+    evidence_bundle_enabled: bool = True
+    regression_acceptance_enabled: bool = True
+    safety_acceptance_enabled: bool = True
+    system_area_acceptance_enabled: bool = True
+    release_candidate_audit_enabled: bool = True
+    release_candidate_risk_register_enabled: bool = True
+    final_freeze_checklist_enabled: bool = True
+    final_freeze_boundary_enabled: bool = True
+    final_freeze_certificate_enabled: bool = True
+    phase160_handoff_contract_enabled: bool = True
+    phase160_handoff_package_enabled: bool = True
+    phase160_readiness_gate_enabled: bool = True
+    write_advanced_acceptance_reports: bool = True
+    warn_advanced_acceptance_only: bool = True
+    warn_dry_run_only: bool = True
+    warn_not_deployment_approval: bool = True
+    warn_not_trading_approval: bool = True
+    warn_not_investment_advice: bool = True
+
+@dataclass
+class Phase159AcceptancePolicyConfig:
+    compute_values_local_only: bool = True
+    research_data_only: bool = True
+    advanced_acceptance_only: bool = True
+    dry_run_only: bool = True
+    local_fixture_only_default: bool = True
+    read_only_phase158_review: bool = True
+    allow_advanced_acceptance: bool = True
+    allow_release_candidate_audit: bool = True
+    allow_final_freeze_preparation: bool = True
+    allow_phase160_handoff_package: bool = True
+    allow_local_artifact_write: bool = True
+    allow_live_trading: bool = False
+    allow_paper_state_mutation: bool = False
+    allow_broker_execution: bool = False
+    allow_real_order_creation: bool = False
+    allow_telegram_real_send: bool = False
+    allow_strategy_activation: bool = False
+    allow_deployment: bool = False
+    allow_production_patch: bool = False
+    allow_network: bool = False
+    allow_paid_api: bool = False
+    allow_scraping: bool = False
+    allow_html_parsing: bool = False
+    allow_dashboard: bool = False
+    allow_daemon: bool = False
+    allow_scheduler: bool = False
+    allow_actual_target_weights: bool = False
+    allow_actual_allocation: bool = False
+    allow_order_size: bool = False
+    allow_capital_deployment: bool = False
+    produce_live_signals: bool = False
+    produce_order_decisions: bool = False
+    produce_investment_advice: bool = False
+
+@dataclass
+class Phase159FreezeDefaultsConfig:
+    deterministic_seed: int = 159
+    dry_run: bool = True
+    preview_only: bool = True
+    local_fixture_only: bool = True
+    no_real_side_effects: bool = True
+    no_network: bool = True
+    no_paper_mutation: bool = True
+    no_broker_execution: bool = True
+    no_real_orders: bool = True
+    no_telegram_real_send: bool = True
+    no_deployment: bool = True
+    no_production_patch: bool = True
+    require_deterministic_hashes: bool = True
+    next_phase: int = 160
+
+@dataclass
+class Phase159NotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    preview_only: bool = True
+    telegram_real_send: bool = False
