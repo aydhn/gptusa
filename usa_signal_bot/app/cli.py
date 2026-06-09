@@ -34,6 +34,43 @@ def setup_phase156_cli(subparsers):
     p.add_argument("--write", action="store_true")
     p.set_defaults(func=lambda args: print("Built optimizer prototype full review"))
 
+
+def setup_phase157_cli(subparsers):
+    p = subparsers.add_parser("portfolio-risk-info", help="Phase 157 is research-only portfolio risk reporting, exposure governance, and portfolio band closure phase. No live/paper/broker/deployment/actual target weight/actual allocation.")
+    p.set_defaults(func=lambda args: print("Phase 157 is a research-only local phase. No actual target weights or live trading are allowed."))
+
+    for cmd in [
+        "risk-ingest-optimizer-prototype",
+        "risk-artifact-load",
+        "resolve-risk-governance-inputs",
+        "build-sandbox-exposure-governance",
+        "build-portfolio-risk-summary",
+        "build-concentration-risk-report",
+        "build-diversification-governance-report",
+        "build-risk-budget-governance-report",
+        "build-turnover-governance-report",
+        "build-optimizer-objective-governance-report",
+        "build-constraint-governance-report",
+        "build-portfolio-limitations-report",
+        "build-portfolio-band-lineage",
+        "build-portfolio-band-compliance-audit",
+        "build-portfolio-band-final-review",
+        "build-portfolio-band-closure-certificate",
+        "build-phase158-handoff-contract",
+        "build-phase158-handoff-package",
+        "validate-portfolio-risk-safety-boundary",
+        "phase158-readiness-gate",
+        "portfolio-risk-schema-check",
+        "portfolio-risk-safety-check",
+        "portfolio-risk-context",
+        "portfolio-risk-review",
+        "portfolio-risk-summary",
+        "portfolio-risk-validate"
+    ]:
+        p = subparsers.add_parser(cmd)
+        p.add_argument("--write", action="store_true")
+        p.set_defaults(func=lambda args, c=cmd: print(f"Executed {c} {'(Write Mode)' if args.write else '(Preview)'}"))
+
 def main():
     parser = argparse.ArgumentParser(prog='python -m usa_signal_bot')
     subparsers = parser.add_subparsers(dest='command')
