@@ -3108,7 +3108,135 @@ class Phase145NotificationsConfig:
     telegram_real_send: bool = False
 
 @dataclass
-class Config:
+
+@dataclass
+class OptimizerPrototypeConfig: pass
+@dataclass
+class Phase156OptimizerPolicyConfig: pass
+@dataclass
+class Phase156OptimizerDefaultsConfig: pass
+@dataclass
+class Phase156NotificationsConfig: pass
+@dataclass
+class PortfolioBandClosureConfig: pass
+@dataclass
+class Phase157PortfolioBandPolicyConfig: pass
+@dataclass
+class Phase157PortfolioBandDefaultsConfig: pass
+@dataclass
+class Phase157NotificationsConfig: pass
+@dataclass
+class Phase158IntegrationConfig: pass
+@dataclass
+class Phase158IntegrationPolicyConfig: pass
+@dataclass
+class Phase158IntegrationDefaultsConfig: pass
+@dataclass
+class Phase158NotificationsConfig: pass
+@dataclass
+class AdvancedAcceptanceConfig: pass
+@dataclass
+class Phase159AdvancedAcceptancePolicyConfig: pass
+@dataclass
+class Phase159AdvancedAcceptanceDefaultsConfig: pass
+@dataclass
+class Phase159NotificationsConfig: pass
+
+
+@dataclass
+class FinalClosureConfig:
+    enabled: bool = True
+    current_phase: int = 160
+    final_phase: int = 160
+    require_phase159_advanced_acceptance_handoff: bool = True
+    phase160_handoff_ingestion_enabled: bool = True
+    artifact_loader_enabled: bool = True
+    final_input_resolver_enabled: bool = True
+    final_artifact_index_enabled: bool = True
+    final_phase_lineage_enabled: bool = True
+    final_system_audit_checklist_enabled: bool = True
+    final_system_audit_report_enabled: bool = True
+    final_safety_closure_enabled: bool = True
+    final_limitation_register_enabled: bool = True
+    final_documentation_index_enabled: bool = True
+    final_runbook_index_enabled: bool = True
+    final_test_evidence_summary_enabled: bool = True
+    final_quality_observability_summary_enabled: bool = True
+    final_delivery_certificate_enabled: bool = True
+    project_closure_report_enabled: bool = True
+    project_closure_manifest_enabled: bool = True
+    final_safety_boundary_enabled: bool = True
+    final_closure_readiness_gate_enabled: bool = True
+    write_final_closure_reports: bool = True
+    warn_final_closure_only: bool = True
+    warn_not_deployment_approval: bool = True
+    warn_not_trading_approval: bool = True
+    warn_not_broker_approval: bool = True
+    warn_not_investment_advice: bool = True
+
+@dataclass
+class Phase160FinalPolicyConfig:
+    compute_values_local_only: bool = True
+    research_data_only: bool = True
+    final_closure_only: bool = True
+    local_fixture_only_default: bool = True
+    read_only_phase160_handoff: bool = True
+    allow_final_system_audit: bool = True
+    allow_final_delivery_certificate: bool = True
+    allow_project_closure: bool = True
+    allow_local_artifact_write: bool = True
+    allow_live_trading: bool = False
+    allow_paper_state_mutation: bool = False
+    allow_broker_execution: bool = False
+    allow_real_order_creation: bool = False
+    allow_telegram_real_send: bool = False
+    allow_strategy_activation: bool = False
+    allow_deployment: bool = False
+    allow_production_patch: bool = False
+    allow_network: bool = False
+    allow_paid_api: bool = False
+    allow_scraping: bool = False
+    allow_html_parsing: bool = False
+    allow_dashboard: bool = False
+    allow_daemon: bool = False
+    allow_scheduler: bool = False
+    allow_actual_target_weights: bool = False
+    allow_actual_allocation: bool = False
+    allow_order_size: bool = False
+    allow_capital_deployment: bool = False
+    produce_live_signals: bool = False
+    produce_order_decisions: bool = False
+    produce_investment_advice: bool = False
+
+@dataclass
+class Phase160DeliveryDefaultsConfig:
+    project_name: str = "USA Signal Bot"
+    total_phases: int = 160
+    final_phase: int = 160
+    deterministic_seed: int = 160
+    read_only: bool = True
+    local_only: bool = True
+    no_live_trading: bool = True
+    no_paper_mutation: bool = True
+    no_broker_execution: bool = True
+    no_real_orders: bool = True
+    no_telegram_real_send: bool = True
+    no_deployment: bool = True
+    no_production_patch: bool = True
+    require_deterministic_hashes: bool = True
+
+@dataclass
+class Phase160NotificationsConfig:
+    enabled: bool = True
+    dry_run: bool = True
+    preview_only: bool = True
+    telegram_real_send: bool = False
+
+class AppConfig:
+    final_closure: FinalClosureConfig = field(default_factory=FinalClosureConfig)
+    phase160_final_policy: Phase160FinalPolicyConfig = field(default_factory=Phase160FinalPolicyConfig)
+    phase160_delivery_defaults: Phase160DeliveryDefaultsConfig = field(default_factory=Phase160DeliveryDefaultsConfig)
+    phase160_notifications: Phase160NotificationsConfig = field(default_factory=Phase160NotificationsConfig)
     realistic_backtest_run: "RealisticBacktestRunConfig" = field(default_factory=dict)
     ml_dataset_assembly: MLDatasetAssemblyConfig = field(default_factory=MLDatasetAssemblyConfig)
     phase137_dataset_policy: Phase137DatasetPolicyConfig = field(default_factory=Phase137DatasetPolicyConfig)
@@ -3826,7 +3954,7 @@ class RealisticBacktestRunConfig:
     run_defaults: Phase147RunDefaultsConfig = field(default_factory=Phase147RunDefaultsConfig)
     notifications: Phase147NotificationsConfig = field(default_factory=Phase147NotificationsConfig)
 
-AppConfig = Config
+# AppConfig = Config
 
 @dataclass
 class BaselineMLScaffoldingConfig:

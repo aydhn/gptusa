@@ -1,1 +1,4 @@
-{ "activation_allowed": true }
+{
+  "live_order": true,
+  "buy_signal": true
+}
