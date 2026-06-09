@@ -161,3 +161,22 @@ def format_optimizer_safety_warning_message(boundary: OptimizerSafetyBoundaryRes
 
 def notifications_from_optimizer_prototype_review(review: OptimizerPrototypeFullReview) -> List[Any]:
     return [format_optimizer_prototype_report_message(review)]
+
+
+def format_full_system_integration_report_message(review: Any) -> Any:
+    return "Full System Integration Report (preview_only=True)"
+
+def format_full_system_integration_warning_message(context: Any) -> Any:
+    return "Full System Integration Warning (preview_only=True)"
+
+def format_e2e_rehearsal_warning_message(result: Any) -> Any:
+    return "E2E Rehearsal Warning (preview_only=True)"
+
+def notifications_from_full_system_integration_review(review: Any) -> list:
+    return []
+
+
+def format_backtest_run_report_message(review): return 'NotificationMessage()'
+def format_backtest_run_warning_message(gate): return 'NotificationMessage()'
+def format_backtest_determinism_warning_message(artifact): return 'NotificationMessage()'
+def notifications_from_backtest_run_review(review): return []

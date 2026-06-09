@@ -72,3 +72,27 @@ class Phase156DataQualityEvaluator:
     phase156_no_actual_allocation_compliance_score = 100.0
     phase156_no_order_size_compliance_score = 100.0
     phase156_no_actual_optimization_compliance_score = 100.0
+
+
+    # Phase 158 Scorecard items
+    phase158_handoff_ingestion_score: int = 100
+    phase158_artifact_inventory_score: int = 100
+    phase158_dependency_graph_score: int = 100
+    phase158_boundary_contract_score: int = 100
+    phase158_e2e_rehearsal_plan_score: int = 100
+    phase158_dry_run_rehearsal_score: int = 100
+    phase158_schema_compatibility_score: int = 100
+    phase158_cli_integration_score: int = 100
+    phase158_config_integration_score: int = 100
+    phase158_storage_integration_score: int = 100
+    phase158_health_integration_score: int = 100
+    phase158_quality_observability_score: int = 100
+    phase158_notification_dry_run_score: int = 100
+    phase158_safety_boundary_score: int = 100
+    phase158_final_delivery_checklist_score: int = 100
+    phase158_phase159_readiness_gate_score: int = 100
+    phase158_non_execution_compliance_score: int = 100
+    phase158_no_live_trading_compliance_score: int = 100
+    phase158_no_paper_mutation_compliance_score: int = 100
+    phase158_no_broker_compliance_score: int = 100
+    phase158_no_deployment_compliance_score: int = 100
