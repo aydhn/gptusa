@@ -1,3 +1,4 @@
+class USASignalBotError(Exception): pass
 class AppError(Exception):
     pass
 class BacktestClosureError(Exception): pass
@@ -325,3 +326,5 @@ class OptimizerPrototypeValidationError(OptimizerPrototypeError):
 
 class OptimizerPrototypeReportingError(OptimizerPrototypeError):
     pass
+
+class PortfolioRiskValidationError(Exception): pass

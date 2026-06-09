@@ -1,12 +1,9 @@
+# Mock simple test for CLI patching without invoking full complex logic.
+from usa_signal_bot.app.cli import setup_phase157_cli
+import argparse
 
-import subprocess
-
-def test_portfolio_construction_info():
-    # Since CLI parsing is broken in the original file, we just test the models instead
-    pass
-
-def test_portfolio_construction_policy():
-    pass
-
-def test_portfolio_construction_review():
-    pass
+def test_setup_phase157_cli():
+    parser = argparse.ArgumentParser()
+    subparsers = parser.add_subparsers()
+    setup_phase157_cli(subparsers)
+    assert "portfolio-risk-info" in subparsers.choices
