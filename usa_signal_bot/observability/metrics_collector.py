@@ -56,3 +56,25 @@ class MetricsCollector:
     latest_phase158_deployment_violation_count: int = 0
     latest_phase158_network_violation_count: int = 0
     latest_phase158_safety_boundary_pass_count: int = 0
+
+    # Phase 159 Advanced Acceptance Metrics
+    latest_advanced_acceptance_context_count: int = 0
+    latest_acceptance_input_reference_count: int = 0
+    latest_acceptance_scenario_count: int = 0
+    latest_advanced_dry_run_step_count: int = 0
+    latest_acceptance_evidence_item_count: int = 0
+    latest_acceptance_area_report_count: int = 0
+    latest_release_candidate_risk_count: int = 0
+    latest_release_candidate_blocking_risk_count: int = 0
+    latest_final_freeze_checklist_item_count: int = 0
+    latest_phase160_handoff_package_count: int = 0
+    latest_phase160_readiness_gate_pass_count: int = 0
+    latest_phase159_live_trading_violation_count: int = 0
+    latest_phase159_paper_mutation_violation_count: int = 0
+    latest_phase159_broker_execution_violation_count: int = 0
+    latest_phase159_real_order_violation_count: int = 0
+    latest_phase159_telegram_real_send_violation_count: int = 0
+    latest_phase159_deployment_violation_count: int = 0
+    latest_phase159_production_patch_violation_count: int = 0
+    latest_phase159_network_violation_count: int = 0
+    latest_phase159_final_freeze_pass_count: int = 0

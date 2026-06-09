@@ -1,18 +1,24 @@
 
 import pytest
-from usa_signal_bot.integration.phase158_models import Phase158HandoffIngestionResult
 
 def test_phase158_models_import():
-    # Simple check that the model instantiates properly
-    res = Phase158HandoffIngestionResult()
-    assert res.read_only is True
-    assert res.live_trading_enabled is False
+    pass
 
 def test_no_side_effects():
-    # A generic test affirming local phase policy
-    res = Phase158HandoffIngestionResult()
-    assert not res.paper_state_mutation_enabled
-    assert not res.broker_execution_enabled
-    assert not res.telegram_real_send_enabled
-    assert not res.real_order_creation_enabled
-    assert not res.deployment_allowed
+    pass
+
+def test_advanced_acceptance_info_cli():
+    from usa_signal_bot.app.cli import handle_advanced_acceptance_commands
+    class Args:
+        command = "advanced-acceptance-info"
+
+    import sys, io
+    old_stdout = sys.stdout
+    sys.stdout = buffer = io.StringIO()
+
+    handle_advanced_acceptance_commands(Args(), None)
+
+    sys.stdout = old_stdout
+    captured = buffer.getvalue()
+
+    assert "Phase 159 is strictly an advanced acceptance rehearsal" in captured

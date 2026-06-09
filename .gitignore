@@ -11,3 +11,9 @@ temp.diff
 *.sh
 tests/fixtures/
 data/
+usa_signal_bot/release/__pycache__
+scripts/
+tests/fixtures/advanced_acceptance/
+usa_signal_bot/app/cli.py_patch.py
+usa_signal_bot/app/cli.py_patch_2.py
+usa_signal_bot/tests/test_cli.py_patch.py

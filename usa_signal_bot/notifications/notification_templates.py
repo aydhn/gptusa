@@ -180,3 +180,61 @@ def format_backtest_run_report_message(review): return 'NotificationMessage()'
 def format_backtest_run_warning_message(gate): return 'NotificationMessage()'
 def format_backtest_determinism_warning_message(artifact): return 'NotificationMessage()'
 def notifications_from_backtest_run_review(review): return []
+
+def format_advanced_acceptance_report_message(review: Any) -> NotificationMessage:
+    lines = [
+        "Advanced Acceptance Report (Phase 159)",
+        "This is an offline dry-run output, NOT trading or deployment approval.",
+        f"Review ID: {review.review_id}",
+        f"Ready for Phase 160: {review.phase160_readiness_gate.ready_for_phase160 if review.phase160_readiness_gate else False}"
+    ]
+    return NotificationMessage(
+        message_id="adv_acc_" + review.review_id,
+        created_at_utc="mock_timestamp",
+        notification_type=NotificationType.ADVANCED_ACCEPTANCE_REPORT,
+        subject="Advanced Acceptance Report",
+        body="\n".join(lines),
+        dry_run_only=True,
+        metadata={}
+    )
+
+def format_release_candidate_warning_message(audit: Any) -> NotificationMessage:
+    lines = [
+        "Release Candidate Warning (Phase 159)",
+        f"Audit ID: {audit.audit_id}",
+        f"Failed Areas: {audit.failed_area_count}",
+        f"Blocking Risks: {audit.risk_register.blocking_risk_count if audit.risk_register else 0}"
+    ]
+    return NotificationMessage(
+        message_id="rc_warn_" + audit.audit_id,
+        created_at_utc="mock_timestamp",
+        notification_type=NotificationType.RELEASE_CANDIDATE_WARNING,
+        subject="Release Candidate Warning",
+        body="\n".join(lines),
+        dry_run_only=True,
+        metadata={}
+    )
+
+def format_final_freeze_warning_message(certificate: Any) -> NotificationMessage:
+    lines = [
+        "Final Freeze Warning (Phase 159)",
+        f"Certificate ID: {certificate.certificate_id}",
+        f"Frozen: {certificate.frozen}"
+    ]
+    return NotificationMessage(
+        message_id="freeze_warn_" + certificate.certificate_id,
+        created_at_utc="mock_timestamp",
+        notification_type=NotificationType.FINAL_FREEZE_WARNING,
+        subject="Final Freeze Warning",
+        body="\n".join(lines),
+        dry_run_only=True,
+        metadata={}
+    )
+
+def notifications_from_advanced_acceptance_review(review: Any) -> List[NotificationMessage]:
+    msgs = [format_advanced_acceptance_report_message(review)]
+    if review.release_candidate_audit and not review.release_candidate_audit.audit_passed:
+        msgs.append(format_release_candidate_warning_message(review.release_candidate_audit))
+    if review.final_freeze_certificate and not review.final_freeze_certificate.frozen:
+        msgs.append(format_final_freeze_warning_message(review.final_freeze_certificate))
+    return msgs
