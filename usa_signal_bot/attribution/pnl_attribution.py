@@ -3,12 +3,17 @@
 from typing import Dict, List, Optional
 from collections import defaultdict
 
-from usa_signal_bot.core.enums import AttributionDimension, ContributionDirection, AttributionQuality
+from usa_signal_bot.core.enums import (
+    AttributionDimension,
+    ContributionDirection,
+    AttributionQuality,
+)
 from usa_signal_bot.attribution.attribution_models import (
     AttributionTradeEvent,
     AttributionContribution,
-    create_attribution_contribution_id
+    create_attribution_contribution_id,
 )
+
 
 def calculate_win_rate(events: List[AttributionTradeEvent]) -> Optional[float]:
     win = sum(1 for e in events if e.net_pnl_usd is not None and e.net_pnl_usd > 0)
@@ -18,7 +23,10 @@ def calculate_win_rate(events: List[AttributionTradeEvent]) -> Optional[float]:
         return None
     return (win / total) * 100.0
 
-def classify_contribution_direction(net_pnl_usd: Optional[float]) -> ContributionDirection:
+
+def classify_contribution_direction(
+    net_pnl_usd: Optional[float],
+) -> ContributionDirection:
     if net_pnl_usd is None:
         return ContributionDirection.INSUFFICIENT_DATA
     if net_pnl_usd > 0:
@@ -27,7 +35,10 @@ def classify_contribution_direction(net_pnl_usd: Optional[float]) -> Contributio
         return ContributionDirection.NEGATIVE
     return ContributionDirection.NEUTRAL
 
-def classify_attribution_quality(events: List[AttributionTradeEvent]) -> AttributionQuality:
+
+def classify_attribution_quality(
+    events: List[AttributionTradeEvent],
+) -> AttributionQuality:
     valid_pnl = sum(1 for e in events if e.net_pnl_usd is not None)
     if valid_pnl == 0:
         return AttributionQuality.INSUFFICIENT_DATA
@@ -39,19 +50,35 @@ def classify_attribution_quality(events: List[AttributionTradeEvent]) -> Attribu
         return AttributionQuality.HIGH
     return AttributionQuality.ACCEPTABLE
 
+
 def calculate_contribution_for_group(
     name: str,
     dimension: AttributionDimension,
     events: List[AttributionTradeEvent],
-    total_net_pnl: Optional[float] = None
+    total_net_pnl: Optional[float] = None,
 ) -> AttributionContribution:
-    gross = sum(e.gross_pnl_usd for e in events if e.gross_pnl_usd is not None)
-    net = sum(e.net_pnl_usd for e in events if e.net_pnl_usd is not None)
-    cost = sum(e.total_cost_usd for e in events if e.total_cost_usd is not None)
+    gross = 0.0
+    net = 0.0
+    cost = 0.0
+    win_count = 0
+    loss_count = 0
+
+    for e in events:
+        if e.gross_pnl_usd is not None:
+            gross += e.gross_pnl_usd
+
+        net_val = e.net_pnl_usd
+        if net_val is not None:
+            net += net_val
+            if net_val > 0:
+                win_count += 1
+            else:
+                loss_count += 1
+
+        if e.total_cost_usd is not None:
+            cost += e.total_cost_usd
 
     trade_count = len(events)
-    win_count = sum(1 for e in events if e.net_pnl_usd is not None and e.net_pnl_usd > 0)
-    loss_count = sum(1 for e in events if e.net_pnl_usd is not None and e.net_pnl_usd <= 0)
 
     win_rate = calculate_win_rate(events)
     avg_net = net / trade_count if trade_count > 0 else None
@@ -82,10 +109,13 @@ def calculate_contribution_for_group(
         avg_net_pnl_usd=avg_net,
         contribution_pct_total=pct_total,
         quality=quality,
-        warnings=warnings
+        warnings=warnings,
     )
 
-def aggregate_pnl_by_dimension(events: List[AttributionTradeEvent], dimension: AttributionDimension) -> List[AttributionContribution]:
+
+def aggregate_pnl_by_dimension(
+    events: List[AttributionTradeEvent], dimension: AttributionDimension
+) -> List[AttributionContribution]:
     groups = defaultdict(list)
 
     for e in events:
@@ -115,11 +145,18 @@ def aggregate_pnl_by_dimension(events: List[AttributionTradeEvent], dimension: A
 
     contributions = []
     for name, group_events in groups.items():
-        contributions.append(calculate_contribution_for_group(name, dimension, group_events, total_net_pnl))
+        contributions.append(
+            calculate_contribution_for_group(
+                name, dimension, group_events, total_net_pnl
+            )
+        )
 
     return sorted(contributions, key=lambda x: x.net_pnl_usd, reverse=True)
 
-def pnl_attribution_to_text(contributions: List[AttributionContribution], limit: int = 100) -> str:
+
+def pnl_attribution_to_text(
+    contributions: List[AttributionContribution], limit: int = 100
+) -> str:
     if not contributions:
         return "No contributions to display."
 
@@ -127,7 +164,11 @@ def pnl_attribution_to_text(contributions: List[AttributionContribution], limit:
     lines = [f"--- PnL Attribution by {dimension} ---"]
     for c in contributions[:limit]:
         wr = f"{c.win_rate:.1f}%" if c.win_rate is not None else "N/A"
-        pct = f"{c.contribution_pct_total:.1f}%" if c.contribution_pct_total is not None else "N/A"
+        pct = (
+            f"{c.contribution_pct_total:.1f}%"
+            if c.contribution_pct_total is not None
+            else "N/A"
+        )
         lines.append(
             f"[{c.contribution_direction.value[:3]}] {c.name}: Net PnL: ${c.net_pnl_usd:.2f} "
             f"(Gross: ${c.gross_pnl_usd:.2f}, Cost: ${c.total_cost_usd:.2f}) | "
