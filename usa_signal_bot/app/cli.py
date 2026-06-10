@@ -1,3 +1,5 @@
+import sys
+import click
 
 from usa_signal_bot.ml_research.ensemble_evaluation.ensemble_prototype_report import build_ensemble_prototype_full_review, ensemble_prototype_full_review_to_text, ensemble_prototype_limitations_text
 from usa_signal_bot.ml_research.ensemble_evaluation.ensemble_prototype_store import write_ensemble_prototype_full_review_json, ensemble_prototype_reviews_dir
@@ -240,7 +242,7 @@ def main():
         print("It explicitly prohibits live/paper trading, broker integration, deployment, stress tests, and Monte Carlo.")
         print(walk_forward_limitations_text())
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-walk-forward-window-policy":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy, walk_forward_window_policy_to_text
         policy = build_default_walk_forward_window_policy()
@@ -248,7 +250,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-anchored-walk-forward-splits":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy
         from usa_signal_bot.backtesting.walk_forward.anchored_split_builder import build_anchored_walk_forward_folds, anchored_folds_to_text
@@ -263,11 +265,11 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "run-fold-replays":
         print("Fold replays ran successfully (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "walk-forward-review":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import build_walk_forward_full_review, walk_forward_full_review_to_text
         review = build_walk_forward_full_review()
@@ -275,7 +277,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     if args.command == "backtest-run-info":
         print("Phase 147 - Offline Deterministic Realistic Backtest Engine and Single-Strategy Backtest Run")
@@ -304,7 +306,7 @@ def main():
         print("It explicitly prohibits live/paper trading, broker integration, deployment, stress tests, and Monte Carlo.")
         print(walk_forward_limitations_text())
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-walk-forward-window-policy":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy, walk_forward_window_policy_to_text
         policy = build_default_walk_forward_window_policy()
@@ -312,7 +314,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-anchored-walk-forward-splits":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy
         from usa_signal_bot.backtesting.walk_forward.anchored_split_builder import build_anchored_walk_forward_folds, anchored_folds_to_text
@@ -327,11 +329,11 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "run-fold-replays":
         print("Fold replays ran successfully (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "walk-forward-review":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import build_walk_forward_full_review, walk_forward_full_review_to_text
         review = build_walk_forward_full_review()
@@ -339,7 +341,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
 
 
     if args.command == "portfolio-foundation-info":
@@ -361,7 +363,7 @@ def main():
         print("It explicitly prohibits live/paper trading, broker integration, deployment, stress tests, and Monte Carlo.")
         print(walk_forward_limitations_text())
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-walk-forward-window-policy":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy, walk_forward_window_policy_to_text
         policy = build_default_walk_forward_window_policy()
@@ -369,7 +371,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-anchored-walk-forward-splits":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy
         from usa_signal_bot.backtesting.walk_forward.anchored_split_builder import build_anchored_walk_forward_folds, anchored_folds_to_text
@@ -384,11 +386,11 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "run-fold-replays":
         print("Fold replays ran successfully (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "walk-forward-review":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import build_walk_forward_full_review, walk_forward_full_review_to_text
         review = build_walk_forward_full_review()
@@ -396,7 +398,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     if args.command == "ensemble-prototype-review":
         review = build_ensemble_prototype_full_review()
@@ -506,7 +508,7 @@ def main():
         print("It explicitly prohibits live/paper trading, broker integration, deployment, stress tests, and Monte Carlo.")
         print(walk_forward_limitations_text())
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-walk-forward-window-policy":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy, walk_forward_window_policy_to_text
         policy = build_default_walk_forward_window_policy()
@@ -514,7 +516,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-anchored-walk-forward-splits":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy
         from usa_signal_bot.backtesting.walk_forward.anchored_split_builder import build_anchored_walk_forward_folds, anchored_folds_to_text
@@ -529,11 +531,11 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "run-fold-replays":
         print("Fold replays ran successfully (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "walk-forward-review":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import build_walk_forward_full_review, walk_forward_full_review_to_text
         review = build_walk_forward_full_review()
@@ -541,13 +543,13 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     if args.command == "ml-closure-info":
         print("Phase 145 - Advanced ML Band Final Audit and ML Governance Closure")
         print("This phase is for explainability metadata, final ML governance closure and Advanced ML band final audit.")
         print("It DOES NOT run active paper trading, deployment, live inference, live monitoring, live daemon, or backtests.")
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     if args.command == "walk-forward-info":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import walk_forward_limitations_text
@@ -555,7 +557,7 @@ def main():
         print("It explicitly prohibits live/paper trading, broker integration, deployment, stress tests, and Monte Carlo.")
         print(walk_forward_limitations_text())
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-walk-forward-window-policy":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy, walk_forward_window_policy_to_text
         policy = build_default_walk_forward_window_policy()
@@ -563,7 +565,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-anchored-walk-forward-splits":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy
         from usa_signal_bot.backtesting.walk_forward.anchored_split_builder import build_anchored_walk_forward_folds, anchored_folds_to_text
@@ -578,11 +580,11 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "run-fold-replays":
         print("Fold replays ran successfully (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "walk-forward-review":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import build_walk_forward_full_review, walk_forward_full_review_to_text
         review = build_walk_forward_full_review()
@@ -590,13 +592,13 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     elif args.command == "ml-closure-ingest-drift-monitoring":
         print("Ingesting Drift Monitoring output...")
         if getattr(args, "write", False): print("Writing to store...")
         print("Done (Simulated)")
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     if args.command == "walk-forward-info":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import walk_forward_limitations_text
@@ -604,7 +606,7 @@ def main():
         print("It explicitly prohibits live/paper trading, broker integration, deployment, stress tests, and Monte Carlo.")
         print(walk_forward_limitations_text())
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-walk-forward-window-policy":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy, walk_forward_window_policy_to_text
         policy = build_default_walk_forward_window_policy()
@@ -612,7 +614,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-anchored-walk-forward-splits":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy
         from usa_signal_bot.backtesting.walk_forward.anchored_split_builder import build_anchored_walk_forward_folds, anchored_folds_to_text
@@ -627,11 +629,11 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "run-fold-replays":
         print("Fold replays ran successfully (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "walk-forward-review":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import build_walk_forward_full_review, walk_forward_full_review_to_text
         review = build_walk_forward_full_review()
@@ -639,13 +641,13 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     elif args.command == "ml-closure-artifact-load":
         print("Loading artifacts...")
         if getattr(args, "write", False): print("Writing to store...")
         print("Done (Simulated)")
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     if args.command == "walk-forward-info":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import walk_forward_limitations_text
@@ -653,7 +655,7 @@ def main():
         print("It explicitly prohibits live/paper trading, broker integration, deployment, stress tests, and Monte Carlo.")
         print(walk_forward_limitations_text())
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-walk-forward-window-policy":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy, walk_forward_window_policy_to_text
         policy = build_default_walk_forward_window_policy()
@@ -661,7 +663,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-anchored-walk-forward-splits":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy
         from usa_signal_bot.backtesting.walk_forward.anchored_split_builder import build_anchored_walk_forward_folds, anchored_folds_to_text
@@ -676,11 +678,11 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "run-fold-replays":
         print("Fold replays ran successfully (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "walk-forward-review":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import build_walk_forward_full_review, walk_forward_full_review_to_text
         review = build_walk_forward_full_review()
@@ -688,13 +690,13 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     elif args.command == "resolve-explainability-inputs":
         print("Resolving explainability inputs...")
         if getattr(args, "write", False): print("Writing to store...")
         print("Done (Simulated)")
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     if args.command == "walk-forward-info":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import walk_forward_limitations_text
@@ -702,7 +704,7 @@ def main():
         print("It explicitly prohibits live/paper trading, broker integration, deployment, stress tests, and Monte Carlo.")
         print(walk_forward_limitations_text())
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-walk-forward-window-policy":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy, walk_forward_window_policy_to_text
         policy = build_default_walk_forward_window_policy()
@@ -710,7 +712,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-anchored-walk-forward-splits":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy
         from usa_signal_bot.backtesting.walk_forward.anchored_split_builder import build_anchored_walk_forward_folds, anchored_folds_to_text
@@ -725,11 +727,11 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "run-fold-replays":
         print("Fold replays ran successfully (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "walk-forward-review":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import build_walk_forward_full_review, walk_forward_full_review_to_text
         review = build_walk_forward_full_review()
@@ -737,13 +739,13 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     elif args.command == "build-feature-attribution-proxy":
         print("Building feature attribution proxies... Note: These are NOT trade signals.")
         if getattr(args, "write", False): print("Writing to store...")
         print("Done (Simulated)")
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     if args.command == "walk-forward-info":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import walk_forward_limitations_text
@@ -751,7 +753,7 @@ def main():
         print("It explicitly prohibits live/paper trading, broker integration, deployment, stress tests, and Monte Carlo.")
         print(walk_forward_limitations_text())
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-walk-forward-window-policy":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy, walk_forward_window_policy_to_text
         policy = build_default_walk_forward_window_policy()
@@ -759,7 +761,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-anchored-walk-forward-splits":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy
         from usa_signal_bot.backtesting.walk_forward.anchored_split_builder import build_anchored_walk_forward_folds, anchored_folds_to_text
@@ -774,11 +776,11 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "run-fold-replays":
         print("Fold replays ran successfully (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "walk-forward-review":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import build_walk_forward_full_review, walk_forward_full_review_to_text
         review = build_walk_forward_full_review()
@@ -786,13 +788,13 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     elif args.command == "build-factor-contribution-summary":
         print("Building factor contribution summaries... Note: These are NOT portfolio weights or allocations.")
         if getattr(args, "write", False): print("Writing to store...")
         print("Done (Simulated)")
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     if args.command == "walk-forward-info":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import walk_forward_limitations_text
@@ -800,7 +802,7 @@ def main():
         print("It explicitly prohibits live/paper trading, broker integration, deployment, stress tests, and Monte Carlo.")
         print(walk_forward_limitations_text())
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-walk-forward-window-policy":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy, walk_forward_window_policy_to_text
         policy = build_default_walk_forward_window_policy()
@@ -808,7 +810,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-anchored-walk-forward-splits":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy
         from usa_signal_bot.backtesting.walk_forward.anchored_split_builder import build_anchored_walk_forward_folds, anchored_folds_to_text
@@ -823,11 +825,11 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "run-fold-replays":
         print("Fold replays ran successfully (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "walk-forward-review":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import build_walk_forward_full_review, walk_forward_full_review_to_text
         review = build_walk_forward_full_review()
@@ -835,13 +837,13 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     elif args.command == "build-model-behavior-explanation":
         print("Building model behavior explanations...")
         if getattr(args, "write", False): print("Writing to store...")
         print("Done (Simulated)")
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     if args.command == "walk-forward-info":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import walk_forward_limitations_text
@@ -849,7 +851,7 @@ def main():
         print("It explicitly prohibits live/paper trading, broker integration, deployment, stress tests, and Monte Carlo.")
         print(walk_forward_limitations_text())
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-walk-forward-window-policy":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy, walk_forward_window_policy_to_text
         policy = build_default_walk_forward_window_policy()
@@ -857,7 +859,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-anchored-walk-forward-splits":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy
         from usa_signal_bot.backtesting.walk_forward.anchored_split_builder import build_anchored_walk_forward_folds, anchored_folds_to_text
@@ -872,11 +874,11 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "run-fold-replays":
         print("Fold replays ran successfully (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "walk-forward-review":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import build_walk_forward_full_review, walk_forward_full_review_to_text
         review = build_walk_forward_full_review()
@@ -884,13 +886,13 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     elif args.command == "build-regime-aware-explanation":
         print("Building regime aware explanations...")
         if getattr(args, "write", False): print("Writing to store...")
         print("Done (Simulated)")
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     if args.command == "walk-forward-info":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import walk_forward_limitations_text
@@ -898,7 +900,7 @@ def main():
         print("It explicitly prohibits live/paper trading, broker integration, deployment, stress tests, and Monte Carlo.")
         print(walk_forward_limitations_text())
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-walk-forward-window-policy":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy, walk_forward_window_policy_to_text
         policy = build_default_walk_forward_window_policy()
@@ -906,7 +908,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-anchored-walk-forward-splits":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy
         from usa_signal_bot.backtesting.walk_forward.anchored_split_builder import build_anchored_walk_forward_folds, anchored_folds_to_text
@@ -921,11 +923,11 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "run-fold-replays":
         print("Fold replays ran successfully (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "walk-forward-review":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import build_walk_forward_full_review, walk_forward_full_review_to_text
         review = build_walk_forward_full_review()
@@ -933,13 +935,13 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     elif args.command == "build-calibration-aware-explanation":
         print("Building calibration aware explanations...")
         if getattr(args, "write", False): print("Writing to store...")
         print("Done (Simulated)")
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     if args.command == "walk-forward-info":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import walk_forward_limitations_text
@@ -947,7 +949,7 @@ def main():
         print("It explicitly prohibits live/paper trading, broker integration, deployment, stress tests, and Monte Carlo.")
         print(walk_forward_limitations_text())
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-walk-forward-window-policy":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy, walk_forward_window_policy_to_text
         policy = build_default_walk_forward_window_policy()
@@ -955,7 +957,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-anchored-walk-forward-splits":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy
         from usa_signal_bot.backtesting.walk_forward.anchored_split_builder import build_anchored_walk_forward_folds, anchored_folds_to_text
@@ -970,11 +972,11 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "run-fold-replays":
         print("Fold replays ran successfully (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "walk-forward-review":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import build_walk_forward_full_review, walk_forward_full_review_to_text
         review = build_walk_forward_full_review()
@@ -982,13 +984,13 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     elif args.command == "build-ensemble-explanation":
         print("Building ensemble explanations...")
         if getattr(args, "write", False): print("Writing to store...")
         print("Done (Simulated)")
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     if args.command == "walk-forward-info":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import walk_forward_limitations_text
@@ -996,7 +998,7 @@ def main():
         print("It explicitly prohibits live/paper trading, broker integration, deployment, stress tests, and Monte Carlo.")
         print(walk_forward_limitations_text())
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-walk-forward-window-policy":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy, walk_forward_window_policy_to_text
         policy = build_default_walk_forward_window_policy()
@@ -1004,7 +1006,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-anchored-walk-forward-splits":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy
         from usa_signal_bot.backtesting.walk_forward.anchored_split_builder import build_anchored_walk_forward_folds, anchored_folds_to_text
@@ -1019,11 +1021,11 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "run-fold-replays":
         print("Fold replays ran successfully (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "walk-forward-review":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import build_walk_forward_full_review, walk_forward_full_review_to_text
         review = build_walk_forward_full_review()
@@ -1031,13 +1033,13 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     elif args.command == "build-explainability-report":
         print("Building explainability report...")
         if getattr(args, "write", False): print("Writing to store...")
         print("Done (Simulated)")
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     if args.command == "walk-forward-info":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import walk_forward_limitations_text
@@ -1045,7 +1047,7 @@ def main():
         print("It explicitly prohibits live/paper trading, broker integration, deployment, stress tests, and Monte Carlo.")
         print(walk_forward_limitations_text())
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-walk-forward-window-policy":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy, walk_forward_window_policy_to_text
         policy = build_default_walk_forward_window_policy()
@@ -1053,7 +1055,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-anchored-walk-forward-splits":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy
         from usa_signal_bot.backtesting.walk_forward.anchored_split_builder import build_anchored_walk_forward_folds, anchored_folds_to_text
@@ -1068,11 +1070,11 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "run-fold-replays":
         print("Fold replays ran successfully (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "walk-forward-review":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import build_walk_forward_full_review, walk_forward_full_review_to_text
         review = build_walk_forward_full_review()
@@ -1080,13 +1082,13 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     elif args.command == "build-advanced-ml-artifact-lineage":
         print("Building advanced ML artifact lineage...")
         if getattr(args, "write", False): print("Writing to store...")
         print("Done (Simulated)")
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     if args.command == "walk-forward-info":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import walk_forward_limitations_text
@@ -1094,7 +1096,7 @@ def main():
         print("It explicitly prohibits live/paper trading, broker integration, deployment, stress tests, and Monte Carlo.")
         print(walk_forward_limitations_text())
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-walk-forward-window-policy":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy, walk_forward_window_policy_to_text
         policy = build_default_walk_forward_window_policy()
@@ -1102,7 +1104,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-anchored-walk-forward-splits":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy
         from usa_signal_bot.backtesting.walk_forward.anchored_split_builder import build_anchored_walk_forward_folds, anchored_folds_to_text
@@ -1117,11 +1119,11 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "run-fold-replays":
         print("Fold replays ran successfully (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "walk-forward-review":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import build_walk_forward_full_review, walk_forward_full_review_to_text
         review = build_walk_forward_full_review()
@@ -1129,13 +1131,13 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     elif args.command == "build-ml-governance-closure":
         print("Building ML governance closure... Note: This does NOT produce strategy activation.")
         if getattr(args, "write", False): print("Writing to store...")
         print("Done (Simulated)")
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     if args.command == "walk-forward-info":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import walk_forward_limitations_text
@@ -1143,7 +1145,7 @@ def main():
         print("It explicitly prohibits live/paper trading, broker integration, deployment, stress tests, and Monte Carlo.")
         print(walk_forward_limitations_text())
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-walk-forward-window-policy":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy, walk_forward_window_policy_to_text
         policy = build_default_walk_forward_window_policy()
@@ -1151,7 +1153,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-anchored-walk-forward-splits":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy
         from usa_signal_bot.backtesting.walk_forward.anchored_split_builder import build_anchored_walk_forward_folds, anchored_folds_to_text
@@ -1166,11 +1168,11 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "run-fold-replays":
         print("Fold replays ran successfully (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "walk-forward-review":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import build_walk_forward_full_review, walk_forward_full_review_to_text
         review = build_walk_forward_full_review()
@@ -1178,13 +1180,13 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     elif args.command == "build-advanced-ml-final-audit":
         print("Building advanced ML final audit...")
         if getattr(args, "write", False): print("Writing to store...")
         print("Done (Simulated)")
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     if args.command == "walk-forward-info":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import walk_forward_limitations_text
@@ -1192,7 +1194,7 @@ def main():
         print("It explicitly prohibits live/paper trading, broker integration, deployment, stress tests, and Monte Carlo.")
         print(walk_forward_limitations_text())
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-walk-forward-window-policy":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy, walk_forward_window_policy_to_text
         policy = build_default_walk_forward_window_policy()
@@ -1200,7 +1202,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-anchored-walk-forward-splits":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy
         from usa_signal_bot.backtesting.walk_forward.anchored_split_builder import build_anchored_walk_forward_folds, anchored_folds_to_text
@@ -1215,11 +1217,11 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "run-fold-replays":
         print("Fold replays ran successfully (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "walk-forward-review":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import build_walk_forward_full_review, walk_forward_full_review_to_text
         review = build_walk_forward_full_review()
@@ -1227,13 +1229,13 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     elif args.command == "validate-non-activation-ml-closure-boundary":
         print("Validating non-activation ML closure boundary...")
         if getattr(args, "write", False): print("Writing to store...")
         print("Done (Simulated)")
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     if args.command == "walk-forward-info":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import walk_forward_limitations_text
@@ -1241,7 +1243,7 @@ def main():
         print("It explicitly prohibits live/paper trading, broker integration, deployment, stress tests, and Monte Carlo.")
         print(walk_forward_limitations_text())
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-walk-forward-window-policy":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy, walk_forward_window_policy_to_text
         policy = build_default_walk_forward_window_policy()
@@ -1249,7 +1251,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-anchored-walk-forward-splits":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy
         from usa_signal_bot.backtesting.walk_forward.anchored_split_builder import build_anchored_walk_forward_folds, anchored_folds_to_text
@@ -1264,11 +1266,11 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "run-fold-replays":
         print("Fold replays ran successfully (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "walk-forward-review":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import build_walk_forward_full_review, walk_forward_full_review_to_text
         review = build_walk_forward_full_review()
@@ -1276,13 +1278,13 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     elif args.command == "build-final-ml-model-card-closure":
         print("Building final ML model card closure...")
         if getattr(args, "write", False): print("Writing to store...")
         print("Done (Simulated)")
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     if args.command == "walk-forward-info":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import walk_forward_limitations_text
@@ -1290,7 +1292,7 @@ def main():
         print("It explicitly prohibits live/paper trading, broker integration, deployment, stress tests, and Monte Carlo.")
         print(walk_forward_limitations_text())
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-walk-forward-window-policy":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy, walk_forward_window_policy_to_text
         policy = build_default_walk_forward_window_policy()
@@ -1298,7 +1300,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-anchored-walk-forward-splits":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy
         from usa_signal_bot.backtesting.walk_forward.anchored_split_builder import build_anchored_walk_forward_folds, anchored_folds_to_text
@@ -1313,11 +1315,11 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "run-fold-replays":
         print("Fold replays ran successfully (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "walk-forward-review":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import build_walk_forward_full_review, walk_forward_full_review_to_text
         review = build_walk_forward_full_review()
@@ -1325,13 +1327,13 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     elif args.command == "advanced-ml-acceptance-gate":
         print("Running advanced ML acceptance gate... Note: This DOES NOT start live inference, live monitoring, backtest, or deployment.")
         if getattr(args, "write", False): print("Writing to store...")
         print("Done (Simulated)")
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     if args.command == "walk-forward-info":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import walk_forward_limitations_text
@@ -1339,7 +1341,7 @@ def main():
         print("It explicitly prohibits live/paper trading, broker integration, deployment, stress tests, and Monte Carlo.")
         print(walk_forward_limitations_text())
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-walk-forward-window-policy":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy, walk_forward_window_policy_to_text
         policy = build_default_walk_forward_window_policy()
@@ -1347,7 +1349,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-anchored-walk-forward-splits":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy
         from usa_signal_bot.backtesting.walk_forward.anchored_split_builder import build_anchored_walk_forward_folds, anchored_folds_to_text
@@ -1362,11 +1364,11 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "run-fold-replays":
         print("Fold replays ran successfully (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "walk-forward-review":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import build_walk_forward_full_review, walk_forward_full_review_to_text
         review = build_walk_forward_full_review()
@@ -1374,12 +1376,12 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     elif args.command == "ml-closure-schema-check":
         print("Checking ML closure schema...")
         print("Done (Simulated)")
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     if args.command == "walk-forward-info":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import walk_forward_limitations_text
@@ -1387,7 +1389,7 @@ def main():
         print("It explicitly prohibits live/paper trading, broker integration, deployment, stress tests, and Monte Carlo.")
         print(walk_forward_limitations_text())
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-walk-forward-window-policy":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy, walk_forward_window_policy_to_text
         policy = build_default_walk_forward_window_policy()
@@ -1395,7 +1397,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-anchored-walk-forward-splits":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy
         from usa_signal_bot.backtesting.walk_forward.anchored_split_builder import build_anchored_walk_forward_folds, anchored_folds_to_text
@@ -1410,11 +1412,11 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "run-fold-replays":
         print("Fold replays ran successfully (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "walk-forward-review":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import build_walk_forward_full_review, walk_forward_full_review_to_text
         review = build_walk_forward_full_review()
@@ -1422,12 +1424,12 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     elif args.command == "ml-closure-safety-check":
         print("Checking ML closure safety...")
         print("Done (Simulated)")
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     if args.command == "walk-forward-info":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import walk_forward_limitations_text
@@ -1435,7 +1437,7 @@ def main():
         print("It explicitly prohibits live/paper trading, broker integration, deployment, stress tests, and Monte Carlo.")
         print(walk_forward_limitations_text())
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-walk-forward-window-policy":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy, walk_forward_window_policy_to_text
         policy = build_default_walk_forward_window_policy()
@@ -1443,7 +1445,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-anchored-walk-forward-splits":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy
         from usa_signal_bot.backtesting.walk_forward.anchored_split_builder import build_anchored_walk_forward_folds, anchored_folds_to_text
@@ -1458,11 +1460,11 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "run-fold-replays":
         print("Fold replays ran successfully (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "walk-forward-review":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import build_walk_forward_full_review, walk_forward_full_review_to_text
         review = build_walk_forward_full_review()
@@ -1470,13 +1472,13 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     elif args.command == "ml-closure-context":
         print("Building ML closure context...")
         if getattr(args, "write", False): print("Writing to store...")
         print("Done (Simulated)")
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     if args.command == "walk-forward-info":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import walk_forward_limitations_text
@@ -1484,7 +1486,7 @@ def main():
         print("It explicitly prohibits live/paper trading, broker integration, deployment, stress tests, and Monte Carlo.")
         print(walk_forward_limitations_text())
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-walk-forward-window-policy":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy, walk_forward_window_policy_to_text
         policy = build_default_walk_forward_window_policy()
@@ -1492,7 +1494,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-anchored-walk-forward-splits":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy
         from usa_signal_bot.backtesting.walk_forward.anchored_split_builder import build_anchored_walk_forward_folds, anchored_folds_to_text
@@ -1507,11 +1509,11 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "run-fold-replays":
         print("Fold replays ran successfully (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "walk-forward-review":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import build_walk_forward_full_review, walk_forward_full_review_to_text
         review = build_walk_forward_full_review()
@@ -1519,13 +1521,13 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     elif args.command == "ml-closure-review":
         print("Building ML closure review...")
         if getattr(args, "write", False): print("Writing to store...")
         print("Done (Simulated)")
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     if args.command == "walk-forward-info":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import walk_forward_limitations_text
@@ -1533,7 +1535,7 @@ def main():
         print("It explicitly prohibits live/paper trading, broker integration, deployment, stress tests, and Monte Carlo.")
         print(walk_forward_limitations_text())
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-walk-forward-window-policy":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy, walk_forward_window_policy_to_text
         policy = build_default_walk_forward_window_policy()
@@ -1541,7 +1543,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-anchored-walk-forward-splits":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy
         from usa_signal_bot.backtesting.walk_forward.anchored_split_builder import build_anchored_walk_forward_folds, anchored_folds_to_text
@@ -1556,11 +1558,11 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "run-fold-replays":
         print("Fold replays ran successfully (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "walk-forward-review":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import build_walk_forward_full_review, walk_forward_full_review_to_text
         review = build_walk_forward_full_review()
@@ -1568,12 +1570,12 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     elif args.command == "ml-closure-summary":
         print("Showing ML closure summary...")
         print("Done (Simulated)")
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     if args.command == "walk-forward-info":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import walk_forward_limitations_text
@@ -1581,7 +1583,7 @@ def main():
         print("It explicitly prohibits live/paper trading, broker integration, deployment, stress tests, and Monte Carlo.")
         print(walk_forward_limitations_text())
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-walk-forward-window-policy":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy, walk_forward_window_policy_to_text
         policy = build_default_walk_forward_window_policy()
@@ -1589,7 +1591,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-anchored-walk-forward-splits":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy
         from usa_signal_bot.backtesting.walk_forward.anchored_split_builder import build_anchored_walk_forward_folds, anchored_folds_to_text
@@ -1604,11 +1606,11 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "run-fold-replays":
         print("Fold replays ran successfully (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "walk-forward-review":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import build_walk_forward_full_review, walk_forward_full_review_to_text
         review = build_walk_forward_full_review()
@@ -1616,12 +1618,12 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     elif args.command == "ml-closure-validate":
         print("Validating ML closure...")
         print("Done (Simulated)")
-        sys.exit(0)
+        import sys; sys.exit(0)
 
 
 
@@ -1983,7 +1985,7 @@ def main():
         print("It explicitly prohibits live/paper trading, broker integration, deployment, stress tests, and Monte Carlo.")
         print(walk_forward_limitations_text())
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-walk-forward-window-policy":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy, walk_forward_window_policy_to_text
         policy = build_default_walk_forward_window_policy()
@@ -1991,7 +1993,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-anchored-walk-forward-splits":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy
         from usa_signal_bot.backtesting.walk_forward.anchored_split_builder import build_anchored_walk_forward_folds, anchored_folds_to_text
@@ -2006,11 +2008,11 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "run-fold-replays":
         print("Fold replays ran successfully (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "walk-forward-review":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import build_walk_forward_full_review, walk_forward_full_review_to_text
         review = build_walk_forward_full_review()
@@ -2018,7 +2020,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     if args.command == "backtest-run-info":
         print("Phase 147 - Offline Deterministic Realistic Backtest Engine and Single-Strategy Backtest Run")
@@ -2047,7 +2049,7 @@ def main():
         print("It explicitly prohibits live/paper trading, broker integration, deployment, stress tests, and Monte Carlo.")
         print(walk_forward_limitations_text())
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-walk-forward-window-policy":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy, walk_forward_window_policy_to_text
         policy = build_default_walk_forward_window_policy()
@@ -2055,7 +2057,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-anchored-walk-forward-splits":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy
         from usa_signal_bot.backtesting.walk_forward.anchored_split_builder import build_anchored_walk_forward_folds, anchored_folds_to_text
@@ -2070,11 +2072,11 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "run-fold-replays":
         print("Fold replays ran successfully (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "walk-forward-review":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import build_walk_forward_full_review, walk_forward_full_review_to_text
         review = build_walk_forward_full_review()
@@ -2082,7 +2084,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
 
 
     if args.command == "portfolio-foundation-info":
@@ -2104,7 +2106,7 @@ def main():
         print("It explicitly prohibits live/paper trading, broker integration, deployment, stress tests, and Monte Carlo.")
         print(walk_forward_limitations_text())
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-walk-forward-window-policy":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy, walk_forward_window_policy_to_text
         policy = build_default_walk_forward_window_policy()
@@ -2112,7 +2114,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-anchored-walk-forward-splits":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy
         from usa_signal_bot.backtesting.walk_forward.anchored_split_builder import build_anchored_walk_forward_folds, anchored_folds_to_text
@@ -2127,11 +2129,11 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "run-fold-replays":
         print("Fold replays ran successfully (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "walk-forward-review":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import build_walk_forward_full_review, walk_forward_full_review_to_text
         review = build_walk_forward_full_review()
@@ -2139,7 +2141,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     if args.command == "ensemble-prototype-review":
         review = build_ensemble_prototype_full_review()
@@ -2249,7 +2251,7 @@ def main():
         print("It explicitly prohibits live/paper trading, broker integration, deployment, stress tests, and Monte Carlo.")
         print(walk_forward_limitations_text())
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-walk-forward-window-policy":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy, walk_forward_window_policy_to_text
         policy = build_default_walk_forward_window_policy()
@@ -2257,7 +2259,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-anchored-walk-forward-splits":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy
         from usa_signal_bot.backtesting.walk_forward.anchored_split_builder import build_anchored_walk_forward_folds, anchored_folds_to_text
@@ -2272,11 +2274,11 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "run-fold-replays":
         print("Fold replays ran successfully (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "walk-forward-review":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import build_walk_forward_full_review, walk_forward_full_review_to_text
         review = build_walk_forward_full_review()
@@ -2284,13 +2286,13 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     if args.command == "ml-closure-info":
         print("Phase 145 - Advanced ML Band Final Audit and ML Governance Closure")
         print("This phase is for explainability metadata, final ML governance closure and Advanced ML band final audit.")
         print("It DOES NOT run active paper trading, deployment, live inference, live monitoring, live daemon, or backtests.")
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     if args.command == "walk-forward-info":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import walk_forward_limitations_text
@@ -2298,7 +2300,7 @@ def main():
         print("It explicitly prohibits live/paper trading, broker integration, deployment, stress tests, and Monte Carlo.")
         print(walk_forward_limitations_text())
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-walk-forward-window-policy":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy, walk_forward_window_policy_to_text
         policy = build_default_walk_forward_window_policy()
@@ -2306,7 +2308,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-anchored-walk-forward-splits":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy
         from usa_signal_bot.backtesting.walk_forward.anchored_split_builder import build_anchored_walk_forward_folds, anchored_folds_to_text
@@ -2321,11 +2323,11 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "run-fold-replays":
         print("Fold replays ran successfully (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "walk-forward-review":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import build_walk_forward_full_review, walk_forward_full_review_to_text
         review = build_walk_forward_full_review()
@@ -2333,13 +2335,13 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     elif args.command == "ml-closure-ingest-drift-monitoring":
         print("Ingesting Drift Monitoring output...")
         if getattr(args, "write", False): print("Writing to store...")
         print("Done (Simulated)")
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     if args.command == "walk-forward-info":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import walk_forward_limitations_text
@@ -2347,7 +2349,7 @@ def main():
         print("It explicitly prohibits live/paper trading, broker integration, deployment, stress tests, and Monte Carlo.")
         print(walk_forward_limitations_text())
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-walk-forward-window-policy":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy, walk_forward_window_policy_to_text
         policy = build_default_walk_forward_window_policy()
@@ -2355,7 +2357,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-anchored-walk-forward-splits":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy
         from usa_signal_bot.backtesting.walk_forward.anchored_split_builder import build_anchored_walk_forward_folds, anchored_folds_to_text
@@ -2370,11 +2372,11 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "run-fold-replays":
         print("Fold replays ran successfully (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "walk-forward-review":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import build_walk_forward_full_review, walk_forward_full_review_to_text
         review = build_walk_forward_full_review()
@@ -2382,13 +2384,13 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     elif args.command == "ml-closure-artifact-load":
         print("Loading artifacts...")
         if getattr(args, "write", False): print("Writing to store...")
         print("Done (Simulated)")
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     if args.command == "walk-forward-info":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import walk_forward_limitations_text
@@ -2396,7 +2398,7 @@ def main():
         print("It explicitly prohibits live/paper trading, broker integration, deployment, stress tests, and Monte Carlo.")
         print(walk_forward_limitations_text())
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-walk-forward-window-policy":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy, walk_forward_window_policy_to_text
         policy = build_default_walk_forward_window_policy()
@@ -2404,7 +2406,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-anchored-walk-forward-splits":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy
         from usa_signal_bot.backtesting.walk_forward.anchored_split_builder import build_anchored_walk_forward_folds, anchored_folds_to_text
@@ -2419,11 +2421,11 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "run-fold-replays":
         print("Fold replays ran successfully (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "walk-forward-review":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import build_walk_forward_full_review, walk_forward_full_review_to_text
         review = build_walk_forward_full_review()
@@ -2431,13 +2433,13 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     elif args.command == "resolve-explainability-inputs":
         print("Resolving explainability inputs...")
         if getattr(args, "write", False): print("Writing to store...")
         print("Done (Simulated)")
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     if args.command == "walk-forward-info":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import walk_forward_limitations_text
@@ -2445,7 +2447,7 @@ def main():
         print("It explicitly prohibits live/paper trading, broker integration, deployment, stress tests, and Monte Carlo.")
         print(walk_forward_limitations_text())
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-walk-forward-window-policy":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy, walk_forward_window_policy_to_text
         policy = build_default_walk_forward_window_policy()
@@ -2453,7 +2455,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-anchored-walk-forward-splits":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy
         from usa_signal_bot.backtesting.walk_forward.anchored_split_builder import build_anchored_walk_forward_folds, anchored_folds_to_text
@@ -2468,11 +2470,11 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "run-fold-replays":
         print("Fold replays ran successfully (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "walk-forward-review":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import build_walk_forward_full_review, walk_forward_full_review_to_text
         review = build_walk_forward_full_review()
@@ -2480,13 +2482,13 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     elif args.command == "build-feature-attribution-proxy":
         print("Building feature attribution proxies... Note: These are NOT trade signals.")
         if getattr(args, "write", False): print("Writing to store...")
         print("Done (Simulated)")
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     if args.command == "walk-forward-info":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import walk_forward_limitations_text
@@ -2494,7 +2496,7 @@ def main():
         print("It explicitly prohibits live/paper trading, broker integration, deployment, stress tests, and Monte Carlo.")
         print(walk_forward_limitations_text())
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-walk-forward-window-policy":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy, walk_forward_window_policy_to_text
         policy = build_default_walk_forward_window_policy()
@@ -2502,7 +2504,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-anchored-walk-forward-splits":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy
         from usa_signal_bot.backtesting.walk_forward.anchored_split_builder import build_anchored_walk_forward_folds, anchored_folds_to_text
@@ -2517,11 +2519,11 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "run-fold-replays":
         print("Fold replays ran successfully (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "walk-forward-review":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import build_walk_forward_full_review, walk_forward_full_review_to_text
         review = build_walk_forward_full_review()
@@ -2529,13 +2531,13 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     elif args.command == "build-factor-contribution-summary":
         print("Building factor contribution summaries... Note: These are NOT portfolio weights or allocations.")
         if getattr(args, "write", False): print("Writing to store...")
         print("Done (Simulated)")
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     if args.command == "walk-forward-info":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import walk_forward_limitations_text
@@ -2543,7 +2545,7 @@ def main():
         print("It explicitly prohibits live/paper trading, broker integration, deployment, stress tests, and Monte Carlo.")
         print(walk_forward_limitations_text())
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-walk-forward-window-policy":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy, walk_forward_window_policy_to_text
         policy = build_default_walk_forward_window_policy()
@@ -2551,7 +2553,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-anchored-walk-forward-splits":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy
         from usa_signal_bot.backtesting.walk_forward.anchored_split_builder import build_anchored_walk_forward_folds, anchored_folds_to_text
@@ -2566,11 +2568,11 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "run-fold-replays":
         print("Fold replays ran successfully (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "walk-forward-review":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import build_walk_forward_full_review, walk_forward_full_review_to_text
         review = build_walk_forward_full_review()
@@ -2578,13 +2580,13 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     elif args.command == "build-model-behavior-explanation":
         print("Building model behavior explanations...")
         if getattr(args, "write", False): print("Writing to store...")
         print("Done (Simulated)")
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     if args.command == "walk-forward-info":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import walk_forward_limitations_text
@@ -2592,7 +2594,7 @@ def main():
         print("It explicitly prohibits live/paper trading, broker integration, deployment, stress tests, and Monte Carlo.")
         print(walk_forward_limitations_text())
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-walk-forward-window-policy":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy, walk_forward_window_policy_to_text
         policy = build_default_walk_forward_window_policy()
@@ -2600,7 +2602,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-anchored-walk-forward-splits":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy
         from usa_signal_bot.backtesting.walk_forward.anchored_split_builder import build_anchored_walk_forward_folds, anchored_folds_to_text
@@ -2615,11 +2617,11 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "run-fold-replays":
         print("Fold replays ran successfully (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "walk-forward-review":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import build_walk_forward_full_review, walk_forward_full_review_to_text
         review = build_walk_forward_full_review()
@@ -2627,13 +2629,13 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     elif args.command == "build-regime-aware-explanation":
         print("Building regime aware explanations...")
         if getattr(args, "write", False): print("Writing to store...")
         print("Done (Simulated)")
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     if args.command == "walk-forward-info":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import walk_forward_limitations_text
@@ -2641,7 +2643,7 @@ def main():
         print("It explicitly prohibits live/paper trading, broker integration, deployment, stress tests, and Monte Carlo.")
         print(walk_forward_limitations_text())
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-walk-forward-window-policy":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy, walk_forward_window_policy_to_text
         policy = build_default_walk_forward_window_policy()
@@ -2649,7 +2651,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-anchored-walk-forward-splits":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy
         from usa_signal_bot.backtesting.walk_forward.anchored_split_builder import build_anchored_walk_forward_folds, anchored_folds_to_text
@@ -2664,11 +2666,11 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "run-fold-replays":
         print("Fold replays ran successfully (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "walk-forward-review":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import build_walk_forward_full_review, walk_forward_full_review_to_text
         review = build_walk_forward_full_review()
@@ -2676,13 +2678,13 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     elif args.command == "build-calibration-aware-explanation":
         print("Building calibration aware explanations...")
         if getattr(args, "write", False): print("Writing to store...")
         print("Done (Simulated)")
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     if args.command == "walk-forward-info":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import walk_forward_limitations_text
@@ -2690,7 +2692,7 @@ def main():
         print("It explicitly prohibits live/paper trading, broker integration, deployment, stress tests, and Monte Carlo.")
         print(walk_forward_limitations_text())
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-walk-forward-window-policy":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy, walk_forward_window_policy_to_text
         policy = build_default_walk_forward_window_policy()
@@ -2698,7 +2700,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-anchored-walk-forward-splits":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy
         from usa_signal_bot.backtesting.walk_forward.anchored_split_builder import build_anchored_walk_forward_folds, anchored_folds_to_text
@@ -2713,11 +2715,11 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "run-fold-replays":
         print("Fold replays ran successfully (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "walk-forward-review":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import build_walk_forward_full_review, walk_forward_full_review_to_text
         review = build_walk_forward_full_review()
@@ -2725,13 +2727,13 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     elif args.command == "build-ensemble-explanation":
         print("Building ensemble explanations...")
         if getattr(args, "write", False): print("Writing to store...")
         print("Done (Simulated)")
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     if args.command == "walk-forward-info":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import walk_forward_limitations_text
@@ -2739,7 +2741,7 @@ def main():
         print("It explicitly prohibits live/paper trading, broker integration, deployment, stress tests, and Monte Carlo.")
         print(walk_forward_limitations_text())
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-walk-forward-window-policy":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy, walk_forward_window_policy_to_text
         policy = build_default_walk_forward_window_policy()
@@ -2747,7 +2749,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-anchored-walk-forward-splits":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy
         from usa_signal_bot.backtesting.walk_forward.anchored_split_builder import build_anchored_walk_forward_folds, anchored_folds_to_text
@@ -2762,11 +2764,11 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "run-fold-replays":
         print("Fold replays ran successfully (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "walk-forward-review":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import build_walk_forward_full_review, walk_forward_full_review_to_text
         review = build_walk_forward_full_review()
@@ -2774,13 +2776,13 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     elif args.command == "build-explainability-report":
         print("Building explainability report...")
         if getattr(args, "write", False): print("Writing to store...")
         print("Done (Simulated)")
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     if args.command == "walk-forward-info":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import walk_forward_limitations_text
@@ -2788,7 +2790,7 @@ def main():
         print("It explicitly prohibits live/paper trading, broker integration, deployment, stress tests, and Monte Carlo.")
         print(walk_forward_limitations_text())
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-walk-forward-window-policy":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy, walk_forward_window_policy_to_text
         policy = build_default_walk_forward_window_policy()
@@ -2796,7 +2798,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-anchored-walk-forward-splits":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy
         from usa_signal_bot.backtesting.walk_forward.anchored_split_builder import build_anchored_walk_forward_folds, anchored_folds_to_text
@@ -2811,11 +2813,11 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "run-fold-replays":
         print("Fold replays ran successfully (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "walk-forward-review":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import build_walk_forward_full_review, walk_forward_full_review_to_text
         review = build_walk_forward_full_review()
@@ -2823,13 +2825,13 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     elif args.command == "build-advanced-ml-artifact-lineage":
         print("Building advanced ML artifact lineage...")
         if getattr(args, "write", False): print("Writing to store...")
         print("Done (Simulated)")
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     if args.command == "walk-forward-info":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import walk_forward_limitations_text
@@ -2837,7 +2839,7 @@ def main():
         print("It explicitly prohibits live/paper trading, broker integration, deployment, stress tests, and Monte Carlo.")
         print(walk_forward_limitations_text())
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-walk-forward-window-policy":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy, walk_forward_window_policy_to_text
         policy = build_default_walk_forward_window_policy()
@@ -2845,7 +2847,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-anchored-walk-forward-splits":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy
         from usa_signal_bot.backtesting.walk_forward.anchored_split_builder import build_anchored_walk_forward_folds, anchored_folds_to_text
@@ -2860,11 +2862,11 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "run-fold-replays":
         print("Fold replays ran successfully (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "walk-forward-review":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import build_walk_forward_full_review, walk_forward_full_review_to_text
         review = build_walk_forward_full_review()
@@ -2872,13 +2874,13 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     elif args.command == "build-ml-governance-closure":
         print("Building ML governance closure... Note: This does NOT produce strategy activation.")
         if getattr(args, "write", False): print("Writing to store...")
         print("Done (Simulated)")
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     if args.command == "walk-forward-info":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import walk_forward_limitations_text
@@ -2886,7 +2888,7 @@ def main():
         print("It explicitly prohibits live/paper trading, broker integration, deployment, stress tests, and Monte Carlo.")
         print(walk_forward_limitations_text())
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-walk-forward-window-policy":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy, walk_forward_window_policy_to_text
         policy = build_default_walk_forward_window_policy()
@@ -2894,7 +2896,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-anchored-walk-forward-splits":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy
         from usa_signal_bot.backtesting.walk_forward.anchored_split_builder import build_anchored_walk_forward_folds, anchored_folds_to_text
@@ -2909,11 +2911,11 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "run-fold-replays":
         print("Fold replays ran successfully (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "walk-forward-review":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import build_walk_forward_full_review, walk_forward_full_review_to_text
         review = build_walk_forward_full_review()
@@ -2921,13 +2923,13 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     elif args.command == "build-advanced-ml-final-audit":
         print("Building advanced ML final audit...")
         if getattr(args, "write", False): print("Writing to store...")
         print("Done (Simulated)")
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     if args.command == "walk-forward-info":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import walk_forward_limitations_text
@@ -2935,7 +2937,7 @@ def main():
         print("It explicitly prohibits live/paper trading, broker integration, deployment, stress tests, and Monte Carlo.")
         print(walk_forward_limitations_text())
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-walk-forward-window-policy":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy, walk_forward_window_policy_to_text
         policy = build_default_walk_forward_window_policy()
@@ -2943,7 +2945,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-anchored-walk-forward-splits":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy
         from usa_signal_bot.backtesting.walk_forward.anchored_split_builder import build_anchored_walk_forward_folds, anchored_folds_to_text
@@ -2958,11 +2960,11 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "run-fold-replays":
         print("Fold replays ran successfully (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "walk-forward-review":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import build_walk_forward_full_review, walk_forward_full_review_to_text
         review = build_walk_forward_full_review()
@@ -2970,13 +2972,13 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     elif args.command == "validate-non-activation-ml-closure-boundary":
         print("Validating non-activation ML closure boundary...")
         if getattr(args, "write", False): print("Writing to store...")
         print("Done (Simulated)")
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     if args.command == "walk-forward-info":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import walk_forward_limitations_text
@@ -2984,7 +2986,7 @@ def main():
         print("It explicitly prohibits live/paper trading, broker integration, deployment, stress tests, and Monte Carlo.")
         print(walk_forward_limitations_text())
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-walk-forward-window-policy":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy, walk_forward_window_policy_to_text
         policy = build_default_walk_forward_window_policy()
@@ -2992,7 +2994,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-anchored-walk-forward-splits":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy
         from usa_signal_bot.backtesting.walk_forward.anchored_split_builder import build_anchored_walk_forward_folds, anchored_folds_to_text
@@ -3007,11 +3009,11 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "run-fold-replays":
         print("Fold replays ran successfully (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "walk-forward-review":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import build_walk_forward_full_review, walk_forward_full_review_to_text
         review = build_walk_forward_full_review()
@@ -3019,13 +3021,13 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     elif args.command == "build-final-ml-model-card-closure":
         print("Building final ML model card closure...")
         if getattr(args, "write", False): print("Writing to store...")
         print("Done (Simulated)")
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     if args.command == "walk-forward-info":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import walk_forward_limitations_text
@@ -3033,7 +3035,7 @@ def main():
         print("It explicitly prohibits live/paper trading, broker integration, deployment, stress tests, and Monte Carlo.")
         print(walk_forward_limitations_text())
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-walk-forward-window-policy":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy, walk_forward_window_policy_to_text
         policy = build_default_walk_forward_window_policy()
@@ -3041,7 +3043,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-anchored-walk-forward-splits":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy
         from usa_signal_bot.backtesting.walk_forward.anchored_split_builder import build_anchored_walk_forward_folds, anchored_folds_to_text
@@ -3056,11 +3058,11 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "run-fold-replays":
         print("Fold replays ran successfully (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "walk-forward-review":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import build_walk_forward_full_review, walk_forward_full_review_to_text
         review = build_walk_forward_full_review()
@@ -3068,13 +3070,13 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     elif args.command == "advanced-ml-acceptance-gate":
         print("Running advanced ML acceptance gate... Note: This DOES NOT start live inference, live monitoring, backtest, or deployment.")
         if getattr(args, "write", False): print("Writing to store...")
         print("Done (Simulated)")
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     if args.command == "walk-forward-info":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import walk_forward_limitations_text
@@ -3082,7 +3084,7 @@ def main():
         print("It explicitly prohibits live/paper trading, broker integration, deployment, stress tests, and Monte Carlo.")
         print(walk_forward_limitations_text())
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-walk-forward-window-policy":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy, walk_forward_window_policy_to_text
         policy = build_default_walk_forward_window_policy()
@@ -3090,7 +3092,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-anchored-walk-forward-splits":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy
         from usa_signal_bot.backtesting.walk_forward.anchored_split_builder import build_anchored_walk_forward_folds, anchored_folds_to_text
@@ -3105,11 +3107,11 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "run-fold-replays":
         print("Fold replays ran successfully (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "walk-forward-review":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import build_walk_forward_full_review, walk_forward_full_review_to_text
         review = build_walk_forward_full_review()
@@ -3117,12 +3119,12 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     elif args.command == "ml-closure-schema-check":
         print("Checking ML closure schema...")
         print("Done (Simulated)")
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     if args.command == "walk-forward-info":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import walk_forward_limitations_text
@@ -3130,7 +3132,7 @@ def main():
         print("It explicitly prohibits live/paper trading, broker integration, deployment, stress tests, and Monte Carlo.")
         print(walk_forward_limitations_text())
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-walk-forward-window-policy":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy, walk_forward_window_policy_to_text
         policy = build_default_walk_forward_window_policy()
@@ -3138,7 +3140,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-anchored-walk-forward-splits":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy
         from usa_signal_bot.backtesting.walk_forward.anchored_split_builder import build_anchored_walk_forward_folds, anchored_folds_to_text
@@ -3153,11 +3155,11 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "run-fold-replays":
         print("Fold replays ran successfully (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "walk-forward-review":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import build_walk_forward_full_review, walk_forward_full_review_to_text
         review = build_walk_forward_full_review()
@@ -3165,12 +3167,12 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     elif args.command == "ml-closure-safety-check":
         print("Checking ML closure safety...")
         print("Done (Simulated)")
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     if args.command == "walk-forward-info":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import walk_forward_limitations_text
@@ -3178,7 +3180,7 @@ def main():
         print("It explicitly prohibits live/paper trading, broker integration, deployment, stress tests, and Monte Carlo.")
         print(walk_forward_limitations_text())
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-walk-forward-window-policy":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy, walk_forward_window_policy_to_text
         policy = build_default_walk_forward_window_policy()
@@ -3186,7 +3188,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-anchored-walk-forward-splits":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy
         from usa_signal_bot.backtesting.walk_forward.anchored_split_builder import build_anchored_walk_forward_folds, anchored_folds_to_text
@@ -3201,11 +3203,11 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "run-fold-replays":
         print("Fold replays ran successfully (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "walk-forward-review":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import build_walk_forward_full_review, walk_forward_full_review_to_text
         review = build_walk_forward_full_review()
@@ -3213,13 +3215,13 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     elif args.command == "ml-closure-context":
         print("Building ML closure context...")
         if getattr(args, "write", False): print("Writing to store...")
         print("Done (Simulated)")
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     if args.command == "walk-forward-info":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import walk_forward_limitations_text
@@ -3227,7 +3229,7 @@ def main():
         print("It explicitly prohibits live/paper trading, broker integration, deployment, stress tests, and Monte Carlo.")
         print(walk_forward_limitations_text())
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-walk-forward-window-policy":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy, walk_forward_window_policy_to_text
         policy = build_default_walk_forward_window_policy()
@@ -3235,7 +3237,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-anchored-walk-forward-splits":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy
         from usa_signal_bot.backtesting.walk_forward.anchored_split_builder import build_anchored_walk_forward_folds, anchored_folds_to_text
@@ -3250,11 +3252,11 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "run-fold-replays":
         print("Fold replays ran successfully (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "walk-forward-review":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import build_walk_forward_full_review, walk_forward_full_review_to_text
         review = build_walk_forward_full_review()
@@ -3262,13 +3264,13 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     elif args.command == "ml-closure-review":
         print("Building ML closure review...")
         if getattr(args, "write", False): print("Writing to store...")
         print("Done (Simulated)")
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     if args.command == "walk-forward-info":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import walk_forward_limitations_text
@@ -3276,7 +3278,7 @@ def main():
         print("It explicitly prohibits live/paper trading, broker integration, deployment, stress tests, and Monte Carlo.")
         print(walk_forward_limitations_text())
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-walk-forward-window-policy":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy, walk_forward_window_policy_to_text
         policy = build_default_walk_forward_window_policy()
@@ -3284,7 +3286,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-anchored-walk-forward-splits":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy
         from usa_signal_bot.backtesting.walk_forward.anchored_split_builder import build_anchored_walk_forward_folds, anchored_folds_to_text
@@ -3299,11 +3301,11 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "run-fold-replays":
         print("Fold replays ran successfully (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "walk-forward-review":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import build_walk_forward_full_review, walk_forward_full_review_to_text
         review = build_walk_forward_full_review()
@@ -3311,12 +3313,12 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     elif args.command == "ml-closure-summary":
         print("Showing ML closure summary...")
         print("Done (Simulated)")
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     if args.command == "walk-forward-info":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import walk_forward_limitations_text
@@ -3324,7 +3326,7 @@ def main():
         print("It explicitly prohibits live/paper trading, broker integration, deployment, stress tests, and Monte Carlo.")
         print(walk_forward_limitations_text())
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-walk-forward-window-policy":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy, walk_forward_window_policy_to_text
         policy = build_default_walk_forward_window_policy()
@@ -3332,7 +3334,7 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "build-anchored-walk-forward-splits":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_window_policy import build_default_walk_forward_window_policy
         from usa_signal_bot.backtesting.walk_forward.anchored_split_builder import build_anchored_walk_forward_folds, anchored_folds_to_text
@@ -3347,11 +3349,11 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "run-fold-replays":
         print("Fold replays ran successfully (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
     elif args.command == "walk-forward-review":
         from usa_signal_bot.backtesting.walk_forward.walk_forward_report import build_walk_forward_full_review, walk_forward_full_review_to_text
         review = build_walk_forward_full_review()
@@ -3359,12 +3361,12 @@ def main():
         if getattr(args, "write", False):
             print("Written (mock).")
         import sys
-        sys.exit(0)
+        import sys; sys.exit(0)
 
     elif args.command == "ml-closure-validate":
         print("Validating ML closure...")
         print("Done (Simulated)")
-        sys.exit(0)
+        import sys; sys.exit(0)
 
 
 

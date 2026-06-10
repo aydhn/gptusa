@@ -424,7 +424,7 @@ class AdvancedAcceptanceStoreError(AdvancedAcceptanceError): pass
 class AdvancedAcceptanceValidationError(AdvancedAcceptanceError): pass
 class AdvancedAcceptanceReportingError(AdvancedAcceptanceError): pass
 
-class FinalClosureError(UsaSignalBotError): pass
+class FinalClosureError(USASignalBotError): pass
 class Phase160HandoffIngestionError(FinalClosureError): pass
 class Phase160HandoffArtifactLoaderError(FinalClosureError): pass
 class FinalInputResolverError(FinalClosureError): pass

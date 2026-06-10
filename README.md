@@ -1,14 +1,13 @@
 # USA Signal Bot
 
-Current Phase: 137 (ML Dataset Assembly, Train-Validation-Test Split Design and Leakage Audit)
+Current Phase: 160 (Final System Audit and Project Closure)
 
-This phase establishes the foundational ML datasets for future experimentation.
-It operates strictly as a local, non-executing metadata and dataset assembly layer.
-It explicitly forbids:
-- ML Model Training
-- ML Model Predictions
-- Any active broker connections
-- Real Telegram sends
-- Any web scraping or paid APIs
+This repo is structured to run as a read-only metadata generation system to verify compliance without active execution.
 
-Run tests: `python -m pytest tests/test_phase137*`
+## Windows Startup
+A robust Windows startup orchestrator is included. See [RUN_WINDOWS.md](RUN_WINDOWS.md) for details on how to use `start_windows.bat`.
+
+## Quick Start
+```cmd
+start_windows.bat
+```
