@@ -48,13 +48,30 @@ def build_attribution_scorecard(
     risk = risk_contributions or []
     sig = signal_contributions or []
 
-    total_gross = sum(e.gross_pnl_usd for e in events if e.gross_pnl_usd is not None)
-    total_net = sum(e.net_pnl_usd for e in events if e.net_pnl_usd is not None)
-    total_cost = sum(e.total_cost_usd for e in events if e.total_cost_usd is not None)
+    total_gross = 0.0
+    total_net = 0.0
+    total_cost = 0.0
 
-    pos_count = sum(1 for c in perf if c.net_pnl_usd > 0)
-    neg_count = sum(1 for c in perf if c.net_pnl_usd < 0)
-    detrimental = sum(1 for s in sig if s.net_pnl_usd < 0)
+    for e in events:
+        if e.gross_pnl_usd is not None:
+            total_gross += e.gross_pnl_usd
+        if e.net_pnl_usd is not None:
+            total_net += e.net_pnl_usd
+        if e.total_cost_usd is not None:
+            total_cost += e.total_cost_usd
+
+    pos_count = 0
+    neg_count = 0
+    for c in perf:
+        if c.net_pnl_usd > 0:
+            pos_count += 1
+        elif c.net_pnl_usd < 0:
+            neg_count += 1
+
+    detrimental = 0
+    for s in sig:
+        if s.net_pnl_usd < 0:
+            detrimental += 1
     high_risk = len(risk) # Mock
 
     from usa_signal_bot.attribution.pnl_attribution import classify_attribution_quality
