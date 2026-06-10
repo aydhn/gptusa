@@ -1,5 +1,6 @@
 import datetime
 from typing import List, Dict, Any, Optional
+from collections import defaultdict
 
 from usa_signal_bot.core.enums import SourceTrustLevel, ProviderQualityRiskFlag, DataQualityComponent
 from usa_signal_bot.provider_quality.phase109_models import SourceTrustProfile, ProviderDataQualityScore, create_source_trust_profile_id
@@ -31,26 +32,20 @@ def build_source_trust_profile(provider_name: str, provider_kind: str = "MARKET_
 
     trust_score = trust_score_from_quality_scores(quality_scores)
     blocked = any(s.blocked for s in quality_scores)
-
-    schema_scores = []
-    fresh_scores = []
-    agree_scores = []
-    cache_scores = []
-    safety_scores = []
-
+    scores_dict = defaultdict(list)
     for qs in quality_scores:
         for c in qs.components:
-            if c.component == DataQualityComponent.SCHEMA_VALIDITY: schema_scores.append(c.score)
-            elif c.component == DataQualityComponent.FRESHNESS: fresh_scores.append(c.score)
-            elif c.component == DataQualityComponent.SOURCE_AGREEMENT: agree_scores.append(c.score)
-            elif c.component == DataQualityComponent.CACHE_RELIABILITY: cache_scores.append(c.score)
-            elif c.component == DataQualityComponent.SAFETY_COMPLIANCE: safety_scores.append(c.score)
+            scores_dict[c.component].append(c.score)
 
-    schema_rel = sum(schema_scores)/len(schema_scores) if schema_scores else None
-    fresh_rel = sum(fresh_scores)/len(fresh_scores) if fresh_scores else None
-    agree_rel = sum(agree_scores)/len(agree_scores) if agree_scores else None
-    cache_rel = sum(cache_scores)/len(cache_scores) if cache_scores else None
-    safety_rel = sum(safety_scores)/len(safety_scores) if safety_scores else None
+    def _avg(scores_list: List[float]) -> Optional[float]:
+        return sum(scores_list) / len(scores_list) if scores_list else None
+
+    schema_rel = _avg(scores_dict.get(DataQualityComponent.SCHEMA_VALIDITY, []))
+    fresh_rel = _avg(scores_dict.get(DataQualityComponent.FRESHNESS, []))
+    agree_rel = _avg(scores_dict.get(DataQualityComponent.SOURCE_AGREEMENT, []))
+    cache_rel = _avg(scores_dict.get(DataQualityComponent.CACHE_RELIABILITY, []))
+    safety_rel = _avg(scores_dict.get(DataQualityComponent.SAFETY_COMPLIANCE, []))
+
 
     if safety_rel is not None and safety_rel < 100:
         blocked = True
