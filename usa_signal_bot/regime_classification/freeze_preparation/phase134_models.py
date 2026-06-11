@@ -3,6 +3,7 @@ from typing import Any, Dict, List, Optional
 import uuid
 import datetime
 
+from usa_signal_bot.core.exceptions import Phase134ValidationError
 from usa_signal_bot.core.enums import (
     RegimeResearchFreezeStatus,
     RegimeResearchFreezeDecision,
@@ -16,7 +17,7 @@ from usa_signal_bot.core.enums import (
     ResearchFreezeReadinessRuleKind,
     ResearchFreezeQuality,
     ResearchFreezeRiskFlag,
-    RegimeResearchFreezeReportType
+    RegimeResearchFreezeReportType,
 )
 
 
@@ -413,4 +414,194 @@ def create_regime_research_freeze_context_id() -> str:
 def create_regime_research_freeze_full_review_id() -> str:
     return f"rev_{uuid.uuid4().hex[:12]}"
 
-# TODO: implement _to_dict and validate_* functions
+
+def regime_monitoring_ingestion_result_to_dict(
+    item: RegimeMonitoringIngestionResult,
+) -> dict:
+    from usa_signal_bot.core.serialization import to_dict_clean
+
+    return to_dict_clean(item)
+
+
+def monitoring_validation_rule_to_dict(item: MonitoringValidationRule) -> dict:
+    from usa_signal_bot.core.serialization import to_dict_clean
+
+    return to_dict_clean(item)
+
+
+def monitoring_validation_result_to_dict(item: MonitoringValidationResult) -> dict:
+    from usa_signal_bot.core.serialization import to_dict_clean
+
+    return to_dict_clean(item)
+
+
+def drift_report_section_to_dict(item: DriftReportSection) -> dict:
+    from usa_signal_bot.core.serialization import to_dict_clean
+
+    return to_dict_clean(item)
+
+
+def drift_report_document_to_dict(item: DriftReportDocument) -> dict:
+    from usa_signal_bot.core.serialization import to_dict_clean
+
+    return to_dict_clean(item)
+
+
+def drift_report_qa_rule_result_to_dict(item: DriftReportQaRuleResult) -> dict:
+    from usa_signal_bot.core.serialization import to_dict_clean
+
+    return to_dict_clean(item)
+
+
+def research_freeze_artifact_reference_to_dict(
+    item: ResearchFreezeArtifactReference,
+) -> dict:
+    from usa_signal_bot.core.serialization import to_dict_clean
+
+    return to_dict_clean(item)
+
+
+def research_freeze_package_to_dict(item: ResearchFreezePackage) -> dict:
+    from usa_signal_bot.core.serialization import to_dict_clean
+
+    return to_dict_clean(item)
+
+
+def research_freeze_readiness_rule_to_dict(item: ResearchFreezeReadinessRule) -> dict:
+    from usa_signal_bot.core.serialization import to_dict_clean
+
+    return to_dict_clean(item)
+
+
+def research_freeze_readiness_gate_to_dict(item: ResearchFreezeReadinessGate) -> dict:
+    from usa_signal_bot.core.serialization import to_dict_clean
+
+    return to_dict_clean(item)
+
+
+def regime_research_freeze_context_to_dict(item: RegimeResearchFreezeContext) -> dict:
+    from usa_signal_bot.core.serialization import to_dict_clean
+
+    return to_dict_clean(item)
+
+
+def regime_research_freeze_full_review_to_dict(
+    item: RegimeResearchFreezeFullReview,
+) -> dict:
+    from usa_signal_bot.core.serialization import to_dict_clean
+
+    return to_dict_clean(item)
+
+
+def validate_regime_monitoring_ingestion_result(
+    item: RegimeMonitoringIngestionResult,
+) -> None:
+    if hasattr(item, "research_metadata_only") and not item.research_metadata_only:
+        raise Phase134ValidationError("research_metadata_only must be True")
+    if hasattr(item, "produces_trade_signal") and item.produces_trade_signal:
+        raise Phase134ValidationError("produces_trade_signal must be False")
+    if hasattr(item, "produces_order_decision") and item.produces_order_decision:
+        raise Phase134ValidationError("produces_order_decision must be False")
+
+
+def validate_monitoring_validation_rule(item: MonitoringValidationRule) -> None:
+    if hasattr(item, "research_metadata_only") and not item.research_metadata_only:
+        raise Phase134ValidationError("research_metadata_only must be True")
+    if hasattr(item, "produces_trade_signal") and item.produces_trade_signal:
+        raise Phase134ValidationError("produces_trade_signal must be False")
+    if hasattr(item, "produces_order_decision") and item.produces_order_decision:
+        raise Phase134ValidationError("produces_order_decision must be False")
+
+
+def validate_monitoring_validation_result(item: MonitoringValidationResult) -> None:
+    if hasattr(item, "research_metadata_only") and not item.research_metadata_only:
+        raise Phase134ValidationError("research_metadata_only must be True")
+    if hasattr(item, "produces_trade_signal") and item.produces_trade_signal:
+        raise Phase134ValidationError("produces_trade_signal must be False")
+    if hasattr(item, "produces_order_decision") and item.produces_order_decision:
+        raise Phase134ValidationError("produces_order_decision must be False")
+
+
+def validate_drift_report_section(item: DriftReportSection) -> None:
+    if hasattr(item, "research_metadata_only") and not item.research_metadata_only:
+        raise Phase134ValidationError("research_metadata_only must be True")
+    if hasattr(item, "produces_trade_signal") and item.produces_trade_signal:
+        raise Phase134ValidationError("produces_trade_signal must be False")
+    if hasattr(item, "produces_order_decision") and item.produces_order_decision:
+        raise Phase134ValidationError("produces_order_decision must be False")
+
+
+def validate_drift_report_document(item: DriftReportDocument) -> None:
+    if hasattr(item, "research_metadata_only") and not item.research_metadata_only:
+        raise Phase134ValidationError("research_metadata_only must be True")
+    if hasattr(item, "produces_trade_signal") and item.produces_trade_signal:
+        raise Phase134ValidationError("produces_trade_signal must be False")
+    if hasattr(item, "produces_order_decision") and item.produces_order_decision:
+        raise Phase134ValidationError("produces_order_decision must be False")
+
+
+def validate_drift_report_qa_rule_result(item: DriftReportQaRuleResult) -> None:
+    if hasattr(item, "research_metadata_only") and not item.research_metadata_only:
+        raise Phase134ValidationError("research_metadata_only must be True")
+    if hasattr(item, "produces_trade_signal") and item.produces_trade_signal:
+        raise Phase134ValidationError("produces_trade_signal must be False")
+    if hasattr(item, "produces_order_decision") and item.produces_order_decision:
+        raise Phase134ValidationError("produces_order_decision must be False")
+
+
+def validate_research_freeze_artifact_reference(
+    item: ResearchFreezeArtifactReference,
+) -> None:
+    if hasattr(item, "research_metadata_only") and not item.research_metadata_only:
+        raise Phase134ValidationError("research_metadata_only must be True")
+    if hasattr(item, "produces_trade_signal") and item.produces_trade_signal:
+        raise Phase134ValidationError("produces_trade_signal must be False")
+    if hasattr(item, "produces_order_decision") and item.produces_order_decision:
+        raise Phase134ValidationError("produces_order_decision must be False")
+
+
+def validate_research_freeze_package(item: ResearchFreezePackage) -> None:
+    if hasattr(item, "research_metadata_only") and not item.research_metadata_only:
+        raise Phase134ValidationError("research_metadata_only must be True")
+    if hasattr(item, "produces_trade_signal") and item.produces_trade_signal:
+        raise Phase134ValidationError("produces_trade_signal must be False")
+    if hasattr(item, "produces_order_decision") and item.produces_order_decision:
+        raise Phase134ValidationError("produces_order_decision must be False")
+
+
+def validate_research_freeze_readiness_rule(item: ResearchFreezeReadinessRule) -> None:
+    if hasattr(item, "research_metadata_only") and not item.research_metadata_only:
+        raise Phase134ValidationError("research_metadata_only must be True")
+    if hasattr(item, "produces_trade_signal") and item.produces_trade_signal:
+        raise Phase134ValidationError("produces_trade_signal must be False")
+    if hasattr(item, "produces_order_decision") and item.produces_order_decision:
+        raise Phase134ValidationError("produces_order_decision must be False")
+
+
+def validate_research_freeze_readiness_gate(item: ResearchFreezeReadinessGate) -> None:
+    if hasattr(item, "research_metadata_only") and not item.research_metadata_only:
+        raise Phase134ValidationError("research_metadata_only must be True")
+    if hasattr(item, "produces_trade_signal") and item.produces_trade_signal:
+        raise Phase134ValidationError("produces_trade_signal must be False")
+    if hasattr(item, "produces_order_decision") and item.produces_order_decision:
+        raise Phase134ValidationError("produces_order_decision must be False")
+
+
+def validate_regime_research_freeze_context(item: RegimeResearchFreezeContext) -> None:
+    if hasattr(item, "research_metadata_only") and not item.research_metadata_only:
+        raise Phase134ValidationError("research_metadata_only must be True")
+    if hasattr(item, "produces_trade_signal") and item.produces_trade_signal:
+        raise Phase134ValidationError("produces_trade_signal must be False")
+    if hasattr(item, "produces_order_decision") and item.produces_order_decision:
+        raise Phase134ValidationError("produces_order_decision must be False")
+
+
+def validate_regime_research_freeze_full_review(
+    item: RegimeResearchFreezeFullReview,
+) -> None:
+    if hasattr(item, "research_metadata_only") and not item.research_metadata_only:
+        raise Phase134ValidationError("research_metadata_only must be True")
+    if hasattr(item, "produces_trade_signal") and item.produces_trade_signal:
+        raise Phase134ValidationError("produces_trade_signal must be False")
+    if hasattr(item, "produces_order_decision") and item.produces_order_decision:
+        raise Phase134ValidationError("produces_order_decision must be False")
