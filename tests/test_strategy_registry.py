@@ -36,3 +36,14 @@ def test_strategy_registry_unregister():
     assert r.has("trend_following_skeleton")
     r.unregister("trend_following_skeleton")
     assert not r.has("trend_following_skeleton")
+
+from unittest.mock import patch
+
+def test_strategy_registry_validate_all_error():
+    r = StrategyRegistry()
+    r.register(TrendFollowingSkeletonStrategy())
+
+    with patch("usa_signal_bot.strategies.strategy_registry.validate_strategy_metadata") as mock_validate:
+        mock_validate.side_effect = ValueError("Mocked validation error")
+        with pytest.raises(StrategyRegistrationError, match="Validation failed for strategy trend_following_skeleton: Mocked validation error"):
+            r.validate_all()
