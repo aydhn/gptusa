@@ -800,3 +800,7 @@ class ResearchWorkflowStorageError(USASignalBotError):
 
 class ResearchWorkflowIngestionError(USASignalBotError):
     pass
+
+
+class Phase134ValidationError(Exception):
+    pass
