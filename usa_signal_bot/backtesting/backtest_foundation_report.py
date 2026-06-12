@@ -13,9 +13,7 @@ from usa_signal_bot.core.enums import (
     BacktestFoundationReportType
 )
 
-def build_backtest_foundation_context() -> BacktestFoundationContext:
-    # Build a stub/empty context. Actual usage will populate this via a workflow.
-    # We satisfy imports to show we build it.
+def _build_foundation_components() -> dict[str, Any]:
     from usa_signal_bot.backtesting.advanced_ml_closure_ingestion import _empty_ingestion_result
     from usa_signal_bot.backtesting.backtest_dataset_contract import build_default_backtest_dataset_contract
     from usa_signal_bot.backtesting.research_input_boundary import build_backtest_research_input_contract
@@ -52,77 +50,93 @@ def build_backtest_foundation_context() -> BacktestFoundationContext:
 
     r_gate = build_backtest_readiness_gate(ingestion, ds_contract, rin_contract, mkt, s_bound)
 
+    return {
+        "ingestion": ingestion,
+        "input_references": inputs,
+        "dataset_contract": ds_contract,
+        "research_input_contract": rin_contract,
+        "event_timeline": timeline,
+        "execution_assumption": exec_asm,
+        "transaction_cost_model": tx_cost,
+        "commission_model": comm,
+        "spread_model": spread,
+        "slippage_model": slip,
+        "liquidity_guard": liq,
+        "partial_fill_assumption": pfill,
+        "execution_latency_assumption": lat,
+        "market_simulation_contract": mkt,
+        "safety_boundary": s_bound,
+        "readiness_gate": r_gate,
+    }
+
+def _get_default_foundation_flags() -> dict[str, Any]:
+    return {
+        "advanced_ml_closure_ingested": False,
+        "artifacts_loaded": False,
+        "inputs_resolved": False,
+        "dataset_contract_built": False,
+        "research_input_boundary_built": False,
+        "event_timeline_built": False,
+        "execution_assumptions_built": False,
+        "transaction_cost_model_built": False,
+        "commission_model_built": False,
+        "spread_model_built": False,
+        "slippage_model_built": False,
+        "liquidity_guard_built": False,
+        "partial_fill_assumptions_built": False,
+        "execution_latency_assumptions_built": False,
+        "market_simulation_contract_built": False,
+        "safety_boundary_validated": False,
+        "readiness_gate_built": False,
+        "readiness_gate_passed": False,
+        "ready_for_phase147": False,
+        "research_data_only": True,
+        "offline_backtest_research_only": True,
+        "live_trading_enabled": False,
+        "paper_trading_enabled": False,
+        "broker_execution_enabled": False,
+        "order_creation_enabled": False,
+        "paper_state_mutation_enabled": False,
+        "telegram_real_send_enabled": False,
+        "strategy_activation_allowed": False,
+        "portfolio_allocation_allowed": False,
+        "deployment_allowed": False,
+        "network_used": False,
+        "paid_api_used": False,
+        "scraping_used": False,
+        "html_parsing_used": False,
+        "dashboard_started": False,
+        "daemon_started": False,
+        "scheduler_enabled": False,
+        "full_backtest_run_executed": False,
+        "walk_forward_executed": False,
+        "stress_test_executed": False,
+        "monte_carlo_executed": False,
+        "produces_trade_signal": False,
+        "produces_order_decision": False,
+        "produces_portfolio_weights": False,
+        "investment_advice": False,
+        "warnings": [],
+        "errors": [],
+        "risk_flags": [],
+        "metadata": {},
+    }
+
+def build_backtest_foundation_context() -> BacktestFoundationContext:
+    # Build a stub/empty context. Actual usage will populate this via a workflow.
+    # We satisfy imports to show we build it.
+
+    components = _build_foundation_components()
+    flags = _get_default_foundation_flags()
+
     return BacktestFoundationContext(
         context_id=create_backtest_foundation_context_id(),
         created_at_utc=datetime.now(timezone.utc).isoformat(),
         status=BacktestFoundationStatus.CREATED,
         decision=BacktestFoundationDecision.UNKNOWN,
         source_advanced_ml_closure_review_id=None,
-        ingestion=ingestion,
-        input_references=inputs,
-        dataset_contract=ds_contract,
-        research_input_contract=rin_contract,
-        event_timeline=timeline,
-        execution_assumption=exec_asm,
-        transaction_cost_model=tx_cost,
-        commission_model=comm,
-        spread_model=spread,
-        slippage_model=slip,
-        liquidity_guard=liq,
-        partial_fill_assumption=pfill,
-        execution_latency_assumption=lat,
-        market_simulation_contract=mkt,
-        safety_boundary=s_bound,
-        readiness_gate=r_gate,
-        advanced_ml_closure_ingested=False,
-        artifacts_loaded=False,
-        inputs_resolved=False,
-        dataset_contract_built=False,
-        research_input_boundary_built=False,
-        event_timeline_built=False,
-        execution_assumptions_built=False,
-        transaction_cost_model_built=False,
-        commission_model_built=False,
-        spread_model_built=False,
-        slippage_model_built=False,
-        liquidity_guard_built=False,
-        partial_fill_assumptions_built=False,
-        execution_latency_assumptions_built=False,
-        market_simulation_contract_built=False,
-        safety_boundary_validated=False,
-        readiness_gate_built=False,
-        readiness_gate_passed=False,
-        ready_for_phase147=False,
-        research_data_only=True,
-        offline_backtest_research_only=True,
-        live_trading_enabled=False,
-        paper_trading_enabled=False,
-        broker_execution_enabled=False,
-        order_creation_enabled=False,
-        paper_state_mutation_enabled=False,
-        telegram_real_send_enabled=False,
-        strategy_activation_allowed=False,
-        portfolio_allocation_allowed=False,
-        deployment_allowed=False,
-        network_used=False,
-        paid_api_used=False,
-        scraping_used=False,
-        html_parsing_used=False,
-        dashboard_started=False,
-        daemon_started=False,
-        scheduler_enabled=False,
-        full_backtest_run_executed=False,
-        walk_forward_executed=False,
-        stress_test_executed=False,
-        monte_carlo_executed=False,
-        produces_trade_signal=False,
-        produces_order_decision=False,
-        produces_portfolio_weights=False,
-        investment_advice=False,
-        warnings=[],
-        errors=[],
-        risk_flags=[],
-        metadata={}
+        **components,
+        **flags
     )
 
 def build_backtest_foundation_full_review() -> BacktestFoundationFullReview:
