@@ -805,5 +805,154 @@ class ResearchWorkflowIngestionError(USASignalBotError):
 class Phase134ValidationError(Exception):
     pass
 
+
 class StrategyAdaptationValidationError(Exception):
+    pass
+
+
+class DataValidationError(Exception):
+    pass
+
+
+class DataProviderError(Exception):
+    pass
+
+
+class ActiveUniversePipelineError(Exception):
+    pass
+
+
+class SymbolValidationError(Exception):
+    pass
+
+
+class UniverseLoadError(Exception):
+    pass
+
+
+class UniverseValidationError(Exception):
+    pass
+
+
+class UniverseSourceError(Exception):
+    pass
+
+
+class UniverseImportError(Exception):
+    pass
+
+
+class UniverseReconciliationError(Exception):
+    pass
+
+
+class UniverseSnapshotError(Exception):
+    pass
+
+
+class UniverseCatalogError(Exception):
+    pass
+
+
+class UniverseExportError(Exception):
+    pass
+
+
+class ActiveUniverseResolutionError(Exception):
+    pass
+
+
+class UniverseDataRunError(Exception):
+    pass
+
+
+class UniverseReadinessGateError(Exception):
+    pass
+
+
+class ProviderCapabilityError(Exception):
+    pass
+
+
+class ProviderPolicyError(Exception):
+    pass
+
+
+class WebScrapingForbiddenError(Exception):
+    pass
+
+
+class BrokerRoutingForbiddenError(Exception):
+    pass
+
+
+class ForbiddenProviderError(Exception):
+    pass
+
+
+class DataProviderStateError(Exception):
+    pass
+
+
+class ProviderRequestError(Exception):
+    pass
+
+
+class ProviderParsingError(Exception):
+    pass
+
+
+class ProviderConnectionError(Exception):
+    pass
+
+
+class ProviderRateLimitError(Exception):
+    pass
+
+
+class ProviderAuthenticationError(Exception):
+    pass
+
+
+class ProviderRegistrationError(Exception):
+    pass
+
+
+class ProviderNotFoundError(Exception):
+    pass
+
+
+class DataNormalizationError(Exception):
+    pass
+
+
+class UnsupportedOperationError(Exception):
+    pass
+
+
+class StorageReadError(Exception):
+    pass
+
+
+class StorageWriteError(Exception):
+    pass
+
+
+class DataStorageError(Exception):
+    pass
+
+
+class ValidationError(Exception):
+    pass
+
+
+class StorageError(Exception):
+    pass
+
+
+class StoragePathError(Exception):
+    pass
+
+
+class LoggingSetupError(Exception):
     pass
