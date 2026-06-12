@@ -1,12 +1,18 @@
 """Signal scoring models and calculations."""
 
+import copy
 from dataclasses import dataclass, field
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Tuple
 
-from usa_signal_bot.core.enums import SignalScoreComponent, SignalConfidenceBucket, SignalRiskFlag
+from usa_signal_bot.core.enums import (
+    SignalScoreComponent,
+    SignalConfidenceBucket,
+    SignalRiskFlag,
+)
 from usa_signal_bot.core.config_schema import SignalScoringConfigSchema
 from usa_signal_bot.strategies.signal_contract import StrategySignal
 from usa_signal_bot.core.exceptions import SignalScoringError
+
 
 @dataclass
 class SignalScoreBreakdown:
@@ -19,6 +25,7 @@ class SignalScoreBreakdown:
     confidence_bucket: SignalConfidenceBucket
     notes: List[str] = field(default_factory=list)
 
+
 @dataclass
 class SignalScoringResult:
     original_signal: StrategySignal
@@ -28,8 +35,10 @@ class SignalScoringResult:
     warnings: List[str] = field(default_factory=list)
     errors: List[str] = field(default_factory=list)
 
+
 def default_signal_scoring_config() -> SignalScoringConfigSchema:
     return SignalScoringConfigSchema()
+
 
 def validate_signal_scoring_config(config: SignalScoringConfigSchema) -> None:
     if config.min_score < 0:
@@ -41,12 +50,23 @@ def validate_signal_scoring_config(config: SignalScoringConfigSchema) -> None:
     if not (0 <= config.base_score <= 100):
         raise SignalScoringError("base_score must be between 0 and 100")
     if not (0 <= config.max_allowed_score_without_backtest <= 100):
-        raise SignalScoringError("max_allowed_score_without_backtest must be between 0 and 100")
-    if config.confidence_weight < 0 or config.reason_quality_weight < 0 or config.feature_snapshot_weight < 0 or config.risk_penalty_weight < 0:
+        raise SignalScoringError(
+            "max_allowed_score_without_backtest must be between 0 and 100"
+        )
+    if (
+        config.confidence_weight < 0
+        or config.reason_quality_weight < 0
+        or config.feature_snapshot_weight < 0
+        or config.risk_penalty_weight < 0
+    ):
         raise SignalScoringError("weights cannot be negative")
 
-def clamp_score(score: float, min_score: float = 0.0, max_score: float = 100.0) -> float:
+
+def clamp_score(
+    score: float, min_score: float = 0.0, max_score: float = 100.0
+) -> float:
     return max(min_score, min(score, max_score))
+
 
 def calculate_reason_quality_score(reasons: List[str]) -> float:
     if not reasons:
@@ -66,11 +86,12 @@ def calculate_reason_quality_score(reasons: List[str]) -> float:
     else:
         return 1.0
 
+
 def calculate_feature_snapshot_score(feature_snapshot: Dict[str, Any]) -> float:
     if not feature_snapshot:
         return 0.0
 
-    keys = [k for k in feature_snapshot.keys() if not k.startswith('_')]
+    keys = [k for k in feature_snapshot.keys() if not k.startswith("_")]
     count = len(keys)
 
     if count == 0:
@@ -84,7 +105,10 @@ def calculate_feature_snapshot_score(feature_snapshot: Dict[str, Any]) -> float:
     else:
         return 1.0
 
-def calculate_risk_penalty(risk_flags: List[SignalRiskFlag], config: Optional[SignalScoringConfigSchema] = None) -> float:
+
+def calculate_risk_penalty(
+    risk_flags: List[SignalRiskFlag], config: Optional[SignalScoringConfigSchema] = None
+) -> float:
     if not risk_flags:
         return 0.0
 
@@ -92,11 +116,149 @@ def calculate_risk_penalty(risk_flags: List[SignalRiskFlag], config: Optional[Si
     penalty_ratio = min(1.0, len(risk_flags) * 0.25)
     return penalty_ratio
 
+
 def calibrate_confidence_from_score(score: float) -> float:
     # A simple linear mapping from 0-100 to 0.0-1.0
     return max(0.0, min(1.0, score / 100.0))
 
-def score_signal(signal: StrategySignal, config: Optional[SignalScoringConfigSchema] = None) -> SignalScoringResult:
+
+def _calculate_base_components(
+    signal: StrategySignal, config: SignalScoringConfigSchema, notes: List[str]
+) -> Dict[str, float]:
+    components = {}
+
+    # 1. Base Score
+    base = config.base_score
+    components[SignalScoreComponent.STRATEGY_BASE.value] = base
+
+    # 2. Reason Quality Score
+    reason_ratio = calculate_reason_quality_score(signal.reasons)
+    reason_score = reason_ratio * config.reason_quality_weight
+    components[SignalScoreComponent.REASON_QUALITY.value] = reason_score
+    if reason_ratio == 0:
+        notes.append("No valid reasons provided.")
+
+    # 3. Feature Snapshot Score
+    feature_ratio = calculate_feature_snapshot_score(signal.feature_snapshot)
+    feature_score = feature_ratio * config.feature_snapshot_weight
+    components[SignalScoreComponent.FEATURE_ALIGNMENT.value] = feature_score
+    if feature_ratio < 0.2:
+        notes.append("Feature snapshot is empty or insufficient.")
+
+    # 4. Confidence Contribution
+    conf_score = signal.confidence * config.confidence_weight
+    components[SignalScoreComponent.CONFIDENCE.value] = conf_score
+
+    return components
+
+
+def _calculate_penalties(
+    signal: StrategySignal, config: SignalScoringConfigSchema, notes: List[str]
+) -> Dict[str, float]:
+    penalties = {}
+
+    # 5. Risk Penalty
+    risk_ratio = calculate_risk_penalty(signal.risk_flags, config)
+    risk_penalty = risk_ratio * config.risk_penalty_weight
+    if risk_penalty > 0:
+        penalties[SignalScoreComponent.RISK_PENALTY.value] = -risk_penalty
+        notes.append(f"Applied risk penalty due to {len(signal.risk_flags)} flags.")
+
+    # 6. Overconfidence Check (Backtest guard)
+    # Without a backtest, confidence > 0.8 is penalized
+    overconfidence_penalty = 0.0
+    if signal.confidence > 0.8:
+        overconfidence_penalty = config.overconfidence_penalty
+        penalties["OVERCONFIDENCE"] = -overconfidence_penalty
+        notes.append("Applied overconfidence penalty (no backtest validation).")
+
+    return penalties
+
+
+def _calculate_total_clamped_score(
+    components: Dict[str, float],
+    penalties: Dict[str, float],
+    bonuses: Dict[str, float],
+    config: SignalScoringConfigSchema,
+    notes: List[str],
+) -> float:
+    # Calculate Total
+    total_raw = (
+        sum(components.values()) + sum(penalties.values()) + sum(bonuses.values())
+    )
+    total_clamped = clamp_score(total_raw, config.min_score, config.max_score)
+
+    # Apply Backtest Guard Limit
+    if total_clamped > config.max_allowed_score_without_backtest:
+        total_clamped = config.max_allowed_score_without_backtest
+        notes.append(
+            f"Score capped at {config.max_allowed_score_without_backtest} (no backtest)."
+        )
+
+    return total_clamped
+
+
+def _determine_confidence_bucket(final_confidence: float) -> SignalConfidenceBucket:
+    if final_confidence >= 0.8:
+        return SignalConfidenceBucket.VERY_HIGH
+    elif final_confidence >= 0.6:
+        return SignalConfidenceBucket.HIGH
+    elif final_confidence >= 0.4:
+        return SignalConfidenceBucket.MODERATE
+    elif final_confidence >= 0.2:
+        return SignalConfidenceBucket.LOW
+    else:
+        return SignalConfidenceBucket.VERY_LOW
+
+
+def _build_scoring_result(
+    signal: StrategySignal,
+    total_clamped: float,
+    components: Dict[str, float],
+    penalties: Dict[str, float],
+    bonuses: Dict[str, float],
+    final_confidence: float,
+    bucket: SignalConfidenceBucket,
+    notes: List[str],
+    accepted: bool,
+    warnings: List[str],
+    errors: List[str],
+) -> SignalScoringResult:
+    # Update the signal (create a copy)
+    scored_signal = copy.deepcopy(signal)
+    scored_signal.score = total_clamped
+    scored_signal.confidence = final_confidence
+    scored_signal.confidence_bucket = bucket
+    scored_signal.score_breakdown = {
+        "components": components,
+        "penalties": penalties,
+        "bonuses": bonuses,
+    }
+
+    breakdown = SignalScoreBreakdown(
+        signal_id=signal.signal_id,
+        total_score=total_clamped,
+        components=components,
+        penalties=penalties,
+        bonuses=bonuses,
+        final_confidence=final_confidence,
+        confidence_bucket=bucket,
+        notes=notes,
+    )
+
+    return SignalScoringResult(
+        original_signal=signal,
+        scored_signal=scored_signal,
+        breakdown=breakdown,
+        accepted_for_review=accepted,
+        warnings=warnings,
+        errors=errors,
+    )
+
+
+def score_signal(
+    signal: StrategySignal, config: Optional[SignalScoringConfigSchema] = None
+) -> SignalScoringResult:
     if config is None:
         config = default_signal_scoring_config()
 
@@ -104,105 +266,37 @@ def score_signal(signal: StrategySignal, config: Optional[SignalScoringConfigSch
 
     warnings = []
     errors = []
-    components = {}
-    penalties = {}
     bonuses = {}
     notes = []
 
     try:
-        # 1. Base Score
-        base = config.base_score
-        components[SignalScoreComponent.STRATEGY_BASE.value] = base
+        components = _calculate_base_components(signal, config, notes)
+        penalties = _calculate_penalties(signal, config, notes)
 
-        # 2. Reason Quality Score
-        reason_ratio = calculate_reason_quality_score(signal.reasons)
-        reason_score = reason_ratio * config.reason_quality_weight
-        components[SignalScoreComponent.REASON_QUALITY.value] = reason_score
-        if reason_ratio == 0:
-            notes.append("No valid reasons provided.")
-
-        # 3. Feature Snapshot Score
-        feature_ratio = calculate_feature_snapshot_score(signal.feature_snapshot)
-        feature_score = feature_ratio * config.feature_snapshot_weight
-        components[SignalScoreComponent.FEATURE_ALIGNMENT.value] = feature_score
-        if feature_ratio < 0.2:
-            notes.append("Feature snapshot is empty or insufficient.")
-
-        # 4. Confidence Contribution
-        conf_score = signal.confidence * config.confidence_weight
-        components[SignalScoreComponent.CONFIDENCE.value] = conf_score
-
-        # 5. Risk Penalty
-        risk_ratio = calculate_risk_penalty(signal.risk_flags, config)
-        risk_penalty = risk_ratio * config.risk_penalty_weight
-        if risk_penalty > 0:
-            penalties[SignalScoreComponent.RISK_PENALTY.value] = -risk_penalty
-            notes.append(f"Applied risk penalty due to {len(signal.risk_flags)} flags.")
-
-        # 6. Overconfidence Check (Backtest guard)
-        # Without a backtest, confidence > 0.8 is penalized
-        overconfidence_penalty = 0.0
-        if signal.confidence > 0.8:
-            overconfidence_penalty = config.overconfidence_penalty
-            penalties["OVERCONFIDENCE"] = -overconfidence_penalty
-            notes.append("Applied overconfidence penalty (no backtest validation).")
-
-        # Calculate Total
-        total_raw = sum(components.values()) + sum(penalties.values()) + sum(bonuses.values())
-        total_clamped = clamp_score(total_raw, config.min_score, config.max_score)
-
-        # Apply Backtest Guard Limit
-        if total_clamped > config.max_allowed_score_without_backtest:
-            total_clamped = config.max_allowed_score_without_backtest
-            notes.append(f"Score capped at {config.max_allowed_score_without_backtest} (no backtest).")
+        total_clamped = _calculate_total_clamped_score(
+            components, penalties, bonuses, config, notes
+        )
 
         # Final calibrated confidence
         final_confidence = calibrate_confidence_from_score(total_clamped)
 
         # Re-evaluate confidence bucket based on final confidence
-        if final_confidence >= 0.8:
-            bucket = SignalConfidenceBucket.VERY_HIGH
-        elif final_confidence >= 0.6:
-            bucket = SignalConfidenceBucket.HIGH
-        elif final_confidence >= 0.4:
-            bucket = SignalConfidenceBucket.MODERATE
-        elif final_confidence >= 0.2:
-            bucket = SignalConfidenceBucket.LOW
-        else:
-            bucket = SignalConfidenceBucket.VERY_LOW
+        bucket = _determine_confidence_bucket(final_confidence)
 
         accepted = total_clamped >= config.min_score_for_review
 
-        # Update the signal (create a copy)
-        import copy
-        scored_signal = copy.deepcopy(signal)
-        scored_signal.score = total_clamped
-        scored_signal.confidence = final_confidence
-        scored_signal.confidence_bucket = bucket
-        scored_signal.score_breakdown = {
-            "components": components,
-            "penalties": penalties,
-            "bonuses": bonuses
-        }
-
-        breakdown = SignalScoreBreakdown(
-            signal_id=signal.signal_id,
-            total_score=total_clamped,
-            components=components,
-            penalties=penalties,
-            bonuses=bonuses,
-            final_confidence=final_confidence,
-            confidence_bucket=bucket,
-            notes=notes
-        )
-
-        return SignalScoringResult(
-            original_signal=signal,
-            scored_signal=scored_signal,
-            breakdown=breakdown,
-            accepted_for_review=accepted,
-            warnings=warnings,
-            errors=errors
+        return _build_scoring_result(
+            signal,
+            total_clamped,
+            components,
+            penalties,
+            bonuses,
+            final_confidence,
+            bucket,
+            notes,
+            accepted,
+            warnings,
+            errors,
         )
 
     except Exception as e:
@@ -216,19 +310,22 @@ def score_signal(signal: StrategySignal, config: Optional[SignalScoringConfigSch
             bonuses={},
             final_confidence=0.0,
             confidence_bucket=SignalConfidenceBucket.VERY_LOW,
-            notes=["Scoring failed"]
+            notes=["Scoring failed"],
         )
-        scored_signal = copy.deepcopy(signal) if 'copy' in locals() else signal
+        scored_signal = copy.deepcopy(signal)
         return SignalScoringResult(
             original_signal=signal,
             scored_signal=scored_signal,
             breakdown=breakdown,
             accepted_for_review=False,
             warnings=warnings,
-            errors=errors
+            errors=errors,
         )
 
-def score_signal_list(signals: List[StrategySignal], config: Optional[SignalScoringConfigSchema] = None) -> List[SignalScoringResult]:
+
+def score_signal_list(
+    signals: List[StrategySignal], config: Optional[SignalScoringConfigSchema] = None
+) -> List[SignalScoringResult]:
     if not signals:
         return []
     return [score_signal(sig, config) for sig in signals]
