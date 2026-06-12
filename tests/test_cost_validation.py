@@ -72,3 +72,78 @@ def test_validate_slippage_curve_report_error_slippage():
     assert report.valid is False
     assert report.error_count == 1
     assert "slippage_bps cannot be negative" in report.errors[0]
+
+def test_validate_market_impact_report_error_empty_symbol():
+    import sys
+    from unittest.mock import MagicMock
+    sys.modules['usa_signal_bot.core.enums'] = MagicMock()
+    from usa_signal_bot.transaction_costs.cost_models import MarketImpactEstimate
+    from usa_signal_bot.transaction_costs.cost_validation import validate_market_impact_report
+
+    item = MarketImpactEstimate(
+        estimate_id="est_123",
+        symbol="",
+        created_at_utc="2024-01-01T00:00:00Z",
+        side="BUY",
+        notional_usd=1000.0,
+        participation_rate_pct=10.0,
+        impact_bps=5.0,
+        impact_usd=50.0,
+        status="SUCCESS",
+        order_size_class="NORMAL", warnings=[], errors=[]
+    )
+
+    report = validate_market_impact_report(item)
+    assert report.valid is False
+    assert report.error_count == 1
+    assert "symbol cannot be empty" in report.errors[0]
+
+def test_validate_market_impact_report_error_negative_bps():
+    import sys
+    from unittest.mock import MagicMock
+    sys.modules['usa_signal_bot.core.enums'] = MagicMock()
+    from usa_signal_bot.transaction_costs.cost_models import MarketImpactEstimate
+    from usa_signal_bot.transaction_costs.cost_validation import validate_market_impact_report
+
+    item = MarketImpactEstimate(
+        estimate_id="est_123",
+        symbol="AAPL",
+        created_at_utc="2024-01-01T00:00:00Z",
+        side="BUY",
+        notional_usd=1000.0,
+        participation_rate_pct=10.0,
+        impact_bps=-5.0,
+        impact_usd=50.0,
+        status="SUCCESS",
+        order_size_class="NORMAL", warnings=[], errors=[]
+    )
+
+    report = validate_market_impact_report(item)
+    assert report.valid is False
+    assert report.error_count == 1
+    assert "impact_bps cannot be negative" in report.errors[0]
+
+def test_validate_market_impact_report_error_negative_usd():
+    import sys
+    from unittest.mock import MagicMock
+    sys.modules['usa_signal_bot.core.enums'] = MagicMock()
+    from usa_signal_bot.transaction_costs.cost_models import MarketImpactEstimate
+    from usa_signal_bot.transaction_costs.cost_validation import validate_market_impact_report
+
+    item = MarketImpactEstimate(
+        estimate_id="est_123",
+        symbol="AAPL",
+        created_at_utc="2024-01-01T00:00:00Z",
+        side="BUY",
+        notional_usd=1000.0,
+        participation_rate_pct=10.0,
+        impact_bps=5.0,
+        impact_usd=-50.0,
+        status="SUCCESS",
+        order_size_class="NORMAL", warnings=[], errors=[]
+    )
+
+    report = validate_market_impact_report(item)
+    assert report.valid is False
+    assert report.error_count == 1
+    assert "impact_usd cannot be negative" in report.errors[0]
