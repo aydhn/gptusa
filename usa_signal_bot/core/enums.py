@@ -2652,12 +2652,14 @@ class EvaluationMetricKind(str, Enum):
     STABILITY_METRIC = "STABILITY_METRIC"
     UNKNOWN = "UNKNOWN"
 
+
 class BaselineExperimentKind(str, Enum):
     CLASSIFICATION_BASELINE = "CLASSIFICATION_BASELINE"
     REGRESSION_BASELINE = "REGRESSION_BASELINE"
     REGIME_CONTEXT_BASELINE = "REGIME_CONTEXT_BASELINE"
     VOLATILITY_BASELINE = "VOLATILITY_BASELINE"
     UNKNOWN = "UNKNOWN"
+
 
 class EvaluationHarnessKind(str, Enum):
     TIME_SERIES_CV = "TIME_SERIES_CV"
@@ -2667,6 +2669,7 @@ class EvaluationHarnessKind(str, Enum):
     OFFLINE_RESEARCH_EVALUATION = "OFFLINE_RESEARCH_EVALUATION"
     UNKNOWN = "UNKNOWN"
 
+
 class BaselineMLScaffoldingStatus(str, Enum):
     PENDING = "PENDING"
     ACTIVE = "ACTIVE"
@@ -2674,11 +2677,13 @@ class BaselineMLScaffoldingStatus(str, Enum):
     FAILED = "FAILED"
     UNKNOWN = "UNKNOWN"
 
+
 class BaselineMLScaffoldingDecision(str, Enum):
     APPROVE_BASELINE = "APPROVE_BASELINE"
     REJECT_BASELINE = "REJECT_BASELINE"
     REQUEST_BASELINE_REWORK = "REQUEST_BASELINE_REWORK"
     UNKNOWN = "UNKNOWN"
+
 
 class BaselineArtifactKind(str, Enum):
     MODEL_SPEC = "MODEL_SPEC"
@@ -2686,6 +2691,7 @@ class BaselineArtifactKind(str, Enum):
     METRIC_SPEC = "METRIC_SPEC"
     HARNESS_SPEC = "HARNESS_SPEC"
     UNKNOWN = "UNKNOWN"
+
 
 class BaselineModelKind(str, Enum):
     DUMMY_CLASSIFIER = "DUMMY_CLASSIFIER"
@@ -2695,6 +2701,7 @@ class BaselineModelKind(str, Enum):
     LIGHTWEIGHT_LINEAR = "LIGHTWEIGHT_LINEAR"
     UNKNOWN = "UNKNOWN"
 
+
 class BaselineSafetyRuleKind(str, Enum):
     NO_LIVE_TRADING = "NO_LIVE_TRADING"
     NO_PAPER_STATE_MUTATION = "NO_PAPER_STATE_MUTATION"
@@ -2702,6 +2709,7 @@ class BaselineSafetyRuleKind(str, Enum):
     RESEARCH_METADATA_ONLY = "RESEARCH_METADATA_ONLY"
     NO_HEAVY_ML_LIBRARIES = "NO_HEAVY_ML_LIBRARIES"
     UNKNOWN = "UNKNOWN"
+
 
 class BaselineScaffoldingQuality(str, Enum):
     HIGH = "HIGH"
@@ -2711,15 +2719,18 @@ class BaselineScaffoldingQuality(str, Enum):
     INVALID = "INVALID"
     UNKNOWN = "UNKNOWN"
 
+
 class BaselineMLScaffoldingRiskFlag(str, Enum):
     NO_RISK = "NO_RISK"
     HEAVY_ML_LIBRARY_DETECTED = "HEAVY_ML_LIBRARY_DETECTED"
     TRADING_SIGNAL_DETECTED = "TRADING_SIGNAL_DETECTED"
     UNKNOWN = "UNKNOWN"
 
+
 class BaselineMLScaffoldingReportType(str, Enum):
     BASELINE_SCAFFOLDING_REPORT = "BASELINE_SCAFFOLDING_REPORT"
     UNKNOWN = "UNKNOWN"
+
 
 class BaselineModelFamilyKind(str, Enum):
     DUMMY = "DUMMY"
@@ -2728,11 +2739,13 @@ class BaselineModelFamilyKind(str, Enum):
     MOVING_AVERAGE = "MOVING_AVERAGE"
     UNKNOWN = "UNKNOWN"
 
+
 class Phase138ReadinessStatus(str, Enum):
     PASSED = "PASSED"
     WARNING = "WARNING"
     FAILED = "FAILED"
     UNKNOWN = "UNKNOWN"
+
 
 class Phase138ReadinessRuleKind(str, Enum):
     ALL_ARTIFACTS_VALID = "ALL_ARTIFACTS_VALID"
@@ -2751,6 +2764,7 @@ class Phase138ReadinessRuleKind(str, Enum):
     NO_EXECUTION_EVIDENCE = "NO_EXECUTION_EVIDENCE"
     UNKNOWN = "UNKNOWN"
 
+
 class PredictionOutputBoundaryKind(str, Enum):
     NO_EXECUTION = "NO_EXECUTION"
     RESEARCH_ONLY = "RESEARCH_ONLY"
@@ -2761,10 +2775,12 @@ class PredictionOutputBoundaryKind(str, Enum):
     DIAGNOSTIC_METADATA_ONLY = "DIAGNOSTIC_METADATA_ONLY"
     UNKNOWN = "UNKNOWN"
 
+
 class BaselineModelObjectiveKind(str, Enum):
     MINIMIZE_ERROR = "MINIMIZE_ERROR"
     MAXIMIZE_ACCURACY = "MAXIMIZE_ACCURACY"
     UNKNOWN = "UNKNOWN"
+
 
 class ModelCardSectionKind(str, Enum):
     MODEL_PURPOSE = "MODEL_PURPOSE"
@@ -2785,11 +2801,13 @@ class ModelCardSectionKind(str, Enum):
     GOVERNANCE = "GOVERNANCE"
     UNKNOWN = "UNKNOWN"
 
+
 class ArtifactValidationLevel(str, Enum):
     STRICT = "STRICT"
     WARNING = "WARNING"
     LAX = "LAX"
     UNKNOWN = "UNKNOWN"
+
 
 class ExperimentRegistryStatus(str, Enum):
     CREATED = "CREATED"
@@ -2798,12 +2816,14 @@ class ExperimentRegistryStatus(str, Enum):
     ARCHIVED = "ARCHIVED"
     UNKNOWN = "UNKNOWN"
 
+
 class MLGovernanceAuditKind(str, Enum):
     LEAKAGE = "LEAKAGE"
     BIAS = "BIAS"
     PERFORMANCE = "PERFORMANCE"
     ROBUSTNESS = "ROBUSTNESS"
     UNKNOWN = "UNKNOWN"
+
 
 class NonActivationEvaluationRuleKind(str, Enum):
     NO_EXECUTION_EVIDENCE = "NO_EXECUTION_EVIDENCE"
@@ -2821,15 +2841,18 @@ class NonActivationEvaluationRuleKind(str, Enum):
     NO_SCHEDULER = "NO_SCHEDULER"
     UNKNOWN = "UNKNOWN"
 
+
 class MLModelBandPhase(str, Enum):
     PHASE138 = "PHASE138"
     UNKNOWN = "UNKNOWN"
+
 
 class BaselineScaffoldingReadinessStatus(str, Enum):
     PASSED = "PASSED"
     WARNING = "WARNING"
     FAILED = "FAILED"
     UNKNOWN = "UNKNOWN"
+
 
 class BaselineScaffoldingReadinessRuleKind(str, Enum):
     ALL_ARTIFACTS_VALID = "ALL_ARTIFACTS_VALID"
@@ -2848,6 +2871,7 @@ class BaselineScaffoldingReadinessRuleKind(str, Enum):
     NO_EXECUTION_EVIDENCE = "NO_EXECUTION_EVIDENCE"
     UNKNOWN = "UNKNOWN"
 
+
 class BaselineMLScaffoldingQuality(str, Enum):
     HIGH = "HIGH"
     ACCEPTABLE = "ACCEPTABLE"
@@ -2856,27 +2880,109 @@ class BaselineMLScaffoldingQuality(str, Enum):
     INVALID = "INVALID"
     UNKNOWN = "UNKNOWN"
 
+
 class StrategyFamily(str, Enum):
     TREND_FOLLOWING = "TREND_FOLLOWING"
     MEAN_REVERSION = "MEAN_REVERSION"
 
+
 class StrategyRegimeCompatibility(str, Enum):
     HIGH = "HIGH"
+
 
 class StrategyGateDecision(str, Enum):
     PASS = "PASS"
 
+
 class StrategyConflictType(str, Enum):
     UNKNOWN = "UNKNOWN"
+
 
 class StrategyEnsembleDecision(str, Enum):
     NEUTRAL = "NEUTRAL"
 
+
 class AdaptiveWeightStatus(str, Enum):
     ACTIVE = "ACTIVE"
+
 
 class StrategyAdaptationRisk(str, Enum):
     LOW = "LOW"
 
+
 class StrategyAdaptationReportType(str, Enum):
     DAILY = "DAILY"
+
+
+class CompatibilityValidationRuleKind(str, Enum):
+    ALIGNMENT_REVIEW_VALID = "ALIGNMENT_REVIEW_VALID"
+    COMPATIBILITY_RESULTS_AVAILABLE = "COMPATIBILITY_RESULTS_AVAILABLE"
+    COMPATIBILITY_SCORE_RANGE_VALID = "COMPATIBILITY_SCORE_RANGE_VALID"
+    COMPATIBILITY_CLASSIFICATION_VALID = "COMPATIBILITY_CLASSIFICATION_VALID"
+    OVERLAY_RESULTS_AVAILABLE = "OVERLAY_RESULTS_AVAILABLE"
+    OVERLAY_SCORE_RANGE_VALID = "OVERLAY_SCORE_RANGE_VALID"
+    DIAGNOSTICS_PROFILES_AVAILABLE = "DIAGNOSTICS_PROFILES_AVAILABLE"
+    LOW_COMPATIBILITY_EXPLAINED = "LOW_COMPATIBILITY_EXPLAINED"
+    UNCERTAIN_CONTEXT_EXPLAINED = "UNCERTAIN_CONTEXT_EXPLAINED"
+    CONFLICTED_CONTEXT_EXPLAINED = "CONFLICTED_CONTEXT_EXPLAINED"
+    DATA_QUALITY_LIMITED_CONTEXT_EXPLAINED = "DATA_QUALITY_LIMITED_CONTEXT_EXPLAINED"
+    NO_SIGNAL_OUTPUT = "NO_SIGNAL_OUTPUT"
+    NO_ORDER_OUTPUT = "NO_ORDER_OUTPUT"
+    NO_PORTFOLIO_OUTPUT = "NO_PORTFOLIO_OUTPUT"
+    NO_EXECUTION_OUTPUT = "NO_EXECUTION_OUTPUT"
+    NO_MODEL_TRAINING = "NO_MODEL_TRAINING"
+
+
+class RegimeContextValidationQuality(str, Enum):
+    HIGH = "HIGH"
+    INVALID = "INVALID"
+
+
+class RegimeContextValidationRiskFlag(str, Enum):
+    COMPATIBILITY_SCORE_INVALID = "COMPATIBILITY_SCORE_INVALID"
+
+
+class CompatibilityValidationStatus(str, Enum):
+    PASS = "PASS"
+    FAIL = "FAIL"
+
+
+class RegimeContextValidationStatus(str, Enum):
+    PASS = "PASS"
+    FAIL = "FAIL"
+
+
+class RegimeContextValidationDecision(str, Enum):
+    PASS = "PASS"
+    FAIL = "FAIL"
+
+
+class ConditionalDiagnosticKind(str, Enum):
+    PASS = "PASS"
+    FAIL = "FAIL"
+
+
+class RegimeContextAcceptanceStatus(str, Enum):
+    ACCEPTED = "ACCEPTED"
+    WARNING_ACCEPTED = "WARNING_ACCEPTED"
+
+
+class RegimeContextAcceptanceRuleKind(str, Enum):
+    PASS = "PASS"
+    FAIL = "FAIL"
+
+
+class RegimeContextValidationReportType(str, Enum):
+    PASS = "PASS"
+    FAIL = "FAIL"
+
+
+class ConditionalDiagnosticSeverity(str, Enum):
+    PASS = "PASS"
+    FAIL = "FAIL"
+
+
+class RegimeContextValidationRiskFlag(str, Enum):
+    COMPATIBILITY_SCORE_INVALID = "COMPATIBILITY_SCORE_INVALID"
+    REGIME_ALIGNMENT_REVIEW_MISSING = "REGIME_ALIGNMENT_REVIEW_MISSING"
+    PHASE131_NOT_READY = "PHASE131_NOT_READY"
