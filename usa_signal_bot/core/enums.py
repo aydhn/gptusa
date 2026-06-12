@@ -2672,6 +2672,8 @@ class EvaluationHarnessKind(str, Enum):
 
 class BaselineMLScaffoldingStatus(str, Enum):
     PENDING = "PENDING"
+    CREATED = "CREATED"
+    NOT_STARTED = "NOT_STARTED"
     ACTIVE = "ACTIVE"
     COMPLETED = "COMPLETED"
     FAILED = "FAILED"
@@ -2986,3 +2988,148 @@ class RegimeContextValidationRiskFlag(str, Enum):
     COMPATIBILITY_SCORE_INVALID = "COMPATIBILITY_SCORE_INVALID"
     REGIME_ALIGNMENT_REVIEW_MISSING = "REGIME_ALIGNMENT_REVIEW_MISSING"
     PHASE131_NOT_READY = "PHASE131_NOT_READY"
+
+
+class ActiveUniverseSource(str, Enum):
+    EXPLICIT_FILE = "EXPLICIT_FILE"
+    ACTIVE_SNAPSHOT = "ACTIVE_SNAPSHOT"
+    LATEST_SNAPSHOT = "LATEST_SNAPSHOT"
+    DEFAULT_WATCHLIST = "DEFAULT_WATCHLIST"
+
+
+class UniverseDataRunStatus(str, Enum):
+    PENDING = "PENDING"
+    CREATED = "CREATED"
+    NOT_STARTED = "NOT_STARTED"
+    RUNNING = "RUNNING"
+    IN_PROGRESS = "IN_PROGRESS"
+    COMPLETED = "COMPLETED"
+    FAILED = "FAILED"
+    PARTIAL_SUCCESS = "PARTIAL_SUCCESS"
+
+
+class UniverseRunStep(str, Enum):
+    RESOLVE_UNIVERSE = "RESOLVE_UNIVERSE"
+    DOWNLOAD_DATA = "DOWNLOAD_DATA"
+    VALIDATE_DATA = "VALIDATE_DATA"
+    REPAIR_DATA = "REPAIR_DATA"
+    COVERAGE_REPORT = "COVERAGE_REPORT"
+    READINESS_REPORT = "READINESS_REPORT"
+    READINESS_GATE = "READINESS_GATE"
+    WRITE_OUTPUTS = "WRITE_OUTPUTS"
+
+
+class DataReadinessStatus(str, Enum):
+    READY = "READY"
+    PARTIAL = "PARTIAL"
+    NOT_READY = "NOT_READY"
+    FAILED = "FAILED"
+    UNKNOWN = "UNKNOWN"
+
+
+class DataCoverageStatus(str, Enum):
+    FULL = "FULL"
+    PARTIAL = "PARTIAL"
+    MISSING = "MISSING"
+    EMPTY = "EMPTY"
+
+
+class TimeFrame(str, Enum):
+    M1 = "1m"
+    M5 = "5m"
+    M15 = "15m"
+    H1 = "1h"
+    M30 = "30m"
+    D1 = "1d"
+    W1 = "1wk"
+
+
+class DataQualityStatus(str, Enum):
+    OK = "OK"
+    INVALID = "INVALID"
+    WARNING = "WARNING"
+
+
+class PipelineRunStatus(str, Enum):
+    PENDING = "PENDING"
+    CREATED = "CREATED"
+    NOT_STARTED = "NOT_STARTED"
+    RUNNING = "RUNNING"
+    COMPLETED = "COMPLETED"
+    FAILED = "FAILED"
+    PARTIAL = "PARTIAL"
+
+    M30 = "30m"
+
+
+class AssetType(str, Enum):
+    STOCK = "STOCK"
+    CRYPTO = "CRYPTO"
+    FX = "FX"
+    INDEX = "INDEX"
+    UNKNOWN = "UNKNOWN"
+
+
+class UniverseSourceType(str, Enum):
+    FILE = "FILE"
+    API = "API"
+
+
+class UniverseLayer(str, Enum):
+    BASE = "BASE"
+    FILTERED = "FILTERED"
+
+
+class UniverseConflictResolution(str, Enum):
+    PREFER_COMPLETE_METADATA = "KEEP_OLD"
+    OVERWRITE = "OVERWRITE"
+
+
+class UniverseSnapshotStatus(str, Enum):
+    VALID = "VALID"
+    INVALID = "INVALID"
+
+
+class TimeframeRole(str, Enum):
+    PRIMARY = "PRIMARY"
+    SECONDARY = "SECONDARY"
+
+
+class SymbolReadinessStatus(str, Enum):
+    READY = "READY"
+    NOT_READY = "NOT_READY"
+    ELIGIBLE = "ELIGIBLE"
+    PARTIAL = "PARTIAL"
+    INELIGIBLE = "INELIGIBLE"
+    MISSING_DATA = "MISSING_DATA"
+    FAILED_VALIDATION = "FAILED_VALIDATION"
+
+
+class UniverseReadinessGateStatus(str, Enum):
+    PASSED = "PASSED"
+    FAILED = "FAILED"
+    PARTIAL = "PARTIAL"
+
+
+class ValidationSeverity(str, Enum):
+    ERROR = "ERROR"
+    WARNING = "WARNING"
+    INFO = "INFO"
+
+
+class DataAnomalyType(str, Enum):
+    MISSING_DATA = "MISSING_DATA"
+    OUTLIER = "OUTLIER"
+    STALE_DATA = "STALE_DATA"
+    DUPLICATE_TIMESTAMP = "DUPLICATE_TIMESTAMP"
+    NEGATIVE_PRICE = "NEGATIVE_PRICE"
+    HIGH_LOW_INVERSION = "HIGH_LOW_INVERSION"
+    UNKNOWN = "UNKNOWN"
+
+
+class DataRepairActionType(str, Enum):
+    FORWARD_FILL = "FORWARD_FILL"
+    INTERPOLATE = "INTERPOLATE"
+    DROP = "DROP"
+    OVERRIDE = "OVERRIDE"
+    UNKNOWN = "UNKNOWN"
