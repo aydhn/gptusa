@@ -2855,3 +2855,28 @@ class BaselineMLScaffoldingQuality(str, Enum):
     LOW = "LOW"
     INVALID = "INVALID"
     UNKNOWN = "UNKNOWN"
+
+class StrategyFamily(str, Enum):
+    TREND_FOLLOWING = "TREND_FOLLOWING"
+    MEAN_REVERSION = "MEAN_REVERSION"
+
+class StrategyRegimeCompatibility(str, Enum):
+    HIGH = "HIGH"
+
+class StrategyGateDecision(str, Enum):
+    PASS = "PASS"
+
+class StrategyConflictType(str, Enum):
+    UNKNOWN = "UNKNOWN"
+
+class StrategyEnsembleDecision(str, Enum):
+    NEUTRAL = "NEUTRAL"
+
+class AdaptiveWeightStatus(str, Enum):
+    ACTIVE = "ACTIVE"
+
+class StrategyAdaptationRisk(str, Enum):
+    LOW = "LOW"
+
+class StrategyAdaptationReportType(str, Enum):
+    DAILY = "DAILY"

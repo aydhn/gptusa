@@ -804,3 +804,6 @@ class ResearchWorkflowIngestionError(USASignalBotError):
 
 class Phase134ValidationError(Exception):
     pass
+
+class StrategyAdaptationValidationError(Exception):
+    pass
