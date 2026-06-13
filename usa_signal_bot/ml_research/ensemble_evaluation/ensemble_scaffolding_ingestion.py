@@ -10,42 +10,36 @@ from usa_signal_bot.ml_research.ensemble_evaluation.phase143_models import (
 )
 from usa_signal_bot.core.exceptions import EnsembleScaffoldingIngestionError
 
-def ingest_ensemble_scaffolding_review_payload(payload: Dict[str, Any]) -> EnsembleScaffoldingIngestionResult:
-    report_type = payload.get("report_type")
 
-    warnings = []
+def _validate_scaffolding_review_report_type(report_type: Optional[str]) -> Tuple[List[str], List[EnsemblePrototypeRiskFlag]]:
     errors = []
     risk_flags = []
-
     if report_type != "ENSEMBLE_SCAFFOLDING_FULL_REVIEW":
         errors.append("Invalid report type. Expected ENSEMBLE_SCAFFOLDING_FULL_REVIEW.")
         risk_flags.append(EnsemblePrototypeRiskFlag.ENSEMBLE_SCAFFOLDING_REVIEW_INVALID)
+    return errors, risk_flags
 
-    context = extract_ensemble_scaffolding_context(payload)
-    if not context:
-        errors.append("Missing context in ensemble scaffolding review.")
-        risk_flags.append(EnsemblePrototypeRiskFlag.ENSEMBLE_SCAFFOLDING_REVIEW_MISSING)
-        context = {}
-
-    ready_for_phase143 = context.get("ready_for_phase143", False)
-    if not ready_for_phase143:
-        errors.append("Ensemble scaffolding is not ready for Phase 143.")
-        risk_flags.append(EnsemblePrototypeRiskFlag.PHASE142_NOT_READY)
+def _validate_safe_execution_flags(context: Dict[str, Any]) -> Tuple[List[str], List[EnsemblePrototypeRiskFlag]]:
+    errors = []
+    risk_flags = []
 
     # Check safe execution flags
-    for flag in ["activation_allowed", "strategy_activation_allowed", "deployment_allowed",
-                 "active_paper_enabled", "broker_execution_enabled", "order_creation_enabled",
-                 "paper_state_mutation_enabled", "telegram_real_send_enabled", "scraping_enabled",
-                 "html_parse_enabled", "paid_api_enabled", "dashboard_enabled", "network_default_enabled",
-                 "daemon_started", "scheduler_enabled", "live_inference_enabled", "online_inference_enabled",
-                 "ensemble_fitting_performed", "final_ensemble_prediction_created",
-                 "threshold_optimization_performed", "heavy_ml_dependency_used", "produces_trade_signal",
-                 "produces_order_decision", "produces_portfolio_weights", "investment_advice", "network_used",
-                 "paid_api_used", "scraping_used", "html_parsing_used", "broker_used", "order_created",
-                 "paper_state_mutated", "telegram_real_sent", "dashboard_started"]:
+    unsafe_flags = [
+        "activation_allowed", "strategy_activation_allowed", "deployment_allowed",
+        "active_paper_enabled", "broker_execution_enabled", "order_creation_enabled",
+        "paper_state_mutation_enabled", "telegram_real_send_enabled", "scraping_enabled",
+        "html_parse_enabled", "paid_api_enabled", "dashboard_enabled", "network_default_enabled",
+        "daemon_started", "scheduler_enabled", "live_inference_enabled", "online_inference_enabled",
+        "ensemble_fitting_performed", "final_ensemble_prediction_created",
+        "threshold_optimization_performed", "heavy_ml_dependency_used", "produces_trade_signal",
+        "produces_order_decision", "produces_portfolio_weights", "investment_advice", "network_used",
+        "paid_api_used", "scraping_used", "html_parsing_used", "broker_used", "order_created",
+        "paper_state_mutated", "telegram_real_sent", "dashboard_started"
+    ]
+    for flag in unsafe_flags:
         if context.get(flag, False):
             errors.append(f"Unsafe flag detected: {flag}=True")
-            risk_flags.append(EnsemblePrototypeRiskFlag.DEPLOYMENT_RISK) # general mapping
+            risk_flags.append(EnsemblePrototypeRiskFlag.DEPLOYMENT_RISK)
 
     # Ensure research data only
     if not context.get("research_data_only", False):
@@ -54,11 +48,20 @@ def ingest_ensemble_scaffolding_review_payload(payload: Dict[str, Any]) -> Ensem
     if not context.get("offline_ml_research_only", False):
          errors.append("offline_ml_research_only must be True.")
 
-    is_valid = len(errors) == 0
+    return errors, risk_flags
 
+def _build_scaffolding_ingestion_result(
+        payload: Dict[str, Any],
+        context: Dict[str, Any],
+        ready_for_phase143: bool,
+        is_valid: bool,
+        warnings: List[str],
+        errors: List[str],
+        risk_flags: List[EnsemblePrototypeRiskFlag]
+    ) -> EnsembleScaffoldingIngestionResult:
     return EnsembleScaffoldingIngestionResult(
         ingestion_id=create_ensemble_scaffolding_ingestion_id(),
-        created_at_utc=datetime.datetime.utcnow().isoformat() + "Z",
+        created_at_utc=datetime.datetime.now(datetime.timezone.utc).isoformat().replace("+00:00", "Z"),
         source_path=None,
         source_review_id=payload.get("review_id"),
         source_context_id=context.get("context_id"),
@@ -125,6 +128,40 @@ def ingest_ensemble_scaffolding_review_payload(payload: Dict[str, Any]) -> Ensem
         warnings=warnings,
         errors=errors,
         metadata={}
+    )
+
+def ingest_ensemble_scaffolding_review_payload(payload: Dict[str, Any]) -> EnsembleScaffoldingIngestionResult:
+    warnings = []
+
+    report_errors, report_risk_flags = _validate_scaffolding_review_report_type(payload.get("report_type"))
+    errors = report_errors
+    risk_flags = report_risk_flags
+
+    context = extract_ensemble_scaffolding_context(payload)
+    if not context:
+        errors.append("Missing context in ensemble scaffolding review.")
+        risk_flags.append(EnsemblePrototypeRiskFlag.ENSEMBLE_SCAFFOLDING_REVIEW_MISSING)
+        context = {}
+
+    ready_for_phase143 = context.get("ready_for_phase143", False)
+    if not ready_for_phase143:
+        errors.append("Ensemble scaffolding is not ready for Phase 143.")
+        risk_flags.append(EnsemblePrototypeRiskFlag.PHASE142_NOT_READY)
+
+    safe_errors, safe_risk_flags = _validate_safe_execution_flags(context)
+    errors.extend(safe_errors)
+    risk_flags.extend(safe_risk_flags)
+
+    is_valid = len(errors) == 0
+
+    return _build_scaffolding_ingestion_result(
+        payload=payload,
+        context=context,
+        ready_for_phase143=ready_for_phase143,
+        is_valid=is_valid,
+        warnings=warnings,
+        errors=errors,
+        risk_flags=risk_flags
     )
 
 def ingest_latest_ensemble_scaffolding_review_from_store(data_root: Path) -> EnsembleScaffoldingIngestionResult:
