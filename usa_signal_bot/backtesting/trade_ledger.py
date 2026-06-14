@@ -77,6 +77,83 @@ def _parse_time(time_str: str) -> Optional[datetime]:
     except (ValueError, TypeError):
         return None
 
+def _create_closed_trade(symbol: str, entry_fill: BacktestFill, exit_fill: BacktestFill, qty: float, signals_by_id: Optional[Dict[str, StrategySignal]]) -> BacktestTrade:
+    gross_pnl, net_pnl = calculate_trade_pnl(entry_fill, exit_fill)
+    return_pct = calculate_trade_return_pct(entry_fill.fill_price, exit_fill.fill_price, TradeDirection.LONG)
+
+    total_fees = entry_fill.transaction_cost + exit_fill.transaction_cost
+
+    entry_slippage_cost = entry_fill.slippage_breakdown.get('total_slippage_cost', 0.0) if hasattr(entry_fill, 'slippage_breakdown') and entry_fill.slippage_breakdown else 0.0
+    exit_slippage_cost = exit_fill.slippage_breakdown.get('total_slippage_cost', 0.0) if hasattr(exit_fill, 'slippage_breakdown') and exit_fill.slippage_breakdown else 0.0
+    total_slippage_cost = entry_slippage_cost + exit_slippage_cost
+
+    strategy_name = None
+    if signals_by_id and entry_fill.signal_id and entry_fill.signal_id in signals_by_id:
+        strategy_name = signals_by_id[entry_fill.signal_id].strategy_name
+
+    holding_seconds = None
+    entry_dt = _parse_time(entry_fill.timestamp_utc)
+    exit_dt = _parse_time(exit_fill.timestamp_utc)
+    if entry_dt and exit_dt:
+        holding_seconds = (exit_dt - entry_dt).total_seconds()
+
+    return BacktestTrade(
+        trade_id=create_trade_id(symbol, entry_fill.timestamp_utc, entry_fill.signal_id),
+        symbol=symbol,
+        timeframe=entry_fill.timeframe,
+        direction=TradeDirection.LONG,
+        status=TradeStatus.CLOSED,
+        entry_fill_id=entry_fill.fill_id,
+        exit_fill_id=exit_fill.fill_id,
+        entry_time_utc=entry_fill.timestamp_utc,
+        exit_time_utc=exit_fill.timestamp_utc,
+        entry_price=entry_fill.fill_price,
+        exit_price=exit_fill.fill_price,
+        quantity=qty,
+        gross_pnl=gross_pnl,
+        net_pnl=net_pnl,
+        total_fees=total_fees,
+        total_slippage_cost=total_slippage_cost,
+        return_pct=return_pct,
+        holding_bars=None,
+        holding_seconds=holding_seconds,
+        exit_reason=TradeExitReason.UNKNOWN,
+        signal_id=entry_fill.signal_id,
+        strategy_name=strategy_name
+    )
+
+def _create_open_trade(symbol: str, entry_fill: BacktestFill, signals_by_id: Optional[Dict[str, StrategySignal]]) -> BacktestTrade:
+    strategy_name = None
+    if signals_by_id and entry_fill.signal_id and entry_fill.signal_id in signals_by_id:
+        strategy_name = signals_by_id[entry_fill.signal_id].strategy_name
+
+    entry_slippage_cost = entry_fill.slippage_breakdown.get('total_slippage_cost', 0.0) if hasattr(entry_fill, 'slippage_breakdown') and entry_fill.slippage_breakdown else 0.0
+
+    return BacktestTrade(
+        trade_id=create_trade_id(symbol, entry_fill.timestamp_utc, entry_fill.signal_id),
+        symbol=symbol,
+        timeframe=entry_fill.timeframe,
+        direction=TradeDirection.LONG,
+        status=TradeStatus.OPEN,
+        entry_fill_id=entry_fill.fill_id,
+        exit_fill_id=None,
+        entry_time_utc=entry_fill.timestamp_utc,
+        exit_time_utc=None,
+        entry_price=entry_fill.fill_price,
+        exit_price=None,
+        quantity=entry_fill.quantity,
+        gross_pnl=0.0,
+        net_pnl=-entry_fill.transaction_cost,
+        total_fees=entry_fill.transaction_cost,
+        total_slippage_cost=entry_slippage_cost,
+        return_pct=0.0,
+        holding_bars=None,
+        holding_seconds=None,
+        exit_reason=TradeExitReason.UNKNOWN,
+        signal_id=entry_fill.signal_id,
+        strategy_name=strategy_name
+    )
+
 def pair_long_fills_into_trades(fills: List[BacktestFill], signals_by_id: Optional[Dict[str, StrategySignal]] = None) -> Tuple[List[BacktestTrade], List[BacktestTrade], List[str]]:
     """Pairs BUY and SELL fills into trades using FIFO."""
     warnings = []
@@ -114,87 +191,12 @@ def pair_long_fills_into_trades(fills: List[BacktestFill], signals_by_id: Option
                 if fill.quantity != entry_fill.quantity:
                      warnings.append(f"Partial fill pairing not fully supported. Entry: {entry_fill.quantity}, Exit: {fill.quantity}")
 
-                gross_pnl, net_pnl = calculate_trade_pnl(entry_fill, fill)
-                return_pct = calculate_trade_return_pct(entry_fill.fill_price, fill.fill_price, TradeDirection.LONG)
-
-                total_fees = entry_fill.transaction_cost + fill.transaction_cost
-
-                # Get slippage from breakdown if available, else fallback to old slippage logic
-                entry_slippage_cost = entry_fill.slippage_breakdown.get('total_slippage_cost', 0.0) if hasattr(entry_fill, 'slippage_breakdown') and entry_fill.slippage_breakdown else 0.0
-                exit_slippage_cost = fill.slippage_breakdown.get('total_slippage_cost', 0.0) if hasattr(fill, 'slippage_breakdown') and fill.slippage_breakdown else 0.0
-
-                # If using legacy simulation, slippage_breakdown is empty, but we might want to estimate. For Phase 26, rely on the breakdown.
-                total_slippage_cost = entry_slippage_cost + exit_slippage_cost
-
-                strategy_name = None
-                if signals_by_id and entry_fill.signal_id and entry_fill.signal_id in signals_by_id:
-                     strategy_name = signals_by_id[entry_fill.signal_id].strategy_name
-
-                # Calculate holding time
-                holding_seconds = None
-                entry_dt = _parse_time(entry_fill.timestamp_utc)
-                exit_dt = _parse_time(fill.timestamp_utc)
-                if entry_dt and exit_dt:
-                    holding_seconds = (exit_dt - entry_dt).total_seconds()
-
-                trade = BacktestTrade(
-                    trade_id=create_trade_id(symbol, entry_fill.timestamp_utc, entry_fill.signal_id),
-                    symbol=symbol,
-                    timeframe=entry_fill.timeframe,
-                    direction=TradeDirection.LONG,
-                    status=TradeStatus.CLOSED,
-                    entry_fill_id=entry_fill.fill_id,
-                    exit_fill_id=fill.fill_id,
-                    entry_time_utc=entry_fill.timestamp_utc,
-                    exit_time_utc=fill.timestamp_utc,
-                    entry_price=entry_fill.fill_price,
-                    exit_price=fill.fill_price,
-                    quantity=qty,
-                    gross_pnl=gross_pnl,
-                    net_pnl=net_pnl,
-                    total_fees=total_fees,
-                    total_slippage_cost=total_slippage_cost,
-                    return_pct=return_pct,
-                    holding_bars=None,  # Need bar indices to calculate accurately
-                    holding_seconds=holding_seconds,
-                    exit_reason=TradeExitReason.UNKNOWN, # Could parse reason from fill
-                    signal_id=entry_fill.signal_id,
-                    strategy_name=strategy_name
-                )
+                trade = _create_closed_trade(symbol, entry_fill, fill, qty, signals_by_id)
                 closed_trades.append(trade)
 
         # Any remaining buys are open trades
         for entry_fill in open_buys:
-             strategy_name = None
-             if signals_by_id and entry_fill.signal_id and entry_fill.signal_id in signals_by_id:
-                  strategy_name = signals_by_id[entry_fill.signal_id].strategy_name
-
-             entry_slippage_cost = entry_fill.slippage_breakdown.get('total_slippage_cost', 0.0) if hasattr(entry_fill, 'slippage_breakdown') and entry_fill.slippage_breakdown else 0.0
-
-             trade = BacktestTrade(
-                    trade_id=create_trade_id(symbol, entry_fill.timestamp_utc, entry_fill.signal_id),
-                    symbol=symbol,
-                    timeframe=entry_fill.timeframe,
-                    direction=TradeDirection.LONG,
-                    status=TradeStatus.OPEN,
-                    entry_fill_id=entry_fill.fill_id,
-                    exit_fill_id=None,
-                    entry_time_utc=entry_fill.timestamp_utc,
-                    exit_time_utc=None,
-                    entry_price=entry_fill.fill_price,
-                    exit_price=None,
-                    quantity=entry_fill.quantity,
-                    gross_pnl=0.0,
-                    net_pnl=-entry_fill.transaction_cost, # Just fees so far
-                    total_fees=entry_fill.transaction_cost,
-                    total_slippage_cost=entry_slippage_cost,
-                    return_pct=0.0,
-                    holding_bars=None,
-                    holding_seconds=None,
-                    exit_reason=TradeExitReason.UNKNOWN,
-                    signal_id=entry_fill.signal_id,
-                    strategy_name=strategy_name
-                )
+             trade = _create_open_trade(symbol, entry_fill, signals_by_id)
              open_trades.append(trade)
 
     return closed_trades, open_trades, warnings
