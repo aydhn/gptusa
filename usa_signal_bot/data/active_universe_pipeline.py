@@ -90,45 +90,13 @@ class ActiveUniverseDataPipeline:
         errors = []
 
         # 1. Resolve and filter universe
-        try:
-            resolution = self.resolve_and_filter_universe(request)
-            warnings.extend(resolution.warnings)
-        except Exception as e:
-            raise ActiveUniversePipelineError(f"Failed to resolve active universe: {e}")
-
-        filtered_symbols_count = len(resolution.universe.symbols)
+        resolution, filtered_symbols_count = self._resolve_universe(request, warnings)
 
         # 2. Create Run Metadata
-        run = create_universe_data_run(
-            universe_name=resolution.universe.name,
-            source=resolution.source,
-            source_path=resolution.source_path,
-            provider_name=request.provider_name,
-            timeframes=request.timeframes,
-            total_symbols=filtered_symbols_count,
-        )
-        run = start_universe_data_run(run)
-
-        run_dir = build_universe_run_dir(self.data_root, run.run_id)
-
-        # Add RESOLVE_UNIVERSE step
-        run = add_run_step_result(
-            run,
-            create_step_result(
-                UniverseRunStep.RESOLVE_UNIVERSE,
-                UniverseDataRunStatus.COMPLETED,
-                f"Resolved {filtered_symbols_count} symbols from {resolution.source.value}",
-            ),
-        )
+        run, run_dir = self._initialize_run(request, resolution, filtered_symbols_count)
 
         # 3. MultiTimeframe Pipeline execution
-        if filtered_symbols_count == 0:
-            errors.append("No active symbols remaining after filtering")
-            run = finish_universe_data_run(run, UniverseDataRunStatus.FAILED)
-            write_universe_data_run(run_dir / "run_metadata.json", run)
-            raise ActiveUniversePipelineError(
-                "No active symbols remaining after filtering"
-            )
+        self._check_empty_universe(filtered_symbols_count, run, run_dir, errors)
 
         mtf_result, coverage, readiness, run = self._execute_mtf_pipeline(
             request, resolution, run, run_dir, warnings, errors
@@ -140,12 +108,8 @@ class ActiveUniverseDataPipeline:
         )
 
         # 5. Determine Eligible Symbols
-        eligible_symbols = get_eligible_symbols(gate_report)
-        ineligible_symbols = get_ineligible_symbols(gate_report)
-
-        success = (
-            gate_report.status.value in ("PASSED", "PARTIAL")
-            and len(eligible_symbols) > 0
+        eligible_symbols, ineligible_symbols, success = self._determine_eligibility(
+            gate_report
         )
 
         # 6. Write Outputs
@@ -179,6 +143,58 @@ class ActiveUniverseDataPipeline:
             warnings=warnings,
             errors=errors,
         )
+
+    def _resolve_universe(self, request, warnings):
+        try:
+            resolution = self.resolve_and_filter_universe(request)
+            warnings.extend(resolution.warnings)
+            filtered_symbols_count = len(resolution.universe.symbols)
+            return resolution, filtered_symbols_count
+        except Exception as e:
+            raise ActiveUniversePipelineError(f"Failed to resolve active universe: {e}")
+
+    def _initialize_run(self, request, resolution, filtered_symbols_count):
+        run = create_universe_data_run(
+            universe_name=resolution.universe.name,
+            source=resolution.source,
+            source_path=resolution.source_path,
+            provider_name=request.provider_name,
+            timeframes=request.timeframes,
+            total_symbols=filtered_symbols_count,
+        )
+        run = start_universe_data_run(run)
+
+        run_dir = build_universe_run_dir(self.data_root, run.run_id)
+
+        # Add RESOLVE_UNIVERSE step
+        run = add_run_step_result(
+            run,
+            create_step_result(
+                UniverseRunStep.RESOLVE_UNIVERSE,
+                UniverseDataRunStatus.COMPLETED,
+                f"Resolved {filtered_symbols_count} symbols from {resolution.source.value}",
+            ),
+        )
+        return run, run_dir
+
+    def _check_empty_universe(self, filtered_symbols_count, run, run_dir, errors):
+        if filtered_symbols_count == 0:
+            errors.append("No active symbols remaining after filtering")
+            run = finish_universe_data_run(run, UniverseDataRunStatus.FAILED)
+            write_universe_data_run(run_dir / "run_metadata.json", run)
+            raise ActiveUniversePipelineError(
+                "No active symbols remaining after filtering"
+            )
+
+    def _determine_eligibility(self, gate_report):
+        eligible_symbols = get_eligible_symbols(gate_report)
+        ineligible_symbols = get_ineligible_symbols(gate_report)
+
+        success = (
+            gate_report.status.value in ("PASSED", "PARTIAL")
+            and len(eligible_symbols) > 0
+        )
+        return eligible_symbols, ineligible_symbols, success
 
     def _execute_mtf_pipeline(
         self, request, resolution, run, run_dir, warnings, errors
