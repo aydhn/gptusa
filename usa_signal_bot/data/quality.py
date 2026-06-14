@@ -5,10 +5,20 @@ from usa_signal_bot.data.models import OHLCVBar
 from usa_signal_bot.core.enums import DataQualityStatus
 from usa_signal_bot.core.exceptions import DataValidationError
 from usa_signal_bot.data.validation_rules import (
-    ValidationRuleResult, validate_single_bar, validate_duplicate_bars,
-    validate_bar_sequence, validate_missing_symbols, validate_empty_dataset
+    ValidationRuleResult,
+    validate_single_bar,
+    validate_duplicate_bars,
+    validate_bar_sequence,
+    validate_missing_symbols,
+    validate_empty_dataset,
 )
-from usa_signal_bot.data.anomalies import DataAnomalyReport, validation_results_to_anomaly_report, has_blocking_anomalies, anomaly_report_to_dict
+from usa_signal_bot.data.anomalies import (
+    DataAnomalyReport,
+    validation_results_to_anomaly_report,
+    has_blocking_anomalies,
+    anomaly_report_to_dict,
+)
+
 
 @dataclass
 class DataQualityIssue:
@@ -17,6 +27,7 @@ class DataQualityIssue:
     severity: str = "WARNING"
     field: Optional[str] = None
     message: str = ""
+
 
 @dataclass
 class DataQualityReport:
@@ -30,6 +41,7 @@ class DataQualityReport:
     issues: List[DataQualityIssue] = field(default_factory=list)
     status: DataQualityStatus = DataQualityStatus.OK
 
+
 def validate_ohlcv_bar_quality(bar: OHLCVBar) -> List[DataQualityIssue]:
     """Validates a single bar for data quality issues (Legacy Phase 8)."""
     # Use new rules internally to map back to legacy issues to not break tests
@@ -37,13 +49,27 @@ def validate_ohlcv_bar_quality(bar: OHLCVBar) -> List[DataQualityIssue]:
     issues = []
     for r in results:
         if not r.passed:
-            field_mapped = "price" if r.rule_name == "price_consistency" and "positive" in r.message.lower() else r.field
-            field_mapped = "high/low" if r.rule_name == "price_consistency" and "high cannot be less than low" in r.message.lower() else field_mapped
-            issues.append(DataQualityIssue(
-                symbol=r.symbol, timestamp_utc=r.timestamp_utc,
-                severity=r.severity.value, field=field_mapped,
-                message=r.message
-            ))
+            field_mapped = (
+                "price"
+                if r.rule_name == "price_consistency"
+                and "positive" in r.message.lower()
+                else r.field
+            )
+            field_mapped = (
+                "high/low"
+                if r.rule_name == "price_consistency"
+                and "high cannot be less than low" in r.message.lower()
+                else field_mapped
+            )
+            issues.append(
+                DataQualityIssue(
+                    symbol=r.symbol,
+                    timestamp_utc=r.timestamp_utc,
+                    severity=r.severity.value,
+                    field=field_mapped,
+                    message=r.message,
+                )
+            )
 
     # Specific fix for legacy tests checking negative volume: The new volume validation handles zero volume,
     # but the old test specifically checked for negative volume message format.
@@ -51,11 +77,20 @@ def validate_ohlcv_bar_quality(bar: OHLCVBar) -> List[DataQualityIssue]:
 
     return issues
 
-def validate_ohlcv_bars_quality(bars: List[OHLCVBar], expected_symbols: List[str], provider_name: str, timeframe: str) -> DataQualityReport:
+
+def validate_ohlcv_bars_quality(
+    bars: List[OHLCVBar],
+    expected_symbols: List[str],
+    provider_name: str,
+    timeframe: str,
+) -> DataQualityReport:
     """Validates a collection of bars against expected conditions (Legacy Phase 8)."""
     # We will use the new comprehensive function and convert it
-    quality_report, _ = run_full_ohlcv_quality_validation(bars, expected_symbols, provider_name, timeframe)
+    quality_report, _ = run_full_ohlcv_quality_validation(
+        bars, expected_symbols, provider_name, timeframe
+    )
     return quality_report
+
 
 def data_quality_report_to_text(report: DataQualityReport) -> str:
     """Formats a DataQualityReport into a readable text summary."""
@@ -66,35 +101,51 @@ def data_quality_report_to_text(report: DataQualityReport) -> str:
         f"Valid Bars: {report.valid_bars}",
         f"Invalid Bars: {report.invalid_bars}",
         f"Symbols Checked: {len(report.symbols_checked)}",
-        f"Missing Symbols: {len(report.missing_symbols)}"
+        f"Missing Symbols: {len(report.missing_symbols)}",
     ]
     if report.issues:
         lines.append("Issues:")
         for i, issue in enumerate(report.issues[:10]):
             sym_part = f"[{issue.symbol}]" if issue.symbol else ""
             ts_part = f"@{issue.timestamp_utc}" if issue.timestamp_utc else ""
-            lines.append(f"  - {issue.severity} {sym_part}{ts_part} {issue.field or ''}: {issue.message}")
+            lines.append(
+                f"  - {issue.severity} {sym_part}{ts_part} {issue.field or ''}: {issue.message}"
+            )
         if len(report.issues) > 10:
-             lines.append(f"  ... and {len(report.issues) - 10} more issues.")
+            lines.append(f"  ... and {len(report.issues) - 10} more issues.")
 
     return "\n".join(lines)
 
-def assert_data_quality_acceptable(report: DataQualityReport, allow_warnings: bool = True) -> None:
+
+def assert_data_quality_acceptable(
+    report: DataQualityReport, allow_warnings: bool = True
+) -> None:
     """Raises DataValidationError if quality is not acceptable."""
     if report.status == DataQualityStatus.ERROR:
-        raise DataValidationError(f"Data quality check failed: {report.invalid_bars} invalid bars. {len(report.missing_symbols)} missing symbols.")
+        raise DataValidationError(
+            f"Data quality check failed: {report.invalid_bars} invalid bars. {len(report.missing_symbols)} missing symbols."
+        )
     if not allow_warnings and report.status == DataQualityStatus.WARNING:
-        raise DataValidationError("Data quality check raised warnings which are not allowed.")
+        raise DataValidationError(
+            "Data quality check raised warnings which are not allowed."
+        )
 
 
 # --- NEW PHASE 9 FUNCTIONS ---
 
-def build_quality_report_from_validation_results(results: List[ValidationRuleResult], bars: List[OHLCVBar], expected_symbols: List[str], provider_name: str, timeframe: str) -> DataQualityReport:
+
+def build_quality_report_from_validation_results(
+    results: List[ValidationRuleResult],
+    bars: List[OHLCVBar],
+    expected_symbols: List[str],
+    provider_name: str,
+    timeframe: str,
+) -> DataQualityReport:
     report = DataQualityReport(
         provider_name=provider_name,
         timeframe=timeframe,
         symbols_checked=expected_symbols.copy(),
-        total_bars=len(bars)
+        total_bars=len(bars),
     )
 
     invalid_bars_idx = set()
@@ -103,17 +154,20 @@ def build_quality_report_from_validation_results(results: List[ValidationRuleRes
     for r in results:
         if not r.passed:
             issue = DataQualityIssue(
-                symbol=r.symbol, timestamp_utc=r.timestamp_utc,
-                severity=r.severity.value, field=r.field, message=r.message
+                symbol=r.symbol,
+                timestamp_utc=r.timestamp_utc,
+                severity=r.severity.value,
+                field=r.field,
+                message=r.message,
             )
             # Legacy mapping adjustments
             if r.rule_name == "price_consistency" and "positive" in r.message.lower():
                 issue.field = "price"
-            if r.rule_name == "price_consistency" and "high cannot be less than low" in r.message.lower():
+            if (
+                r.rule_name == "price_consistency"
+                and "high cannot be less than low" in r.message.lower()
+            ):
                 issue.field = "high/low"
-            # Specific hack for Legacy test missing symbol message
-            if r.rule_name == "missing_symbol":
-                issue.message = "No data returned for expected symbol"
 
             report.issues.append(issue)
 
@@ -157,7 +211,13 @@ def build_quality_report_from_validation_results(results: List[ValidationRuleRes
 
     return report
 
-def run_full_ohlcv_quality_validation(bars: List[OHLCVBar], expected_symbols: List[str], provider_name: str, timeframe: str) -> Tuple[DataQualityReport, DataAnomalyReport]:
+
+def run_full_ohlcv_quality_validation(
+    bars: List[OHLCVBar],
+    expected_symbols: List[str],
+    provider_name: str,
+    timeframe: str,
+) -> Tuple[DataQualityReport, DataAnomalyReport]:
     results = []
 
     # 1. Dataset level
@@ -180,49 +240,78 @@ def run_full_ohlcv_quality_validation(bars: List[OHLCVBar], expected_symbols: Li
         if key in seen_timestamps:
             # Add a legacy WARNING for duplicate timestamp to satisfy old tests
             from usa_signal_bot.core.enums import ValidationSeverity
-            results.append(ValidationRuleResult("duplicate_legacy", False, ValidationSeverity.WARNING, "Duplicate timestamp for symbol", symbol=bar.symbol, timestamp_utc=bar.timestamp_utc, field="timestamp_utc"))
+
+            results.append(
+                ValidationRuleResult(
+                    "duplicate_legacy",
+                    False,
+                    ValidationSeverity.WARNING,
+                    "Duplicate timestamp for symbol",
+                    symbol=bar.symbol,
+                    timestamp_utc=bar.timestamp_utc,
+                    field="timestamp_utc",
+                )
+            )
         seen_timestamps.add(key)
 
     # Legacy check for missing symbols
     for sym in expected_symbols:
         if sym not in found_symbols:
             from usa_signal_bot.core.enums import ValidationSeverity
-            # ensure warning is emitted for missing
-            results.append(ValidationRuleResult("missing_symbol_legacy", False, ValidationSeverity.WARNING, "No data returned for expected symbol", symbol=sym, field="symbol"))
 
-    quality_report = build_quality_report_from_validation_results(results, bars, expected_symbols, provider_name, timeframe)
-    anomaly_report = validation_results_to_anomaly_report(results, provider_name, timeframe)
+            # ensure warning is emitted for missing
+            results.append(
+                ValidationRuleResult(
+                    "missing_symbol_legacy",
+                    False,
+                    ValidationSeverity.WARNING,
+                    "No data returned for expected symbol",
+                    symbol=sym,
+                    field="symbol",
+                )
+            )
+
+    quality_report = build_quality_report_from_validation_results(
+        results, bars, expected_symbols, provider_name, timeframe
+    )
+    anomaly_report = validation_results_to_anomaly_report(
+        results, provider_name, timeframe
+    )
 
     if has_blocking_anomalies(anomaly_report) or len(bars) == 0:
         quality_report.status = DataQualityStatus.ERROR
 
     return quality_report, anomaly_report
 
+
 def write_quality_report_json(path: Path, report: DataQualityReport) -> Path:
     import json
     from dataclasses import asdict
     from usa_signal_bot.utils.file_utils import safe_mkdir
+
     safe_mkdir(path.parent)
-    with path.open('w', encoding='utf-8') as f:
+    with path.open("w", encoding="utf-8") as f:
         # manual serialization to handle enum serialization properly
         d = asdict(report)
-        d['status'] = report.status.value
+        d["status"] = report.status.value
         json.dump(d, f, indent=2)
     return path
+
 
 def write_anomaly_report_json(path: Path, report: DataAnomalyReport) -> Path:
     import json
     from usa_signal_bot.utils.file_utils import safe_mkdir
+
     safe_mkdir(path.parent)
 
     # Custom dict builder for enums
     d = anomaly_report_to_dict(report)
-    for a in d['anomalies']:
-        if hasattr(a['severity'], 'value'):
-            a['severity'] = a['severity'].value
-        if hasattr(a['anomaly_type'], 'value'):
-            a['anomaly_type'] = a['anomaly_type'].value
+    for a in d["anomalies"]:
+        if hasattr(a["severity"], "value"):
+            a["severity"] = a["severity"].value
+        if hasattr(a["anomaly_type"], "value"):
+            a["anomaly_type"] = a["anomaly_type"].value
 
-    with path.open('w', encoding='utf-8') as f:
+    with path.open("w", encoding="utf-8") as f:
         json.dump(d, f, indent=2)
     return path
