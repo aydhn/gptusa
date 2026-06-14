@@ -147,3 +147,20 @@ def test_validate_market_impact_report_error_negative_usd():
     assert report.valid is False
     assert report.error_count == 1
     assert "impact_usd cannot be negative" in report.errors[0]
+
+
+def test_validate_transaction_cost_breakdown_report_error_path():
+    from unittest.mock import patch, MagicMock
+    from usa_signal_bot.transaction_costs.cost_validation import validate_transaction_cost_breakdown_report
+
+    with patch('usa_signal_bot.transaction_costs.cost_validation.validate_transaction_cost_breakdown') as mock_validate:
+        mock_validate.side_effect = ValueError("simulated validation error")
+
+        # pass a dummy MagicMock as the item, since the inner logic is mocked out
+        dummy_item = MagicMock()
+
+        report = validate_transaction_cost_breakdown_report(dummy_item)
+
+        assert report.valid is False
+        assert report.error_count == 1
+        assert "simulated validation error" in report.errors[0]
