@@ -4,6 +4,8 @@ import pytest
 from usa_signal_bot.calendar.calendar_models import (
     CalendarReviewResult,
     calendar_review_result_to_dict,
+    TradingDayResult,
+    trading_day_result_to_dict,
     MarketHoliday,
     MarketEarlyClose,
     MarketSession,
@@ -122,3 +124,92 @@ def test_calendar_review_result_to_dict():
     assert d["output_paths"] == {"path": "/output"}
     assert d["warnings"] == ["warning 1"]
     assert d["errors"] == ["error 1"]
+
+
+def test_trading_day_result_to_dict_with_session():
+    from unittest.mock import MagicMock
+
+    cal_mock = MagicMock()
+    cal_mock.value = "US_EQUITIES"
+    day_type_mock = MagicMock()
+    day_type_mock.value = "TRADING_DAY"
+    session_type_mock = MagicMock()
+    session_type_mock.value = "REGULAR"
+    source_mock = MagicMock()
+    source_mock.value = "STATIC_DEFAULT"
+
+    session_mock = MarketSession(
+        session_id="session_1",
+        calendar_name=cal_mock,
+        date="2024-01-02",
+        session_type=session_type_mock,
+        open_time_local="09:30",
+        close_time_local="16:00",
+        timezone="America/New_York",
+        is_trading_session=True,
+        is_early_close=False,
+        source=source_mock,
+        warnings=["session_warn"],
+        errors=["session_err"]
+    )
+
+    result = TradingDayResult(
+        result_id="res_1",
+        calendar_name=cal_mock,
+        date="2024-01-02",
+        day_type=day_type_mock,
+        is_trading_day=True,
+        previous_trading_day="2023-12-29",
+        next_trading_day="2024-01-03",
+        session=session_mock,
+        warnings=["warn_1"],
+        errors=["err_1"]
+    )
+
+    d = trading_day_result_to_dict(result)
+
+    assert d["result_id"] == "res_1"
+    assert d["calendar_name"] == "US_EQUITIES"
+    assert d["date"] == "2024-01-02"
+    assert d["day_type"] == "TRADING_DAY"
+    assert d["is_trading_day"] is True
+    assert d["previous_trading_day"] == "2023-12-29"
+    assert d["next_trading_day"] == "2024-01-03"
+    assert d["warnings"] == ["warn_1"]
+    assert d["errors"] == ["err_1"]
+    assert d["session"] is not None
+    assert d["session"]["session_id"] == "session_1"
+    assert d["session"]["calendar_name"] == "US_EQUITIES"
+    assert d["session"]["warnings"] == ["session_warn"]
+    assert d["session"]["errors"] == ["session_err"]
+
+
+def test_trading_day_result_to_dict_without_session():
+    from unittest.mock import MagicMock
+
+    cal_mock = MagicMock()
+    cal_mock.value = "US_EQUITIES"
+    day_type_mock = MagicMock()
+    day_type_mock.value = "HOLIDAY"
+
+    result = TradingDayResult(
+        result_id="res_2",
+        calendar_name=cal_mock,
+        date="2024-01-01",
+        day_type=day_type_mock,
+        is_trading_day=False,
+        previous_trading_day="2023-12-29",
+        next_trading_day="2024-01-02",
+        session=None,
+        warnings=[],
+        errors=[]
+    )
+
+    d = trading_day_result_to_dict(result)
+
+    assert d["result_id"] == "res_2"
+    assert d["calendar_name"] == "US_EQUITIES"
+    assert d["date"] == "2024-01-01"
+    assert d["day_type"] == "HOLIDAY"
+    assert d["is_trading_day"] is False
+    assert d["session"] is None
