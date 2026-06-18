@@ -1,7 +1,7 @@
 """Test session classifier."""
 from usa_signal_bot.calendar.session_classifier import classify_timestamp_session, classify_rows_by_session, session_type_to_signal_guard
 from usa_signal_bot.calendar.market_calendar import LocalMarketCalendar
-from usa_signal_bot.core.enums import MarketSessionType
+from usa_signal_bot.core.enums import MarketSessionType, MarketCalendarName
 
 def test_session_classifier():
     cal = LocalMarketCalendar()
@@ -19,3 +19,50 @@ def test_session_classifier():
     guard = session_type_to_signal_guard(MarketSessionType.CLOSED)
     assert guard["is_trading_allowed"] is False
     assert guard["warning"] is not None
+
+
+def test_classify_rows_by_session():
+    from usa_signal_bot.calendar.calendar_models import MarketEarlyClose
+    # Set up a calendar with an early close date
+    early_close_date = MarketEarlyClose(name="Black Friday", calendar_name=MarketCalendarName.US_EQUITIES, date="2024-11-29", close_time_local="13:00", source="test")
+    cal = LocalMarketCalendar(early_closes=[early_close_date])
+
+    # Rows covering different session types
+    rows = [
+        {"timestamp": "2024-01-02 08:30"}, # PREMARKET
+        {"timestamp": "2024-01-02 12:00"}, # REGULAR
+        {"timestamp": "2024-01-02 16:30"}, # AFTER_HOURS
+        {"timestamp": "2024-01-06 12:00"}, # WEEKEND
+        {"timestamp": "2024-11-29 12:00"}, # EARLY_CLOSE (regular time, but early close date)
+        {"date": ""},                      # UNKNOWN
+
+    ]
+
+    summary = classify_rows_by_session(rows, cal)
+
+    assert summary[MarketSessionType.PREMARKET.value] == 1
+    assert summary[MarketSessionType.AFTER_HOURS.value] == 1
+    assert summary[MarketSessionType.WEEKEND.value] == 1
+    assert summary[MarketSessionType.EARLY_CLOSE.value] == 1
+    assert summary[MarketSessionType.UNKNOWN.value] == 1
+
+    # The 'invalid_date' evaluates to REGULAR in classify_timestamp_session if it reaches the end and time logic fails/returns default
+    # Actually, timestamp length < 10 returns UNKNOWN in classify_timestamp_session:
+    # "invalid_d" (9 chars) -> UNKNOWN. "invalid_date" (12 chars) -> date="invalid_da", time="t" -> REGULAR fallback since len(time_part)<5
+    assert summary[MarketSessionType.REGULAR.value] == 1
+
+
+
+def test_classify_rows_by_session_fallback():
+    from unittest.mock import patch
+    import usa_signal_bot.calendar.session_classifier as sc
+    cal = LocalMarketCalendar()
+
+    # We return the string value of REGULAR to avoid KeyError and test the `else str(session)` branch
+    def mock_classify(row, calendar):
+        return MarketSessionType.REGULAR.value
+
+    with patch.object(sc, 'classify_bar_session', side_effect=mock_classify):
+        rows = [{"timestamp": "2024-01-02 12:00"}]
+        summary = sc.classify_rows_by_session(rows, cal)
+        assert summary[MarketSessionType.REGULAR.value] == 1
