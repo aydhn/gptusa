@@ -108,3 +108,41 @@ def test_classify_bar_session():
     # Test both present (timestamp should take precedence)
     row_both = {"timestamp": "2024-01-02 12:00", "date": "2024-01-02 16:30"}
     assert classify_bar_session(row_both, cal) == MarketSessionType.REGULAR
+
+
+def test_session_type_to_signal_guard():
+    from usa_signal_bot.calendar.session_classifier import session_type_to_signal_guard
+    from usa_signal_bot.core.enums import MarketSessionType
+
+    guard_regular = session_type_to_signal_guard(MarketSessionType.REGULAR)
+    assert guard_regular["is_trading_allowed"] is True
+    assert guard_regular["warning"] is None
+    assert guard_regular["metadata_flag"] == str(MarketSessionType.REGULAR)
+
+    guard_early = session_type_to_signal_guard(MarketSessionType.EARLY_CLOSE)
+    assert guard_early["is_trading_allowed"] is True
+    assert guard_early["warning"] == "Session is early close."
+
+    guard_premarket = session_type_to_signal_guard(MarketSessionType.PREMARKET)
+    assert guard_premarket["is_trading_allowed"] is False
+    assert guard_premarket["warning"] == "Premarket session. Proceed with caution."
+
+    guard_after_hours = session_type_to_signal_guard(MarketSessionType.AFTER_HOURS)
+    assert guard_after_hours["is_trading_allowed"] is False
+    assert guard_after_hours["warning"] == "After-hours session. Proceed with caution."
+
+    guard_weekend = session_type_to_signal_guard(MarketSessionType.WEEKEND)
+    assert guard_weekend["is_trading_allowed"] is False
+    assert guard_weekend["warning"] == "Weekend. Market closed."
+
+    guard_holiday = session_type_to_signal_guard(MarketSessionType.HOLIDAY)
+    assert guard_holiday["is_trading_allowed"] is False
+    assert guard_holiday["warning"] == "Holiday. Market closed."
+
+    guard_closed = session_type_to_signal_guard(MarketSessionType.CLOSED)
+    assert guard_closed["is_trading_allowed"] is False
+    assert guard_closed["warning"] == "Market closed."
+
+    guard_unknown = session_type_to_signal_guard(MarketSessionType.UNKNOWN)
+    assert guard_unknown["is_trading_allowed"] is False
+    assert guard_unknown["warning"] == "Unknown session type."
