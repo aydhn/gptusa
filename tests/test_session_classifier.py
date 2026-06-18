@@ -1,14 +1,26 @@
 """Test session classifier."""
-from usa_signal_bot.calendar.session_classifier import classify_timestamp_session, classify_rows_by_session, session_type_to_signal_guard
+
+from usa_signal_bot.calendar.session_classifier import (
+    classify_timestamp_session,
+    classify_rows_by_session,
+    session_type_to_signal_guard,
+)
 from usa_signal_bot.calendar.market_calendar import LocalMarketCalendar
 from usa_signal_bot.core.enums import MarketSessionType, MarketCalendarName
+
 
 def test_session_classifier():
     cal = LocalMarketCalendar()
 
     assert classify_timestamp_session("2024-01-02", cal) == MarketSessionType.REGULAR
-    assert classify_timestamp_session("2024-01-02 08:00", cal) == MarketSessionType.PREMARKET
-    assert classify_timestamp_session("2024-01-02 16:30", cal) == MarketSessionType.AFTER_HOURS
+    assert (
+        classify_timestamp_session("2024-01-02 08:00", cal)
+        == MarketSessionType.PREMARKET
+    )
+    assert (
+        classify_timestamp_session("2024-01-02 16:30", cal)
+        == MarketSessionType.AFTER_HOURS
+    )
     assert classify_timestamp_session("2024-01-06", cal) == MarketSessionType.WEEKEND
 
     rows = [{"date": "2024-01-02"}, {"date": "2024-01-06"}]
@@ -23,19 +35,27 @@ def test_session_classifier():
 
 def test_classify_rows_by_session():
     from usa_signal_bot.calendar.calendar_models import MarketEarlyClose
+
     # Set up a calendar with an early close date
-    early_close_date = MarketEarlyClose(name="Black Friday", calendar_name=MarketCalendarName.US_EQUITIES, date="2024-11-29", close_time_local="13:00", source="test")
+    early_close_date = MarketEarlyClose(
+        name="Black Friday",
+        calendar_name=MarketCalendarName.US_EQUITIES,
+        date="2024-11-29",
+        close_time_local="13:00",
+        source="test",
+    )
     cal = LocalMarketCalendar(early_closes=[early_close_date])
 
     # Rows covering different session types
     rows = [
-        {"timestamp": "2024-01-02 08:30"}, # PREMARKET
-        {"timestamp": "2024-01-02 12:00"}, # REGULAR
-        {"timestamp": "2024-01-02 16:30"}, # AFTER_HOURS
-        {"timestamp": "2024-01-06 12:00"}, # WEEKEND
-        {"timestamp": "2024-11-29 12:00"}, # EARLY_CLOSE (regular time, but early close date)
-        {"date": ""},                      # UNKNOWN
-
+        {"timestamp": "2024-01-02 08:30"},  # PREMARKET
+        {"timestamp": "2024-01-02 12:00"},  # REGULAR
+        {"timestamp": "2024-01-02 16:30"},  # AFTER_HOURS
+        {"timestamp": "2024-01-06 12:00"},  # WEEKEND
+        {
+            "timestamp": "2024-11-29 12:00"
+        },  # EARLY_CLOSE (regular time, but early close date)
+        {"date": ""},  # UNKNOWN
     ]
 
     summary = classify_rows_by_session(rows, cal)
@@ -52,17 +72,39 @@ def test_classify_rows_by_session():
     assert summary[MarketSessionType.REGULAR.value] == 1
 
 
-
 def test_classify_rows_by_session_fallback():
     from unittest.mock import patch
     import usa_signal_bot.calendar.session_classifier as sc
+
     cal = LocalMarketCalendar()
 
     # We return the string value of REGULAR to avoid KeyError and test the `else str(session)` branch
     def mock_classify(row, calendar):
         return MarketSessionType.REGULAR.value
 
-    with patch.object(sc, 'classify_bar_session', side_effect=mock_classify):
+    with patch.object(sc, "classify_bar_session", side_effect=mock_classify):
         rows = [{"timestamp": "2024-01-02 12:00"}]
         summary = sc.classify_rows_by_session(rows, cal)
         assert summary[MarketSessionType.REGULAR.value] == 1
+
+
+def test_classify_bar_session():
+    from usa_signal_bot.calendar.session_classifier import classify_bar_session
+
+    cal = LocalMarketCalendar()
+
+    # Test timestamp presence
+    row_timestamp = {"timestamp": "2024-01-02 08:00"}
+    assert classify_bar_session(row_timestamp, cal) == MarketSessionType.PREMARKET
+
+    # Test date fallback
+    row_date = {"date": "2024-01-02 16:30"}
+    assert classify_bar_session(row_date, cal) == MarketSessionType.AFTER_HOURS
+
+    # Test both missing
+    row_empty = {}
+    assert classify_bar_session(row_empty, cal) == MarketSessionType.UNKNOWN
+
+    # Test both present (timestamp should take precedence)
+    row_both = {"timestamp": "2024-01-02 12:00", "date": "2024-01-02 16:30"}
+    assert classify_bar_session(row_both, cal) == MarketSessionType.REGULAR
