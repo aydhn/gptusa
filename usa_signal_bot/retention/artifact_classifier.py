@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Any
 from usa_signal_bot.core.enums import RetentionArtifactType
 
+
 def classify_retention_artifact(path: Path, data_root: Path) -> RetentionArtifactType:
     try:
         rel_path = path.relative_to(data_root)
@@ -44,6 +45,7 @@ def classify_retention_artifact(path: Path, data_root: Path) -> RetentionArtifac
 
     return RetentionArtifactType.UNKNOWN
 
+
 def artifact_age_days(path: Path) -> float | None:
     try:
         mtime = path.stat().st_mtime
@@ -51,6 +53,7 @@ def artifact_age_days(path: Path) -> float | None:
         return (now - mtime) / (24 * 3600)
     except OSError:
         return None
+
 
 def artifact_size_bytes(path: Path) -> int:
     try:
@@ -68,12 +71,14 @@ def artifact_size_bytes(path: Path) -> int:
     except OSError:
         return 0
 
+
 def artifact_last_modified_utc(path: Path) -> str | None:
     try:
         mtime = path.stat().st_mtime
         return datetime.fromtimestamp(mtime, tz=timezone.utc).isoformat()
     except OSError:
         return None
+
 
 def artifact_checksum_if_small(path: Path, max_size_bytes: int = 1048576) -> str | None:
     try:
@@ -82,11 +87,14 @@ def artifact_checksum_if_small(path: Path, max_size_bytes: int = 1048576) -> str
         if path.stat().st_size > max_size_bytes:
             return None
         with open(path, "rb") as f:
-            return hashlib.md5(f.read()).hexdigest()
+            return hashlib.sha256(f.read()).hexdigest()
     except OSError:
         return None
 
-def discover_retention_artifacts(data_root: Path, include_files: bool = True, include_dirs: bool = True) -> list[Path]:
+
+def discover_retention_artifacts(
+    data_root: Path, include_files: bool = True, include_dirs: bool = True
+) -> list[Path]:
     artifacts = []
     if not data_root.exists() or not data_root.is_dir():
         return artifacts
@@ -98,30 +106,44 @@ def discover_retention_artifacts(data_root: Path, include_files: bool = True, in
 
         rel = dp.relative_to(data_root)
 
-        if len(rel.parts) >= 2 and classify_retention_artifact(dp, data_root) != RetentionArtifactType.UNKNOWN:
-             if include_dirs:
-                 artifacts.append(dp)
-             dirnames[:] = []
-             continue
+        if (
+            len(rel.parts) >= 2
+            and classify_retention_artifact(dp, data_root)
+            != RetentionArtifactType.UNKNOWN
+        ):
+            if include_dirs:
+                artifacts.append(dp)
+            dirnames[:] = []
+            continue
 
         if include_files:
-             for f in filenames:
-                 file_path = dp / f
-                 if classify_retention_artifact(file_path, data_root) != RetentionArtifactType.UNKNOWN:
-                     artifacts.append(file_path)
+            for f in filenames:
+                file_path = dp / f
+                if (
+                    classify_retention_artifact(file_path, data_root)
+                    != RetentionArtifactType.UNKNOWN
+                ):
+                    artifacts.append(file_path)
 
     return artifacts
 
-def group_artifacts_by_type(paths: list[Path], data_root: Path) -> dict[RetentionArtifactType, list[Path]]:
+
+def group_artifacts_by_type(
+    paths: list[Path], data_root: Path
+) -> dict[RetentionArtifactType, list[Path]]:
     grouped = {t: [] for t in RetentionArtifactType}
     for p in paths:
         t = classify_retention_artifact(p, data_root)
         grouped[t].append(p)
     return grouped
 
+
 def summarize_artifact_group(paths: list[Path], data_root: Path) -> dict[str, Any]:
     return {
         "count": len(paths),
         "total_size_bytes": sum(artifact_size_bytes(p) for p in paths),
-        "types": {t.value: len(ps) for t, ps in group_artifacts_by_type(paths, data_root).items()}
+        "types": {
+            t.value: len(ps)
+            for t, ps in group_artifacts_by_type(paths, data_root).items()
+        },
     }
