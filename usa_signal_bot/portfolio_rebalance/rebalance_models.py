@@ -2,6 +2,7 @@ import uuid
 import datetime
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
+from usa_signal_bot.core.serialization import to_dict_clean
 
 from usa_signal_bot.core.enums import (
     RebalanceMode,
@@ -11,9 +12,11 @@ from usa_signal_bot.core.enums import (
     DriftSeverity,
     TurnoverStatus,
     RebalanceThrottleReason,
-    RebalanceReportType
+    RebalanceReportType,
 )
 from usa_signal_bot.core.exceptions import DataValidationError
+from usa_signal_bot.core.serialization import to_dict_clean
+
 
 @dataclass
 class PortfolioPosition:
@@ -32,6 +35,7 @@ class PortfolioPosition:
     cost_bucket: Optional[str] = None
     metadata: Dict[str, Any] = field(default_factory=dict)
 
+
 @dataclass
 class CurrentPortfolioState:
     state_id: str
@@ -45,6 +49,7 @@ class CurrentPortfolioState:
     errors: List[str] = field(default_factory=list)
     metadata: Dict[str, Any] = field(default_factory=dict)
 
+
 @dataclass
 class TargetPortfolioState:
     target_id: str
@@ -57,6 +62,7 @@ class TargetPortfolioState:
     warnings: List[str] = field(default_factory=list)
     errors: List[str] = field(default_factory=list)
     metadata: Dict[str, Any] = field(default_factory=dict)
+
 
 @dataclass
 class DriftMeasurement:
@@ -73,6 +79,7 @@ class DriftMeasurement:
     warnings: List[str] = field(default_factory=list)
     errors: List[str] = field(default_factory=list)
     metadata: Dict[str, Any] = field(default_factory=dict)
+
 
 @dataclass
 class RebalanceAction:
@@ -92,6 +99,7 @@ class RebalanceAction:
     errors: List[str] = field(default_factory=list)
     metadata: Dict[str, Any] = field(default_factory=dict)
 
+
 @dataclass
 class TurnoverAssessment:
     assessment_id: str
@@ -105,6 +113,7 @@ class TurnoverAssessment:
     warnings: List[str] = field(default_factory=list)
     errors: List[str] = field(default_factory=list)
     metadata: Dict[str, Any] = field(default_factory=dict)
+
 
 @dataclass
 class RebalancePlan:
@@ -125,6 +134,7 @@ class RebalancePlan:
     warnings: List[str] = field(default_factory=list)
     errors: List[str] = field(default_factory=list)
     metadata: Dict[str, Any] = field(default_factory=dict)
+
 
 @dataclass
 class RebalanceReview:
@@ -149,11 +159,13 @@ def validate_portfolio_position(item: PortfolioPosition) -> None:
     if item.market_value_usd < 0:
         raise DataValidationError("market_value_usd cannot be negative")
 
+
 def validate_current_portfolio_state(item: CurrentPortfolioState) -> None:
     if item.total_equity_usd is not None and item.total_equity_usd < 0:
         raise DataValidationError("total_equity_usd cannot be negative")
     for pos in item.positions:
         validate_portfolio_position(pos)
+
 
 def validate_target_portfolio_state(item: TargetPortfolioState) -> None:
     if item.total_equity_usd is not None and item.total_equity_usd < 0:
@@ -161,9 +173,11 @@ def validate_target_portfolio_state(item: TargetPortfolioState) -> None:
     for pos in item.target_positions:
         validate_portfolio_position(pos)
 
+
 def validate_drift_measurement(item: DriftMeasurement) -> None:
     if not item.name:
         raise DataValidationError("drift name cannot be empty")
+
 
 def validate_rebalance_action(item: RebalanceAction) -> None:
     if not item.symbol:
@@ -173,9 +187,11 @@ def validate_rebalance_action(item: RebalanceAction) -> None:
     if item.estimated_turnover_usd is not None and item.estimated_turnover_usd < 0:
         raise DataValidationError("estimated_turnover_usd cannot be negative")
 
+
 def validate_turnover_assessment(item: TurnoverAssessment) -> None:
     if item.estimated_turnover_usd < 0:
         raise DataValidationError("estimated_turnover_usd cannot be negative")
+
 
 def validate_rebalance_plan(item: RebalancePlan) -> None:
     if item.current_state:
@@ -189,62 +205,78 @@ def validate_rebalance_plan(item: RebalancePlan) -> None:
     if item.turnover_assessment:
         validate_turnover_assessment(item.turnover_assessment)
 
+
 def create_portfolio_position_id(symbol: str) -> str:
     return f"pos_{symbol}_{uuid.uuid4().hex[:8]}"
+
 
 def create_current_portfolio_state_id(prefix: str = "current_portfolio") -> str:
     return f"{prefix}_{uuid.uuid4().hex[:8]}"
 
+
 def create_target_portfolio_state_id(prefix: str = "target_portfolio") -> str:
     return f"{prefix}_{uuid.uuid4().hex[:8]}"
+
 
 def create_drift_measurement_id(name: str) -> str:
     safe_name = name.lower().replace(" ", "_")
     return f"drift_{safe_name}_{uuid.uuid4().hex[:8]}"
 
+
 def create_rebalance_action_id(symbol: str) -> str:
     return f"action_{symbol}_{uuid.uuid4().hex[:8]}"
+
 
 def create_turnover_assessment_id(prefix: str = "turnover") -> str:
     return f"{prefix}_{uuid.uuid4().hex[:8]}"
 
+
 def create_rebalance_plan_id(prefix: str = "rebalance_plan") -> str:
     return f"{prefix}_{uuid.uuid4().hex[:8]}"
+
 
 def create_rebalance_review_id(prefix: str = "rebalance_review") -> str:
     return f"{prefix}_{uuid.uuid4().hex[:8]}"
 
-import json
-
-class CustomJSONEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, Enum):
-            return obj.value
-        return super().default(obj)
 
 from enum import Enum
-from dataclasses import asdict
+
 
 def portfolio_position_to_dict(item: PortfolioPosition) -> dict:
-    return json.loads(json.dumps(asdict(item), cls=CustomJSONEncoder))
+
+    return to_dict_clean(item)
+
 
 def current_portfolio_state_to_dict(item: CurrentPortfolioState) -> dict:
-    return json.loads(json.dumps(asdict(item), cls=CustomJSONEncoder))
+
+    return to_dict_clean(item)
+
 
 def target_portfolio_state_to_dict(item: TargetPortfolioState) -> dict:
-    return json.loads(json.dumps(asdict(item), cls=CustomJSONEncoder))
+
+    return to_dict_clean(item)
+
 
 def drift_measurement_to_dict(item: DriftMeasurement) -> dict:
-    return json.loads(json.dumps(asdict(item), cls=CustomJSONEncoder))
+
+    return to_dict_clean(item)
+
 
 def rebalance_action_to_dict(item: RebalanceAction) -> dict:
-    return json.loads(json.dumps(asdict(item), cls=CustomJSONEncoder))
+
+    return to_dict_clean(item)
+
 
 def turnover_assessment_to_dict(item: TurnoverAssessment) -> dict:
-    return json.loads(json.dumps(asdict(item), cls=CustomJSONEncoder))
+
+    return to_dict_clean(item)
+
 
 def rebalance_plan_to_dict(item: RebalancePlan) -> dict:
-    return json.loads(json.dumps(asdict(item), cls=CustomJSONEncoder))
+
+    return to_dict_clean(item)
+
 
 def rebalance_review_to_dict(item: RebalanceReview) -> dict:
-    return json.loads(json.dumps(asdict(item), cls=CustomJSONEncoder))
+
+    return to_dict_clean(item)
