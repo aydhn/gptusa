@@ -146,3 +146,28 @@ def test_session_type_to_signal_guard():
     guard_unknown = session_type_to_signal_guard(MarketSessionType.UNKNOWN)
     assert guard_unknown["is_trading_allowed"] is False
     assert guard_unknown["warning"] == "Unknown session type."
+
+
+def test_classify_timestamp_session_edge_cases():
+    cal = LocalMarketCalendar()
+
+    # Empty or short string
+    assert classify_timestamp_session("", cal) == MarketSessionType.UNKNOWN
+    assert classify_timestamp_session("2024", cal) == MarketSessionType.UNKNOWN
+
+    # Missing " " and "T" separator (assumes REGULAR for daily)
+    assert classify_timestamp_session("2024-01-02_08:00", cal) == MarketSessionType.REGULAR
+
+    # Malformed time part (len < 5)
+    assert classify_timestamp_session("2024-01-02 12", cal) == MarketSessionType.REGULAR
+
+    # T separator usage
+    assert classify_timestamp_session("2024-01-02T08:00", cal) == MarketSessionType.PREMARKET
+    assert classify_timestamp_session("2024-01-02T12:00", cal) == MarketSessionType.REGULAR
+    assert classify_timestamp_session("2024-01-02T16:30", cal) == MarketSessionType.AFTER_HOURS
+
+def test_classify_timestamp_session_holiday():
+    from unittest.mock import patch
+    cal = LocalMarketCalendar()
+    with patch.object(cal, "is_holiday", return_value=True):
+        assert classify_timestamp_session("2024-01-01", cal) == MarketSessionType.HOLIDAY
