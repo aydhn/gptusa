@@ -150,7 +150,7 @@ def test_trading_day_result_to_dict_with_session():
         is_early_close=False,
         source=source_mock,
         warnings=["session_warn"],
-        errors=["session_err"]
+        errors=["session_err"],
     )
 
     result = TradingDayResult(
@@ -163,7 +163,7 @@ def test_trading_day_result_to_dict_with_session():
         next_trading_day="2024-01-03",
         session=session_mock,
         warnings=["warn_1"],
-        errors=["err_1"]
+        errors=["err_1"],
     )
 
     d = trading_day_result_to_dict(result)
@@ -202,7 +202,7 @@ def test_trading_day_result_to_dict_without_session():
         next_trading_day="2024-01-02",
         session=None,
         warnings=[],
-        errors=[]
+        errors=[],
     )
 
     d = trading_day_result_to_dict(result)
@@ -213,3 +213,59 @@ def test_trading_day_result_to_dict_without_session():
     assert d["day_type"] == "HOLIDAY"
     assert d["is_trading_day"] is False
     assert d["session"] is None
+
+
+def test_market_holiday_to_dict():
+    from unittest.mock import MagicMock
+    from usa_signal_bot.calendar.calendar_models import (
+        market_holiday_to_dict,
+        MarketHoliday,
+    )
+
+    cal_mock = MagicMock()
+    cal_mock.value = "US_EQUITIES"
+    source_mock = MagicMock()
+    source_mock.value = "STATIC_DEFAULT"
+
+    h = MarketHoliday(
+        date="2024-01-01",
+        name="New Year",
+        calendar_name=cal_mock,
+        source=source_mock,
+        metadata={"key": "value"},
+    )
+    d = market_holiday_to_dict(h)
+    assert d["date"] == "2024-01-01"
+    assert d["name"] == "New Year"
+    assert d["calendar_name"] == "US_EQUITIES"
+    assert d["source"] == "STATIC_DEFAULT"
+    assert d["metadata"] == {"key": "value"}
+
+
+def test_market_early_close_to_dict():
+    from unittest.mock import MagicMock
+    from usa_signal_bot.calendar.calendar_models import (
+        market_early_close_to_dict,
+        MarketEarlyClose,
+    )
+
+    cal_mock = MagicMock()
+    cal_mock.value = "US_EQUITIES"
+    source_mock = MagicMock()
+    source_mock.value = "STATIC_DEFAULT"
+
+    c = MarketEarlyClose(
+        date="2024-07-03",
+        close_time_local="13:00",
+        name="Early Close",
+        calendar_name=cal_mock,
+        source=source_mock,
+        metadata={"reason": "half day"},
+    )
+    d = market_early_close_to_dict(c)
+    assert d["date"] == "2024-07-03"
+    assert d["close_time_local"] == "13:00"
+    assert d["name"] == "Early Close"
+    assert d["calendar_name"] == "US_EQUITIES"
+    assert d["source"] == "STATIC_DEFAULT"
+    assert d["metadata"] == {"reason": "half day"}
