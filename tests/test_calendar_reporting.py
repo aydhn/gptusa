@@ -234,3 +234,36 @@ def test_calendar_review_result_to_text_with_limit():
     assert "  AAPL: VALID" in text
     assert "  MSFT: VALID" not in text
     assert "  ... and 1 more." in text
+
+
+def test_calendar_store_summary_to_text_complete():
+    from usa_signal_bot.calendar.calendar_reporting import (
+        calendar_store_summary_to_text,
+    )
+
+    summary = {
+        "reviews_count": 5,
+        "latest_review": "2023-11-01T12:00:00Z",
+        "validations_count": 10,
+        "sessions_files_count": 3,
+    }
+    text = calendar_store_summary_to_text(summary)
+    assert "=== Calendar Store Summary ===" in text
+    assert "Reviews count: 5" in text
+    assert "Latest review: 2023-11-01T12:00:00Z" in text
+    assert "Validations count: 10" in text
+    assert "Session files count: 3" in text
+
+
+def test_calendar_store_summary_to_text_empty():
+    from usa_signal_bot.calendar.calendar_reporting import (
+        calendar_store_summary_to_text,
+    )
+
+    summary = {}
+    text = calendar_store_summary_to_text(summary)
+    assert "=== Calendar Store Summary ===" in text
+    assert "Reviews count: 0" in text
+    assert "Latest review: None" in text
+    assert "Validations count: 0" in text
+    assert "Session files count: 0" in text
