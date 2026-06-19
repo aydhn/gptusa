@@ -9,6 +9,8 @@ from usa_signal_bot.calendar.calendar_models import (
     MarketHoliday,
     MarketEarlyClose,
     MarketSession,
+    SessionValidationResult,
+    session_validation_result_to_dict,
     validate_market_holiday,
     validate_market_early_close,
     validate_market_session,
@@ -269,3 +271,44 @@ def test_market_early_close_to_dict():
     assert d["calendar_name"] == "US_EQUITIES"
     assert d["source"] == "STATIC_DEFAULT"
     assert d["metadata"] == {"reason": "half day"}
+
+
+def test_session_validation_result_to_dict():
+    from unittest.mock import MagicMock
+
+    cal_mock = MagicMock()
+    cal_mock.value = "US_EQUITIES"
+    status_mock = MagicMock()
+    status_mock.value = "VALID"
+
+    result = SessionValidationResult(
+        validation_id="val_1",
+        created_at_utc="2024-01-01T00:00:00Z",
+        symbol="AAPL",
+        calendar_name=cal_mock,
+        status=status_mock,
+        row_count=252,
+        trading_day_count=252,
+        non_trading_day_rows=0,
+        missing_trading_days=0,
+        early_close_rows=2,
+        warnings=["val_warn"],
+        errors=["val_err"],
+        metadata={"source": "api"}
+    )
+
+    d = session_validation_result_to_dict(result)
+
+    assert d["validation_id"] == "val_1"
+    assert d["created_at_utc"] == "2024-01-01T00:00:00Z"
+    assert d["symbol"] == "AAPL"
+    assert d["calendar_name"] == "US_EQUITIES"
+    assert d["status"] == "VALID"
+    assert d["row_count"] == 252
+    assert d["trading_day_count"] == 252
+    assert d["non_trading_day_rows"] == 0
+    assert d["missing_trading_days"] == 0
+    assert d["early_close_rows"] == 2
+    assert d["warnings"] == ["val_warn"]
+    assert d["errors"] == ["val_err"]
+    assert d["metadata"] == {"source": "api"}
