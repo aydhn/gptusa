@@ -234,3 +234,60 @@ def test_calendar_review_result_to_text_with_limit():
     assert "  AAPL: VALID" in text
     assert "  MSFT: VALID" not in text
     assert "  ... and 1 more." in text
+
+def test_trading_day_result_to_text():
+    from usa_signal_bot.calendar.calendar_models import TradingDayResult
+    from usa_signal_bot.calendar.calendar_reporting import trading_day_result_to_text
+
+    class DummyEnum:
+        def __init__(self, value):
+            self.value = value
+
+    result = TradingDayResult(
+        result_id="td1",
+        calendar_name=DummyEnum("NYSE"),
+        date="2023-10-27",
+        day_type=DummyEnum("STANDARD"),
+        is_trading_day=True,
+        previous_trading_day="2023-10-26",
+        next_trading_day="2023-10-30",
+        session=None,
+        warnings=[],
+        errors=[],
+    )
+
+    text = trading_day_result_to_text(result)
+    assert "Date: 2023-10-27" in text
+    assert "Type: STANDARD" in text
+    assert "Is Trading Day: True" in text
+    assert "Prev: 2023-10-26" in text
+    assert "Next: 2023-10-30" in text
+
+
+def test_trading_day_result_to_text_no_prev_next():
+    from usa_signal_bot.calendar.calendar_models import TradingDayResult
+    from usa_signal_bot.calendar.calendar_reporting import trading_day_result_to_text
+
+    class DummyEnum:
+        def __init__(self, value):
+            self.value = value
+
+    result = TradingDayResult(
+        result_id="td2",
+        calendar_name=DummyEnum("NYSE"),
+        date="2023-10-28",
+        day_type=DummyEnum("WEEKEND"),
+        is_trading_day=False,
+        previous_trading_day=None,
+        next_trading_day=None,
+        session=None,
+        warnings=[],
+        errors=[],
+    )
+
+    text = trading_day_result_to_text(result)
+    assert "Date: 2023-10-28" in text
+    assert "Type: WEEKEND" in text
+    assert "Is Trading Day: False" in text
+    assert "Prev:" not in text
+    assert "Next:" not in text
