@@ -9,6 +9,7 @@ from usa_signal_bot.paper_quarantine.quarantine_models import (
 )
 from usa_signal_bot.core.exceptions import QuarantinePolicyError
 
+
 def allowed_quarantine_bridge_operations() -> list[BridgeOperation]:
     return [
         BridgeOperation.READ_PROMOTION_TICKET,
@@ -20,6 +21,7 @@ def allowed_quarantine_bridge_operations() -> list[BridgeOperation]:
         BridgeOperation.GENERATE_NOTIFICATION_PREVIEW,
     ]
 
+
 def denied_quarantine_bridge_operations() -> list[BridgeOperation]:
     return [
         BridgeOperation.WRITE_PAPER_STATE,
@@ -29,7 +31,10 @@ def denied_quarantine_bridge_operations() -> list[BridgeOperation]:
         BridgeOperation.WRITE_PRODUCTION_CONFIG,
     ]
 
-def default_quarantine_policy(min_shadow_acceptance_score: float = 70.0) -> QuarantinePolicy:
+
+def default_quarantine_policy(
+    min_shadow_acceptance_score: float = 70.0,
+) -> QuarantinePolicy:
     policy = QuarantinePolicy(
         policy_id=create_quarantine_policy_id(),
         created_at_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
@@ -50,6 +55,7 @@ def default_quarantine_policy(min_shadow_acceptance_score: float = 70.0) -> Quar
     validate_quarantine_policy(policy)
     return policy
 
+
 def strict_quarantine_policy() -> QuarantinePolicy:
     policy = QuarantinePolicy(
         policy_id=create_quarantine_policy_id("strict_policy"),
@@ -62,18 +68,26 @@ def strict_quarantine_policy() -> QuarantinePolicy:
         allow_broker_orders=False,
         allow_telegram_real_send=False,
         allow_production_config_write=False,
-        allowed_bridge_operations=[BridgeOperation.READ_PROMOTION_TICKET], # very strict
-        denied_bridge_operations=denied_quarantine_bridge_operations() + allowed_quarantine_bridge_operations(), # all denied basically
+        allowed_bridge_operations=[
+            BridgeOperation.READ_PROMOTION_TICKET
+        ],  # very strict
+        denied_bridge_operations=denied_quarantine_bridge_operations()
+        + allowed_quarantine_bridge_operations(),  # all denied basically
         warnings=[],
         errors=[],
         metadata={"policy_type": "strict"},
     )
     # the allowed overrides the denied in the test above, fix to valid
-    policy.denied_bridge_operations = denied_quarantine_bridge_operations()
-    policy.allowed_bridge_operations = allowed_quarantine_bridge_operations()
+    policy.denied_bridge_operations = denied_quarantine_bridge_operations() + [
+        op
+        for op in allowed_quarantine_bridge_operations()
+        if op != BridgeOperation.READ_PROMOTION_TICKET
+    ]
+    policy.allowed_bridge_operations = [BridgeOperation.READ_PROMOTION_TICKET]
 
     validate_quarantine_policy(policy)
     return policy
+
 
 def validate_quarantine_policy_safety(policy: QuarantinePolicy) -> list[str]:
     errors = []
@@ -93,6 +107,7 @@ def validate_quarantine_policy_safety(policy: QuarantinePolicy) -> list[str]:
             errors.append(f"BridgeOperation {op.value} cannot be in allowed operations")
 
     return errors
+
 
 def quarantine_policy_to_text(policy: QuarantinePolicy) -> str:
     lines = [
