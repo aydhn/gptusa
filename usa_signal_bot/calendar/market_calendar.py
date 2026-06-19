@@ -20,6 +20,8 @@ class LocalMarketCalendar:
         self.timezone = timezone
         self._holidays = {h.date: h for h in (holidays or [])}
         self._early_closes = {c.date: c for c in (early_closes or [])}
+        self._weekend_cache: dict[str, bool] = {}
+        self._trading_day_cache: dict[str, bool] = {}
 
         if self.calendar_name in [MarketCalendarName.US_EQUITIES, MarketCalendarName.US_ETF]:
             self._default_open = "09:30"
@@ -29,8 +31,10 @@ class LocalMarketCalendar:
             self._default_close = "17:00"
 
     def is_weekend(self, date_str: str) -> bool:
-        dt = datetime.strptime(date_str, "%Y-%m-%d")
-        return dt.weekday() >= 5 # 5=Sat, 6=Sun
+        if date_str not in self._weekend_cache:
+            dt = datetime.strptime(date_str, "%Y-%m-%d")
+            self._weekend_cache[date_str] = dt.weekday() >= 5
+        return self._weekend_cache[date_str]
 
     def is_holiday(self, date_str: str) -> bool:
         return date_str in self._holidays
@@ -39,11 +43,14 @@ class LocalMarketCalendar:
         return date_str in self._early_closes
 
     def is_trading_day(self, date_str: str) -> bool:
-        if self.is_weekend(date_str):
-            return False
-        if self.is_holiday(date_str):
-            return False
-        return True
+        if date_str not in self._trading_day_cache:
+            if self.is_weekend(date_str):
+                self._trading_day_cache[date_str] = False
+            elif self.is_holiday(date_str):
+                self._trading_day_cache[date_str] = False
+            else:
+                self._trading_day_cache[date_str] = True
+        return self._trading_day_cache[date_str]
 
     def session_for_date(self, date_str: str) -> MarketSession:
         from usa_signal_bot.calendar.calendar_models import create_market_session_id
