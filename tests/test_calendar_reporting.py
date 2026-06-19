@@ -98,3 +98,139 @@ def test_session_validation_result_to_text():
     assert "Missing Days: 0" in text
     assert "Non-trading Rows: 0" in text
     assert "Early Close Rows: 0" in text
+
+
+def test_calendar_review_result_to_text():
+    from usa_signal_bot.calendar.calendar_models import (
+        CalendarReviewResult,
+        SessionValidationResult,
+        TradingDayResult,
+    )
+    from usa_signal_bot.calendar.calendar_reporting import (
+        calendar_review_result_to_text,
+    )
+
+    class DummyEnum:
+        def __init__(self, value):
+            self.value = value
+
+    session_validation = SessionValidationResult(
+        validation_id="val123",
+        created_at_utc="2023-10-27T00:00:00Z",
+        symbol="AAPL",
+        calendar_name=DummyEnum("NYSE"),
+        status=DummyEnum("VALID"),
+        row_count=100,
+        trading_day_count=100,
+        non_trading_day_rows=0,
+        missing_trading_days=0,
+        early_close_rows=0,
+        warnings=[],
+        errors=[],
+        metadata={},
+    )
+
+    trading_day_result = TradingDayResult(
+        result_id="td1",
+        calendar_name=DummyEnum("NYSE"),
+        date="2023-10-27",
+        day_type=DummyEnum("STANDARD"),
+        is_trading_day=True,
+        previous_trading_day="2023-10-26",
+        next_trading_day="2023-10-30",
+        session=None,
+        warnings=[],
+        errors=[],
+    )
+
+    result = CalendarReviewResult(
+        review_id="rev123",
+        created_at_utc="2023-10-27T10:00:00Z",
+        report_type=DummyEnum("FULL"),
+        calendar_name=DummyEnum("NYSE"),
+        sessions=[],
+        trading_day_results=[trading_day_result],
+        session_validations=[session_validation],
+        output_paths={},
+        warnings=[],
+        errors=["Error 1", "Error 2"],
+    )
+
+    text = calendar_review_result_to_text(result)
+    assert "=== Calendar Review: rev123 ===" in text
+    assert "Report Type: FULL" in text
+    assert "Calendar: NYSE" in text
+    assert "Created: 2023-10-27T10:00:00Z" in text
+    assert "Total Trading Days Checked: 1" in text
+    assert "Total Validations: 1" in text
+    assert "Errors:" in text
+    assert "  - Error 1" in text
+    assert "  - Error 2" in text
+    assert "Session Validation Highlights:" in text
+    assert "  AAPL: VALID (Missing: 0, Non-trading: 0)" in text
+    assert "... and" not in text
+
+
+def test_calendar_review_result_to_text_with_limit():
+    from usa_signal_bot.calendar.calendar_models import (
+        CalendarReviewResult,
+        SessionValidationResult,
+    )
+    from usa_signal_bot.calendar.calendar_reporting import (
+        calendar_review_result_to_text,
+    )
+
+    class DummyEnum:
+        def __init__(self, value):
+            self.value = value
+
+    session_validation_1 = SessionValidationResult(
+        validation_id="val1",
+        created_at_utc="2023-10-27T00:00:00Z",
+        symbol="AAPL",
+        calendar_name=DummyEnum("NYSE"),
+        status=DummyEnum("VALID"),
+        row_count=100,
+        trading_day_count=100,
+        non_trading_day_rows=0,
+        missing_trading_days=0,
+        early_close_rows=0,
+        warnings=[],
+        errors=[],
+        metadata={},
+    )
+
+    session_validation_2 = SessionValidationResult(
+        validation_id="val2",
+        created_at_utc="2023-10-27T00:00:00Z",
+        symbol="MSFT",
+        calendar_name=DummyEnum("NYSE"),
+        status=DummyEnum("VALID"),
+        row_count=100,
+        trading_day_count=100,
+        non_trading_day_rows=0,
+        missing_trading_days=0,
+        early_close_rows=0,
+        warnings=[],
+        errors=[],
+        metadata={},
+    )
+
+    result = CalendarReviewResult(
+        review_id="rev123",
+        created_at_utc="2023-10-27T10:00:00Z",
+        report_type=DummyEnum("FULL"),
+        calendar_name=DummyEnum("NYSE"),
+        sessions=[],
+        trading_day_results=[],
+        session_validations=[session_validation_1, session_validation_2],
+        output_paths={},
+        warnings=[],
+        errors=[],
+    )
+
+    text = calendar_review_result_to_text(result, limit=1)
+    assert "Total Validations: 2" in text
+    assert "  AAPL: VALID" in text
+    assert "  MSFT: VALID" not in text
+    assert "  ... and 1 more." in text
