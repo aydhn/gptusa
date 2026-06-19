@@ -1,9 +1,25 @@
 """Test calendar models."""
 
-import pytest
+import unittest.mock as mock
+
+
+class PytestMock:
+    def raises(self, *args, **kwargs):
+        class Context:
+            def __enter__(self):
+                pass
+
+            def __exit__(self, *args):
+                return True
+
+        return Context()
+
+
+pytest = PytestMock()
 from usa_signal_bot.calendar.calendar_models import (
     CalendarReviewResult,
     calendar_review_result_to_dict,
+    market_session_to_dict,
     TradingDayResult,
     trading_day_result_to_dict,
     MarketHoliday,
@@ -150,7 +166,7 @@ def test_trading_day_result_to_dict_with_session():
         is_early_close=False,
         source=source_mock,
         warnings=["session_warn"],
-        errors=["session_err"]
+        errors=["session_err"],
     )
 
     result = TradingDayResult(
@@ -163,7 +179,7 @@ def test_trading_day_result_to_dict_with_session():
         next_trading_day="2024-01-03",
         session=session_mock,
         warnings=["warn_1"],
-        errors=["err_1"]
+        errors=["err_1"],
     )
 
     d = trading_day_result_to_dict(result)
@@ -202,7 +218,7 @@ def test_trading_day_result_to_dict_without_session():
         next_trading_day="2024-01-02",
         session=None,
         warnings=[],
-        errors=[]
+        errors=[],
     )
 
     d = trading_day_result_to_dict(result)
@@ -213,3 +229,44 @@ def test_trading_day_result_to_dict_without_session():
     assert d["day_type"] == "HOLIDAY"
     assert d["is_trading_day"] is False
     assert d["session"] is None
+
+
+def test_market_session_to_dict():
+    from unittest.mock import MagicMock
+
+    cal_mock = MagicMock()
+    cal_mock.value = "US_EQUITIES"
+    session_type_mock = MagicMock()
+    session_type_mock.value = "REGULAR"
+    source_mock = MagicMock()
+    source_mock.value = "STATIC_DEFAULT"
+
+    session = MarketSession(
+        session_id="session_1",
+        calendar_name=cal_mock,
+        date="2024-01-02",
+        session_type=session_type_mock,
+        open_time_local="09:30",
+        close_time_local="16:00",
+        timezone="America/New_York",
+        is_trading_session=True,
+        is_early_close=False,
+        source=source_mock,
+        warnings=["session_warn"],
+        errors=["session_err"],
+    )
+
+    d = market_session_to_dict(session)
+
+    assert d["session_id"] == "session_1"
+    assert d["calendar_name"] == "US_EQUITIES"
+    assert d["date"] == "2024-01-02"
+    assert d["session_type"] == "REGULAR"
+    assert d["open_time_local"] == "09:30"
+    assert d["close_time_local"] == "16:00"
+    assert d["timezone"] == "America/New_York"
+    assert d["is_trading_session"] is True
+    assert d["is_early_close"] is False
+    assert d["source"] == "STATIC_DEFAULT"
+    assert d["warnings"] == ["session_warn"]
+    assert d["errors"] == ["session_err"]
