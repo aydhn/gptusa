@@ -156,18 +156,48 @@ def test_classify_timestamp_session_edge_cases():
     assert classify_timestamp_session("2024", cal) == MarketSessionType.UNKNOWN
 
     # Missing " " and "T" separator (assumes REGULAR for daily)
-    assert classify_timestamp_session("2024-01-02_08:00", cal) == MarketSessionType.REGULAR
+    assert (
+        classify_timestamp_session("2024-01-02_08:00", cal) == MarketSessionType.REGULAR
+    )
 
     # Malformed time part (len < 5)
     assert classify_timestamp_session("2024-01-02 12", cal) == MarketSessionType.REGULAR
 
     # T separator usage
-    assert classify_timestamp_session("2024-01-02T08:00", cal) == MarketSessionType.PREMARKET
-    assert classify_timestamp_session("2024-01-02T12:00", cal) == MarketSessionType.REGULAR
-    assert classify_timestamp_session("2024-01-02T16:30", cal) == MarketSessionType.AFTER_HOURS
+    assert (
+        classify_timestamp_session("2024-01-02T08:00", cal)
+        == MarketSessionType.PREMARKET
+    )
+    assert (
+        classify_timestamp_session("2024-01-02T12:00", cal) == MarketSessionType.REGULAR
+    )
+    assert (
+        classify_timestamp_session("2024-01-02T16:30", cal)
+        == MarketSessionType.AFTER_HOURS
+    )
+
 
 def test_classify_timestamp_session_holiday():
     from unittest.mock import patch
+
     cal = LocalMarketCalendar()
     with patch.object(cal, "is_holiday", return_value=True):
-        assert classify_timestamp_session("2024-01-01", cal) == MarketSessionType.HOLIDAY
+        assert (
+            classify_timestamp_session("2024-01-01", cal) == MarketSessionType.HOLIDAY
+        )
+
+
+def test_session_summary_to_text():
+    from usa_signal_bot.calendar.session_classifier import session_summary_to_text
+
+    # Empty summary
+    assert session_summary_to_text({}) == "Session Summary:\n  No data."
+
+    # Summary with zero counts
+    zero_summary = {"REGULAR": 0, "PREMARKET": 0}
+    assert session_summary_to_text(zero_summary) == "Session Summary:\n  No data."
+
+    # Summary with positive counts
+    positive_summary = {"REGULAR": 5, "PREMARKET": 2, "AFTER_HOURS": 0}
+    expected_positive = "Session Summary:\n  REGULAR: 5 rows\n  PREMARKET: 2 rows"
+    assert session_summary_to_text(positive_summary) == expected_positive
