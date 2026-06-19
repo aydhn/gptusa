@@ -46,11 +46,11 @@ def read_provider_cache_csv(path: Path) -> list[dict[str, Any]]:
 def cache_file_checksum(path: Path) -> str | None:
     if not path.exists():
         return None
-    hash_md5 = hashlib.md5()
+    hash_sha256 = hashlib.sha256()
     with open(path, "rb") as f:
         for chunk in iter(lambda: f.read(4096), b""):
-            hash_md5.update(chunk)
-    return hash_md5.hexdigest()
+            hash_sha256.update(chunk)
+    return hash_sha256.hexdigest()
 
 def validate_cache_records_schema(records: list[dict[str, Any]]) -> list[str]:
     if not records:
