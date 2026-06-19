@@ -3,6 +3,7 @@
 from usa_signal_bot.calendar.calendar_reporting import (
     calendar_limitations_text,
     market_session_to_text,
+    calendar_store_summary_to_text,
 )
 from usa_signal_bot.calendar.calendar_models import MarketSession
 
@@ -234,3 +235,27 @@ def test_calendar_review_result_to_text_with_limit():
     assert "  AAPL: VALID" in text
     assert "  MSFT: VALID" not in text
     assert "  ... and 1 more." in text
+
+def test_calendar_store_summary_to_text():
+    # Test with empty summary to verify defaults
+    empty_summary = {}
+    text_empty = calendar_store_summary_to_text(empty_summary)
+    assert "=== Calendar Store Summary ===" in text_empty
+    assert "Reviews count: 0" in text_empty
+    assert "Latest review: None" in text_empty
+    assert "Validations count: 0" in text_empty
+    assert "Session files count: 0" in text_empty
+
+    # Test with populated summary
+    populated_summary = {
+        'reviews_count': 5,
+        'latest_review': '2023-10-27T10:00:00Z',
+        'validations_count': 500,
+        'sessions_files_count': 10
+    }
+    text_populated = calendar_store_summary_to_text(populated_summary)
+    assert "=== Calendar Store Summary ===" in text_populated
+    assert "Reviews count: 5" in text_populated
+    assert "Latest review: 2023-10-27T10:00:00Z" in text_populated
+    assert "Validations count: 500" in text_populated
+    assert "Session files count: 10" in text_populated
