@@ -54,6 +54,31 @@ def test_market_early_close_valid():
     validate_market_early_close(c)
 
 
+
+def test_market_early_close_invalid_date():
+    c = MarketEarlyClose(
+        "2024-13-45",
+        "13:00",
+        "Early Close",
+        MarketCalendarName.US_EQUITIES,
+        CalendarDataSource.STATIC_DEFAULT,
+    )
+    with pytest.raises(MarketCalendarError):
+        validate_market_early_close(c)
+
+
+def test_market_early_close_invalid_time():
+    c = MarketEarlyClose(
+        "2024-07-03",
+        "13:00:00",
+        "Early Close",
+        MarketCalendarName.US_EQUITIES,
+        CalendarDataSource.STATIC_DEFAULT,
+    )
+    with pytest.raises(MarketCalendarError):
+        validate_market_early_close(c)
+
+
 def test_market_session_valid():
     s = MarketSession(
         "id",
