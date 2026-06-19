@@ -291,3 +291,31 @@ def test_trading_day_result_to_text_no_prev_next():
     assert "Is Trading Day: False" in text
     assert "Prev:" not in text
     assert "Next:" not in text
+
+def test_trading_day_result_to_text_no_enum_value():
+    from usa_signal_bot.calendar.calendar_models import TradingDayResult
+    from usa_signal_bot.calendar.calendar_reporting import trading_day_result_to_text
+
+    class DummyEnumString:
+        def __str__(self):
+            return "STANDARD_STR"
+
+    result = TradingDayResult(
+        result_id="td3",
+        calendar_name="NYSE",
+        date="2023-10-29",
+        day_type=DummyEnumString(),
+        is_trading_day=True,
+        previous_trading_day="2023-10-27",
+        next_trading_day="2023-10-30",
+        session=None,
+        warnings=[],
+        errors=[],
+    )
+
+    text = trading_day_result_to_text(result)
+    assert "Date: 2023-10-29" in text
+    assert "Type: STANDARD_STR" in text
+    assert "Is Trading Day: True" in text
+    assert "Prev: 2023-10-27" in text
+    assert "Next: 2023-10-30" in text
