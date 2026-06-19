@@ -1,4 +1,5 @@
 import json
+import functools
 from pathlib import Path
 from typing import Any, List
 from usa_signal_bot.paper_mode_dry_admission_gate.dry_admission_gate_models import (
@@ -122,10 +123,14 @@ def write_dry_admission_full_review_json(path: Path, item: DryAdmissionGateFullR
     path.write_text(json.dumps(d, indent=2))
     return path
 
+@functools.lru_cache(maxsize=128)
+def _cached_read_json(path: Path) -> dict[str, Any]:
+    return json.loads(path.read_text())
+
 def read_dry_admission_full_review_json(path: Path) -> dict[str, Any]:
     if not path.exists():
         return {}
-    return json.loads(path.read_text())
+    return _cached_read_json(path)
 
 def list_dry_admission_full_reviews(data_root: Path) -> List[Path]:
     d = dry_admission_full_reviews_dir(data_root)
