@@ -25,11 +25,9 @@ def test_pipeline_run_success(tmp_path):
         timeframe_specs=[TimeframeSpec(timeframe="1d")]
     )
 
-    # Needs a fix for write_pipeline_reports to use correct serialization
-    # Let's mock write_pipeline_reports to avoid serialization issues during basic logic test
-    pipeline.write_pipeline_reports = lambda *args: []
 
-    result, coverage, readiness = pipeline.run(req, write_reports=False)
+
+    result, coverage, readiness = pipeline.run(req, write_reports=True)
 
     assert result.status == PipelineRunStatus.COMPLETED
     assert result.total_bars == 1
@@ -52,5 +50,5 @@ def test_pipeline_run_partial(tmp_path):
         timeframe_specs=[TimeframeSpec(timeframe="1d"), TimeframeSpec(timeframe="1h")]
     )
 
-    result, coverage, readiness = pipeline.run(req, write_reports=False)
+    result, coverage, readiness = pipeline.run(req, write_reports=True)
     assert result.status == PipelineRunStatus.PARTIAL_SUCCESS

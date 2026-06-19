@@ -140,7 +140,7 @@ class MultiTimeframeDataPipeline:
     def write_pipeline_reports(self, result: MultiTimeframeDataResult, coverage: DataCoverageReport, readiness: DataReadinessReport) -> list[Path]:
         from .coverage import write_coverage_report_json
         from .readiness import write_readiness_report_json
-        from ..core.serialization import dataclass_to_dict
+        from ..core.serialization import to_dict_clean
         import json
 
         reports_dir = self.data_root / "reports" / "data_readiness"
@@ -153,7 +153,7 @@ class MultiTimeframeDataPipeline:
         # Result
         res_path = reports_dir / f"mtf_result_{run_id}.json"
         with open(res_path, "w") as f:
-            json.dump(dataclass_to_dict(result), f, indent=2)
+            json.dump(to_dict_clean(result), f, indent=2)
         paths.append(res_path)
 
         # Coverage
