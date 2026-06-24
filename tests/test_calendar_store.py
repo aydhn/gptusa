@@ -43,3 +43,34 @@ def test_write_session_validation_result_json_error(tmp_path):
 
         with pytest.raises(CalendarStorageError, match="Failed to write session validation"):
             write_session_validation_result_json(tmp_path / "calendar" / "session_validations" / "val_1.json", mock_res)
+
+def test_write_trading_day_results_jsonl_success(tmp_path):
+    from usa_signal_bot.calendar.calendar_store import write_trading_day_results_jsonl
+    with patch("usa_signal_bot.calendar.calendar_store.trading_day_result_to_dict") as mock_to_dict:
+        mock_to_dict.return_value = {"date": "2024-01-01", "is_trading_day": True, "holiday_name": None}
+
+        mock_res1 = MagicMock()
+        mock_res2 = MagicMock()
+
+        p = write_trading_day_results_jsonl(tmp_path / "calendar" / "trading_days.jsonl", [mock_res1, mock_res2])
+
+        assert p.exists()
+        assert mock_to_dict.call_count == 2
+
+        with open(p, "r", encoding="utf-8") as f:
+            lines = f.readlines()
+
+        assert len(lines) == 2
+        data = json.loads(lines[0])
+        assert data["date"] == "2024-01-01"
+        assert data["is_trading_day"] is True
+
+def test_write_trading_day_results_jsonl_error(tmp_path):
+    from usa_signal_bot.calendar.calendar_store import write_trading_day_results_jsonl
+    with patch("usa_signal_bot.calendar.calendar_store.open") as mock_open:
+        mock_open.side_effect = PermissionError("Permission denied")
+
+        mock_res = MagicMock()
+
+        with pytest.raises(CalendarStorageError, match="Failed to write trading day results"):
+            write_trading_day_results_jsonl(tmp_path / "calendar" / "trading_days.jsonl", [mock_res])
