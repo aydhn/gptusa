@@ -1,6 +1,18 @@
 import datetime
 from typing import Optional
 
+from dataclasses import dataclass
+
+
+@dataclass
+class FreshnessParameters:
+    fresh: bool
+    stale: bool
+    expired: bool = False
+    age_seconds: Optional[int] = None
+    ttl_seconds: Optional[int] = None
+
+
 from usa_signal_bot.core.enums import (
     DataQualityComponent,
     DataQualityGrade,
@@ -45,38 +57,28 @@ def freshness_score_from_age(
 
 
 def _evaluate_freshness_status(
-    fresh: bool,
-    stale: bool,
-    expired: bool,
-    age_seconds: Optional[int],
-    ttl_seconds: Optional[int],
+    params: FreshnessParameters,
 ) -> tuple[float, list[str], list[ProviderQualityRiskFlag]]:
-    if expired:
+    if params.expired:
         return 0.0, ["Data is expired"], [ProviderQualityRiskFlag.CACHE_RECORD_STALE]
 
-    if stale:
+    if params.stale:
         return 40.0, ["Data is stale"], [ProviderQualityRiskFlag.CACHE_RECORD_STALE]
 
-    if fresh:
+    if params.fresh:
         return 100.0, [], []
 
-    score = freshness_score_from_age(age_seconds, ttl_seconds)
+    score = freshness_score_from_age(params.age_seconds, params.ttl_seconds)
     warnings = ["Data is relatively old"] if score < 50 else []
     return score, warnings, []
 
 
 def score_freshness(
-    fresh: bool,
-    stale: bool,
-    expired: bool = False,
-    age_seconds: Optional[int] = None,
-    ttl_seconds: Optional[int] = None,
+    params: FreshnessParameters,
     provider_name: str = "UNKNOWN",
     symbol: Optional[str] = None,
 ) -> DataQualityScoreComponent:
-    score, warnings, risk_flags = _evaluate_freshness_status(
-        fresh, stale, expired, age_seconds, ttl_seconds
-    )
+    score, warnings, risk_flags = _evaluate_freshness_status(params)
 
     grade = freshness_grade(score)
 
@@ -86,12 +88,12 @@ def score_freshness(
         provider_name=provider_name,
         symbol=symbol,
         component=DataQualityComponent.FRESHNESS,
-        raw_value=float(age_seconds) if age_seconds is not None else None,
+        raw_value=float(params.age_seconds) if params.age_seconds is not None else None,
         score=score,
         weight=0.0,
         weighted_score=0.0,
         grade=grade,
-        explanation=f"Freshness scored {score:.1f} based on status (fresh={fresh}, stale={stale}, expired={expired})",
+        explanation=f"Freshness scored {score:.1f} based on status (fresh={params.fresh}, stale={params.stale}, expired={params.expired})",
         risk_flags=risk_flags,
         warnings=warnings,
     )

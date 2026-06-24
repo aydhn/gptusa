@@ -18,7 +18,10 @@ from usa_signal_bot.provider_quality.scoring_policy import (
 )
 
 from usa_signal_bot.provider_quality.completeness_scorer import score_completeness
-from usa_signal_bot.provider_quality.freshness_scorer import score_freshness
+from usa_signal_bot.provider_quality.freshness_scorer import (
+    score_freshness,
+    FreshnessParameters,
+)
 from usa_signal_bot.provider_quality.schema_validity_scorer import score_schema_validity
 from usa_signal_bot.provider_quality.continuity_scorer import score_continuity
 from usa_signal_bot.provider_quality.source_disagreement_scorer import (
@@ -137,12 +140,15 @@ def build_provider_data_quality_score(
     saf_payload = safety_payload or {}
 
     c_comp = score_completeness(records, provider_name=provider_name, symbol=symbol)
+    f_params = FreshnessParameters(
+        fresh=f_payload.get("fresh", False),
+        stale=f_payload.get("stale", False),
+        expired=f_payload.get("expired", False),
+        age_seconds=f_payload.get("age_seconds"),
+        ttl_seconds=f_payload.get("ttl_seconds"),
+    )
     f_comp = score_freshness(
-        f_payload.get("fresh", False),
-        f_payload.get("stale", False),
-        f_payload.get("expired", False),
-        f_payload.get("age_seconds"),
-        f_payload.get("ttl_seconds"),
+        f_params,
         provider_name=provider_name,
         symbol=symbol,
     )
