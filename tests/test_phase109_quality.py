@@ -12,6 +12,7 @@ from usa_signal_bot.provider_quality.schema_validity_scorer import score_schema_
 from usa_signal_bot.provider_quality.outlier_penalty_scorer import score_outlier_profile
 from usa_signal_bot.provider_quality.provider_safety_compliance_scorer import (
     score_provider_safety_compliance,
+    SafetyComplianceFlags,
 )
 from usa_signal_bot.provider_quality.data_quality_scorer import (
     build_provider_data_quality_score,
@@ -48,7 +49,8 @@ def test_outlier_penalty():
 
 
 def test_safety_compliance():
-    comp = score_provider_safety_compliance("DUMMY", broker_used=True)
+    flags = SafetyComplianceFlags(broker_used=True)
+    comp = score_provider_safety_compliance("DUMMY", flags=flags)
     assert comp.score == 0.0
     assert "BROKER_RISK" in [rf.value for rf in comp.risk_flags]
 
