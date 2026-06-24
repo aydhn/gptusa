@@ -58,3 +58,21 @@ def test_early_closes_path_traversal():
     p = Path("../early_closes.json")
     with pytest.raises(HolidayStoreError):
         load_early_closes_from_json(p)
+
+
+def test_write_example_early_close_file_path_traversal():
+    p = Path("../write_early_closes.json")
+    with pytest.raises(HolidayStoreError, match="Path traversal prevented."):
+        write_example_early_close_file(p)
+
+
+def test_write_example_early_close_file_success(tmp_path):
+    import json
+
+    p = tmp_path / "new_early_closes.json"
+    result_path = write_example_early_close_file(p)
+    assert result_path == p
+    assert p.is_file()
+    with open(p, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    assert len(data) == len(default_us_equities_early_closes())
