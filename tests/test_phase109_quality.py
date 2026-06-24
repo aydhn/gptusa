@@ -65,11 +65,17 @@ def test_data_quality_score():
 def test_ranking_engine():
     from usa_signal_bot.provider_quality.provider_selection_scorer import (
         build_provider_selection_score,
+        ProviderSelectionParams,
     )
 
-    s1 = build_provider_selection_score(
-        "P1", "AAPL", "OHLCV", quality_score=None, trust_profile=None
+    params = ProviderSelectionParams(
+        provider_name="P1",
+        symbol="AAPL",
+        capability="OHLCV",
+        quality_score=None,
+        trust_profile=None,
     )
+    s1 = build_provider_selection_score(params)
     rank = rank_providers_for_symbol("AAPL", "OHLCV", [s1])
     assert rank.preferred_provider == "P1"
     assert rank.produces_trade_signal is False
