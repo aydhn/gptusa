@@ -123,6 +123,15 @@ def validate_no_execution_language_in_provider_quality_text(
     )
 
 
+def _process_dict_for_sensitive_keys(current: dict, stack: list, sensitive_keys_set: set, found_keys: set) -> None:
+    for k, v in current.items():
+        if type(k) is str:
+            k_lower = k.lower()
+            if k_lower in sensitive_keys_set:
+                found_keys.add(k_lower)
+        if type(v) in (dict, list):
+            stack.append(v)
+
 def validate_no_sensitive_data_in_provider_quality_payload(
     payload: Dict[str, Any],
 ) -> ProviderQualityValidationReport:
@@ -141,19 +150,9 @@ def validate_no_sensitive_data_in_provider_quality_payload(
     while stack:
         current = stack.pop()
         if type(current) is dict:
-            for k, v in current.items():
-                if type(k) is str:
-                    k_lower = k.lower()
-                    if k_lower in sensitive_keys_set:
-                        found_keys.add(k_lower)
-                t = type(v)
-                if t is dict or t is list:
-                    stack.append(v)
+            _process_dict_for_sensitive_keys(current, stack, sensitive_keys_set, found_keys)
         elif type(current) is list:
-            for item in current:
-                t = type(item)
-                if t is dict or t is list:
-                    stack.append(item)
+            stack.extend(item for item in current if type(item) in (dict, list))
 
     sensitive_keys_ordered = [
         "api_key",
