@@ -91,38 +91,34 @@ def convert_notional_to_quantity(
     return qty
 
 
+def _apply_cap_to_result(result: AllocationResult, config: AllocationConfig) -> None:
+    if result.status in [AllocationStatus.REJECTED, AllocationStatus.ZERO]:
+        return
+
+    if result.target_weight > config.max_candidate_weight:
+        result.target_weight = config.max_candidate_weight
+        result.status = AllocationStatus.CAPPED
+        result.capped = True
+        cap_msg = f"Capped at max_candidate_weight {config.max_candidate_weight}"
+        if cap_msg not in result.cap_reasons:
+            result.cap_reasons.append(cap_msg)
+        return
+
+    if result.target_weight < config.min_candidate_weight and result.target_weight > 0:
+        result.target_weight = 0.0
+        result.status = AllocationStatus.REJECTED
+        result.capped = True
+        rej_msg = f"Rejected: below min_candidate_weight {config.min_candidate_weight}"
+        if rej_msg not in result.cap_reasons:
+            result.cap_reasons.append(rej_msg)
+        return
+
+
 def apply_allocation_caps(
     results: List[AllocationResult], config: AllocationConfig
 ) -> List[AllocationResult]:
     for result in results:
-        if result.status in [AllocationStatus.REJECTED, AllocationStatus.ZERO]:
-            continue
-
-        if result.target_weight > config.max_candidate_weight:
-            result.target_weight = config.max_candidate_weight
-            result.status = AllocationStatus.CAPPED
-            result.capped = True
-            if (
-                f"Capped at max_candidate_weight {config.max_candidate_weight}"
-                not in result.cap_reasons
-            ):
-                result.cap_reasons.append(
-                    f"Capped at max_candidate_weight {config.max_candidate_weight}"
-                )
-        elif (
-            result.target_weight < config.min_candidate_weight
-            and result.target_weight > 0
-        ):
-            result.target_weight = 0.0
-            result.status = AllocationStatus.REJECTED
-            result.capped = True
-            if (
-                f"Rejected: below min_candidate_weight {config.min_candidate_weight}"
-                not in result.cap_reasons
-            ):
-                result.cap_reasons.append(
-                    f"Rejected: below min_candidate_weight {config.min_candidate_weight}"
-                )
+        _apply_cap_to_result(result, config)
     return results
 
 
