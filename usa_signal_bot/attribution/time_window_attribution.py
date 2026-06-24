@@ -13,19 +13,21 @@ def _get_window_key(timestamp: str, window: str) -> str:
     if not timestamp:
         return "UNKNOWN_DATE"
 
+    formats = {
+        "daily": "%Y-%m-%d",
+        "weekly": "%Y-W%W",
+        "monthly": "%Y-%m",
+        "yearly": "%Y",
+    }
+
+    if window not in formats:
+        return "UNKNOWN_DATE"
+
     try:
         dt = datetime.datetime.fromisoformat(timestamp.replace('Z', '+00:00'))
-        if window == "daily":
-            return dt.strftime("%Y-%m-%d")
-        elif window == "weekly":
-            return dt.strftime("%Y-W%W")
-        elif window == "monthly":
-            return dt.strftime("%Y-%m")
-        elif window == "yearly":
-            return dt.strftime("%Y")
+        return dt.strftime(formats[window])
     except ValueError:
-        pass
-    return "UNKNOWN_DATE"
+        return "UNKNOWN_DATE"
 
 def group_events_by_time_window(events: List[AttributionTradeEvent], window: str = "monthly") -> Dict[str, List[AttributionTradeEvent]]:
     groups = defaultdict(list)
