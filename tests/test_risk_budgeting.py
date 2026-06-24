@@ -44,3 +44,71 @@ def test_build_report_ok():
 
     report = build_risk_budget_report(allocs, 10000, config)
     assert report.status == RiskBudgetStatus.AVAILABLE
+
+def test_validate_risk_budget_config_valid():
+    from usa_signal_bot.portfolio.risk_budgeting import validate_risk_budget_config, RiskBudgetConfig
+    config = RiskBudgetConfig(
+        max_total_budget_pct=0.80,
+        max_symbol_budget_pct=0.15,
+        max_strategy_budget_pct=0.30,
+        max_timeframe_budget_pct=0.50,
+        max_single_candidate_budget_pct=0.10,
+        min_cash_buffer_pct=0.05,
+        enforce_budget=True
+    )
+    # Should not raise any exceptions
+    validate_risk_budget_config(config)
+
+def test_validate_risk_budget_config_invalid_high():
+    from usa_signal_bot.portfolio.risk_budgeting import validate_risk_budget_config, RiskBudgetConfig
+    try:
+        from usa_signal_bot.core.exceptions import RiskBudgetingError
+    except ImportError:
+        RiskBudgetingError = Exception
+
+    config = RiskBudgetConfig(
+        max_total_budget_pct=1.80,
+        max_symbol_budget_pct=0.15,
+        max_strategy_budget_pct=0.30,
+        max_timeframe_budget_pct=0.50,
+        max_single_candidate_budget_pct=0.10,
+        min_cash_buffer_pct=0.05,
+        enforce_budget=True
+    )
+
+    try:
+        validate_risk_budget_config(config)
+        assert False, "Expected an exception"
+    except RiskBudgetingError as e:
+        assert "between 0 and 1" in str(e)
+    except Exception as e:
+        if type(e) == AssertionError:
+            raise e
+        assert "between 0 and 1" in str(e)
+
+def test_validate_risk_budget_config_invalid_low():
+    from usa_signal_bot.portfolio.risk_budgeting import validate_risk_budget_config, RiskBudgetConfig
+    try:
+        from usa_signal_bot.core.exceptions import RiskBudgetingError
+    except ImportError:
+        RiskBudgetingError = Exception
+
+    config = RiskBudgetConfig(
+        max_total_budget_pct=0.80,
+        max_symbol_budget_pct=-0.15,
+        max_strategy_budget_pct=0.30,
+        max_timeframe_budget_pct=0.50,
+        max_single_candidate_budget_pct=0.10,
+        min_cash_buffer_pct=0.05,
+        enforce_budget=True
+    )
+
+    try:
+        validate_risk_budget_config(config)
+        assert False, "Expected an exception"
+    except RiskBudgetingError as e:
+        assert "between 0 and 1" in str(e)
+    except Exception as e:
+        if type(e) == AssertionError:
+            raise e
+        assert "between 0 and 1" in str(e)
