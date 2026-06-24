@@ -3,10 +3,15 @@ from usa_signal_bot.core.enums import TransactionSide, MarketImpactStatus
 from usa_signal_bot.execution.liquidity_models import LiquidityProfile
 from usa_signal_bot.transaction_costs.cost_models import TransactionCostInput
 from usa_signal_bot.transaction_costs.fee_schedule import load_fee_schedule_from_config
-from usa_signal_bot.transaction_costs.slippage_curve_builder import build_liquidity_adjusted_slippage_curve
+from usa_signal_bot.transaction_costs.slippage_curve_builder import (
+    build_liquidity_adjusted_slippage_curve,
+)
 from usa_signal_bot.transaction_costs.market_impact import estimate_market_impact
-from usa_signal_bot.transaction_costs.cost_adjusted_trade import build_transaction_cost_breakdown
+from usa_signal_bot.transaction_costs.cost_adjusted_trade import (
+    build_transaction_cost_breakdown,
+)
 from usa_signal_bot.transaction_costs.fill_simulator import simulate_fill
+
 
 def _resolve_side(action: str) -> TransactionSide:
     action = action.lower()
@@ -20,10 +25,11 @@ def _resolve_side(action: str) -> TransactionSide:
         return TransactionSide.COVER
     return TransactionSide.BUY
 
+
 def apply_transaction_costs_to_paper_order(
     order: dict[str, Any],
     liquidity_profile: LiquidityProfile | None = None,
-    config: dict[str, Any] | None = None
+    config: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
 
     if not config or not config.get("transaction_cost_model", {}).get("enabled", False):
@@ -52,24 +58,35 @@ def apply_transaction_costs_to_paper_order(
         quantity=quantity,
         notional_usd=notional_usd,
         price=price,
-        avg_dollar_volume=liquidity_profile.avg_dollar_volume if liquidity_profile else None,
+        avg_dollar_volume=(
+            liquidity_profile.avg_dollar_volume if liquidity_profile else None
+        ),
         atr_pct=liquidity_profile.atr_pct if liquidity_profile else None,
         spread_proxy_bps=10.0,
         participation_rate_pct=None,
-        liquidity_status=liquidity_profile.status if liquidity_profile else None
+        liquidity_status=liquidity_profile.status if liquidity_profile else None,
     )
 
     curve = build_liquidity_adjusted_slippage_curve(symbol, liquidity_profile)
     breakdown = build_transaction_cost_breakdown(input_payload, fee_schedule, curve)
-    impact = estimate_market_impact(symbol, side, notional_usd, input_payload.avg_dollar_volume)
+    impact = estimate_market_impact(
+        symbol, side, notional_usd, input_payload.avg_dollar_volume
+    )
 
     order["estimated_cost_usd"] = breakdown.total_cost_usd
     order["estimated_cost_bps"] = breakdown.total_cost_bps
-    order["market_impact_status"] = impact.status.value if isinstance(impact.status, MarketImpactStatus) else impact.status
+    order["market_impact_status"] = (
+        impact.status.value
+        if isinstance(impact.status, MarketImpactStatus)
+        else impact.status
+    )
 
     return order
 
-def apply_transaction_costs_to_paper_fill(fill: dict[str, Any], config: dict[str, Any] | None = None) -> dict[str, Any]:
+
+def apply_transaction_costs_to_paper_fill(
+    fill: dict[str, Any], config: dict[str, Any] | None = None
+) -> dict[str, Any]:
     if not config or not config.get("transaction_cost_model", {}).get("enabled", False):
         return fill
 
@@ -96,31 +113,41 @@ def apply_transaction_costs_to_paper_fill(fill: dict[str, Any], config: dict[str
         atr_pct=None,
         spread_proxy_bps=10.0,
         participation_rate_pct=0.5,
-        liquidity_status=None
+        liquidity_status=None,
     )
 
     curve = build_liquidity_adjusted_slippage_curve(symbol)
     breakdown = build_transaction_cost_breakdown(input_payload, fee_schedule, curve)
     impact = estimate_market_impact(symbol, side, notional_usd, None)
 
-    sim_result = simulate_fill(symbol, side, quantity, notional_usd, base_price, breakdown, impact)
+    sim_result = simulate_fill(
+        symbol, side, quantity, notional_usd, base_price, breakdown, impact
+    )
 
     if sim_result.simulated_fill_price:
         fill["cost_adjusted_fill_price"] = sim_result.simulated_fill_price
         fill["estimated_cost_usd"] = breakdown.total_cost_usd
-        fill["fill_realism_status"] = sim_result.status.value if hasattr(sim_result.status, 'value') else sim_result.status
+        fill["fill_realism_status"] = (
+            sim_result.status.value
+            if hasattr(sim_result.status, "value")
+            else sim_result.status
+        )
 
     return fill
 
+
 def paper_cost_summary(orders_or_fills: list[dict[str, Any]]) -> dict[str, Any]:
-    total_cost = sum(i.get("estimated_cost_usd", 0.0) for i in orders_or_fills)
-    return {
-        "total_estimated_cost_usd": total_cost,
-        "count": len(orders_or_fills)
-    }
+    total_cost = 0.0
+    for i in orders_or_fills:
+        if "estimated_cost_usd" in i:
+            total_cost += i["estimated_cost_usd"]
+    return {"total_estimated_cost_usd": total_cost, "count": len(orders_or_fills)}
+
 
 def paper_cost_warnings(order_or_fill: dict[str, Any]) -> list[str]:
     warnings = []
     if order_or_fill.get("market_impact_status") in ["HIGH", "EXTREME"]:
-        warnings.append(f"HIGH/EXTREME market impact expected for paper order on {order_or_fill.get('symbol')}.")
+        warnings.append(
+            f"HIGH/EXTREME market impact expected for paper order on {order_or_fill.get('symbol')}."
+        )
     return warnings
