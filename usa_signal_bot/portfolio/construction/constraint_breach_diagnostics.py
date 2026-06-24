@@ -1,12 +1,36 @@
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Tuple
+from collections import defaultdict
 from usa_signal_bot.portfolio.construction.phase155_models import (
     PortfolioSandboxDiagnosticRecord,
     PortfolioSandboxDiagnosticKind,
     PrototypeExposureTable,
     PortfolioConstructionPolicy,
     create_portfolio_sandbox_diagnostic_id,
-    _now_str
+    _now_str,
+    PrototypeExposureRecord
 )
+
+def _evaluate_weight_breach(
+    r: PrototypeExposureRecord,
+    policy: PortfolioConstructionPolicy
+) -> Tuple[int, List[str]]:
+    w = r.normalized_sandbox_weight
+    if w is None:
+        return 0, []
+
+    breaches = 0
+    notes = []
+
+    # Due to float rounding, use small epsilon
+    if w > policy.max_sandbox_weight_fraction + 1e-5:
+        breaches += 1
+        notes.append(f"{r.symbol} weight {w:.4f} > max {policy.max_sandbox_weight_fraction}")
+    # Don't penalize exactly 0 for min check, min check is for non-zero weights
+    elif w > 0 and w < policy.min_sandbox_weight_fraction - 1e-5:
+        breaches += 1
+        notes.append(f"{r.symbol} weight {w:.4f} < min {policy.min_sandbox_weight_fraction}")
+
+    return breaches, notes
 
 def build_constraint_breach_diagnostics(
     table: PrototypeExposureTable,
@@ -15,10 +39,8 @@ def build_constraint_breach_diagnostics(
 
     diags = []
 
-    method_records = {}
+    method_records = defaultdict(list)
     for r in table.records:
-        if r.method_kind not in method_records:
-            method_records[r.method_kind] = []
         method_records[r.method_kind].append(r)
 
     for method, recs in method_records.items():
@@ -26,16 +48,9 @@ def build_constraint_breach_diagnostics(
         notes = []
 
         for r in recs:
-            w = r.normalized_sandbox_weight
-            if w is not None:
-                # Due to float rounding, use small epsilon
-                if w > policy.max_sandbox_weight_fraction + 1e-5:
-                    breaches += 1
-                    notes.append(f"{r.symbol} weight {w:.4f} > max {policy.max_sandbox_weight_fraction}")
-                # Don't penalize exactly 0 for min check, min check is for non-zero weights
-                elif w > 0 and w < policy.min_sandbox_weight_fraction - 1e-5:
-                    breaches += 1
-                    notes.append(f"{r.symbol} weight {w:.4f} < min {policy.min_sandbox_weight_fraction}")
+            b, n = _evaluate_weight_breach(r, policy)
+            breaches += b
+            notes.extend(n)
 
         diags.append(PortfolioSandboxDiagnosticRecord(
             diagnostic_id=create_portfolio_sandbox_diagnostic_id(),
