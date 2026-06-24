@@ -12,9 +12,10 @@ from usa_signal_bot.core.enums import (
     ProviderSelectionScoreStatus,
     ProviderRankingDecision,
     ProviderQualityRiskFlag,
-    ProviderQualityReportType
+    ProviderQualityReportType,
 )
 from usa_signal_bot.core.exceptions import ProviderQualityValidationError
+
 
 @dataclass
 class ProviderCacheIngestionResult:
@@ -45,6 +46,7 @@ class ProviderCacheIngestionResult:
     errors: List[str] = field(default_factory=list)
     metadata: Dict[str, Any] = field(default_factory=dict)
 
+
 @dataclass
 class DataQualityScoreComponent:
     component_id: str
@@ -62,6 +64,21 @@ class DataQualityScoreComponent:
     warnings: List[str] = field(default_factory=list)
     errors: List[str] = field(default_factory=list)
     metadata: Dict[str, Any] = field(default_factory=dict)
+
+
+@dataclass
+class ProviderDataQualityScorePayload:
+    provider_name: str
+    capability: str
+    symbol: Optional[str] = None
+    records: Optional[List[Dict[str, Any]]] = None
+    schema_errors: Optional[List[str]] = None
+    freshness_payload: Optional[Dict[str, Any]] = None
+    source_comparison_payload: Optional[Dict[str, Any]] = None
+    cache_payload: Optional[Dict[str, Any]] = None
+    safety_payload: Optional[Dict[str, Any]] = None
+    policy: Optional[Dict[str, float]] = None
+
 
 @dataclass
 class ProviderDataQualityScore:
@@ -82,6 +99,7 @@ class ProviderDataQualityScore:
     errors: List[str] = field(default_factory=list)
     metadata: Dict[str, Any] = field(default_factory=dict)
 
+
 @dataclass
 class SourceTrustProfile:
     profile_id: str
@@ -101,6 +119,7 @@ class SourceTrustProfile:
     errors: List[str] = field(default_factory=list)
     risk_flags: List[ProviderQualityRiskFlag] = field(default_factory=list)
     metadata: Dict[str, Any] = field(default_factory=dict)
+
 
 @dataclass
 class ProviderSelectionScore:
@@ -129,6 +148,7 @@ class ProviderSelectionScore:
     errors: List[str] = field(default_factory=list)
     metadata: Dict[str, Any] = field(default_factory=dict)
 
+
 @dataclass
 class ProviderRanking:
     ranking_id: str
@@ -148,6 +168,7 @@ class ProviderRanking:
     warnings: List[str] = field(default_factory=list)
     errors: List[str] = field(default_factory=list)
     metadata: Dict[str, Any] = field(default_factory=dict)
+
 
 @dataclass
 class ProviderQualityContext:
@@ -182,6 +203,7 @@ class ProviderQualityContext:
     errors: List[str] = field(default_factory=list)
     metadata: Dict[str, Any] = field(default_factory=dict)
 
+
 @dataclass
 class ProviderQualityFullReview:
     review_id: str
@@ -197,63 +219,90 @@ class ProviderQualityFullReview:
     warnings: List[str] = field(default_factory=list)
     errors: List[str] = field(default_factory=list)
 
+
 def create_provider_cache_ingestion_id() -> str:
     return f"cache_ingest_{uuid.uuid4().hex[:8]}"
+
 
 def create_data_quality_component_id() -> str:
     return f"dq_comp_{uuid.uuid4().hex[:8]}"
 
+
 def create_provider_data_quality_score_id() -> str:
     return f"pdqs_{uuid.uuid4().hex[:8]}"
+
 
 def create_source_trust_profile_id() -> str:
     return f"trust_prof_{uuid.uuid4().hex[:8]}"
 
+
 def create_provider_selection_score_id() -> str:
     return f"psel_score_{uuid.uuid4().hex[:8]}"
+
 
 def create_provider_ranking_id() -> str:
     return f"prank_{uuid.uuid4().hex[:8]}"
 
+
 def create_provider_quality_context_id() -> str:
     return f"pq_ctx_{uuid.uuid4().hex[:8]}"
+
 
 def create_provider_quality_full_review_id() -> str:
     return f"pq_review_{uuid.uuid4().hex[:8]}"
 
+
 def provider_cache_ingestion_result_to_dict(item: ProviderCacheIngestionResult) -> dict:
     from usa_signal_bot.core.serialization import to_dict_clean
+
     return to_dict_clean(item)
+
 
 def data_quality_score_component_to_dict(item: DataQualityScoreComponent) -> dict:
     from usa_signal_bot.core.serialization import to_dict_clean
+
     return to_dict_clean(item)
+
 
 def provider_data_quality_score_to_dict(item: ProviderDataQualityScore) -> dict:
     from usa_signal_bot.core.serialization import to_dict_clean
+
     return to_dict_clean(item)
+
 
 def source_trust_profile_to_dict(item: SourceTrustProfile) -> dict:
     from usa_signal_bot.core.serialization import to_dict_clean
+
     return to_dict_clean(item)
+
 
 def provider_selection_score_to_dict(item: ProviderSelectionScore) -> dict:
     from usa_signal_bot.core.serialization import to_dict_clean
+
     return to_dict_clean(item)
+
 
 def provider_ranking_to_dict(item: ProviderRanking) -> dict:
     from usa_signal_bot.core.serialization import to_dict_clean
+
     return to_dict_clean(item)
+
 
 def provider_quality_context_to_dict(item: ProviderQualityContext) -> dict:
     from usa_signal_bot.core.serialization import to_dict_clean
+
     return to_dict_clean(item)
+
 
 def provider_quality_full_review_to_dict(item: ProviderQualityFullReview) -> dict:
     from usa_signal_bot.core.serialization import to_dict_clean
+
     return to_dict_clean(item)
 
-def validate_provider_cache_ingestion_result(item: ProviderCacheIngestionResult) -> None:
+
+def validate_provider_cache_ingestion_result(
+    item: ProviderCacheIngestionResult,
+) -> None:
     if not item.provider_cache_ready:
         raise ProviderQualityValidationError("provider_cache_ready must be True")
     if not item.stale_fresh_policy_valid:
@@ -277,11 +326,14 @@ def validate_provider_cache_ingestion_result(item: ProviderCacheIngestionResult)
     if item.order_creation_enabled:
         raise ProviderQualityValidationError("order_creation_enabled must be False")
     if item.paper_state_mutation_enabled:
-        raise ProviderQualityValidationError("paper_state_mutation_enabled must be False")
+        raise ProviderQualityValidationError(
+            "paper_state_mutation_enabled must be False"
+        )
     if item.telegram_real_send_enabled:
         raise ProviderQualityValidationError("telegram_real_send_enabled must be False")
     if item.dashboard_enabled:
         raise ProviderQualityValidationError("dashboard_enabled must be False")
+
 
 def validate_data_quality_score_component(item: DataQualityScoreComponent) -> None:
     if not (0 <= item.score <= 100):
@@ -289,27 +341,38 @@ def validate_data_quality_score_component(item: DataQualityScoreComponent) -> No
     if not (0 <= item.weight <= 1.0):
         raise ProviderQualityValidationError("Weight must be between 0 and 1.0")
 
+
 def validate_provider_data_quality_score(item: ProviderDataQualityScore) -> None:
     if not (0 <= item.total_score <= 100):
         raise ProviderQualityValidationError("total_score must be between 0 and 100")
     if item.blocked and item.usable_for_research:
-        raise ProviderQualityValidationError("blocked provider cannot be usable for research")
+        raise ProviderQualityValidationError(
+            "blocked provider cannot be usable for research"
+        )
+
 
 def validate_source_trust_profile(item: SourceTrustProfile) -> None:
     if not (0 <= item.trust_score <= 100):
         raise ProviderQualityValidationError("trust_score must be between 0 and 100")
 
+
 def validate_provider_selection_score(item: ProviderSelectionScore) -> None:
     if not (0 <= item.final_selection_score <= 100):
-        raise ProviderQualityValidationError("final_selection_score must be between 0 and 100")
+        raise ProviderQualityValidationError(
+            "final_selection_score must be between 0 and 100"
+        )
+
 
 def validate_provider_ranking(item: ProviderRanking) -> None:
     if not item.ranking_is_research_data_only:
-        raise ProviderQualityValidationError("ranking_is_research_data_only must be True")
+        raise ProviderQualityValidationError(
+            "ranking_is_research_data_only must be True"
+        )
     if item.produces_trade_signal:
         raise ProviderQualityValidationError("produces_trade_signal must be False")
     if item.produces_order_decision:
         raise ProviderQualityValidationError("produces_order_decision must be False")
+
 
 def validate_provider_quality_context(item: ProviderQualityContext) -> None:
     if not item.research_data_only:
@@ -336,6 +399,7 @@ def validate_provider_quality_context(item: ProviderQualityContext) -> None:
         raise ProviderQualityValidationError("telegram_real_sent must be False")
     if item.dashboard_started:
         raise ProviderQualityValidationError("dashboard_started must be False")
+
 
 def validate_provider_quality_full_review(item: ProviderQualityFullReview) -> None:
     validate_provider_cache_ingestion_result(item.ingestion)
