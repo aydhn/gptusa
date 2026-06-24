@@ -109,6 +109,9 @@ class BacktestClosureReportingError(BacktestClosureError):
 class PortfolioFoundationError(Exception):
     pass
 
+class PortfolioValidationError(PortfolioFoundationError):
+    pass
+
 
 class BacktestClosureIngestionError(PortfolioFoundationError):
     pass
