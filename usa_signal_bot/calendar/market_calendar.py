@@ -136,9 +136,36 @@ class LocalMarketCalendar:
             curr += timedelta(days=1)
         return days
 
-    def review_range(self, start_date: str, end_date: str) -> list[TradingDayResult]:
+    def _review_day(self, date_str: str) -> TradingDayResult:
         from usa_signal_bot.calendar.calendar_models import create_trading_day_result_id
 
+        is_trading = self.is_trading_day(date_str)
+
+        if self.is_weekend(date_str):
+            day_type = MarketDayType.WEEKEND
+        elif self.is_holiday(date_str):
+            day_type = MarketDayType.HOLIDAY
+        elif self.is_early_close(date_str):
+            day_type = MarketDayType.EARLY_CLOSE
+        elif is_trading:
+            day_type = MarketDayType.TRADING_DAY
+        else:
+            day_type = MarketDayType.NON_TRADING_DAY
+
+        session = self.session_for_date(date_str)
+
+        return TradingDayResult(
+            result_id=create_trading_day_result_id(date_str),
+            calendar_name=self.calendar_name,
+            date=date_str,
+            day_type=day_type,
+            is_trading_day=is_trading,
+            previous_trading_day=self.previous_trading_day(date_str) if is_trading else None,
+            next_trading_day=self.next_trading_day(date_str) if is_trading else None,
+            session=session
+        )
+
+    def review_range(self, start_date: str, end_date: str) -> list[TradingDayResult]:
         start_dt = datetime.strptime(start_date, "%Y-%m-%d")
         end_dt = datetime.strptime(end_date, "%Y-%m-%d")
 
@@ -146,33 +173,7 @@ class LocalMarketCalendar:
         curr = start_dt
         while curr <= end_dt:
             curr_str = curr.strftime("%Y-%m-%d")
-            is_trading = self.is_trading_day(curr_str)
-
-            day_type = MarketDayType.UNKNOWN
-            if self.is_weekend(curr_str):
-                day_type = MarketDayType.WEEKEND
-            elif self.is_holiday(curr_str):
-                day_type = MarketDayType.HOLIDAY
-            elif self.is_early_close(curr_str):
-                day_type = MarketDayType.EARLY_CLOSE
-            elif is_trading:
-                day_type = MarketDayType.TRADING_DAY
-            else:
-                day_type = MarketDayType.NON_TRADING_DAY
-
-            session = self.session_for_date(curr_str)
-
-            res = TradingDayResult(
-                result_id=create_trading_day_result_id(curr_str),
-                calendar_name=self.calendar_name,
-                date=curr_str,
-                day_type=day_type,
-                is_trading_day=is_trading,
-                previous_trading_day=self.previous_trading_day(curr_str) if is_trading else None,
-                next_trading_day=self.next_trading_day(curr_str) if is_trading else None,
-                session=session
-            )
-            results.append(res)
+            results.append(self._review_day(curr_str))
             curr += timedelta(days=1)
 
         return results
