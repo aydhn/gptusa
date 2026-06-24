@@ -113,32 +113,37 @@ def calculate_contribution_for_group(
     )
 
 
+def _extract_dimension_key(
+    e: AttributionTradeEvent, dimension: AttributionDimension
+) -> str:
+    if dimension == AttributionDimension.SYMBOL:
+        return e.symbol or "UNKNOWN"
+    if dimension == AttributionDimension.STRATEGY:
+        return e.strategy_name or "UNKNOWN"
+    if dimension == AttributionDimension.SIGNAL_FAMILY:
+        return e.signal_family or "UNKNOWN"
+    if dimension == AttributionDimension.SECTOR:
+        return e.sector or "UNKNOWN"
+    if dimension == AttributionDimension.CLUSTER:
+        return e.cluster or "UNKNOWN"
+    if dimension == AttributionDimension.REGIME:
+        return e.regime_label or "UNKNOWN"
+    if dimension == AttributionDimension.SIDE:
+        return e.side or "UNKNOWN"
+    if dimension == AttributionDimension.SIZING_STATUS:
+        return e.sizing_status or "UNKNOWN"
+    if dimension == AttributionDimension.REBALANCE_ACTION:
+        return e.rebalance_action_type or "UNKNOWN"
+    return "UNKNOWN"
+
+
 def aggregate_pnl_by_dimension(
     events: List[AttributionTradeEvent], dimension: AttributionDimension
 ) -> List[AttributionContribution]:
     groups = defaultdict(list)
 
     for e in events:
-        key = "UNKNOWN"
-        if dimension == AttributionDimension.SYMBOL:
-            key = e.symbol
-        elif dimension == AttributionDimension.STRATEGY:
-            key = e.strategy_name or "UNKNOWN"
-        elif dimension == AttributionDimension.SIGNAL_FAMILY:
-            key = e.signal_family or "UNKNOWN"
-        elif dimension == AttributionDimension.SECTOR:
-            key = e.sector or "UNKNOWN"
-        elif dimension == AttributionDimension.CLUSTER:
-            key = e.cluster or "UNKNOWN"
-        elif dimension == AttributionDimension.REGIME:
-            key = e.regime_label or "UNKNOWN"
-        elif dimension == AttributionDimension.SIDE:
-            key = e.side or "UNKNOWN"
-        elif dimension == AttributionDimension.SIZING_STATUS:
-            key = e.sizing_status or "UNKNOWN"
-        elif dimension == AttributionDimension.REBALANCE_ACTION:
-            key = e.rebalance_action_type or "UNKNOWN"
-
+        key = _extract_dimension_key(e, dimension)
         groups[key].append(e)
 
     total_net_pnl = sum(e.net_pnl_usd for e in events if e.net_pnl_usd is not None)
