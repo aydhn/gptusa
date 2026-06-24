@@ -90,3 +90,169 @@ def test_validate_portfolio_basket_negative_weight():
     basket.total_target_weight = -10.0
     with pytest.raises(Exception, match="total_target_weight cannot be negative"):
         validate_portfolio_basket(basket)
+
+from usa_signal_bot.portfolio.portfolio_models import AllocationResult, validate_allocation_result
+from usa_signal_bot.core.exceptions import PortfolioValidationError
+
+class DummyEnum:
+    def __init__(self, value):
+        self.value = value
+
+def test_validate_allocation_result_valid():
+    result = AllocationResult(
+        candidate_id="c1",
+        symbol="AAPL",
+        timeframe="1D",
+        method=DummyEnum("EQUAL_WEIGHT"),
+        status=DummyEnum("APPROVED"),
+        target_weight=0.1,
+        target_notional=100.0,
+        target_quantity=1.0,
+        raw_weight=0.15,
+        raw_notional=150.0,
+        capped=False,
+        cap_reasons=[],
+        warnings=[],
+        errors=[]
+    )
+    validate_allocation_result(result)
+
+def test_validate_allocation_result_empty_candidate_id():
+    result = AllocationResult(
+        candidate_id="",
+        symbol="AAPL",
+        timeframe="1D",
+        method=DummyEnum("EQUAL_WEIGHT"),
+        status=DummyEnum("APPROVED"),
+        target_weight=0.1,
+        target_notional=100.0,
+        target_quantity=1.0,
+        raw_weight=0.15,
+        raw_notional=150.0,
+        capped=False,
+        cap_reasons=[],
+        warnings=[],
+        errors=[]
+    )
+    with pytest.raises(PortfolioValidationError, match="candidate_id is empty."):
+        validate_allocation_result(result)
+
+def test_validate_allocation_result_empty_symbol():
+    result = AllocationResult(
+        candidate_id="c1",
+        symbol="",
+        timeframe="1D",
+        method=DummyEnum("EQUAL_WEIGHT"),
+        status=DummyEnum("APPROVED"),
+        target_weight=0.1,
+        target_notional=100.0,
+        target_quantity=1.0,
+        raw_weight=0.15,
+        raw_notional=150.0,
+        capped=False,
+        cap_reasons=[],
+        warnings=[],
+        errors=[]
+    )
+    with pytest.raises(PortfolioValidationError, match="symbol is empty."):
+        validate_allocation_result(result)
+
+def test_validate_allocation_result_negative_target_weight():
+    result = AllocationResult(
+        candidate_id="c1",
+        symbol="AAPL",
+        timeframe="1D",
+        method=DummyEnum("EQUAL_WEIGHT"),
+        status=DummyEnum("APPROVED"),
+        target_weight=-0.1,
+        target_notional=100.0,
+        target_quantity=1.0,
+        raw_weight=0.15,
+        raw_notional=150.0,
+        capped=False,
+        cap_reasons=[],
+        warnings=[],
+        errors=[]
+    )
+    with pytest.raises(PortfolioValidationError, match="target_weight cannot be negative."):
+        validate_allocation_result(result)
+
+def test_validate_allocation_result_negative_target_notional():
+    result = AllocationResult(
+        candidate_id="c1",
+        symbol="AAPL",
+        timeframe="1D",
+        method=DummyEnum("EQUAL_WEIGHT"),
+        status=DummyEnum("APPROVED"),
+        target_weight=0.1,
+        target_notional=-100.0,
+        target_quantity=1.0,
+        raw_weight=0.15,
+        raw_notional=150.0,
+        capped=False,
+        cap_reasons=[],
+        warnings=[],
+        errors=[]
+    )
+    with pytest.raises(PortfolioValidationError, match="target_notional cannot be negative."):
+        validate_allocation_result(result)
+
+def test_validate_allocation_result_negative_target_quantity():
+    result = AllocationResult(
+        candidate_id="c1",
+        symbol="AAPL",
+        timeframe="1D",
+        method=DummyEnum("EQUAL_WEIGHT"),
+        status=DummyEnum("APPROVED"),
+        target_weight=0.1,
+        target_notional=100.0,
+        target_quantity=-1.0,
+        raw_weight=0.15,
+        raw_notional=150.0,
+        capped=False,
+        cap_reasons=[],
+        warnings=[],
+        errors=[]
+    )
+    with pytest.raises(PortfolioValidationError, match="target_quantity cannot be negative."):
+        validate_allocation_result(result)
+
+def test_validate_allocation_result_negative_raw_weight():
+    result = AllocationResult(
+        candidate_id="c1",
+        symbol="AAPL",
+        timeframe="1D",
+        method=DummyEnum("EQUAL_WEIGHT"),
+        status=DummyEnum("APPROVED"),
+        target_weight=0.1,
+        target_notional=100.0,
+        target_quantity=1.0,
+        raw_weight=-0.15,
+        raw_notional=150.0,
+        capped=False,
+        cap_reasons=[],
+        warnings=[],
+        errors=[]
+    )
+    with pytest.raises(PortfolioValidationError, match="raw_weight cannot be negative."):
+        validate_allocation_result(result)
+
+def test_validate_allocation_result_negative_raw_notional():
+    result = AllocationResult(
+        candidate_id="c1",
+        symbol="AAPL",
+        timeframe="1D",
+        method=DummyEnum("EQUAL_WEIGHT"),
+        status=DummyEnum("APPROVED"),
+        target_weight=0.1,
+        target_notional=100.0,
+        target_quantity=1.0,
+        raw_weight=0.15,
+        raw_notional=-150.0,
+        capped=False,
+        cap_reasons=[],
+        warnings=[],
+        errors=[]
+    )
+    with pytest.raises(PortfolioValidationError, match="raw_notional cannot be negative."):
+        validate_allocation_result(result)
