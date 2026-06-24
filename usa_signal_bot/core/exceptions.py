@@ -963,3 +963,6 @@ class LoggingSetupError(Exception):
 
 class ConcentrationGuardError(USASignalBotError):
     pass
+
+class RiskBudgetingError(USASignalBotError):
+    pass
