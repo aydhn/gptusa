@@ -109,6 +109,7 @@ class BacktestClosureReportingError(BacktestClosureError):
 class PortfolioFoundationError(Exception):
     pass
 
+
 class PortfolioValidationError(PortfolioFoundationError):
     pass
 
@@ -964,5 +965,10 @@ class LoggingSetupError(Exception):
 class ConcentrationGuardError(USASignalBotError):
     pass
 
+
 class RiskBudgetingError(USASignalBotError):
+    pass
+
+
+class ProviderQualityValidationError(Exception):
     pass
