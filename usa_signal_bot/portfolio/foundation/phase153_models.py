@@ -1,5 +1,6 @@
 from dataclasses import dataclass, field
 from typing import Any
+from usa_signal_bot.core.serialization import to_dict_clean
 import uuid
 import datetime
 
@@ -17,14 +18,17 @@ from usa_signal_bot.core.enums import (
     Phase154ReadinessStatus,
     Phase154ReadinessRuleKind,
     PortfolioFoundationRiskFlag,
-    PortfolioFoundationReportType
+    PortfolioFoundationReportType,
 )
+
 
 def _uid() -> str:
     return str(uuid.uuid4())
 
+
 def _now() -> str:
     return datetime.datetime.now(datetime.timezone.utc).isoformat()
+
 
 @dataclass
 class BacktestClosureIngestionResult:
@@ -75,6 +79,7 @@ class BacktestClosureIngestionResult:
     errors: list[str] = field(default_factory=list)
     metadata: dict[str, Any] = field(default_factory=dict)
 
+
 @dataclass
 class PortfolioInputReference:
     input_ref_id: str = field(default_factory=_uid)
@@ -95,12 +100,15 @@ class PortfolioInputReference:
     risk_flags: list[PortfolioFoundationRiskFlag] = field(default_factory=list)
     metadata: dict[str, Any] = field(default_factory=dict)
 
+
 @dataclass
 class PortfolioCandidate:
     candidate_id: str = field(default_factory=_uid)
     created_at_utc: str = field(default_factory=_now)
     symbol: str = ""
-    candidate_universe_kind: PortfolioCandidateUniverseKind = PortfolioCandidateUniverseKind.UNKNOWN
+    candidate_universe_kind: PortfolioCandidateUniverseKind = (
+        PortfolioCandidateUniverseKind.UNKNOWN
+    )
     source_phase: str | None = None
     has_metric_inventory: bool = False
     has_risk_notes: bool = False
@@ -117,12 +125,15 @@ class PortfolioCandidate:
     risk_flags: list[PortfolioFoundationRiskFlag] = field(default_factory=list)
     metadata: dict[str, Any] = field(default_factory=dict)
 
+
 @dataclass
 class CandidateUniverseContract:
     contract_id: str = field(default_factory=_uid)
     created_at_utc: str = field(default_factory=_now)
     universe_name: str = ""
-    universe_kind: PortfolioCandidateUniverseKind = PortfolioCandidateUniverseKind.UNKNOWN
+    universe_kind: PortfolioCandidateUniverseKind = (
+        PortfolioCandidateUniverseKind.UNKNOWN
+    )
     candidates: list[PortfolioCandidate] = field(default_factory=list)
     candidate_count: int = 0
     symbols: list[str] = field(default_factory=list)
@@ -143,6 +154,7 @@ class CandidateUniverseContract:
     risk_flags: list[PortfolioFoundationRiskFlag] = field(default_factory=list)
     metadata: dict[str, Any] = field(default_factory=dict)
 
+
 @dataclass
 class PortfolioEligibilityRule:
     rule_id: str = field(default_factory=_uid)
@@ -162,6 +174,7 @@ class PortfolioEligibilityRule:
     risk_flags: list[PortfolioFoundationRiskFlag] = field(default_factory=list)
     metadata: dict[str, Any] = field(default_factory=dict)
 
+
 @dataclass
 class PortfolioConstraint:
     constraint_id: str = field(default_factory=_uid)
@@ -180,6 +193,7 @@ class PortfolioConstraint:
     risk_flags: list[PortfolioFoundationRiskFlag] = field(default_factory=list)
     metadata: dict[str, Any] = field(default_factory=dict)
 
+
 @dataclass
 class PortfolioConstraintCatalog:
     catalog_id: str = field(default_factory=_uid)
@@ -196,6 +210,7 @@ class PortfolioConstraintCatalog:
     errors: list[str] = field(default_factory=list)
     risk_flags: list[PortfolioFoundationRiskFlag] = field(default_factory=list)
     metadata: dict[str, Any] = field(default_factory=dict)
+
 
 @dataclass
 class RiskBudgetContractItem:
@@ -215,6 +230,7 @@ class RiskBudgetContractItem:
     risk_flags: list[PortfolioFoundationRiskFlag] = field(default_factory=list)
     metadata: dict[str, Any] = field(default_factory=dict)
 
+
 @dataclass
 class RiskBudgetContract:
     contract_id: str = field(default_factory=_uid)
@@ -233,6 +249,7 @@ class RiskBudgetContract:
     risk_flags: list[PortfolioFoundationRiskFlag] = field(default_factory=list)
     metadata: dict[str, Any] = field(default_factory=dict)
 
+
 @dataclass
 class PositionSizingBoundaryRule:
     rule_id: str = field(default_factory=_uid)
@@ -248,6 +265,7 @@ class PositionSizingBoundaryRule:
     errors: list[str] = field(default_factory=list)
     risk_flags: list[PortfolioFoundationRiskFlag] = field(default_factory=list)
     metadata: dict[str, Any] = field(default_factory=dict)
+
 
 @dataclass
 class PositionSizingBoundaryContract:
@@ -267,11 +285,14 @@ class PositionSizingBoundaryContract:
     risk_flags: list[PortfolioFoundationRiskFlag] = field(default_factory=list)
     metadata: dict[str, Any] = field(default_factory=dict)
 
+
 @dataclass
 class PortfolioConstructionBoundary:
     boundary_id: str = field(default_factory=_uid)
     created_at_utc: str = field(default_factory=_now)
-    boundary_kinds: list[PortfolioConstructionBoundaryKind] = field(default_factory=list)
+    boundary_kinds: list[PortfolioConstructionBoundaryKind] = field(
+        default_factory=list
+    )
     contract_only_phase153: bool = True
     no_optimization_phase153: bool = True
     no_rebalancing_phase153: bool = True
@@ -283,6 +304,7 @@ class PortfolioConstructionBoundary:
     errors: list[str] = field(default_factory=list)
     risk_flags: list[PortfolioFoundationRiskFlag] = field(default_factory=list)
     metadata: dict[str, Any] = field(default_factory=dict)
+
 
 @dataclass
 class CandidateUniverseDiagnostics:
@@ -301,11 +323,14 @@ class CandidateUniverseDiagnostics:
     risk_flags: list[PortfolioFoundationRiskFlag] = field(default_factory=list)
     metadata: dict[str, Any] = field(default_factory=dict)
 
+
 @dataclass
 class ConstraintValidationReport:
     report_id: str = field(default_factory=_uid)
     created_at_utc: str = field(default_factory=_now)
-    catalog: PortfolioConstraintCatalog = field(default_factory=PortfolioConstraintCatalog)
+    catalog: PortfolioConstraintCatalog = field(
+        default_factory=PortfolioConstraintCatalog
+    )
     rules: list[PortfolioEligibilityRule] = field(default_factory=list)
     report_valid: bool = False
     hard_constraint_count: int = 0
@@ -318,6 +343,7 @@ class ConstraintValidationReport:
     errors: list[str] = field(default_factory=list)
     risk_flags: list[PortfolioFoundationRiskFlag] = field(default_factory=list)
     metadata: dict[str, Any] = field(default_factory=dict)
+
 
 @dataclass
 class RiskBudgetValidationReport:
@@ -335,12 +361,17 @@ class RiskBudgetValidationReport:
     risk_flags: list[PortfolioFoundationRiskFlag] = field(default_factory=list)
     metadata: dict[str, Any] = field(default_factory=dict)
 
+
 @dataclass
 class SizingBoundaryValidationReport:
     report_id: str = field(default_factory=_uid)
     created_at_utc: str = field(default_factory=_now)
-    boundary: PositionSizingBoundaryContract = field(default_factory=PositionSizingBoundaryContract)
-    construction_boundary: PortfolioConstructionBoundary = field(default_factory=PortfolioConstructionBoundary)
+    boundary: PositionSizingBoundaryContract = field(
+        default_factory=PositionSizingBoundaryContract
+    )
+    construction_boundary: PortfolioConstructionBoundary = field(
+        default_factory=PortfolioConstructionBoundary
+    )
     report_valid: bool = False
     no_actual_position_size: bool = True
     no_target_weight: bool = True
@@ -353,11 +384,14 @@ class SizingBoundaryValidationReport:
     risk_flags: list[PortfolioFoundationRiskFlag] = field(default_factory=list)
     metadata: dict[str, Any] = field(default_factory=dict)
 
+
 @dataclass
 class PortfolioFoundationSafetyBoundaryRule:
     rule_id: str = field(default_factory=_uid)
     created_at_utc: str = field(default_factory=_now)
-    rule_kind: PortfolioFoundationSafetyRuleKind = PortfolioFoundationSafetyRuleKind.UNKNOWN
+    rule_kind: PortfolioFoundationSafetyRuleKind = (
+        PortfolioFoundationSafetyRuleKind.UNKNOWN
+    )
     name: str = ""
     required: bool = True
     passed: bool = False
@@ -368,6 +402,7 @@ class PortfolioFoundationSafetyBoundaryRule:
     errors: list[str] = field(default_factory=list)
     risk_flags: list[PortfolioFoundationRiskFlag] = field(default_factory=list)
     metadata: dict[str, Any] = field(default_factory=dict)
+
 
 @dataclass
 class PortfolioFoundationSafetyBoundaryResult:
@@ -402,6 +437,7 @@ class PortfolioFoundationSafetyBoundaryResult:
     risk_flags: list[PortfolioFoundationRiskFlag] = field(default_factory=list)
     metadata: dict[str, Any] = field(default_factory=dict)
 
+
 @dataclass
 class Phase154ReadinessRule:
     rule_id: str = field(default_factory=_uid)
@@ -419,17 +455,26 @@ class Phase154ReadinessRule:
     risk_flags: list[PortfolioFoundationRiskFlag] = field(default_factory=list)
     metadata: dict[str, Any] = field(default_factory=dict)
 
+
 @dataclass
 class Phase154ReadinessGate:
     gate_id: str = field(default_factory=_uid)
     created_at_utc: str = field(default_factory=_now)
     status: Phase154ReadinessStatus = Phase154ReadinessStatus.NOT_CHECKED
     rules: list[Phase154ReadinessRule] = field(default_factory=list)
-    candidate_universe_contract: CandidateUniverseContract = field(default_factory=CandidateUniverseContract)
-    constraint_catalog: PortfolioConstraintCatalog = field(default_factory=PortfolioConstraintCatalog)
+    candidate_universe_contract: CandidateUniverseContract = field(
+        default_factory=CandidateUniverseContract
+    )
+    constraint_catalog: PortfolioConstraintCatalog = field(
+        default_factory=PortfolioConstraintCatalog
+    )
     risk_budget_contract: RiskBudgetContract = field(default_factory=RiskBudgetContract)
-    sizing_boundary: PositionSizingBoundaryContract = field(default_factory=PositionSizingBoundaryContract)
-    safety_boundary: PortfolioFoundationSafetyBoundaryResult = field(default_factory=PortfolioFoundationSafetyBoundaryResult)
+    sizing_boundary: PositionSizingBoundaryContract = field(
+        default_factory=PositionSizingBoundaryContract
+    )
+    safety_boundary: PortfolioFoundationSafetyBoundaryResult = field(
+        default_factory=PortfolioFoundationSafetyBoundaryResult
+    )
     ready_for_phase154: bool = False
     research_data_only: bool = True
     portfolio_research_contract_only: bool = True
@@ -449,6 +494,7 @@ class Phase154ReadinessGate:
     risk_flags: list[PortfolioFoundationRiskFlag] = field(default_factory=list)
     metadata: dict[str, Any] = field(default_factory=dict)
 
+
 @dataclass
 class PortfolioFoundationContext:
     context_id: str = field(default_factory=_uid)
@@ -456,20 +502,42 @@ class PortfolioFoundationContext:
     status: PortfolioFoundationStatus = PortfolioFoundationStatus.DRAFT
     decision: PortfolioFoundationDecision = PortfolioFoundationDecision.UNKNOWN
     source_backtest_closure_review_id: str | None = None
-    ingestion: BacktestClosureIngestionResult = field(default_factory=BacktestClosureIngestionResult)
+    ingestion: BacktestClosureIngestionResult = field(
+        default_factory=BacktestClosureIngestionResult
+    )
     input_references: list[PortfolioInputReference] = field(default_factory=list)
-    candidate_universe_contract: CandidateUniverseContract = field(default_factory=CandidateUniverseContract)
+    candidate_universe_contract: CandidateUniverseContract = field(
+        default_factory=CandidateUniverseContract
+    )
     eligibility_rules: list[PortfolioEligibilityRule] = field(default_factory=list)
-    constraint_catalog: PortfolioConstraintCatalog = field(default_factory=PortfolioConstraintCatalog)
+    constraint_catalog: PortfolioConstraintCatalog = field(
+        default_factory=PortfolioConstraintCatalog
+    )
     risk_budget_contract: RiskBudgetContract = field(default_factory=RiskBudgetContract)
-    sizing_boundary: PositionSizingBoundaryContract = field(default_factory=PositionSizingBoundaryContract)
-    construction_boundary: PortfolioConstructionBoundary = field(default_factory=PortfolioConstructionBoundary)
-    candidate_diagnostics: CandidateUniverseDiagnostics = field(default_factory=CandidateUniverseDiagnostics)
-    constraint_validation_report: ConstraintValidationReport = field(default_factory=ConstraintValidationReport)
-    risk_budget_validation_report: RiskBudgetValidationReport = field(default_factory=RiskBudgetValidationReport)
-    sizing_boundary_validation_report: SizingBoundaryValidationReport = field(default_factory=SizingBoundaryValidationReport)
-    safety_boundary: PortfolioFoundationSafetyBoundaryResult = field(default_factory=PortfolioFoundationSafetyBoundaryResult)
-    phase154_readiness_gate: Phase154ReadinessGate = field(default_factory=Phase154ReadinessGate)
+    sizing_boundary: PositionSizingBoundaryContract = field(
+        default_factory=PositionSizingBoundaryContract
+    )
+    construction_boundary: PortfolioConstructionBoundary = field(
+        default_factory=PortfolioConstructionBoundary
+    )
+    candidate_diagnostics: CandidateUniverseDiagnostics = field(
+        default_factory=CandidateUniverseDiagnostics
+    )
+    constraint_validation_report: ConstraintValidationReport = field(
+        default_factory=ConstraintValidationReport
+    )
+    risk_budget_validation_report: RiskBudgetValidationReport = field(
+        default_factory=RiskBudgetValidationReport
+    )
+    sizing_boundary_validation_report: SizingBoundaryValidationReport = field(
+        default_factory=SizingBoundaryValidationReport
+    )
+    safety_boundary: PortfolioFoundationSafetyBoundaryResult = field(
+        default_factory=PortfolioFoundationSafetyBoundaryResult
+    )
+    phase154_readiness_gate: Phase154ReadinessGate = field(
+        default_factory=Phase154ReadinessGate
+    )
     backtest_closure_ingested: bool = False
     handoff_package_loaded: bool = False
     inputs_resolved: bool = False
@@ -521,113 +589,250 @@ class PortfolioFoundationContext:
     risk_flags: list[PortfolioFoundationRiskFlag] = field(default_factory=list)
     metadata: dict[str, Any] = field(default_factory=dict)
 
+
 @dataclass
 class PortfolioFoundationFullReview:
     review_id: str = field(default_factory=_uid)
     created_at_utc: str = field(default_factory=_now)
-    report_type: PortfolioFoundationReportType = PortfolioFoundationReportType.FULL_PHASE153_REVIEW
-    ingestion: BacktestClosureIngestionResult = field(default_factory=BacktestClosureIngestionResult)
-    context: PortfolioFoundationContext = field(default_factory=PortfolioFoundationContext)
-    candidate_universe_contract: CandidateUniverseContract = field(default_factory=CandidateUniverseContract)
-    constraint_catalog: PortfolioConstraintCatalog = field(default_factory=PortfolioConstraintCatalog)
+    report_type: PortfolioFoundationReportType = (
+        PortfolioFoundationReportType.FULL_PHASE153_REVIEW
+    )
+    ingestion: BacktestClosureIngestionResult = field(
+        default_factory=BacktestClosureIngestionResult
+    )
+    context: PortfolioFoundationContext = field(
+        default_factory=PortfolioFoundationContext
+    )
+    candidate_universe_contract: CandidateUniverseContract = field(
+        default_factory=CandidateUniverseContract
+    )
+    constraint_catalog: PortfolioConstraintCatalog = field(
+        default_factory=PortfolioConstraintCatalog
+    )
     risk_budget_contract: RiskBudgetContract = field(default_factory=RiskBudgetContract)
-    sizing_boundary: PositionSizingBoundaryContract = field(default_factory=PositionSizingBoundaryContract)
-    safety_boundary: PortfolioFoundationSafetyBoundaryResult = field(default_factory=PortfolioFoundationSafetyBoundaryResult)
-    phase154_readiness_gate: Phase154ReadinessGate = field(default_factory=Phase154ReadinessGate)
+    sizing_boundary: PositionSizingBoundaryContract = field(
+        default_factory=PositionSizingBoundaryContract
+    )
+    safety_boundary: PortfolioFoundationSafetyBoundaryResult = field(
+        default_factory=PortfolioFoundationSafetyBoundaryResult
+    )
+    phase154_readiness_gate: Phase154ReadinessGate = field(
+        default_factory=Phase154ReadinessGate
+    )
     output_paths: dict[str, str] = field(default_factory=dict)
     warnings: list[str] = field(default_factory=list)
     errors: list[str] = field(default_factory=list)
 
+
 def create_backtest_closure_ingestion_id() -> str:
     return _uid()
+
+
 def create_portfolio_input_reference_id() -> str:
     return _uid()
+
+
 def create_portfolio_candidate_id() -> str:
     return _uid()
+
+
 def create_candidate_universe_contract_id() -> str:
     return _uid()
+
+
 def create_portfolio_eligibility_rule_id() -> str:
     return _uid()
+
+
 def create_portfolio_constraint_id() -> str:
     return _uid()
+
+
 def create_portfolio_constraint_catalog_id() -> str:
     return _uid()
+
+
 def create_risk_budget_contract_item_id() -> str:
     return _uid()
+
+
 def create_risk_budget_contract_id() -> str:
     return _uid()
+
+
 def create_position_sizing_boundary_rule_id() -> str:
     return _uid()
+
+
 def create_position_sizing_boundary_contract_id() -> str:
     return _uid()
+
+
 def create_portfolio_construction_boundary_id() -> str:
     return _uid()
+
+
 def create_candidate_universe_diagnostics_id() -> str:
     return _uid()
+
+
 def create_constraint_validation_report_id() -> str:
     return _uid()
+
+
 def create_risk_budget_validation_report_id() -> str:
     return _uid()
+
+
 def create_sizing_boundary_validation_report_id() -> str:
     return _uid()
+
+
 def create_portfolio_foundation_safety_boundary_rule_id() -> str:
     return _uid()
+
+
 def create_portfolio_foundation_safety_boundary_result_id() -> str:
     return _uid()
+
+
 def create_phase154_readiness_rule_id() -> str:
     return _uid()
+
+
 def create_phase154_readiness_gate_id() -> str:
     return _uid()
+
+
 def create_portfolio_foundation_context_id() -> str:
     return _uid()
+
+
 def create_portfolio_foundation_full_review_id() -> str:
     return _uid()
 
 
-def _to_dict(obj: Any) -> dict[str, Any]:
-    if hasattr(obj, "__dataclass_fields__"):
-        res = {}
-        for k in obj.__dataclass_fields__.keys():
-            v = getattr(obj, k)
-            if isinstance(v, list):
-                res[k] = [_to_dict(x) for x in v]
-            elif isinstance(v, dict):
-                res[k] = {vk: _to_dict(vv) for vk, vv in v.items()}
-            elif hasattr(v, "__dataclass_fields__"):
-                res[k] = _to_dict(v)
-            elif hasattr(v, "value"): # Enum
-                res[k] = getattr(v, "value")
-            else:
-                res[k] = v
-        return res
-    if hasattr(obj, "value"):
-        return getattr(obj, "value")
-    return obj
+def backtest_closure_ingestion_result_to_dict(
+    item: BacktestClosureIngestionResult,
+) -> dict[str, Any]:
+    return to_dict_clean(item)
 
-def backtest_closure_ingestion_result_to_dict(item: BacktestClosureIngestionResult) -> dict[str, Any]: return _to_dict(item)
-def portfolio_input_reference_to_dict(item: PortfolioInputReference) -> dict[str, Any]: return _to_dict(item)
-def portfolio_candidate_to_dict(item: PortfolioCandidate) -> dict[str, Any]: return _to_dict(item)
-def candidate_universe_contract_to_dict(item: CandidateUniverseContract) -> dict[str, Any]: return _to_dict(item)
-def portfolio_eligibility_rule_to_dict(item: PortfolioEligibilityRule) -> dict[str, Any]: return _to_dict(item)
-def portfolio_constraint_to_dict(item: PortfolioConstraint) -> dict[str, Any]: return _to_dict(item)
-def portfolio_constraint_catalog_to_dict(item: PortfolioConstraintCatalog) -> dict[str, Any]: return _to_dict(item)
-def risk_budget_contract_item_to_dict(item: RiskBudgetContractItem) -> dict[str, Any]: return _to_dict(item)
-def risk_budget_contract_to_dict(item: RiskBudgetContract) -> dict[str, Any]: return _to_dict(item)
-def position_sizing_boundary_rule_to_dict(item: PositionSizingBoundaryRule) -> dict[str, Any]: return _to_dict(item)
-def position_sizing_boundary_contract_to_dict(item: PositionSizingBoundaryContract) -> dict[str, Any]: return _to_dict(item)
-def portfolio_construction_boundary_to_dict(item: PortfolioConstructionBoundary) -> dict[str, Any]: return _to_dict(item)
-def candidate_universe_diagnostics_to_dict(item: CandidateUniverseDiagnostics) -> dict[str, Any]: return _to_dict(item)
-def constraint_validation_report_to_dict(item: ConstraintValidationReport) -> dict[str, Any]: return _to_dict(item)
-def risk_budget_validation_report_to_dict(item: RiskBudgetValidationReport) -> dict[str, Any]: return _to_dict(item)
-def sizing_boundary_validation_report_to_dict(item: SizingBoundaryValidationReport) -> dict[str, Any]: return _to_dict(item)
-def portfolio_foundation_safety_boundary_rule_to_dict(item: PortfolioFoundationSafetyBoundaryRule) -> dict[str, Any]: return _to_dict(item)
-def portfolio_foundation_safety_boundary_result_to_dict(item: PortfolioFoundationSafetyBoundaryResult) -> dict[str, Any]: return _to_dict(item)
-def phase154_readiness_rule_to_dict(item: Phase154ReadinessRule) -> dict[str, Any]: return _to_dict(item)
-def phase154_readiness_gate_to_dict(item: Phase154ReadinessGate) -> dict[str, Any]: return _to_dict(item)
-def portfolio_foundation_context_to_dict(item: PortfolioFoundationContext) -> dict[str, Any]: return _to_dict(item)
-def portfolio_foundation_full_review_to_dict(item: PortfolioFoundationFullReview) -> dict[str, Any]: return _to_dict(item)
 
-def validate_backtest_closure_ingestion_result(item: BacktestClosureIngestionResult) -> list[str]:
+def portfolio_input_reference_to_dict(item: PortfolioInputReference) -> dict[str, Any]:
+    return to_dict_clean(item)
+
+
+def portfolio_candidate_to_dict(item: PortfolioCandidate) -> dict[str, Any]:
+    return to_dict_clean(item)
+
+
+def candidate_universe_contract_to_dict(
+    item: CandidateUniverseContract,
+) -> dict[str, Any]:
+    return to_dict_clean(item)
+
+
+def portfolio_eligibility_rule_to_dict(
+    item: PortfolioEligibilityRule,
+) -> dict[str, Any]:
+    return to_dict_clean(item)
+
+
+def portfolio_constraint_to_dict(item: PortfolioConstraint) -> dict[str, Any]:
+    return to_dict_clean(item)
+
+
+def portfolio_constraint_catalog_to_dict(
+    item: PortfolioConstraintCatalog,
+) -> dict[str, Any]:
+    return to_dict_clean(item)
+
+
+def risk_budget_contract_item_to_dict(item: RiskBudgetContractItem) -> dict[str, Any]:
+    return to_dict_clean(item)
+
+
+def risk_budget_contract_to_dict(item: RiskBudgetContract) -> dict[str, Any]:
+    return to_dict_clean(item)
+
+
+def position_sizing_boundary_rule_to_dict(
+    item: PositionSizingBoundaryRule,
+) -> dict[str, Any]:
+    return to_dict_clean(item)
+
+
+def position_sizing_boundary_contract_to_dict(
+    item: PositionSizingBoundaryContract,
+) -> dict[str, Any]:
+    return to_dict_clean(item)
+
+
+def portfolio_construction_boundary_to_dict(
+    item: PortfolioConstructionBoundary,
+) -> dict[str, Any]:
+    return to_dict_clean(item)
+
+
+def candidate_universe_diagnostics_to_dict(
+    item: CandidateUniverseDiagnostics,
+) -> dict[str, Any]:
+    return to_dict_clean(item)
+
+
+def constraint_validation_report_to_dict(
+    item: ConstraintValidationReport,
+) -> dict[str, Any]:
+    return to_dict_clean(item)
+
+
+def risk_budget_validation_report_to_dict(
+    item: RiskBudgetValidationReport,
+) -> dict[str, Any]:
+    return to_dict_clean(item)
+
+
+def sizing_boundary_validation_report_to_dict(
+    item: SizingBoundaryValidationReport,
+) -> dict[str, Any]:
+    return to_dict_clean(item)
+
+
+def portfolio_foundation_safety_boundary_rule_to_dict(
+    item: PortfolioFoundationSafetyBoundaryRule,
+) -> dict[str, Any]:
+    return to_dict_clean(item)
+
+
+def portfolio_foundation_safety_boundary_result_to_dict(
+    item: PortfolioFoundationSafetyBoundaryResult,
+) -> dict[str, Any]:
+    return to_dict_clean(item)
+
+
+def phase154_readiness_rule_to_dict(item: Phase154ReadinessRule) -> dict[str, Any]:
+    return to_dict_clean(item)
+
+
+def phase154_readiness_gate_to_dict(item: Phase154ReadinessGate) -> dict[str, Any]:
+    return to_dict_clean(item)
+
+
+def portfolio_foundation_context_to_dict(
+    item: PortfolioFoundationContext,
+) -> dict[str, Any]:
+    return to_dict_clean(item)
+
+
+def portfolio_foundation_full_review_to_dict(
+    item: PortfolioFoundationFullReview,
+) -> dict[str, Any]:
+    return to_dict_clean(item)
+
+
+def validate_backtest_closure_ingestion_result(
+    item: BacktestClosureIngestionResult,
+) -> list[str]:
     errors = []
     if not item.ready_for_phase153:
         errors.append("Not ready for phase 153")
@@ -639,24 +844,110 @@ def validate_backtest_closure_ingestion_result(item: BacktestClosureIngestionRes
         errors.append("Actual portfolio construction must be false")
     return errors
 
-def validate_portfolio_input_reference(item: PortfolioInputReference) -> list[str]: return []
-def validate_portfolio_candidate(item: PortfolioCandidate) -> list[str]: return []
-def validate_candidate_universe_contract(item: CandidateUniverseContract) -> list[str]: return []
-def validate_portfolio_eligibility_rule(item: PortfolioEligibilityRule) -> list[str]: return []
-def validate_portfolio_constraint(item: PortfolioConstraint) -> list[str]: return []
-def validate_portfolio_constraint_catalog(item: PortfolioConstraintCatalog) -> list[str]: return []
-def validate_risk_budget_contract_item(item: RiskBudgetContractItem) -> list[str]: return []
-def validate_risk_budget_contract(item: RiskBudgetContract) -> list[str]: return []
-def validate_position_sizing_boundary_rule(item: PositionSizingBoundaryRule) -> list[str]: return []
-def validate_position_sizing_boundary_contract(item: PositionSizingBoundaryContract) -> list[str]: return []
-def validate_portfolio_construction_boundary(item: PortfolioConstructionBoundary) -> list[str]: return []
-def validate_candidate_universe_diagnostics(item: CandidateUniverseDiagnostics) -> list[str]: return []
-def validate_constraint_validation_report(item: ConstraintValidationReport) -> list[str]: return []
-def validate_risk_budget_validation_report(item: RiskBudgetValidationReport) -> list[str]: return []
-def validate_sizing_boundary_validation_report(item: SizingBoundaryValidationReport) -> list[str]: return []
-def validate_portfolio_foundation_safety_boundary_rule(item: PortfolioFoundationSafetyBoundaryRule) -> list[str]: return []
-def validate_portfolio_foundation_safety_boundary_result(item: PortfolioFoundationSafetyBoundaryResult) -> list[str]: return []
-def validate_phase154_readiness_rule(item: Phase154ReadinessRule) -> list[str]: return []
-def validate_phase154_readiness_gate(item: Phase154ReadinessGate) -> list[str]: return []
-def validate_portfolio_foundation_context(item: PortfolioFoundationContext) -> list[str]: return []
-def validate_portfolio_foundation_full_review(item: PortfolioFoundationFullReview) -> list[str]: return []
+
+def validate_portfolio_input_reference(item: PortfolioInputReference) -> list[str]:
+    return []
+
+
+def validate_portfolio_candidate(item: PortfolioCandidate) -> list[str]:
+    return []
+
+
+def validate_candidate_universe_contract(item: CandidateUniverseContract) -> list[str]:
+    return []
+
+
+def validate_portfolio_eligibility_rule(item: PortfolioEligibilityRule) -> list[str]:
+    return []
+
+
+def validate_portfolio_constraint(item: PortfolioConstraint) -> list[str]:
+    return []
+
+
+def validate_portfolio_constraint_catalog(
+    item: PortfolioConstraintCatalog,
+) -> list[str]:
+    return []
+
+
+def validate_risk_budget_contract_item(item: RiskBudgetContractItem) -> list[str]:
+    return []
+
+
+def validate_risk_budget_contract(item: RiskBudgetContract) -> list[str]:
+    return []
+
+
+def validate_position_sizing_boundary_rule(
+    item: PositionSizingBoundaryRule,
+) -> list[str]:
+    return []
+
+
+def validate_position_sizing_boundary_contract(
+    item: PositionSizingBoundaryContract,
+) -> list[str]:
+    return []
+
+
+def validate_portfolio_construction_boundary(
+    item: PortfolioConstructionBoundary,
+) -> list[str]:
+    return []
+
+
+def validate_candidate_universe_diagnostics(
+    item: CandidateUniverseDiagnostics,
+) -> list[str]:
+    return []
+
+
+def validate_constraint_validation_report(
+    item: ConstraintValidationReport,
+) -> list[str]:
+    return []
+
+
+def validate_risk_budget_validation_report(
+    item: RiskBudgetValidationReport,
+) -> list[str]:
+    return []
+
+
+def validate_sizing_boundary_validation_report(
+    item: SizingBoundaryValidationReport,
+) -> list[str]:
+    return []
+
+
+def validate_portfolio_foundation_safety_boundary_rule(
+    item: PortfolioFoundationSafetyBoundaryRule,
+) -> list[str]:
+    return []
+
+
+def validate_portfolio_foundation_safety_boundary_result(
+    item: PortfolioFoundationSafetyBoundaryResult,
+) -> list[str]:
+    return []
+
+
+def validate_phase154_readiness_rule(item: Phase154ReadinessRule) -> list[str]:
+    return []
+
+
+def validate_phase154_readiness_gate(item: Phase154ReadinessGate) -> list[str]:
+    return []
+
+
+def validate_portfolio_foundation_context(
+    item: PortfolioFoundationContext,
+) -> list[str]:
+    return []
+
+
+def validate_portfolio_foundation_full_review(
+    item: PortfolioFoundationFullReview,
+) -> list[str]:
+    return []
