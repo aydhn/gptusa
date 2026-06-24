@@ -959,3 +959,7 @@ class StoragePathError(Exception):
 
 class LoggingSetupError(Exception):
     pass
+
+
+class ConcentrationGuardError(USASignalBotError):
+    pass
