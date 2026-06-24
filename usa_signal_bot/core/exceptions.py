@@ -956,3 +956,7 @@ class StoragePathError(Exception):
 
 class LoggingSetupError(Exception):
     pass
+
+
+class PortfolioCandidateError(Exception):
+    pass
