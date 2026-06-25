@@ -5,6 +5,7 @@ from usa_signal_bot.provider_quality.provider_quality_validation import (
     ProviderQualityValidationReport,
     ProviderQualityValidationIssue,
     assert_provider_quality_validation_valid,
+    provider_quality_validation_report_to_text,
 )
 from usa_signal_bot.core.exceptions import ProviderQualityValidationError
 
@@ -44,6 +45,36 @@ class TestProviderQualityValidation(unittest.TestCase):
             "Provider Quality Validation failed with 1 errors", str(context.exception)
         )
         self.assertIn("['test error']", str(context.exception))
+
+    def test_provider_quality_validation_report_to_text_valid(self):
+        report = ProviderQualityValidationReport(
+            valid=True,
+            issue_count=0,
+            warning_count=0,
+            error_count=0,
+            blocked_count=0,
+            issues=[],
+            warnings=[],
+            errors=[],
+        )
+        result = provider_quality_validation_report_to_text(report)
+        self.assertEqual(result, "Provider Quality Validation: PASSED")
+
+    def test_provider_quality_validation_report_to_text_invalid(self):
+        report = ProviderQualityValidationReport(
+            valid=False,
+            issue_count=2,
+            warning_count=0,
+            error_count=2,
+            blocked_count=2,
+            issues=[],
+            warnings=[],
+            errors=["Error 1", "Error 2"],
+        )
+        result = provider_quality_validation_report_to_text(report)
+        self.assertEqual(
+            result, "Provider Quality Validation: FAILED\n  Error 1\n  Error 2"
+        )
 
 
 if __name__ == "__main__":
