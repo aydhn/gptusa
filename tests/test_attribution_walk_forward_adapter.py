@@ -25,3 +25,18 @@ def test_attach_attribution_to_walk_forward_result():
     assert "window_reviews" in attached["attribution_metadata"]
     assert "warnings" in attached
     assert any("negative contributor" in w for w in attached["warnings"])
+
+def test_build_attribution_by_walk_forward_window_happy_path():
+    result = {"windows": [{"trades": []}]}
+    reviews = build_attribution_by_walk_forward_window(result)
+    assert len(reviews) == 1
+    assert "window_0" in reviews
+
+def test_build_attribution_by_walk_forward_window_edge_cases():
+    result = {}
+    reviews = build_attribution_by_walk_forward_window(result)
+    assert len(reviews) == 0
+
+    result = {"windows": []}
+    reviews = build_attribution_by_walk_forward_window(result)
+    assert len(reviews) == 0
