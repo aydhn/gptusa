@@ -1,5 +1,6 @@
 import json
 import logging
+
 from pathlib import Path
 from typing import Any, Dict, Optional
 import datetime
@@ -7,6 +8,8 @@ import traceback
 
 from usa_signal_bot.core.enums import ObservabilityEventType, ObservabilitySeverity
 from usa_signal_bot.observability.observability_models import ObservabilityEvent, create_observability_event_id, observability_event_to_dict
+
+logger = logging.getLogger(__name__)
 
 def sanitize_log_payload(payload: Optional[Dict[str, Any]]) -> Dict[str, Any]:
     if not payload:
@@ -29,8 +32,8 @@ def append_jsonl(path: Path, record: Dict[str, Any]) -> Path:
     try:
         with open(path, "a", encoding="utf-8") as f:
             f.write(json.dumps(record) + "\n")
-    except Exception:
-        pass
+    except Exception as e:
+        logger.error(f"Failed to append to jsonl at {path}: {e}", exc_info=True)
     return path
 
 def append_text_log(path: Path, line: str) -> Path:
@@ -38,8 +41,8 @@ def append_text_log(path: Path, line: str) -> Path:
     try:
         with open(path, "a", encoding="utf-8") as f:
             f.write(line + "\n")
-    except Exception:
-        pass
+    except Exception as e:
+        logger.error(f"Failed to append to text log at {path}: {e}", exc_info=True)
     return path
 
 def read_observability_events_jsonl(path: Path, limit: Optional[int] = None) -> list[Dict[str, Any]]:
@@ -51,8 +54,8 @@ def read_observability_events_jsonl(path: Path, limit: Optional[int] = None) -> 
             if not line.strip(): continue
             try:
                 res.append(json.loads(line))
-            except Exception:
-                pass
+            except Exception as e:
+                logger.warning(f"Failed to parse jsonl line in {path}: {e}")
             if limit and len(res) >= limit:
                 break
     return res
