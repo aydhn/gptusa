@@ -77,14 +77,6 @@ def strict_quarantine_policy() -> QuarantinePolicy:
         errors=[],
         metadata={"policy_type": "strict"},
     )
-    # the allowed overrides the denied in the test above, fix to valid
-    policy.denied_bridge_operations = denied_quarantine_bridge_operations() + [
-        op
-        for op in allowed_quarantine_bridge_operations()
-        if op != BridgeOperation.READ_PROMOTION_TICKET
-    ]
-    policy.allowed_bridge_operations = [BridgeOperation.READ_PROMOTION_TICKET]
-
     validate_quarantine_policy(policy)
     return policy
 

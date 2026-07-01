@@ -6,19 +6,19 @@ from usa_signal_bot.paper_quarantine.quarantine_policy import allowed_quarantine
 from usa_signal_bot.core.exceptions import BridgeOperationGuardError
 
 def bridge_operation_decision(operation: BridgeOperation, policy: QuarantinePolicy | None = None) -> BridgeOperationDecision:
-    denied = denied_quarantine_bridge_operations()
-    if policy:
-        denied = policy.denied_bridge_operations
-
-    if operation in denied:
-        return BridgeOperationDecision.DENY
-
     allowed = allowed_quarantine_bridge_operations()
     if policy:
         allowed = policy.allowed_bridge_operations
 
     if operation in allowed:
         return BridgeOperationDecision.ALLOW
+
+    denied = denied_quarantine_bridge_operations()
+    if policy:
+        denied = policy.denied_bridge_operations
+
+    if operation in denied:
+        return BridgeOperationDecision.DENY
 
     return BridgeOperationDecision.WARN
 

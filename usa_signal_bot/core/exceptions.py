@@ -972,3 +972,11 @@ class RiskBudgetingError(USASignalBotError):
 
 class ProviderQualityValidationError(Exception):
     pass
+
+class BridgeOperationGuardError(Exception):
+    pass
+
+class QuarantineValidationError(Exception):
+    pass
+class QuarantinePolicyError(Exception):
+    pass
