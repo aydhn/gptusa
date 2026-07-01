@@ -34,3 +34,37 @@ def test_lock_audit_summary():
 
     txt = lock_audit_summary_to_text(summ)
     assert "Lock Audit Summary" in txt
+
+import unittest
+from unittest.mock import patch, mock_open
+
+class TestLockAuditExceptions(unittest.TestCase):
+    def test_read_lock_audit_jsonl_invalid_json(self):
+        invalid_json = '{"valid": "json"}\n{"invalid": "json\n'
+        test_path = Path("test.jsonl")
+
+        with patch("pathlib.Path.exists", return_value=True):
+            with patch("builtins.open", mock_open(read_data=invalid_json)):
+                with patch("usa_signal_bot.scheduler.lock_audit.logger.warning") as mock_warning:
+                    records = read_lock_audit_jsonl(test_path)
+
+                    self.assertEqual(len(records), 1)
+                    self.assertEqual(records[0], {"valid": "json"})
+                    mock_warning.assert_called_once()
+                    self.assertIn("Failed to parse JSON line", mock_warning.call_args[0][0])
+
+    def test_read_lock_audit_jsonl_file_error(self):
+        test_path = Path("test.jsonl")
+
+        with patch("pathlib.Path.exists", return_value=True):
+            # Mock open to raise an exception
+            mock_open_file = mock_open()
+            mock_open_file.side_effect = PermissionError("Permission denied")
+
+            with patch("builtins.open", mock_open_file):
+                with patch("usa_signal_bot.scheduler.lock_audit.logger.error") as mock_error:
+                    records = read_lock_audit_jsonl(test_path)
+
+                    self.assertEqual(len(records), 0)
+                    mock_error.assert_called_once()
+                    self.assertIn("Failed to read lock audit file", mock_error.call_args[0][0])

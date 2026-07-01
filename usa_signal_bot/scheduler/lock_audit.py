@@ -1,4 +1,5 @@
 import json
+import logging
 import uuid
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
@@ -6,6 +7,8 @@ from pathlib import Path
 from typing import Dict, Any, List, Optional
 
 from usa_signal_bot.core.enums import RunLockScope
+
+logger = logging.getLogger(__name__)
 
 @dataclass
 class LockAuditEvent:
@@ -69,10 +72,10 @@ def read_lock_audit_jsonl(path: Path, limit: Optional[int] = None) -> List[Dict[
                 if line.strip():
                     try:
                         records.append(json.loads(line))
-                    except Exception:
-                        pass
-    except Exception:
-        pass
+                    except Exception as e:
+                        logger.warning(f"Failed to parse JSON line in {path}: {e}")
+    except Exception as e:
+        logger.error(f"Failed to read lock audit file {path}: {e}")
     if limit:
         return records[-limit:]
     return records
