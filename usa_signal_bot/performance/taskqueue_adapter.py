@@ -1,4 +1,7 @@
+import logging
 from typing import Dict, Any, Optional
+
+logger = logging.getLogger(__name__)
 
 from usa_signal_bot.performance.baseline_models import CurrentPerformanceSample
 from usa_signal_bot.performance.baseline_collectors import normalize_taskqueue_result_to_sample
@@ -37,8 +40,8 @@ def annotate_taskqueue_plan_with_performance_baseline(plan: Any, baseline: Optio
             plan.metadata["performance_gate_status"] = gate_result.status.value
             plan.metadata["budget_adjustments"] = adj
 
-    except Exception:
-        pass
+    except Exception as e:
+        logger.warning("Failed to annotate taskqueue plan with performance baseline: %s", e)
 
     return plan
 

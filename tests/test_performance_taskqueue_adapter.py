@@ -22,3 +22,17 @@ def test_annotate_taskqueue_plan_with_performance_baseline():
     p2 = annotate_taskqueue_plan_with_performance_baseline(p, None, gate)
     assert p2.metadata["performance_gate_status"] == "FAIL"
     assert p2.metadata["budget_adjustments"]["cpu_budget_modifier"] == 0.75
+
+from unittest.mock import patch
+
+def test_annotate_taskqueue_plan_with_performance_baseline_exception():
+    class BrokenPlan:
+        @property
+        def metadata(self):
+            raise ValueError("Test error")
+
+    p = BrokenPlan()
+    with patch('usa_signal_bot.performance.taskqueue_adapter.logger.warning') as mock_warning:
+        p2 = annotate_taskqueue_plan_with_performance_baseline(p, "dummy_baseline", None)
+        assert p2 == p
+        mock_warning.assert_called_once()
