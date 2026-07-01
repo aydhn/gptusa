@@ -5,6 +5,9 @@ from typing import Any, Dict, List, Optional
 from pathlib import Path
 from datetime import datetime, timezone
 import json
+import logging
+
+logger = logging.getLogger(__name__)
 
 from usa_signal_bot.core.enums import ArtifactFreshnessStatus
 from usa_signal_bot.core.exceptions import ArtifactCollectionError
@@ -33,7 +36,8 @@ def load_json_if_exists(path: Optional[Path]) -> Optional[Dict[str, Any]]:
     try:
         with open(path, 'r') as f:
             return json.load(f)
-    except Exception:
+    except Exception as e:
+        logger.error(f"Error loading JSON from {path}: {e}")
         return None
 
 def load_jsonl_if_exists(path: Optional[Path], limit: Optional[int] = None) -> List[Dict[str, Any]]:
@@ -50,10 +54,10 @@ def load_jsonl_if_exists(path: Optional[Path], limit: Optional[int] = None) -> L
                     res.append(json.loads(line))
                     if limit is not None and len(res) >= limit:
                         break
-                except Exception:
-                    pass
-    except Exception:
-        pass
+                except Exception as e:
+                    logger.warning(f"Error parsing JSONL line in {path}: {e}")
+    except Exception as e:
+        logger.error(f"Error reading JSONL file {path}: {e}")
     return res
 
 def _find_latest_dir(base_dir: Path) -> Optional[Path]:
