@@ -1,5 +1,9 @@
 from dataclasses import dataclass, field
 from typing import List, Any, Optional
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 from usa_signal_bot.portfolio.portfolio_models import (
     AllocationRequest,
@@ -112,8 +116,8 @@ def validate_no_portfolio_optimizer_behavior(result: PortfolioConstructionResult
             if not ("not_optimizer" in data or "not_investment_advice" in data):
                 # Simple heuristic
                 issues.append(PortfolioValidationIssue("ERROR", "result", "Contains optimization or recommendation language."))
-    except Exception:
-        pass
+    except Exception as e:
+        logger.error("Failed to serialize and validate portfolio optimizer behavior: %s", e)
 
     error_count = sum(1 for i in issues if i.severity == "ERROR")
     warning_count = sum(1 for i in issues if i.severity == "WARNING")
@@ -137,8 +141,8 @@ def validate_no_broker_execution_in_portfolio(result: PortfolioConstructionResul
         data = json.dumps(portfolio_construction_result_to_dict(result)).lower()
         if "broker_order" in data or "live_order" in data or "paper_order" in data:
              issues.append(PortfolioValidationIssue("ERROR", "result", "Contains live/broker order instructions."))
-    except Exception:
-        pass
+    except Exception as e:
+        logger.error("Failed to serialize and validate broker execution in portfolio: %s", e)
 
     error_count = sum(1 for i in issues if i.severity == "ERROR")
     warning_count = sum(1 for i in issues if i.severity == "WARNING")
