@@ -29,8 +29,8 @@ def append_jsonl(path: Path, record: Dict[str, Any]) -> Path:
     try:
         with open(path, "a", encoding="utf-8") as f:
             f.write(json.dumps(record) + "\n")
-    except Exception:
-        pass
+    except Exception as e:
+        logging.error(f"Failed to append to jsonl log {path}: {e}")
     return path
 
 def append_text_log(path: Path, line: str) -> Path:
@@ -38,8 +38,8 @@ def append_text_log(path: Path, line: str) -> Path:
     try:
         with open(path, "a", encoding="utf-8") as f:
             f.write(line + "\n")
-    except Exception:
-        pass
+    except Exception as e:
+        logging.error(f"Failed to append to text log {path}: {e}")
     return path
 
 def read_observability_events_jsonl(path: Path, limit: Optional[int] = None) -> list[Dict[str, Any]]:
@@ -51,8 +51,8 @@ def read_observability_events_jsonl(path: Path, limit: Optional[int] = None) -> 
             if not line.strip(): continue
             try:
                 res.append(json.loads(line))
-            except Exception:
-                pass
+            except Exception as e:
+                logging.warning(f"Failed to parse observability event line in {path}: {e}")
             if limit and len(res) >= limit:
                 break
     return res
