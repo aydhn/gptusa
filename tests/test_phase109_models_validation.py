@@ -197,5 +197,61 @@ class TestProviderDataQualityScoreValidation(unittest.TestCase):
                 validate_provider_data_quality_score(mock_item)
 
 
+
+class TestProviderRankingValidation(unittest.TestCase):
+    def test_validate_provider_ranking(self):
+        # Patch the exceptions module to include the missing class
+        mock_exceptions = MagicMock()
+        mock_exceptions.ProviderQualityValidationError = (
+            MockProviderQualityValidationError
+        )
+
+        with patch.dict(
+            "sys.modules",
+            {
+                "pandas": MagicMock(),
+                "usa_signal_bot.core.enums": CatchAllMockEnum(),
+                "usa_signal_bot.core.exceptions": mock_exceptions,
+            },
+        ):
+            from usa_signal_bot.provider_quality.phase109_models import (
+                validate_provider_ranking,
+            )
+
+            # Happy path
+            mock_item = MagicMock()
+            mock_item.ranking_is_research_data_only = True
+            mock_item.produces_trade_signal = False
+            mock_item.produces_order_decision = False
+
+            # Should not raise an exception
+            validate_provider_ranking(mock_item)
+
+            # Error: ranking_is_research_data_only is False
+            mock_item.ranking_is_research_data_only = False
+            with self.assertRaisesRegex(
+                MockProviderQualityValidationError,
+                "ranking_is_research_data_only must be True",
+            ):
+                validate_provider_ranking(mock_item)
+            mock_item.ranking_is_research_data_only = True  # reset
+
+            # Error: produces_trade_signal is True
+            mock_item.produces_trade_signal = True
+            with self.assertRaisesRegex(
+                MockProviderQualityValidationError,
+                "produces_trade_signal must be False",
+            ):
+                validate_provider_ranking(mock_item)
+            mock_item.produces_trade_signal = False  # reset
+
+            # Error: produces_order_decision is True
+            mock_item.produces_order_decision = True
+            with self.assertRaisesRegex(
+                MockProviderQualityValidationError,
+                "produces_order_decision must be False",
+            ):
+                validate_provider_ranking(mock_item)
+
 if __name__ == "__main__":
     unittest.main()
