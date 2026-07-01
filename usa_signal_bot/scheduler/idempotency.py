@@ -1,5 +1,6 @@
 import json
 import os
+import logging
 import tempfile
 from pathlib import Path
 from datetime import datetime, timezone, timedelta
@@ -7,6 +8,8 @@ from typing import List, Dict, Any, Optional
 
 from usa_signal_bot.core.enums import RunLockScope, IdempotencyStatus
 from usa_signal_bot.scheduler.scheduler_models import IdempotencyRecord, idempotency_record_to_dict
+
+logger = logging.getLogger(__name__)
 
 class IdempotencyStore:
     def __init__(self, path: Path):
@@ -36,10 +39,11 @@ class IdempotencyStore:
                             output_paths=data.get("output_paths", {}),
                             metadata=data.get("metadata", {})
                         ))
-                    except Exception:
+                    except Exception as e:
+                        logger.warning(f"Failed to parse idempotency record: {e}", exc_info=True)
                         continue
-        except Exception:
-            pass
+        except Exception as e:
+            logger.error(f"Failed to load idempotency records from {self.path}: {e}", exc_info=True)
         return records
 
     def append_record(self, record: IdempotencyRecord) -> Path:
@@ -92,7 +96,8 @@ class IdempotencyStore:
                     pruned.append(r)
                 else:
                     retained.append(r)
-            except Exception:
+            except Exception as e:
+                logger.warning(f"Failed to parse creation date for idempotency record {r.key}: {e}", exc_info=True)
                 retained.append(r)
 
         if not dry_run and pruned:
