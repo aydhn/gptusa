@@ -43,6 +43,7 @@ def test_validate_ohlcv_bar_quality_negative_volume():
     issues = validate_ohlcv_bar_quality(bar)
     assert len(issues) == 1
     assert issues[0].field == "volume"
+    assert issues[0].message == "Volume cannot be negative"
 
 def test_validate_ohlcv_bars_quality_missing_symbol():
     bar = OHLCVBar(symbol="AAPL", timestamp_utc="2023-01-01T00:00:00Z", timeframe="1d", open=100.0, high=105.0, low=95.0, close=101.0, volume=1000.0)
