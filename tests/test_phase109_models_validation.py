@@ -139,5 +139,91 @@ class TestProviderCacheIngestionResultValidation(unittest.TestCase):
                 setattr(valid_item, flag, False)
 
 
+class TestProviderQualityContextValidation(unittest.TestCase):
+    def test_validation_logic(self):
+        mock_exceptions = MagicMock()
+        mock_exceptions.ProviderQualityValidationError = (
+            MockProviderQualityValidationError
+        )
+
+        with patch.dict(
+            "sys.modules",
+            {
+                "pandas": MagicMock(),
+                "usa_signal_bot.core.enums": CatchAllMockEnum(),
+                "usa_signal_bot.core.exceptions": mock_exceptions,
+            },
+        ):
+            from usa_signal_bot.provider_quality.phase109_models import (
+                ProviderQualityContext,
+                validate_provider_quality_context,
+            )
+
+            valid_item = ProviderQualityContext(
+                context_id="test_ctx_id",
+                created_at_utc="2023-01-01T00:00:00Z",
+                status=CatchAllMockEnum(),
+                decision=CatchAllMockEnum(),
+                source_provider_cache_review_id=None,
+                ingestion=MagicMock(),
+                data_quality_scores=[],
+                trust_profiles=[],
+                selection_scores=[],
+                rankings=[],
+                provider_quality_ready=True,
+                source_trust_ready=True,
+                provider_selection_scoring_ready=True,
+                metadata_only=True,
+                research_data_only=True,
+                produces_trade_signal=False,
+                produces_order_decision=False,
+                network_used=False,
+                paid_api_used=False,
+                scraping_used=False,
+                html_parsing_used=False,
+                broker_used=False,
+                order_created=False,
+                paper_state_mutated=False,
+                telegram_real_sent=False,
+                dashboard_started=False,
+                risk_flags=[],
+                warnings=[],
+                errors=[],
+                metadata={},
+            )
+
+            # Happy path
+            validate_provider_quality_context(valid_item)
+
+            # Missing research_data_only
+            valid_item.research_data_only = False
+            with self.assertRaisesRegex(
+                MockProviderQualityValidationError, "research_data_only must be True"
+            ):
+                validate_provider_quality_context(valid_item)
+            valid_item.research_data_only = True
+
+            # Execution flags must be false
+            flags = [
+                ("produces_trade_signal", "produces_trade_signal must be False"),
+                ("produces_order_decision", "produces_order_decision must be False"),
+                ("network_used", "network_used must be False"),
+                ("paid_api_used", "paid_api_used must be False"),
+                ("scraping_used", "scraping_used must be False"),
+                ("html_parsing_used", "html_parsing_used must be False"),
+                ("broker_used", "broker_used must be False"),
+                ("order_created", "order_created must be False"),
+                ("paper_state_mutated", "paper_state_mutated must be False"),
+                ("telegram_real_sent", "telegram_real_sent must be False"),
+                ("dashboard_started", "dashboard_started must be False"),
+            ]
+
+            for flag, msg in flags:
+                setattr(valid_item, flag, True)
+                with self.assertRaisesRegex(MockProviderQualityValidationError, msg):
+                    validate_provider_quality_context(valid_item)
+                setattr(valid_item, flag, False)
+
+
 if __name__ == "__main__":
     unittest.main()
