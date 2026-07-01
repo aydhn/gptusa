@@ -71,12 +71,7 @@ def validate_ohlcv_bar_quality(bar: OHLCVBar) -> List[DataQualityIssue]:
                 )
             )
 
-    # Specific fix for legacy tests checking negative volume: The new volume validation handles zero volume,
-    # but the old test specifically checked for negative volume message format.
-    # The new rules already produce "Volume cannot be negative", we just need to ensure the legacy tests pass
-    for i in issues:
-        if i.field == "volume" and i.message == "Volume cannot be negative":
-            i.message = "Negative volume"
+
 
 
     return issues
