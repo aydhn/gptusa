@@ -1,3 +1,4 @@
+import logging
 from typing import Any, Dict, List, Optional
 
 from usa_signal_bot.core.enums import WalkForwardRiskFlag
@@ -7,19 +8,30 @@ from usa_signal_bot.backtesting.walk_forward.phase150_models import (
     FoldReplayResult,
     TemporalStabilityAuditReport,
     WalkForwardSafetyBoundaryResult,
-    Phase151ReadinessGate
+    Phase151ReadinessGate,
 )
 
+logger = logging.getLogger(__name__)
+
 UNSAFE_KEYWORDS = [
-    "live trading", "real order", "broker execution", "buy order", "sell order",
-    "guaranteed profit", "investment advice", "strategy active", "deploy to production"
+    "live trading",
+    "real order",
+    "broker execution",
+    "buy order",
+    "sell order",
+    "guaranteed profit",
+    "investment advice",
+    "strategy active",
+    "deploy to production",
 ]
+
 
 def walk_forward_text_has_trade_or_execution_language(text: str) -> bool:
     if not text:
         return False
     lower_text = text.lower()
     return any(k in lower_text for k in UNSAFE_KEYWORDS)
+
 
 def validate_walk_forward_context_safety(context: WalkForwardContext) -> List[str]:
     errors = []
@@ -67,7 +79,10 @@ def validate_walk_forward_context_safety(context: WalkForwardContext) -> List[st
         errors.append("investment_advice is true")
     return errors
 
-def validate_walk_forward_validation_report_safety(report: WalkForwardValidationReport) -> List[str]:
+
+def validate_walk_forward_validation_report_safety(
+    report: WalkForwardValidationReport,
+) -> List[str]:
     errors = []
     if report.stress_test_executed:
         errors.append("stress_test_executed is true in report")
@@ -81,6 +96,7 @@ def validate_walk_forward_validation_report_safety(report: WalkForwardValidation
         errors.append("investment_advice is true in report")
     return errors
 
+
 def validate_fold_replay_results_safety(items: List[FoldReplayResult]) -> List[str]:
     errors = []
     for r in items:
@@ -92,7 +108,10 @@ def validate_fold_replay_results_safety(items: List[FoldReplayResult]) -> List[s
             errors.append(f"Result {r.result_id} paper_state_mutated is true")
     return errors
 
-def validate_temporal_stability_audit_safety(audit: TemporalStabilityAuditReport) -> List[str]:
+
+def validate_temporal_stability_audit_safety(
+    audit: TemporalStabilityAuditReport,
+) -> List[str]:
     errors = []
     if not audit.no_strategy_activation:
         errors.append("audit no_strategy_activation is false")
@@ -100,11 +119,15 @@ def validate_temporal_stability_audit_safety(audit: TemporalStabilityAuditReport
         errors.append("audit no_investment_advice is false")
     return errors
 
-def validate_walk_forward_boundary_safety(result: WalkForwardSafetyBoundaryResult) -> List[str]:
+
+def validate_walk_forward_boundary_safety(
+    result: WalkForwardSafetyBoundaryResult,
+) -> List[str]:
     errors = []
     if not result.boundary_passed:
         errors.append("safety boundary failed")
     return errors
+
 
 def validate_phase151_readiness_gate_safety(gate: Phase151ReadinessGate) -> List[str]:
     errors = []
@@ -114,18 +137,27 @@ def validate_phase151_readiness_gate_safety(gate: Phase151ReadinessGate) -> List
         errors.append("gate stress_test_executed is true")
     return errors
 
+
 def validate_walk_forward_dataframe_output_safety(df: Any) -> List[str]:
     try:
-        from usa_signal_bot.backtesting.walk_forward.walk_forward_input_resolver import detect_forbidden_walk_forward_columns
+        from usa_signal_bot.backtesting.walk_forward.walk_forward_input_resolver import (
+            detect_forbidden_walk_forward_columns,
+        )
+
         cols = list(df.columns)
         forbidden = detect_forbidden_walk_forward_columns(cols)
         if forbidden:
             return [f"DataFrame contains forbidden columns: {forbidden}"]
-    except Exception:
-        pass
+    except Exception as e:
+        logger.error(
+            f"Error validating walk forward DataFrame output safety: {e}", exc_info=True
+        )
     return []
 
-def collect_walk_forward_risk_flags(context: Optional[WalkForwardContext] = None) -> List[WalkForwardRiskFlag]:
+
+def collect_walk_forward_risk_flags(
+    context: Optional[WalkForwardContext] = None,
+) -> List[WalkForwardRiskFlag]:
     flags = set()
     if context:
         flags.update(context.risk_flags)
@@ -140,11 +172,10 @@ def collect_walk_forward_risk_flags(context: Optional[WalkForwardContext] = None
         flags.update(context.phase151_readiness_gate.risk_flags)
     return list(flags)
 
+
 def walk_forward_safety_summary(errors: List[str]) -> Dict[str, Any]:
-    return {
-        "safe": len(errors) == 0,
-        "error_count": len(errors)
-    }
+    return {"safe": len(errors) == 0, "error_count": len(errors)}
+
 
 def walk_forward_safety_to_text(errors: List[str]) -> str:
     return "Safe" if not errors else f"Unsafe ({len(errors)} errors)"
