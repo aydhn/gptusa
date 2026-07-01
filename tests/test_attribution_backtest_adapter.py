@@ -25,6 +25,33 @@ def test_build_attribution_review_from_backtest_result():
     assert len(review.events) == 1
     assert review.events[0].symbol == "AAPL"
     assert review.scorecard.total_net_pnl_usd == 100.0
+    assert len(review.performance_contributions) > 0
+    assert review.performance_contributions[0].name == "Trend"
+    assert review.report_type == "PERFORMANCE_ATTRIBUTION"
+    assert review.review_id.startswith("bt_review_")
+
+def test_build_attribution_review_from_backtest_result_empty():
+    result = {}
+    review = build_attribution_review_from_backtest_result(result)
+    assert len(review.events) == 0
+    assert review.scorecard.total_net_pnl_usd == 0.0
+    assert review.report_type == "PERFORMANCE_ATTRIBUTION"
+    assert review.review_id.startswith("bt_review_")
+
+
+def test_build_attribution_review_from_backtest_result_with_events_key():
+    result = {
+        "summary": {"total_pnl": 50},
+        "events": [
+            {"symbol": "MSFT", "net_pnl_usd": 50.0, "total_cost_usd": 5.0, "strategy_name": "MeanReversion"}
+        ]
+    }
+    review = build_attribution_review_from_backtest_result(result)
+    assert len(review.events) == 1
+    assert review.events[0].symbol == "MSFT"
+    assert review.scorecard.total_net_pnl_usd == 50.0
+
+
 
 def test_attach_attribution_to_backtest_result():
     result = _get_mock_result()
