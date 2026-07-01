@@ -35,7 +35,7 @@ def score_schema_validity(schema_errors: List[str], provider_name: str = "UNKNOW
 
     return DataQualityScoreComponent(
         component_id=create_data_quality_component_id(),
-        created_at_utc=datetime.datetime.utcnow().isoformat() + "Z",
+        created_at_utc=datetime.datetime.now(datetime.timezone.utc).isoformat().replace("+00:00", "Z"),
         provider_name=provider_name,
         symbol=symbol,
         component=DataQualityComponent.SCHEMA_VALIDITY,
