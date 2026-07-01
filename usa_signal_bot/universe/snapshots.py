@@ -1,4 +1,5 @@
 import json
+import logging
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
@@ -9,6 +10,8 @@ from usa_signal_bot.universe.models import UniverseDefinition, UniverseSummary, 
 from usa_signal_bot.universe.reconciliation import UniverseReconciliationReport
 from usa_signal_bot.universe.loader import save_universe_csv
 from usa_signal_bot.core.exceptions import UniverseSnapshotError
+
+logger = logging.getLogger(__name__)
 
 @dataclass
 class UniverseSnapshot:
@@ -141,8 +144,8 @@ def list_universe_snapshots(data_root: Path) -> List[UniverseSnapshot]:
     for meta_file in snapshots_dir.glob("*_meta.json"):
         try:
             snapshots.append(read_universe_snapshot(meta_file))
-        except Exception:
-            pass # Skip corrupted
+        except Exception as e:
+            logger.warning("Skipping corrupted snapshot %s: %s", meta_file, e)
 
     # Sort by created_at descending
     return sorted(snapshots, key=lambda s: s.created_at_utc, reverse=True)
@@ -163,8 +166,8 @@ def get_latest_active_snapshot(data_root: Path) -> Optional[UniverseSnapshot]:
         paths = build_snapshot_paths(data_root, active_id)
         if paths["metadata"].exists():
             return read_universe_snapshot(paths["metadata"])
-    except Exception:
-        pass
+    except Exception as e:
+        logger.error("Failed to read active snapshot from %s: %s", active_file, e)
 
     return None
 
