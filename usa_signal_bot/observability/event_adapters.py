@@ -1,6 +1,9 @@
 from typing import Any, List, Optional
 import datetime
 import traceback
+import logging
+
+logger = logging.getLogger(__name__)
 
 from usa_signal_bot.core.enums import ObservabilityEventType, ObservabilitySeverity
 from usa_signal_bot.observability.observability_models import ObservabilityEvent, create_observability_event_id
@@ -26,8 +29,8 @@ def observability_event_from_runtime_event(runtime_event: Any) -> ObservabilityE
         if "STARTED" in et: t = ObservabilityEventType.RUN_STARTED
         elif "COMPLETED" in et: t = ObservabilityEventType.RUN_COMPLETED
         elif "FAILED" in et: t = ObservabilityEventType.RUN_FAILED
-    except Exception:
-        pass
+    except Exception as e:
+        logger.warning("Failed to extract event_type from runtime_event: %s", e)
 
     sev = ObservabilitySeverity.INFO
     if "FAIL" in getattr(runtime_event, "status", ""):
