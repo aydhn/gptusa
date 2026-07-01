@@ -1,10 +1,13 @@
 import shutil
+import logging
 import uuid
 import datetime
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import List, Optional
 from usa_signal_bot.core.enums import DiskUsageStatus
+
+logger = logging.getLogger(__name__)
 
 @dataclass
 class DiskUsageSummary:
@@ -30,13 +33,13 @@ def calculate_directory_size(path: Path, max_files: Optional[int] = None) -> int
             if f.is_file():
                 try:
                     total += f.stat().st_size
-                except Exception:
-                    pass
+                except Exception as e:
+                    logger.warning(f"Failed to stat file {f}: {e}")
                 count += 1
                 if max_files and count >= max_files:
                     break
-    except Exception:
-        pass
+    except Exception as e:
+        logger.warning(f"Failed to calculate directory size for {path}: {e}")
     return total
 
 def classify_disk_usage_status(used_pct: Optional[float], warning_threshold_pct: float, critical_threshold_pct: float) -> DiskUsageStatus:
