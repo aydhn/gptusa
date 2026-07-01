@@ -139,5 +139,63 @@ class TestProviderCacheIngestionResultValidation(unittest.TestCase):
                 setattr(valid_item, flag, False)
 
 
+class TestProviderDataQualityScoreValidation(unittest.TestCase):
+    def test_validate_provider_data_quality_score(self):
+        # Patch the exceptions module to include the missing class
+        mock_exceptions = MagicMock()
+        mock_exceptions.ProviderQualityValidationError = (
+            MockProviderQualityValidationError
+        )
+
+        with patch.dict(
+            "sys.modules",
+            {
+                "pandas": MagicMock(),
+                "usa_signal_bot.core.enums": CatchAllMockEnum(),
+                "usa_signal_bot.core.exceptions": mock_exceptions,
+            },
+        ):
+            from usa_signal_bot.provider_quality.phase109_models import (
+                validate_provider_data_quality_score,
+            )
+
+            # Happy path
+            mock_item = MagicMock()
+            mock_item.total_score = 50.0
+            mock_item.blocked = False
+            mock_item.usable_for_research = True
+
+            # Should not raise an exception
+            validate_provider_data_quality_score(mock_item)
+
+            # Error: total_score < 0
+            mock_item.total_score = -1.0
+            with self.assertRaisesRegex(
+                MockProviderQualityValidationError,
+                "total_score must be between 0 and 100",
+            ):
+                validate_provider_data_quality_score(mock_item)
+
+            # Error: total_score > 100
+            mock_item.total_score = 101.0
+            with self.assertRaisesRegex(
+                MockProviderQualityValidationError,
+                "total_score must be between 0 and 100",
+            ):
+                validate_provider_data_quality_score(mock_item)
+
+            # Reset total_score
+            mock_item.total_score = 50.0
+
+            # Error: blocked and usable_for_research
+            mock_item.blocked = True
+            mock_item.usable_for_research = True
+            with self.assertRaisesRegex(
+                MockProviderQualityValidationError,
+                "blocked provider cannot be usable for research",
+            ):
+                validate_provider_data_quality_score(mock_item)
+
+
 if __name__ == "__main__":
     unittest.main()
