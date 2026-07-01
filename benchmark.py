@@ -6,16 +6,16 @@ from typing import Any
 # Define the two versions of the function logic
 
 def current_logic(rows, start_date=None, end_date=None):
-    dates = []
-    for r in rows:
-        d_val = r.get("date") or r.get("timestamp") or ""
-        if isinstance(d_val, str) and len(d_val) >= 10:
-            dates.append(d_val[:10])
+    actual_set = {
+        d_val[:10]
+        for r in rows
+        if isinstance(d_val := (r.get("date") or r.get("timestamp") or ""), str)
+        and len(d_val) >= 10
+    }
 
-    if not dates and not start_date and not end_date:
+    if not actual_set and not start_date and not end_date:
         return []
 
-    actual_set = set(dates)
     start = start_date or (min(actual_set) if actual_set else "")
     end = end_date or (max(actual_set) if actual_set else "")
     return actual_set
