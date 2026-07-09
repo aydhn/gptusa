@@ -6,6 +6,7 @@ import json
 from usa_signal_bot.portfolio.risk_reporting.phase157_models import (
     Phase158HandoffPackage,
     Phase158HandoffContract,
+    PortfolioRiskContext,
     PortfolioBandClosureCertificate,
     PortfolioBandFinalReview,
     PortfolioRiskSummary,
@@ -14,15 +15,15 @@ from usa_signal_bot.portfolio.risk_reporting.phase157_models import (
     create_phase158_handoff_package_id
 )
 
-def build_phase158_handoff_package(contract: Phase158HandoffContract, certificate: PortfolioBandClosureCertificate, final_review: PortfolioBandFinalReview, risk_summary: PortfolioRiskSummary, governance_reports: List[PortfolioGovernanceReport], lineage: PortfolioBandLineage) -> Phase158HandoffPackage:
+def build_phase158_handoff_package(context: PortfolioRiskContext) -> Phase158HandoffPackage:
     package = Phase158HandoffPackage(
         package_id=create_phase158_handoff_package_id(),
         created_at_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
-        contract=contract,
-        closure_certificate=certificate,
-        risk_summary=risk_summary,
-        governance_reports=governance_reports,
-        band_lineage=lineage,
+        contract=context.phase158_handoff_contract,
+        closure_certificate=context.closure_certificate,
+        risk_summary=context.risk_summary,
+        governance_reports=context.governance_reports,
+        band_lineage=context.band_lineage,
         package_hash=None,
         package_valid=True,
         read_only=True,

@@ -9,6 +9,7 @@ from usa_signal_bot.portfolio.risk_reporting.portfolio_risk_safety_boundary impo
 from usa_signal_bot.portfolio.risk_reporting.portfolio_band_lineage import build_portfolio_band_lineage
 from usa_signal_bot.portfolio.risk_reporting.portfolio_risk_summary import build_portfolio_risk_summary
 from usa_signal_bot.portfolio.risk_reporting.portfolio_band_compliance_audit import build_portfolio_band_compliance_audit
+from usa_signal_bot.portfolio.risk_reporting.portfolio_risk_report import build_portfolio_risk_context
 
 def test_build_phase158_readiness_gate():
     lineage = build_portfolio_band_lineage({})
@@ -17,7 +18,16 @@ def test_build_phase158_readiness_gate():
     review = build_portfolio_band_final_review(lineage, audit, summary, [])
     cert = build_portfolio_band_closure_certificate(review)
     contract = build_phase158_handoff_contract(cert, review)
-    package = build_phase158_handoff_package(contract, cert, review, summary, [], lineage)
+
+    context = build_portfolio_risk_context()
+    context.phase158_handoff_contract = contract
+    context.closure_certificate = cert
+    context.band_final_review = review
+    context.risk_summary = summary
+    context.governance_reports = []
+    context.band_lineage = lineage
+
+    package = build_phase158_handoff_package(context)
     boundary = build_portfolio_risk_safety_boundary_result(build_portfolio_risk_safety_boundary_rules())
     gate = build_phase158_readiness_gate(review, cert, package, boundary)
 
