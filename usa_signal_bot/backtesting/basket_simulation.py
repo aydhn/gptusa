@@ -115,7 +115,6 @@ class BasketSimulationEngine:
             raise BasketSimulationError("No replay items found to simulate.")
 
         bars_by_symbol = self.prepare_market_data(replay_data, replay_data.request)
-
         sorted_timestamps = self._extract_sorted_timestamps(bars_by_symbol)
 
         portfolio = BacktestPortfolio(
@@ -127,68 +126,113 @@ class BasketSimulationEngine:
             config.starting_cash,
             None,
         )
-        order_intents = []
-        fills = []
-        exposure_snapshots = []
-        warnings = list(replay_data.warnings)
-        errors = list(replay_data.errors)
+
+        simulation_state = {
+            "portfolio": portfolio,
+            "order_intents": [],
+            "fills": [],
+            "exposure_snapshots": [],
+            "warnings": list(replay_data.warnings),
+            "errors": list(replay_data.errors),
+            "pending_orders": [],
+            "items_to_process": list(replay_data.items),
+        }
 
         target_weights = calculate_target_weights_from_replay_items(replay_data.items)
         alloc_config = default_allocation_to_order_config()
         alloc_config.replay_mode = config.allocation_replay_mode
         alloc_config.allow_fractional_quantity = config.allow_fractional_quantity
 
-        items_to_process = list(replay_data.items)
-        pending_orders = []
+        self._run_simulation_loop(
+            sorted_timestamps,
+            bars_by_symbol,
+            simulation_state,
+            config,
+            replay_data,
+            alloc_config,
+            target_weights,
+        )
 
+        return self._build_simulation_result(
+            run_id, created_at_utc, replay_data, config, simulation_state
+        )
+
+    def _run_simulation_loop(
+        self,
+        sorted_timestamps: list[str],
+        bars_by_symbol: dict[str, list[OHLCVBar]],
+        state: dict,
+        config: BasketSimulationConfig,
+        replay_data: BasketReplayData,
+        alloc_config: "AllocationConfig",
+        target_weights: dict,
+    ) -> None:
         for t_idx, ts in enumerate(sorted_timestamps):
-            portfolio.timestamp_utc = ts
+            state["portfolio"].timestamp_utc = ts
             current_prices = self._get_current_prices(bars_by_symbol, ts)
 
-            pending_orders = self._process_pending_orders(
-                portfolio, pending_orders, current_prices, ts, fills
+            state["pending_orders"] = self._process_pending_orders(
+                state["portfolio"],
+                state["pending_orders"],
+                current_prices,
+                ts,
+                state["fills"],
             )
 
             self._process_hold_n_bars_exits(
-                config, t_idx, portfolio, ts, replay_data, order_intents, pending_orders
+                config,
+                t_idx,
+                state["portfolio"],
+                ts,
+                replay_data,
+                state["order_intents"],
+                state["pending_orders"],
             )
 
-            eligible_items, items_to_process = (
+            eligible_items, state["items_to_process"] = (
                 self._get_eligible_items_and_update_queue(
-                    config, t_idx, ts, items_to_process
+                    config, t_idx, ts, state["items_to_process"]
                 )
             )
 
             self._process_entries(
                 eligible_items,
                 current_prices,
-                portfolio,
+                state["portfolio"],
                 config,
-                warnings,
+                state["warnings"],
                 ts,
                 alloc_config,
-                order_intents,
-                pending_orders,
+                state["order_intents"],
+                state["pending_orders"],
             )
 
             self._process_end_of_data_exits(
                 config,
                 t_idx,
                 sorted_timestamps,
-                portfolio,
+                state["portfolio"],
                 ts,
                 replay_data,
                 current_prices,
-                fills,
+                state["fills"],
             )
 
             if current_prices:
                 snap = build_basket_exposure_snapshot(
-                    ts, portfolio, current_prices, target_weights
+                    ts, state["portfolio"], current_prices, target_weights
                 )
-                exposure_snapshots.append(snap)
+                state["exposure_snapshots"].append(snap)
 
-        trade_ledger = build_trade_ledger_from_fills(fills)
+    def _build_simulation_result(
+        self,
+        run_id: str,
+        created_at_utc: str,
+        replay_data: BasketReplayData,
+        config: BasketSimulationConfig,
+        state: dict,
+    ) -> BasketSimulationResult:
+        trade_ledger = build_trade_ledger_from_fills(state["fills"])
 
         res = BasketSimulationResult(
             run_id=run_id,
@@ -197,17 +241,17 @@ class BasketSimulationEngine:
             request=replay_data.request,
             config=config,
             replay_data=replay_data,
-            portfolio=portfolio,
+            portfolio=state["portfolio"],
             snapshots=[],
-            basket_exposure_snapshots=exposure_snapshots,
-            order_intents=order_intents,
-            fills=fills,
+            basket_exposure_snapshots=state["exposure_snapshots"],
+            order_intents=state["order_intents"],
+            fills=state["fills"],
             trade_ledger=trade_ledger,
             basket_metrics={},
             benchmark_summary={},
             review_status=BasketReviewStatus.ACCEPTABLE,
-            warnings=warnings,
-            errors=errors,
+            warnings=state["warnings"],
+            errors=state["errors"],
         )
 
         m = calculate_basket_metrics(res)

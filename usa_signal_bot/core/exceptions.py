@@ -980,3 +980,27 @@ class QuarantineValidationError(Exception):
     pass
 class QuarantinePolicyError(Exception):
     pass
+
+class SignalContractError(USASignalBotError):
+    pass
+
+class BacktestOrderError(USASignalBotError):
+    pass
+
+class BasketSimulationError(USASignalBotError):
+    pass
+
+class BacktestFillError(USASignalBotError):
+    pass
+
+class BacktestPortfolioError(USASignalBotError):
+    pass
+
+class BacktestPositionError(USASignalBotError):
+    pass
+
+class TradeLedgerError(USASignalBotError):
+    pass
+
+class BasketReplayError(USASignalBotError):
+    pass
