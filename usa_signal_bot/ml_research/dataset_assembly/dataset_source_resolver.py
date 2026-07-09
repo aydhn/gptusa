@@ -37,7 +37,8 @@ def inspect_local_csv_source(path: Path, required_columns: Optional[List[str]] =
         forbidden = ["buy", "sell", "order", "portfolio_weight", "target_weight", "allocation", "paper", "live_order"]
         has_forbidden = any(any(f in c.lower() for f in forbidden) for c in columns)
 
-        row_count = sum(1 for _ in open(path)) - 1 # rough estimate
+        with open(path, "rb") as f:
+            row_count = sum(chunk.count(b"\n") for chunk in iter(lambda: f.read(1024 * 1024), b"")) - 1 # rough estimate
 
         return {
             "status": "RESOLVED" if not missing else "PARTIALLY_RESOLVED",
