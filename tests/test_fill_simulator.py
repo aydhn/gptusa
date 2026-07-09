@@ -1,7 +1,7 @@
 import pytest
 from usa_signal_bot.core.enums import TransactionSide, FillSimulationStatus
 from usa_signal_bot.transaction_costs.fill_simulator import simulate_fill_price, simulate_fill
-from usa_signal_bot.transaction_costs.cost_models import TransactionCostBreakdown, create_transaction_cost_breakdown_id
+from usa_signal_bot.transaction_costs.cost_models import TransactionCostBreakdown, create_transaction_cost_breakdown_id, FillSimulationRequest
 from usa_signal_bot.core.enums import CostAdjustmentStatus, CostRealismStatus
 from datetime import datetime
 
@@ -22,6 +22,16 @@ def test_simulate_fill():
         status=CostAdjustmentStatus.APPLIED, realism_status=CostRealismStatus.CONSERVATIVE,
         warnings=[], errors=[], metadata={}
     )
-    res = simulate_fill("SPY", TransactionSide.BUY, 10, 1000.0, 100.0, brk, None)
+    res = simulate_fill(
+        FillSimulationRequest(
+            symbol="SPY",
+            side=TransactionSide.BUY,
+            quantity=10,
+            notional_usd=1000.0,
+            reference_price=100.0,
+            cost_breakdown=brk,
+            market_impact=None
+        )
+    )
     assert res.simulated_fill_price > 100.0
     assert res.status == FillSimulationStatus.FILLED

@@ -1,7 +1,7 @@
 from typing import Any
 from usa_signal_bot.core.enums import TransactionSide, MarketImpactStatus
 from usa_signal_bot.execution.liquidity_models import LiquidityProfile
-from usa_signal_bot.transaction_costs.cost_models import TransactionCostInput
+from usa_signal_bot.transaction_costs.cost_models import TransactionCostInput, FillSimulationRequest
 from usa_signal_bot.transaction_costs.fee_schedule import load_fee_schedule_from_config
 from usa_signal_bot.transaction_costs.slippage_curve_builder import (
     build_liquidity_adjusted_slippage_curve,
@@ -121,7 +121,15 @@ def apply_transaction_costs_to_paper_fill(
     impact = estimate_market_impact(symbol, side, notional_usd, None)
 
     sim_result = simulate_fill(
-        symbol, side, quantity, notional_usd, base_price, breakdown, impact
+        FillSimulationRequest(
+            symbol=symbol,
+            side=side,
+            quantity=quantity,
+            notional_usd=notional_usd,
+            reference_price=base_price,
+            cost_breakdown=breakdown,
+            market_impact=impact
+        )
     )
 
     if sim_result.simulated_fill_price:

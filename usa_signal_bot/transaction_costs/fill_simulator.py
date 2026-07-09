@@ -4,6 +4,7 @@ from usa_signal_bot.core.enums import TransactionSide, FillSimulationStatus, Mar
 from usa_signal_bot.transaction_costs.cost_models import (
     TransactionCostBreakdown,
     MarketImpactEstimate,
+    FillSimulationRequest,
     FillSimulationResult,
     create_fill_simulation_id
 )
@@ -41,15 +42,15 @@ def decide_fill_simulation_status(
 
     return FillSimulationStatus.FILLED
 
-def simulate_fill(
-    symbol: str,
-    side: TransactionSide,
-    quantity: float | None,
-    notional_usd: float | None,
-    reference_price: float | None,
-    cost_breakdown: TransactionCostBreakdown | None,
-    market_impact: MarketImpactEstimate | None
-) -> FillSimulationResult:
+def simulate_fill(request: FillSimulationRequest) -> FillSimulationResult:
+
+    symbol = request.symbol
+    side = request.side
+    quantity = request.quantity
+    notional_usd = request.notional_usd
+    reference_price = request.reference_price
+    cost_breakdown = request.cost_breakdown
+    market_impact = request.market_impact
 
     cost_bps = cost_breakdown.total_cost_bps if cost_breakdown else 0.0
 
