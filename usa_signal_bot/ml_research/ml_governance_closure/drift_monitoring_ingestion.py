@@ -106,6 +106,109 @@ def _validate_unsafe_checks(
     return flags
 
 
+def _build_baseline_flags(context: dict[str, Any] | None) -> dict[str, bool]:
+    return {
+        "drift_baseline_specs_built": (
+            context.get("drift_baseline_specs_built", False) if context else False
+        ),
+        "feature_drift_baseline_built": (
+            context.get("feature_drift_baseline_built", False) if context else False
+        ),
+        "prediction_drift_baseline_built": (
+            context.get("prediction_drift_baseline_built", False) if context else False
+        ),
+        "score_distribution_drift_built": (
+            context.get("score_distribution_drift_built", False) if context else False
+        ),
+        "calibration_drift_baseline_built": (
+            context.get("calibration_drift_baseline_built", False) if context else False
+        ),
+        "residual_drift_baseline_built": (
+            context.get("residual_drift_baseline_built", False) if context else False
+        ),
+        "label_distribution_drift_built": (
+            context.get("label_distribution_drift_built", False) if context else False
+        ),
+        "regime_drift_baseline_built": (
+            context.get("regime_drift_baseline_built", False) if context else False
+        ),
+    }
+
+
+def _build_advanced_flags(context: dict[str, Any] | None) -> dict[str, bool]:
+    return {
+        "ensemble_artifacts_loaded": (
+            context.get("ensemble_artifacts_loaded", False) if context else False
+        ),
+        "monitoring_window_policy_built": (
+            context.get("monitoring_window_policy_built", False) if context else False
+        ),
+        "drift_metrics_built": (
+            context.get("drift_metrics_built", False) if context else False
+        ),
+        "monitoring_snapshot_built": (
+            context.get("monitoring_snapshot_built", False) if context else False
+        ),
+        "alert_rule_metadata_built": (
+            context.get("alert_rule_metadata_built", False) if context else False
+        ),
+        "readiness_gate_built": (
+            context.get("readiness_gate_built", False) if context else False
+        ),
+    }
+
+
+def _build_execution_flags(flags: dict[str, bool]) -> dict[str, bool]:
+    return {
+        "metadata_only": True,
+        "research_data_only": flags.get("research_data_only", False),
+        "offline_ml_research_only": flags.get("offline_ml_research_only", False),
+        "activation_allowed": flags.get("activation_allowed", False),
+        "strategy_activation_allowed": flags.get("strategy_activation_allowed", False),
+        "deployment_allowed": flags.get("deployment_allowed", False),
+        "active_paper_enabled": False,
+        "broker_execution_enabled": False,
+        "order_creation_enabled": False,
+        "paper_state_mutation_enabled": False,
+        "telegram_real_send_enabled": False,
+        "scraping_enabled": False,
+        "html_parse_enabled": False,
+        "paid_api_enabled": False,
+        "dashboard_enabled": False,
+        "network_default_enabled": False,
+        "live_monitoring_enabled": flags.get("live_monitoring_enabled", False),
+        "alert_sender_enabled": flags.get("alert_sender_enabled", False),
+        "daemon_started": flags.get("daemon_started", False),
+        "scheduler_enabled": flags.get("scheduler_enabled", False),
+        "live_inference_enabled": flags.get("live_inference_enabled", False),
+        "online_inference_enabled": flags.get("online_inference_enabled", False),
+        "threshold_optimization_performed": flags.get(
+            "threshold_optimization_performed", False
+        ),
+    }
+
+
+def _build_dependency_flags(flags: dict[str, bool]) -> dict[str, bool]:
+    return {
+        "heavy_ml_dependency_used": False,
+        "shap_lime_dependency_used": False,
+        "backtest_executed": False,
+        "produces_trade_signal": flags.get("produces_trade_signal", False),
+        "produces_order_decision": flags.get("produces_order_decision", False),
+        "produces_portfolio_weights": flags.get("produces_portfolio_weights", False),
+        "investment_advice": flags.get("investment_advice", False),
+        "network_used": False,
+        "paid_api_used": False,
+        "scraping_used": False,
+        "html_parsing_used": False,
+        "broker_used": False,
+        "order_created": False,
+        "paper_state_mutated": False,
+        "telegram_real_sent": False,
+        "dashboard_started": False,
+    }
+
+
 def _build_drift_monitoring_ingestion_result(
     review_id: str | None,
     source_path: str | None,
@@ -117,114 +220,42 @@ def _build_drift_monitoring_ingestion_result(
     warnings: list[str],
     errors: list[str],
 ) -> DriftMonitoringIngestionResult:
-    return DriftMonitoringIngestionResult(
-        ingestion_id=create_drift_monitoring_ingestion_id(),
-        created_at_utc=current_time(),
-        source_path=source_path,
-        source_review_id=review_id,
-        source_context_id=context_id,
-        available=True,
-        ensemble_prototype_ingested=validation_flags["ensemble_prototype_ingested"],
-        ensemble_artifacts_loaded=(
-            context.get("ensemble_artifacts_loaded", False) if context else False
+    kwargs = {
+        "ingestion_id": create_drift_monitoring_ingestion_id(),
+        "created_at_utc": current_time(),
+        "source_path": source_path,
+        "source_review_id": review_id,
+        "source_context_id": context_id,
+        "available": True,
+        "ensemble_prototype_ingested": validation_flags.get(
+            "ensemble_prototype_ingested", False
         ),
-        drift_inputs_resolved=validation_flags["drift_inputs_resolved"],
-        monitoring_window_policy_built=(
-            context.get("monitoring_window_policy_built", False) if context else False
+        "drift_inputs_resolved": validation_flags.get("drift_inputs_resolved", False),
+        "monitoring_metadata_package_built": validation_flags.get(
+            "monitoring_metadata_package_built", False
         ),
-        drift_baseline_specs_built=(
-            context.get("drift_baseline_specs_built", False) if context else False
+        "post_ensemble_governance_built": validation_flags.get(
+            "post_ensemble_governance_built", False
         ),
-        feature_drift_baseline_built=(
-            context.get("feature_drift_baseline_built", False) if context else False
+        "non_activation_boundary_validated": validation_flags.get(
+            "non_activation_boundary_validated", False
         ),
-        prediction_drift_baseline_built=(
-            context.get("prediction_drift_baseline_built", False) if context else False
-        ),
-        score_distribution_drift_built=(
-            context.get("score_distribution_drift_built", False) if context else False
-        ),
-        calibration_drift_baseline_built=(
-            context.get("calibration_drift_baseline_built", False) if context else False
-        ),
-        residual_drift_baseline_built=(
-            context.get("residual_drift_baseline_built", False) if context else False
-        ),
-        label_distribution_drift_built=(
-            context.get("label_distribution_drift_built", False) if context else False
-        ),
-        regime_drift_baseline_built=(
-            context.get("regime_drift_baseline_built", False) if context else False
-        ),
-        drift_metrics_built=(
-            context.get("drift_metrics_built", False) if context else False
-        ),
-        monitoring_snapshot_built=(
-            context.get("monitoring_snapshot_built", False) if context else False
-        ),
-        alert_rule_metadata_built=(
-            context.get("alert_rule_metadata_built", False) if context else False
-        ),
-        monitoring_metadata_package_built=validation_flags[
-            "monitoring_metadata_package_built"
-        ],
-        post_ensemble_governance_built=validation_flags[
-            "post_ensemble_governance_built"
-        ],
-        non_activation_boundary_validated=validation_flags[
-            "non_activation_boundary_validated"
-        ],
-        model_cards_updated=validation_flags["model_cards_updated"],
-        readiness_gate_built=(
-            context.get("readiness_gate_built", False) if context else False
-        ),
-        readiness_gate_passed=validation_flags["readiness_gate_passed"],
-        ready_for_phase145=validation_flags["ready_for_phase145"],
-        metadata_only=True,
-        research_data_only=flags["research_data_only"],
-        offline_ml_research_only=flags["offline_ml_research_only"],
-        activation_allowed=flags["activation_allowed"],
-        strategy_activation_allowed=flags["strategy_activation_allowed"],
-        deployment_allowed=flags["deployment_allowed"],
-        active_paper_enabled=False,
-        broker_execution_enabled=False,
-        order_creation_enabled=False,
-        paper_state_mutation_enabled=False,
-        telegram_real_send_enabled=False,
-        scraping_enabled=False,
-        html_parse_enabled=False,
-        paid_api_enabled=False,
-        dashboard_enabled=False,
-        network_default_enabled=False,
-        live_monitoring_enabled=flags["live_monitoring_enabled"],
-        alert_sender_enabled=flags["alert_sender_enabled"],
-        daemon_started=flags["daemon_started"],
-        scheduler_enabled=flags["scheduler_enabled"],
-        live_inference_enabled=flags["live_inference_enabled"],
-        online_inference_enabled=flags["online_inference_enabled"],
-        threshold_optimization_performed=flags["threshold_optimization_performed"],
-        heavy_ml_dependency_used=False,
-        shap_lime_dependency_used=False,
-        backtest_executed=False,
-        produces_trade_signal=flags["produces_trade_signal"],
-        produces_order_decision=flags["produces_order_decision"],
-        produces_portfolio_weights=flags["produces_portfolio_weights"],
-        investment_advice=flags["investment_advice"],
-        network_used=False,
-        paid_api_used=False,
-        scraping_used=False,
-        html_parsing_used=False,
-        broker_used=False,
-        order_created=False,
-        paper_state_mutated=False,
-        telegram_real_sent=False,
-        dashboard_started=False,
-        valid_for_phase145=valid_for_phase145,
-        risk_flags=[],
-        warnings=warnings,
-        errors=errors,
-        metadata={},
-    )
+        "model_cards_updated": validation_flags.get("model_cards_updated", False),
+        "readiness_gate_passed": validation_flags.get("readiness_gate_passed", False),
+        "ready_for_phase145": validation_flags.get("ready_for_phase145", False),
+        "valid_for_phase145": valid_for_phase145,
+        "risk_flags": [],
+        "warnings": warnings,
+        "errors": errors,
+        "metadata": {},
+    }
+
+    kwargs.update(_build_baseline_flags(context))
+    kwargs.update(_build_advanced_flags(context))
+    kwargs.update(_build_execution_flags(flags))
+    kwargs.update(_build_dependency_flags(flags))
+
+    return DriftMonitoringIngestionResult(**kwargs)
 
 
 def ingest_drift_monitoring_review_payload(
