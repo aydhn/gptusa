@@ -24,7 +24,7 @@ def build_price_event_from_row(row: Dict[str, Any]) -> PriceEvent:
     )
 
 def build_price_event_stream(price_bars: pd.DataFrame) -> PriceEventStream:
-    events = [build_price_event_from_row(r) for _, r in price_bars.iterrows()]
+    events = [build_price_event_from_row(r) for r in price_bars.to_dict('records')]
     symbols = list(price_bars["symbol"].unique()) if not price_bars.empty else []
     timestamps = sorted(price_bars["timestamp"].unique()) if not price_bars.empty else []
 
