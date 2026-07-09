@@ -6,11 +6,8 @@ from usa_signal_bot.regime_classification.validation.phase132_models import (
     _now_utc
 )
 
-def build_default_conditional_diagnostic_specs() -> list[ConditionalDiagnosticSpec]:
-    specs = []
-
-    # Low compatibility
-    specs.append(ConditionalDiagnosticSpec(
+def _build_low_compatibility_spec() -> ConditionalDiagnosticSpec:
+    return ConditionalDiagnosticSpec(
         spec_id=create_conditional_diagnostic_spec_id(),
         created_at_utc=_now_utc(),
         spec_name="Low Compatibility Trigger",
@@ -27,10 +24,10 @@ def build_default_conditional_diagnostic_specs() -> list[ConditionalDiagnosticSp
         errors=[],
         risk_flags=[],
         metadata={}
-    ))
+    )
 
-    # Uncertain
-    specs.append(ConditionalDiagnosticSpec(
+def _build_uncertain_context_spec() -> ConditionalDiagnosticSpec:
+    return ConditionalDiagnosticSpec(
         spec_id=create_conditional_diagnostic_spec_id(),
         created_at_utc=_now_utc(),
         spec_name="Uncertain Context Trigger",
@@ -47,10 +44,10 @@ def build_default_conditional_diagnostic_specs() -> list[ConditionalDiagnosticSp
         errors=[],
         risk_flags=[],
         metadata={}
-    ))
+    )
 
-    # Conflicted
-    specs.append(ConditionalDiagnosticSpec(
+def _build_conflicted_context_spec() -> ConditionalDiagnosticSpec:
+    return ConditionalDiagnosticSpec(
         spec_id=create_conditional_diagnostic_spec_id(),
         created_at_utc=_now_utc(),
         spec_name="Conflicted Context Trigger",
@@ -67,10 +64,10 @@ def build_default_conditional_diagnostic_specs() -> list[ConditionalDiagnosticSp
         errors=[],
         risk_flags=[],
         metadata={}
-    ))
+    )
 
-    # Data quality
-    specs.append(ConditionalDiagnosticSpec(
+def _build_data_quality_limited_spec() -> ConditionalDiagnosticSpec:
+    return ConditionalDiagnosticSpec(
         spec_id=create_conditional_diagnostic_spec_id(),
         created_at_utc=_now_utc(),
         spec_name="Data Quality Limited Trigger",
@@ -87,10 +84,10 @@ def build_default_conditional_diagnostic_specs() -> list[ConditionalDiagnosticSp
         errors=[],
         risk_flags=[],
         metadata={}
-    ))
+    )
 
-    # Churn sensitive
-    specs.append(ConditionalDiagnosticSpec(
+def _build_churn_sensitive_spec() -> ConditionalDiagnosticSpec:
+    return ConditionalDiagnosticSpec(
         spec_id=create_conditional_diagnostic_spec_id(),
         created_at_utc=_now_utc(),
         spec_name="Churn Sensitive Trigger",
@@ -107,10 +104,10 @@ def build_default_conditional_diagnostic_specs() -> list[ConditionalDiagnosticSp
         errors=[],
         risk_flags=[],
         metadata={}
-    ))
+    )
 
-    # Low stability
-    specs.append(ConditionalDiagnosticSpec(
+def _build_low_stability_spec() -> ConditionalDiagnosticSpec:
+    return ConditionalDiagnosticSpec(
         spec_id=create_conditional_diagnostic_spec_id(),
         created_at_utc=_now_utc(),
         spec_name="Low Stability Trigger",
@@ -127,10 +124,10 @@ def build_default_conditional_diagnostic_specs() -> list[ConditionalDiagnosticSp
         errors=[],
         risk_flags=[],
         metadata={}
-    ))
+    )
 
-    # Cross symbol disagreement
-    specs.append(ConditionalDiagnosticSpec(
+def _build_cross_symbol_disagreement_spec() -> ConditionalDiagnosticSpec:
+    return ConditionalDiagnosticSpec(
         spec_id=create_conditional_diagnostic_spec_id(),
         created_at_utc=_now_utc(),
         spec_name="Cross Symbol Disagreement Trigger",
@@ -147,10 +144,10 @@ def build_default_conditional_diagnostic_specs() -> list[ConditionalDiagnosticSp
         errors=[],
         risk_flags=[],
         metadata={}
-    ))
+    )
 
-    # Missing artifact
-    specs.append(ConditionalDiagnosticSpec(
+def _build_missing_artifact_spec() -> ConditionalDiagnosticSpec:
+    return ConditionalDiagnosticSpec(
         spec_id=create_conditional_diagnostic_spec_id(),
         created_at_utc=_now_utc(),
         spec_name="Missing Artifact Trigger",
@@ -167,9 +164,19 @@ def build_default_conditional_diagnostic_specs() -> list[ConditionalDiagnosticSp
         errors=[],
         risk_flags=[],
         metadata={}
-    ))
+    )
 
-    return specs
+def build_default_conditional_diagnostic_specs() -> list[ConditionalDiagnosticSpec]:
+    return [
+        _build_low_compatibility_spec(),
+        _build_uncertain_context_spec(),
+        _build_conflicted_context_spec(),
+        _build_data_quality_limited_spec(),
+        _build_churn_sensitive_spec(),
+        _build_low_stability_spec(),
+        _build_cross_symbol_disagreement_spec(),
+        _build_missing_artifact_spec(),
+    ]
 
 def conditional_diagnostic_spec_by_kind(kind: ConditionalDiagnosticKind, specs: list[ConditionalDiagnosticSpec] | None = None) -> ConditionalDiagnosticSpec | None:
     if specs is None:
