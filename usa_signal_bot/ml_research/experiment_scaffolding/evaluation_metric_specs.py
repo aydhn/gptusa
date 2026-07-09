@@ -7,8 +7,8 @@ from usa_signal_bot.ml_research.experiment_scaffolding.phase138_models import (
 )
 
 
-def build_default_evaluation_metric_specs() -> List[EvaluationMetricSpec]:
-    METRIC_CONFIGS = [
+def _get_classification_metric_configs() -> List[Dict[str, Any]]:
+    return [
         {
             "metric_name": "classification_accuracy",
             "metric_kind": EvaluationMetricKind.CLASSIFICATION_ACCURACY,
@@ -51,6 +51,11 @@ def build_default_evaluation_metric_specs() -> List[EvaluationMetricSpec]:
             "aggregation_method": "MEAN",
             "threshold_free": False,
         },
+    ]
+
+
+def _get_regression_metric_configs() -> List[Dict[str, Any]]:
+    return [
         {
             "metric_name": "regression_mae",
             "metric_kind": EvaluationMetricKind.REGRESSION_MAE,
@@ -93,6 +98,11 @@ def build_default_evaluation_metric_specs() -> List[EvaluationMetricSpec]:
             "aggregation_method": "MEAN",
             "threshold_free": True,
         },
+    ]
+
+
+def _get_other_metric_configs() -> List[Dict[str, Any]]:
+    return [
         {
             "metric_name": "rank_correlation",
             "metric_kind": EvaluationMetricKind.RANK_CORRELATION,
@@ -151,6 +161,14 @@ def build_default_evaluation_metric_specs() -> List[EvaluationMetricSpec]:
         },
     ]
 
+
+def build_default_evaluation_metric_specs() -> List[EvaluationMetricSpec]:
+    metric_configs = (
+        _get_classification_metric_configs()
+        + _get_regression_metric_configs()
+        + _get_other_metric_configs()
+    )
+
     return [
         EvaluationMetricSpec(
             metric_id=create_evaluation_metric_spec_id(),
@@ -162,7 +180,7 @@ def build_default_evaluation_metric_specs() -> List[EvaluationMetricSpec]:
             produces_portfolio_weights=False,
             **config,
         )
-        for config in METRIC_CONFIGS
+        for config in metric_configs
     ]
 
 
