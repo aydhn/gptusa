@@ -2,12 +2,19 @@ import datetime
 from typing import Dict, Any, List
 import pandas as pd
 from .phase147_models import (
-    ResearchDecisionRecord, ResearchDecisionStream, BacktestRunConfig,
-    ResearchDecisionKind, ResearchExposureSide, create_research_decision_record_id,
-    create_research_decision_stream_id
+    ResearchDecisionRecord,
+    ResearchDecisionStream,
+    BacktestRunConfig,
+    ResearchDecisionKind,
+    ResearchExposureSide,
+    create_research_decision_record_id,
+    create_research_decision_stream_id,
 )
 
-def infer_research_decision_record(row: Dict[str, Any], config: BacktestRunConfig) -> ResearchDecisionRecord:
+
+def infer_research_decision_record(
+    row: Dict[str, Any], config: BacktestRunConfig
+) -> ResearchDecisionRecord:
     score = row.get("research_prediction_score", 0.0)
     kind = ResearchDecisionKind.NO_ACTION_METADATA
     side = ResearchExposureSide.FLAT
@@ -33,16 +40,22 @@ def infer_research_decision_record(row: Dict[str, Any], config: BacktestRunConfi
         warnings=[],
         errors=[],
         risk_flags=[],
-        metadata={}
+        metadata={},
     )
 
-def build_research_decision_stream(prediction_df: pd.DataFrame, config: BacktestRunConfig) -> ResearchDecisionStream:
-    records = []
-    for _, row in prediction_df.iterrows():
-        records.append(infer_research_decision_record(row.to_dict(), config))
+
+def build_research_decision_stream(
+    prediction_df: pd.DataFrame, config: BacktestRunConfig
+) -> ResearchDecisionStream:
+    records = [
+        infer_research_decision_record(row, config)
+        for row in prediction_df.to_dict("records")
+    ]
 
     symbols = list(prediction_df["symbol"].unique()) if not prediction_df.empty else []
-    timestamps = sorted(prediction_df["timestamp"].unique()) if not prediction_df.empty else []
+    timestamps = (
+        sorted(prediction_df["timestamp"].unique()) if not prediction_df.empty else []
+    )
     start = timestamps[0] if timestamps else None
     end = timestamps[-1] if timestamps else None
 
@@ -65,26 +78,41 @@ def build_research_decision_stream(prediction_df: pd.DataFrame, config: Backtest
         warnings=[],
         errors=[],
         risk_flags=[],
-        metadata={}
+        metadata={},
     )
+
 
 def validate_research_decision_stream(stream: ResearchDecisionStream) -> List[str]:
     errors = []
-    if stream.produces_live_signal: errors.append("Stream produces live signal")
-    if stream.produces_order_decision: errors.append("Stream produces order decision")
-    if stream.investment_advice: errors.append("Stream is marked as investment advice")
+    if stream.produces_live_signal:
+        errors.append("Stream produces live signal")
+    if stream.produces_order_decision:
+        errors.append("Stream produces order decision")
+    if stream.investment_advice:
+        errors.append("Stream is marked as investment advice")
     return errors
+
 
 def compute_research_decision_stream_hash(stream: ResearchDecisionStream) -> str:
     import hashlib
-    data = "".join([f"{r.symbol}{r.timestamp}{r.decision_kind.value}" for r in stream.records])
+
+    data = "".join(
+        [f"{r.symbol}{r.timestamp}{r.decision_kind.value}" for r in stream.records]
+    )
     return hashlib.sha256(data.encode()).hexdigest()
 
-def research_decision_stream_to_dataframe(stream: ResearchDecisionStream) -> pd.DataFrame:
+
+def research_decision_stream_to_dataframe(
+    stream: ResearchDecisionStream,
+) -> pd.DataFrame:
     return pd.DataFrame([r.__dict__ for r in stream.records])
+
 
 def research_decision_stream_summary(stream: ResearchDecisionStream) -> Dict[str, Any]:
     return {"row_count": stream.row_count, "symbols": stream.symbols}
 
-def research_decision_stream_to_text(stream: ResearchDecisionStream, limit: int = 300) -> str:
+
+def research_decision_stream_to_text(
+    stream: ResearchDecisionStream, limit: int = 300
+) -> str:
     return f"ResearchDecisionStream {stream.stream_id} with {stream.row_count} records"
