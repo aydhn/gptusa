@@ -4,7 +4,6 @@ from typing import Any
 from usa_signal_bot.providers.provider_models import ProviderResponse, ProviderQualityScore
 from usa_signal_bot.core.enums import SessionValidationStatus
 from usa_signal_bot.calendar.market_calendar import LocalMarketCalendar
-from usa_signal_bot.calendar.session_validation import session_validation_summary_to_text
 
 def attach_calendar_metadata_to_provider_response(response: ProviderResponse, calendar: LocalMarketCalendar) -> ProviderResponse:
     if not response.data:
