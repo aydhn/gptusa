@@ -1,6 +1,21 @@
 import datetime
 from typing import List, Dict, Any, Optional
 
+from dataclasses import dataclass, field
+
+@dataclass
+class ProviderDataQualityScoreParams:
+    provider_name: str
+    symbol: Optional[str]
+    capability: str
+    records: Optional[List[Dict[str, Any]]] = None
+    schema_errors: Optional[List[str]] = None
+    freshness_payload: Optional[Dict[str, Any]] = None
+    source_comparison_payload: Optional[Dict[str, Any]] = None
+    cache_payload: Optional[Dict[str, Any]] = None
+    safety_payload: Optional[Dict[str, Any]] = None
+    policy: Optional[Dict[str, float]] = None
+
 from usa_signal_bot.core.enums import (
     DataQualityGrade,
     ProviderQualityRiskFlag,
@@ -116,30 +131,21 @@ def aggregate_quality_components(
 
 
 def build_provider_data_quality_score(
-    provider_name: str,
-    symbol: Optional[str],
-    capability: str,
-    records: Optional[List[Dict[str, Any]]] = None,
-    schema_errors: Optional[List[str]] = None,
-    freshness_payload: Optional[Dict[str, Any]] = None,
-    source_comparison_payload: Optional[Dict[str, Any]] = None,
-    cache_payload: Optional[Dict[str, Any]] = None,
-    safety_payload: Optional[Dict[str, Any]] = None,
-    policy: Optional[Dict[str, float]] = None,
+    params: ProviderDataQualityScoreParams
 ) -> ProviderDataQualityScore:
 
-    records = records or []
-    schema_errors = schema_errors or []
-    f_payload = freshness_payload or {"fresh": False, "stale": False}
-    sc_payload = source_comparison_payload or {"disagreement_score": None}
-    c_payload = cache_payload or {
+    records = params.records or []
+    schema_errors = params.schema_errors or []
+    f_payload = params.freshness_payload or {"fresh": False, "stale": False}
+    sc_payload = params.source_comparison_payload or {"disagreement_score": None}
+    c_payload = params.cache_payload or {
         "status": "UNKNOWN",
         "checksum_present": False,
         "schema_valid": len(schema_errors) == 0,
     }
-    saf_payload = safety_payload or {}
+    saf_payload = params.safety_payload or {}
 
-    c_comp = score_completeness(records, provider_name=provider_name, symbol=symbol)
+    c_comp = score_completeness(records, provider_name=params.provider_name, symbol=params.symbol)
     f_params = FreshnessParameters(
         fresh=f_payload.get("fresh", False),
         stale=f_payload.get("stale", False),
@@ -149,30 +155,30 @@ def build_provider_data_quality_score(
     )
     f_comp = score_freshness(
         f_params,
-        provider_name=provider_name,
-        symbol=symbol,
+        provider_name=params.provider_name,
+        symbol=params.symbol,
     )
     sv_comp = score_schema_validity(
-        schema_errors, provider_name=provider_name, symbol=symbol
+        schema_errors, provider_name=params.provider_name, symbol=params.symbol
     )
     cont_comp = score_continuity(
-        records, expected_interval="1d", provider_name=provider_name, symbol=symbol
+        records, expected_interval="1d", provider_name=params.provider_name, symbol=params.symbol
     )
     sa_comp = score_source_agreement(
         sc_payload.get("disagreement_score"),
         sc_payload.get("status"),
-        provider_name=provider_name,
-        symbol=symbol,
+        provider_name=params.provider_name,
+        symbol=params.symbol,
     )
     out_comp = score_outlier_profile(
-        records, provider_name=provider_name, symbol=symbol
+        records, provider_name=params.provider_name, symbol=params.symbol
     )
     cr_comp = score_cache_reliability(
         c_payload.get("status"),
         c_payload.get("checksum_present", False),
         c_payload.get("schema_valid", True),
-        provider_name=provider_name,
-        symbol=symbol,
+        provider_name=params.provider_name,
+        symbol=params.symbol,
     )
     saf_flags = SafetyComplianceFlags(
         network_used=saf_payload.get("network_used", False),
@@ -186,7 +192,7 @@ def build_provider_data_quality_score(
         dashboard_started=saf_payload.get("dashboard_started", False),
     )
     sf_comp = score_provider_safety_compliance(
-        provider_name, flags=saf_flags, symbol=symbol
+        params.provider_name, flags=saf_flags, symbol=params.symbol
     )
 
     components = [
@@ -201,7 +207,7 @@ def build_provider_data_quality_score(
     ]
 
     return aggregate_quality_components(
-        provider_name, symbol, capability, components, policy
+        params.provider_name, params.symbol, params.capability, components, params.policy
     )
 
 
