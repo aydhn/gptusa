@@ -69,9 +69,7 @@ def apply_transaction_costs_to_paper_order(
 
     curve = build_liquidity_adjusted_slippage_curve(symbol, liquidity_profile)
     breakdown = build_transaction_cost_breakdown(input_payload, fee_schedule, curve)
-    impact = estimate_market_impact(
-        symbol, side, notional_usd, input_payload.avg_dollar_volume
-    )
+    impact = estimate_market_impact(input_payload)
 
     order["estimated_cost_usd"] = breakdown.total_cost_usd
     order["estimated_cost_bps"] = breakdown.total_cost_bps
@@ -118,7 +116,7 @@ def apply_transaction_costs_to_paper_fill(
 
     curve = build_liquidity_adjusted_slippage_curve(symbol)
     breakdown = build_transaction_cost_breakdown(input_payload, fee_schedule, curve)
-    impact = estimate_market_impact(symbol, side, notional_usd, None)
+    impact = estimate_market_impact(input_payload)
 
     sim_result = simulate_fill(
         symbol, side, quantity, notional_usd, base_price, breakdown, impact

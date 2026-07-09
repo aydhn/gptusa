@@ -52,7 +52,7 @@ def apply_transaction_costs_to_backtest_trades(
 
         curve = build_liquidity_adjusted_slippage_curve(symbol)
         breakdown = build_transaction_cost_breakdown(input_payload, fee_schedule, curve)
-        impact = estimate_market_impact(symbol, side, notional_usd, None)
+        impact = estimate_market_impact(input_payload)
 
         gross_pnl = trade.get("pnl_usd", 0.0)
         cost_usd = breakdown.total_cost_usd or 0.0
