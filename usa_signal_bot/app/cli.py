@@ -811,14 +811,7 @@ def setup_phase151_cli(parser):
     pass
 
 
-def setup_phase152_cli(subparsers):
-    try:
-        from usa_signal_bot.app.cli_phase152_patch import register_phase152_commands
-
-        register_phase152_commands(subparsers)
-    except ImportError:
-        pass
-
+def _setup_portfolio_foundation_ingest_commands(subparsers):
     parser_pf_info = subparsers.add_parser(
         "portfolio-foundation-info", help="Print info about Phase 153"
     )
@@ -838,6 +831,7 @@ def setup_phase152_cli(subparsers):
     )
     parser_pf_resolve_inputs.add_argument("--write", action="store_true")
 
+def _setup_portfolio_foundation_build_commands(subparsers):
     parser_pf_build_contract = subparsers.add_parser(
         "build-candidate-universe-contract", help="Build universe contract"
     )
@@ -873,6 +867,7 @@ def setup_phase152_cli(subparsers):
     )
     parser_pf_build_diag.add_argument("--write", action="store_true")
 
+def _setup_portfolio_foundation_validation_commands(subparsers):
     parser_pf_build_const_val = subparsers.add_parser(
         "build-constraint-validation-report", help="Build constraint validation"
     )
@@ -894,6 +889,7 @@ def setup_phase152_cli(subparsers):
     )
     parser_pf_safety.add_argument("--write", action="store_true")
 
+def _setup_portfolio_foundation_lifecycle_commands(subparsers):
     parser_pf_gate = subparsers.add_parser(
         "phase154-readiness-gate", help="Evaluate phase 154 readiness gate"
     )
@@ -924,6 +920,19 @@ def setup_phase152_cli(subparsers):
     parser_pf_validate = subparsers.add_parser(
         "portfolio-foundation-validate", help="Validate full setup"
     )
+
+def setup_phase152_cli(subparsers):
+    try:
+        from usa_signal_bot.app.cli_phase152_patch import register_phase152_commands
+
+        register_phase152_commands(subparsers)
+    except ImportError:
+        pass
+
+    _setup_portfolio_foundation_ingest_commands(subparsers)
+    _setup_portfolio_foundation_build_commands(subparsers)
+    _setup_portfolio_foundation_validation_commands(subparsers)
+    _setup_portfolio_foundation_lifecycle_commands(subparsers)
 
 
 def sizing_prototype_info():
