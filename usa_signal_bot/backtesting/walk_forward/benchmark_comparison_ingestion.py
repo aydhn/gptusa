@@ -202,63 +202,40 @@ def _extract_ingestion_flags(
     }
 
 
-def ingest_benchmark_comparison_review_payload(
+def _build_error_result(
+    ingestion_id: str,
+    created_at: Any,
+    error_msg: str,
+    risk_flag: WalkForwardRiskFlag,
     payload: Dict[str, Any],
 ) -> BenchmarkComparisonIngestionResult:
-    ingestion_id = create_benchmark_comparison_ingestion_id()
-    created_at = _now_utc()
+    flags = _extract_empty_flags()
+    return BenchmarkComparisonIngestionResult(
+        ingestion_id=ingestion_id,
+        created_at_utc=created_at,
+        source_path=payload.get("source_path") if payload else None,
+        source_review_id=payload.get("review_id") if payload else None,
+        source_context_id=None,
+        available=bool(payload),
+        phase150_readiness_gate_built=False,
+        phase150_readiness_gate_passed=False,
+        ready_for_phase150=False,
+        live_trading_enabled=False,
+        walk_forward_executed=False,
+        stress_test_executed=False,
+        investment_advice=False,
+        valid_for_phase150=False,
+        risk_flags=[risk_flag],
+        errors=[error_msg],
+        **flags,
+    )
 
-    if not payload:
-        flags = _extract_empty_flags()
-        return BenchmarkComparisonIngestionResult(
-            ingestion_id=ingestion_id,
-            created_at_utc=created_at,
-            source_path=None,
-            source_review_id=None,
-            source_context_id=None,
-            available=False,
-            phase150_readiness_gate_built=False,
-            phase150_readiness_gate_passed=False,
-            ready_for_phase150=False,
-            live_trading_enabled=False,
-            walk_forward_executed=False,
-            stress_test_executed=False,
-            investment_advice=False,
-            valid_for_phase150=False,
-            risk_flags=[WalkForwardRiskFlag.BENCHMARK_COMPARISON_REVIEW_MISSING],
-            errors=["Payload is empty"],
-            **flags,
-        )
 
-    ctx = extract_benchmark_comparison_context(payload)
-    if not ctx:
-        flags = _extract_empty_flags()
-        return BenchmarkComparisonIngestionResult(
-            ingestion_id=ingestion_id,
-            created_at_utc=created_at,
-            source_path=payload.get("source_path"),
-            source_review_id=payload.get("review_id"),
-            source_context_id=None,
-            available=True,
-            phase150_readiness_gate_built=False,
-            phase150_readiness_gate_passed=False,
-            ready_for_phase150=False,
-            live_trading_enabled=False,
-            walk_forward_executed=False,
-            stress_test_executed=False,
-            investment_advice=False,
-            valid_for_phase150=False,
-            risk_flags=[WalkForwardRiskFlag.BENCHMARK_COMPARISON_REVIEW_INVALID],
-            errors=["Context is missing from payload"],
-            **flags,
-        )
-
-    gate = extract_phase150_readiness_gate(payload)
-    gate_passed = gate.get("ready_for_phase150", False) if gate else False
-
+def _evaluate_safety_and_readiness(
+    payload: Dict[str, Any], ctx: Dict[str, Any]
+) -> Tuple[bool, list[str], list[WalkForwardRiskFlag], bool, bool, bool, bool]:
     valid, errors = benchmark_comparison_supports_phase150(payload)
 
-    # Specific safety checks
     live_trading = payload.get("live_trading_enabled", False) or ctx.get(
         "live_trading_enabled", False
     )
@@ -289,6 +266,55 @@ def ingest_benchmark_comparison_review_payload(
     if investment_advice:
         risk_flags.append(WalkForwardRiskFlag.INVESTMENT_ADVICE_LANGUAGE_RISK)
         valid = False
+
+    return (
+        valid,
+        errors,
+        risk_flags,
+        live_trading,
+        investment_advice,
+        stress_test,
+        walk_forward,
+    )
+
+
+def ingest_benchmark_comparison_review_payload(
+    payload: Dict[str, Any],
+) -> BenchmarkComparisonIngestionResult:
+    ingestion_id = create_benchmark_comparison_ingestion_id()
+    created_at = _now_utc()
+
+    if not payload:
+        return _build_error_result(
+            ingestion_id,
+            created_at,
+            "Payload is empty",
+            WalkForwardRiskFlag.BENCHMARK_COMPARISON_REVIEW_MISSING,
+            payload,
+        )
+
+    ctx = extract_benchmark_comparison_context(payload)
+    if not ctx:
+        return _build_error_result(
+            ingestion_id,
+            created_at,
+            "Context is missing from payload",
+            WalkForwardRiskFlag.BENCHMARK_COMPARISON_REVIEW_INVALID,
+            payload,
+        )
+
+    gate = extract_phase150_readiness_gate(payload)
+    gate_passed = gate.get("ready_for_phase150", False) if gate else False
+
+    (
+        valid,
+        errors,
+        risk_flags,
+        live_trading,
+        investment_advice,
+        stress_test,
+        walk_forward,
+    ) = _evaluate_safety_and_readiness(payload, ctx)
 
     flags = _extract_ingestion_flags(payload, ctx)
     return BenchmarkComparisonIngestionResult(
