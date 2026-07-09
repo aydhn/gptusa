@@ -19,7 +19,7 @@ class EnumsMock:
 sys.modules['usa_signal_bot.core.enums'] = EnumsMock
 
 import unittest
-from usa_signal_bot.calendar.trading_days import missing_trading_days_for_rows, align_rows_to_trading_days
+from usa_signal_bot.calendar.trading_days import missing_trading_days_for_rows
 from usa_signal_bot.calendar.market_calendar import LocalMarketCalendar
 
 class TestTradingDays(unittest.TestCase):
