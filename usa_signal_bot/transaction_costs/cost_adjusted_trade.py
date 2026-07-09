@@ -1,25 +1,43 @@
 from datetime import datetime, timezone
 
-from usa_signal_bot.core.enums import TransactionSide, CostAdjustmentStatus, CostRealismStatus, TransactionCostComponent
+from usa_signal_bot.core.enums import (
+    TransactionSide,
+    CostAdjustmentStatus,
+    CostRealismStatus,
+    TransactionCostComponent,
+)
 from usa_signal_bot.transaction_costs.cost_models import (
     TransactionCostInput,
     TransactionCostBreakdown,
     CostAdjustedTradeResult,
+    CostAdjustedTradeInput,
     FeeScheduleProxy,
     SlippageCurve,
     create_transaction_cost_breakdown_id,
     create_cost_adjusted_trade_result_id,
-    FillSimulationResult
+    FillSimulationResult,
 )
-from usa_signal_bot.transaction_costs.commission_estimator import estimate_total_fee_proxy_usd, fee_proxy_to_bps
-from usa_signal_bot.transaction_costs.spread_cost import estimate_spread_cost_bps, estimate_spread_cost_usd
-from usa_signal_bot.transaction_costs.participation_cost import estimate_participation_cost_bps, estimate_participation_cost_usd
-from usa_signal_bot.transaction_costs.volatility_penalty import estimate_volatility_penalty_bps
+from usa_signal_bot.transaction_costs.commission_estimator import (
+    estimate_total_fee_proxy_usd,
+    fee_proxy_to_bps,
+)
+from usa_signal_bot.transaction_costs.spread_cost import (
+    estimate_spread_cost_bps,
+    estimate_spread_cost_usd,
+)
+from usa_signal_bot.transaction_costs.participation_cost import (
+    estimate_participation_cost_bps,
+    estimate_participation_cost_usd,
+)
+from usa_signal_bot.transaction_costs.volatility_penalty import (
+    estimate_volatility_penalty_bps,
+)
+
 
 def build_transaction_cost_breakdown(
     input_payload: TransactionCostInput,
     schedule: FeeScheduleProxy | None = None,
-    curve: SlippageCurve | None = None
+    curve: SlippageCurve | None = None,
 ) -> TransactionCostBreakdown:
 
     warnings = []
@@ -29,20 +47,41 @@ def build_transaction_cost_breakdown(
     # 1. Fee Proxy
     fee_usd = 0.0
     if schedule:
-        fee_dict = estimate_total_fee_proxy_usd(input_payload.side, input_payload.quantity, input_payload.notional_usd, schedule)
+        fee_dict = estimate_total_fee_proxy_usd(
+            input_payload.side,
+            input_payload.quantity,
+            input_payload.notional_usd,
+            schedule,
+        )
         fee_usd = fee_dict.get("total_fee_usd", 0.0)
-        components_usd[TransactionCostComponent.COMMISSION.value] = fee_dict.get("commission_usd", 0.0)
-        components_usd[TransactionCostComponent.REGULATORY_FEE_PROXY.value] = fee_dict.get("regulatory_fee_usd", 0.0)
+        components_usd[TransactionCostComponent.COMMISSION.value] = fee_dict.get(
+            "commission_usd", 0.0
+        )
+        components_usd[TransactionCostComponent.REGULATORY_FEE_PROXY.value] = (
+            fee_dict.get("regulatory_fee_usd", 0.0)
+        )
 
         fee_bps = fee_proxy_to_bps(fee_usd, input_payload.notional_usd)
         if fee_bps is not None:
-            components_bps[TransactionCostComponent.COMMISSION.value] = fee_proxy_to_bps(fee_dict.get("commission_usd", 0.0), input_payload.notional_usd) or 0.0
-            components_bps[TransactionCostComponent.REGULATORY_FEE_PROXY.value] = fee_proxy_to_bps(fee_dict.get("regulatory_fee_usd", 0.0), input_payload.notional_usd) or 0.0
+            components_bps[TransactionCostComponent.COMMISSION.value] = (
+                fee_proxy_to_bps(
+                    fee_dict.get("commission_usd", 0.0), input_payload.notional_usd
+                )
+                or 0.0
+            )
+            components_bps[TransactionCostComponent.REGULATORY_FEE_PROXY.value] = (
+                fee_proxy_to_bps(
+                    fee_dict.get("regulatory_fee_usd", 0.0), input_payload.notional_usd
+                )
+                or 0.0
+            )
     else:
         warnings.append("No fee schedule provided, using 0 fee.")
 
     # 2. Spread Cost
-    spread_bps = estimate_spread_cost_bps(input_payload.spread_proxy_bps, input_payload.side)
+    spread_bps = estimate_spread_cost_bps(
+        input_payload.spread_proxy_bps, input_payload.side
+    )
     if spread_bps is not None:
         components_bps[TransactionCostComponent.SPREAD_COST.value] = spread_bps
         spread_usd = estimate_spread_cost_usd(spread_bps, input_payload.notional_usd)
@@ -55,14 +94,18 @@ def build_transaction_cost_breakdown(
         components_bps[TransactionCostComponent.PARTICIPATION_PENALTY.value] = part_bps
         part_usd = estimate_participation_cost_usd(part_bps, input_payload.notional_usd)
         if part_usd is not None:
-            components_usd[TransactionCostComponent.PARTICIPATION_PENALTY.value] = part_usd
+            components_usd[TransactionCostComponent.PARTICIPATION_PENALTY.value] = (
+                part_usd
+            )
 
     # 4. Volatility Penalty
     vol_bps = estimate_volatility_penalty_bps(input_payload.atr_pct)
     if vol_bps is not None:
         components_bps[TransactionCostComponent.VOLATILITY_PENALTY.value] = vol_bps
         if input_payload.notional_usd:
-            components_usd[TransactionCostComponent.VOLATILITY_PENALTY.value] = input_payload.notional_usd * (vol_bps / 10000.0)
+            components_usd[TransactionCostComponent.VOLATILITY_PENALTY.value] = (
+                input_payload.notional_usd * (vol_bps / 10000.0)
+            )
 
     total_bps = sum(components_bps.values()) if components_bps else None
 
@@ -82,23 +125,31 @@ def build_transaction_cost_breakdown(
         total_cost_usd=total_usd,
         components_bps=components_bps,
         components_usd=components_usd,
-        status=CostAdjustmentStatus.APPLIED if total_bps is not None else CostAdjustmentStatus.PARTIAL,
+        status=(
+            CostAdjustmentStatus.APPLIED
+            if total_bps is not None
+            else CostAdjustmentStatus.PARTIAL
+        ),
         realism_status=CostRealismStatus.CONSERVATIVE,
         warnings=warnings,
         errors=[],
-        metadata={"disclaimer": "This is a heuristic cost breakdown, not an official broker receipt."}
+        metadata={
+            "disclaimer": "This is a heuristic cost breakdown, not an official broker receipt."
+        },
     )
 
-def apply_costs_to_trade(
-    symbol: str,
-    side: TransactionSide,
-    gross_pnl_usd: float | None,
-    gross_return_pct: float | None,
-    notional_usd: float | None,
-    fill_result: FillSimulationResult | None
-) -> CostAdjustedTradeResult:
 
+def apply_costs_to_trade(
+    input_payload: CostAdjustedTradeInput,
+) -> CostAdjustedTradeResult:
     warnings = []
+
+    symbol = input_payload.symbol
+    side = input_payload.side
+    gross_pnl_usd = input_payload.gross_pnl_usd
+    gross_return_pct = input_payload.gross_return_pct
+    notional_usd = input_payload.notional_usd
+    fill_result = input_payload.fill_result
 
     if fill_result is None or fill_result.cost_breakdown is None:
         warnings.append("Missing cost breakdown, returning unadjusted results.")
@@ -116,7 +167,7 @@ def apply_costs_to_trade(
             fill_result=fill_result,
             status=CostAdjustmentStatus.SKIPPED,
             warnings=warnings,
-            errors=[]
+            errors=[],
         )
 
     cost_usd = fill_result.cost_breakdown.total_cost_usd or 0.0
@@ -145,18 +196,25 @@ def apply_costs_to_trade(
         fill_result=fill_result,
         status=CostAdjustmentStatus.APPLIED,
         warnings=warnings,
-        errors=[]
+        errors=[],
     )
 
-def estimate_round_trip_cost_bps(entry: TransactionCostBreakdown, exit: TransactionCostBreakdown) -> float | None:
+
+def estimate_round_trip_cost_bps(
+    entry: TransactionCostBreakdown, exit: TransactionCostBreakdown
+) -> float | None:
     if entry.total_cost_bps is None or exit.total_cost_bps is None:
         return None
     return entry.total_cost_bps + exit.total_cost_bps
 
-def estimate_round_trip_cost_usd(entry: TransactionCostBreakdown, exit: TransactionCostBreakdown) -> float | None:
+
+def estimate_round_trip_cost_usd(
+    entry: TransactionCostBreakdown, exit: TransactionCostBreakdown
+) -> float | None:
     if entry.total_cost_usd is None or exit.total_cost_usd is None:
         return None
     return entry.total_cost_usd + exit.total_cost_usd
+
 
 def cost_adjusted_trade_result_to_text(result: CostAdjustedTradeResult) -> str:
     lines = [
@@ -165,8 +223,16 @@ def cost_adjusted_trade_result_to_text(result: CostAdjustedTradeResult) -> str:
         f"  Gross PnL: ${result.gross_pnl_usd if result.gross_pnl_usd is not None else 'Unknown'}",
         f"  Total Cost: ${result.total_cost_usd if result.total_cost_usd is not None else 'Unknown'} ({result.cost_bps if result.cost_bps is not None else 'Unknown'} bps)",
         f"  Net PnL: ${result.net_pnl_usd if result.net_pnl_usd is not None else 'Unknown'}",
-        f"  Gross Return: {result.gross_return_pct}%" if result.gross_return_pct is not None else "  Gross Return: Unknown",
-        f"  Net Return: {result.net_return_pct}%" if result.net_return_pct is not None else "  Net Return: Unknown"
+        (
+            f"  Gross Return: {result.gross_return_pct}%"
+            if result.gross_return_pct is not None
+            else "  Gross Return: Unknown"
+        ),
+        (
+            f"  Net Return: {result.net_return_pct}%"
+            if result.net_return_pct is not None
+            else "  Net Return: Unknown"
+        ),
     ]
     if result.warnings:
         lines.append("  Warnings:")
