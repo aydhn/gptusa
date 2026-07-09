@@ -165,10 +165,7 @@ def handle_advanced_acceptance_commands(args, context):
         print("Done.")
 
 
-def setup_parser():
-    parser = argparse.ArgumentParser(prog="python -m usa_signal_bot")
-    subparsers = parser.add_subparsers(dest="command")
-
+def setup_phase143_cli(subparsers):
     parser_ensemble_info = subparsers.add_parser(
         "ensemble-prototype-info", help="Print info about Phase 143"
     )
@@ -187,18 +184,6 @@ def setup_parser():
         "generate-offline-ensemble-predictions", help="Generate predictions"
     )
     parser_ensemble_pred.add_argument("--write", action="store_true")
-
-    parser_info_155 = subparsers.add_parser(
-        "portfolio-construction-info", help="Print info about Phase 155"
-    )
-    parser_policy_155 = subparsers.add_parser(
-        "build-portfolio-construction-policy", help="Build policy"
-    )
-    parser_policy_155.add_argument("--write", action="store_true")
-    parser_review_155 = subparsers.add_parser(
-        "portfolio-construction-review", help="Run full Phase 155 review"
-    )
-    parser_review_155.add_argument("--write", action="store_true")
 
     parser_ensemble_diag = subparsers.add_parser(
         "build-blend-diagnostics", help="Build diagnostics"
@@ -226,6 +211,22 @@ def setup_parser():
         p = subparsers.add_parser(cmd, help=f"Phase 143 {cmd}")
         p.add_argument("--write", action="store_true")
 
+
+def setup_phase155_cli(subparsers):
+    parser_info_155 = subparsers.add_parser(
+        "portfolio-construction-info", help="Print info about Phase 155"
+    )
+    parser_policy_155 = subparsers.add_parser(
+        "build-portfolio-construction-policy", help="Build policy"
+    )
+    parser_policy_155.add_argument("--write", action="store_true")
+    parser_review_155 = subparsers.add_parser(
+        "portfolio-construction-review", help="Run full Phase 155 review"
+    )
+    parser_review_155.add_argument("--write", action="store_true")
+
+
+def setup_phase145_cli(subparsers):
     parser_ml_closure_info = subparsers.add_parser(
         "ml-closure-info",
         help="Display information about Phase 145 ML Governance Closure.",
@@ -347,6 +348,8 @@ def setup_parser():
         "ml-closure-validate", help="Validate ML Closure (Simulated)"
     )
 
+
+def setup_phase147_cli(subparsers):
     parser_phase147_info = subparsers.add_parser(
         "backtest-run-info", help="Phase 147 info"
     )
@@ -380,6 +383,8 @@ def setup_parser():
     subparsers.add_parser("backtest-run-summary", help="Phase 147 summary")
     subparsers.add_parser("backtest-run-validate", help="Phase 147 validate")
 
+
+def setup_phase150_cli(subparsers):
     parser_wf_info = subparsers.add_parser(
         "walk-forward-info", help="Print info about Phase 150"
     )
@@ -401,6 +406,17 @@ def setup_parser():
         "walk-forward-review", help="Walk forward review"
     )
     parser_wf_rev.add_argument("--write", action="store_true", help="Write output")
+
+
+def setup_parser():
+    parser = argparse.ArgumentParser(prog="python -m usa_signal_bot")
+    subparsers = parser.add_subparsers(dest="command")
+
+    setup_phase143_cli(subparsers)
+    setup_phase155_cli(subparsers)
+    setup_phase145_cli(subparsers)
+    setup_phase147_cli(subparsers)
+    setup_phase150_cli(subparsers)
 
     return parser
 
