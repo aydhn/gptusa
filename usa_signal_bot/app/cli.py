@@ -593,7 +593,7 @@ def handle_ensemble_prototype_commands(args):
         sys.exit(0)
 
 
-def handle_ml_closure_commands(args):
+def _handle_ml_closure_info(args):
     if args.command == "ml-closure-info":
         print("Phase 145 - Advanced ML Band Final Audit and ML Governance Closure")
         print(
@@ -621,6 +621,9 @@ def handle_ml_closure_commands(args):
         import sys
 
         sys.exit(0)
+
+
+def _handle_ml_closure_explainability(args):
     if args.command == "resolve-explainability-inputs":
         print("Resolving explainability inputs...")
         if getattr(args, "write", False):
@@ -681,6 +684,9 @@ def handle_ml_closure_commands(args):
         import sys
 
         sys.exit(0)
+
+
+def _handle_ml_closure_audit_and_validation(args):
     if args.command == "build-advanced-ml-artifact-lineage":
         print("Building advanced ML artifact lineage...")
         if getattr(args, "write", False):
@@ -715,6 +721,9 @@ def handle_ml_closure_commands(args):
         import sys
 
         sys.exit(0)
+
+
+def _handle_ml_closure_checks(args):
     if args.command == "ml-closure-schema-check":
         print("Checking ML closure schema...")
         print("Done (Simulated)")
@@ -755,6 +764,13 @@ def handle_ml_closure_commands(args):
         import sys
 
         sys.exit(0)
+
+
+def handle_ml_closure_commands(args):
+    _handle_ml_closure_info(args)
+    _handle_ml_closure_explainability(args)
+    _handle_ml_closure_audit_and_validation(args)
+    _handle_ml_closure_checks(args)
 
 
 def handle_command(args):
