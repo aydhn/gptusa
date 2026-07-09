@@ -1,6 +1,4 @@
-import argparse
-import sys
 from .app.cli import main as cli_main
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     cli_main()
