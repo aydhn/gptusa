@@ -47,8 +47,8 @@ def build_sizing_input_references(payloads: dict[str, Any], dataframes: dict[str
 
 def build_sizing_candidates(candidate_contract_payload: dict[str, Any], candidate_metrics_df: pd.DataFrame | None = None) -> list[SizingCandidate]:
     candidates = []
-    if candidate_metrics_df is not None:
-        for _, row in candidate_metrics_df.iterrows():
+    if candidate_metrics_df is not None and not candidate_metrics_df.empty:
+        for row in candidate_metrics_df.to_dict('records'):
             cand = SizingCandidate(
                 symbol=row.get('symbol', 'UNKNOWN'),
                 candidate_valid=True,
