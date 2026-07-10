@@ -1,7 +1,6 @@
 import time
 import random
 from datetime import datetime, timedelta
-from typing import Any
 
 # Define the two versions of the function logic
 
