@@ -102,6 +102,18 @@ class MarketImpactEstimate:
     metadata: dict[str, Any] = field(default_factory=dict)
 
 
+
+@dataclass
+class FillSimulationRequest:
+    symbol: str
+    side: TransactionSide
+    quantity: float | None
+    notional_usd: float | None
+    reference_price: float | None
+    cost_breakdown: TransactionCostBreakdown | None
+    market_impact: MarketImpactEstimate | None
+
+
 @dataclass
 class FillSimulationResult:
     fill_id: str
