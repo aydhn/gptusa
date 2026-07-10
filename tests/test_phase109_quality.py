@@ -16,6 +16,7 @@ from usa_signal_bot.provider_quality.provider_safety_compliance_scorer import (
 )
 from usa_signal_bot.provider_quality.data_quality_scorer import (
     build_provider_data_quality_score,
+    ProviderDataQualityScoreParams,
 )
 from usa_signal_bot.provider_quality.provider_ranking_engine import (
     rank_providers_for_symbol,
@@ -57,7 +58,8 @@ def test_safety_compliance():
 
 def test_data_quality_score():
     records = [{"open": 1, "high": 2, "low": 1, "close": 2, "volume": 100}]
-    score = build_provider_data_quality_score("DUMMY", "AAPL", "OHLCV", records=records)
+    params = ProviderDataQualityScoreParams(provider_name="DUMMY", symbol="AAPL", capability="OHLCV", records=records)
+    score = build_provider_data_quality_score(params)
     assert score.total_score > 0
     assert not score.blocked
 
