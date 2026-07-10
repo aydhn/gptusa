@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 
 from usa_signal_bot.core.enums import TransactionSide, MarketImpactStatus
-from usa_signal_bot.transaction_costs.cost_models import MarketImpactEstimate, create_market_impact_estimate_id
+from usa_signal_bot.transaction_costs.cost_models import MarketImpactEstimate, create_market_impact_estimate_id, TransactionCostInput
 from usa_signal_bot.transaction_costs.participation_cost import estimate_participation_cost_bps
 from usa_signal_bot.transaction_costs.volatility_penalty import estimate_volatility_penalty_bps
 from usa_signal_bot.transaction_costs.spread_cost import estimate_spread_cost_bps
@@ -49,20 +49,15 @@ def classify_market_impact_status(impact_bps: float | None, participation_rate_p
         return MarketImpactStatus.EXTREME
 
 def estimate_market_impact(
-    symbol: str,
-    side: TransactionSide,
-    notional_usd: float | None,
-    avg_dollar_volume: float | None,
-    atr_pct: float | None = None,
-    spread_proxy_bps: float | None = None
+    tc_input: TransactionCostInput
 ) -> MarketImpactEstimate:
 
     participation_rate_pct = None
-    if notional_usd is not None and avg_dollar_volume is not None and avg_dollar_volume > 0:
-        participation_rate_pct = (notional_usd / avg_dollar_volume) * 100.0
+    if tc_input.notional_usd is not None and tc_input.avg_dollar_volume is not None and tc_input.avg_dollar_volume > 0:
+        participation_rate_pct = (tc_input.notional_usd / tc_input.avg_dollar_volume) * 100.0
 
-    impact_bps = estimate_market_impact_bps(participation_rate_pct, atr_pct, spread_proxy_bps)
-    impact_usd = estimate_market_impact_usd(impact_bps, notional_usd)
+    impact_bps = estimate_market_impact_bps(participation_rate_pct, tc_input.atr_pct, tc_input.spread_proxy_bps)
+    impact_usd = estimate_market_impact_usd(impact_bps, tc_input.notional_usd)
     status = classify_market_impact_status(impact_bps, participation_rate_pct)
     size_class = classify_order_size_class(participation_rate_pct)
 
@@ -73,11 +68,11 @@ def estimate_market_impact(
         warnings.append("Missing participation rate (no ADV or notional). Cannot estimate impact reliably.")
 
     return MarketImpactEstimate(
-        estimate_id=create_market_impact_estimate_id(symbol),
-        symbol=symbol,
+        estimate_id=create_market_impact_estimate_id(tc_input.symbol),
+        symbol=tc_input.symbol,
         created_at_utc=datetime.now(timezone.utc).isoformat(),
-        side=side,
-        notional_usd=notional_usd,
+        side=tc_input.side,
+        notional_usd=tc_input.notional_usd,
         participation_rate_pct=participation_rate_pct,
         impact_bps=impact_bps,
         impact_usd=impact_usd,
