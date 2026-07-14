@@ -12,6 +12,8 @@ from usa_signal_bot.core.enums import (
 from usa_signal_bot.attribution.risk_adapter import (
     attach_attribution_to_risk_report,
     attribution_risk_warnings,
+    attribution_risk_summary,
+    attribution_risk_adapter_to_text,
 )
 
 
@@ -64,3 +66,43 @@ def test_attribution_risk_warnings_no_scorecard():
     review.scorecard = None
     warnings = attribution_risk_warnings(review)
     assert warnings == []
+
+
+def test_attribution_risk_summary_with_contributions():
+    review = _get_mock_review()
+    summary = attribution_risk_summary(review)
+    assert summary == {"high_risk_contributors": 1}
+
+
+def test_attribution_risk_summary_empty():
+    review = _get_mock_review()
+    review.risk_contributions = []
+    summary = attribution_risk_summary(review)
+    assert summary == {"high_risk_contributors": 0}
+
+
+def test_attribution_risk_adapter_to_text_with_metadata():
+    payload = {
+        "attribution_metadata": {
+            "review_id": "test_r_123",
+            "risk_summary": {"high_risk_contributors": 2},
+        }
+    }
+    result = attribution_risk_adapter_to_text(payload)
+    assert result == "Risk Attribution attached: Review ID test_r_123"
+
+
+def test_attribution_risk_adapter_to_text_without_metadata():
+    payload = {}
+    result = attribution_risk_adapter_to_text(payload)
+    assert result == "Risk Attribution attached: Review ID N/A"
+
+
+def test_attribution_risk_adapter_to_text_missing_review_id():
+    payload = {
+        "attribution_metadata": {
+            "risk_summary": {"high_risk_contributors": 2},
+        }
+    }
+    result = attribution_risk_adapter_to_text(payload)
+    assert result == "Risk Attribution attached: Review ID N/A"
