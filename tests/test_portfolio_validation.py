@@ -43,3 +43,16 @@ def test_assert_valid():
 
     rep = validate_portfolio_construction_result(res)
     assert_portfolio_valid(rep)
+
+def test_validate_no_broker_exception():
+    from unittest.mock import patch
+
+    req = AllocationRequest("r1", [], 100, 100, AllocationMethod.EQUAL_WEIGHT, 0.8, "utc")
+    res = PortfolioConstructionResult("run", "utc", PortfolioConstructionStatus.COMPLETED, req, {}, {}, [], [], [], [])
+
+    with patch("usa_signal_bot.portfolio.portfolio_validation.logger") as mock_logger:
+        with patch("json.dumps", side_effect=Exception("mock error")):
+            rep = validate_no_broker_execution_in_portfolio(res)
+            assert rep.valid
+            mock_logger.error.assert_called_once()
+            assert "Failed to serialize and validate broker execution in portfolio" in mock_logger.error.call_args[0][0]
