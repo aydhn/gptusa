@@ -1,4 +1,6 @@
 import pytest
+
+from unittest.mock import patch
 from usa_signal_bot.portfolio.portfolio_validation import (
     validate_allocation_request_report, validate_allocation_results_report,
     validate_portfolio_basket_report, validate_no_portfolio_optimizer_behavior,
@@ -43,3 +45,17 @@ def test_assert_valid():
 
     rep = validate_portfolio_construction_result(res)
     assert_portfolio_valid(rep)
+
+
+@patch('json.dumps')
+def test_validate_no_optimizer_exception(mock_dumps):
+    mock_dumps.side_effect = Exception("Serialization failed")
+
+    req = AllocationRequest("r1", [], 100, 100, AllocationMethod.EQUAL_WEIGHT, 0.8, "utc")
+    res = PortfolioConstructionResult("run", "utc", PortfolioConstructionStatus.COMPLETED, req, {}, {}, [], [], [], [])
+
+    with patch('usa_signal_bot.portfolio.portfolio_validation.logger.error') as mock_logger:
+        rep = validate_no_portfolio_optimizer_behavior(res)
+        mock_logger.assert_called_once()
+        assert rep.valid
+        assert rep.error_count == 0
