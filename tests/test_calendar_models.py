@@ -337,3 +337,26 @@ def test_session_validation_result_to_dict():
     assert d["warnings"] == ["val_warn"]
     assert d["errors"] == ["val_err"]
     assert d["metadata"] == {"source": "api"}
+
+def test_validate_session_validation_result():
+    from usa_signal_bot.calendar.calendar_models import SessionValidationResult, validate_session_validation_result
+
+    # Just to confirm the coverage, validate_session_validation_result does nothing
+    result = SessionValidationResult(
+        validation_id="val_1",
+        created_at_utc="2024-01-01T00:00:00Z",
+        symbol="AAPL",
+        calendar_name="US_EQUITIES",
+        status="VALID",
+        row_count=252,
+        trading_day_count=252,
+        non_trading_day_rows=0,
+        missing_trading_days=0,
+        early_close_rows=2,
+        warnings=["val_warn"],
+        errors=["val_err"],
+        metadata={"source": "api"}
+    )
+
+    # It should not raise any exceptions
+    validate_session_validation_result(result)
