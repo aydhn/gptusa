@@ -39,7 +39,7 @@ def dataframe_to_feature_rows(df: pd.DataFrame, symbol: str, timeframe: str) -> 
 
     df_clean = df.replace({np.nan: None})
 
-    for _, row in df_clean.iterrows():
+    for row in df_clean.to_dict('records'):
         features = {col: row[col] for col in feature_cols}
         rows.append(FeatureRow(
             timestamp_utc=row["timestamp_utc"],
