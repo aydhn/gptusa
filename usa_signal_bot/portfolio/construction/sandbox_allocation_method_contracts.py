@@ -8,11 +8,8 @@ from usa_signal_bot.portfolio.construction.phase155_models import (
 )
 from usa_signal_bot.core.enums import PortfolioConstructionRiskFlag
 
-def build_sandbox_allocation_method_contracts(policy: PortfolioConstructionPolicy) -> List[SandboxAllocationMethodContract]:
-    contracts = []
-
-    # Equal Sandbox
-    contracts.append(SandboxAllocationMethodContract(
+def _build_equal_sandbox_contract() -> SandboxAllocationMethodContract:
+    return SandboxAllocationMethodContract(
         contract_id=create_sandbox_allocation_method_contract_id(),
         created_at_utc=_now_str(),
         method_kind=SandboxAllocationMethodKind.EQUAL_SANDBOX_ALLOCATION,
@@ -31,10 +28,10 @@ def build_sandbox_allocation_method_contracts(policy: PortfolioConstructionPolic
         errors=[],
         risk_flags=[],
         metadata={"weight": 1.0}
-    ))
+    )
 
-    # Sizing Score Sandbox
-    contracts.append(SandboxAllocationMethodContract(
+def _build_sizing_score_sandbox_contract(policy: PortfolioConstructionPolicy) -> SandboxAllocationMethodContract:
+    return SandboxAllocationMethodContract(
         contract_id=create_sandbox_allocation_method_contract_id(),
         created_at_utc=_now_str(),
         method_kind=SandboxAllocationMethodKind.SIZING_SCORE_SANDBOX_ALLOCATION,
@@ -53,10 +50,10 @@ def build_sandbox_allocation_method_contracts(policy: PortfolioConstructionPolic
         errors=[],
         risk_flags=[],
         metadata={"weight": policy.sizing_weight}
-    ))
+    )
 
-    # Risk Budget Sandbox
-    contracts.append(SandboxAllocationMethodContract(
+def _build_risk_budget_sandbox_contract(policy: PortfolioConstructionPolicy) -> SandboxAllocationMethodContract:
+    return SandboxAllocationMethodContract(
         contract_id=create_sandbox_allocation_method_contract_id(),
         created_at_utc=_now_str(),
         method_kind=SandboxAllocationMethodKind.RISK_BUDGET_SANDBOX_ALLOCATION,
@@ -75,10 +72,10 @@ def build_sandbox_allocation_method_contracts(policy: PortfolioConstructionPolic
         errors=[],
         risk_flags=[],
         metadata={"weight": policy.risk_budget_weight}
-    ))
+    )
 
-    # Robustness Sandbox
-    contracts.append(SandboxAllocationMethodContract(
+def _build_robustness_sandbox_contract(policy: PortfolioConstructionPolicy) -> SandboxAllocationMethodContract:
+    return SandboxAllocationMethodContract(
         contract_id=create_sandbox_allocation_method_contract_id(),
         created_at_utc=_now_str(),
         method_kind=SandboxAllocationMethodKind.ROBUSTNESS_SANDBOX_ALLOCATION,
@@ -97,9 +94,15 @@ def build_sandbox_allocation_method_contracts(policy: PortfolioConstructionPolic
         errors=[],
         risk_flags=[],
         metadata={"weight": policy.robustness_weight}
-    ))
+    )
 
-    return contracts
+def build_sandbox_allocation_method_contracts(policy: PortfolioConstructionPolicy) -> List[SandboxAllocationMethodContract]:
+    return [
+        _build_equal_sandbox_contract(),
+        _build_sizing_score_sandbox_contract(policy),
+        _build_risk_budget_sandbox_contract(policy),
+        _build_robustness_sandbox_contract(policy)
+    ]
 
 def validate_sandbox_allocation_method_contracts(items: List[SandboxAllocationMethodContract]) -> List[str]:
     errors = []
