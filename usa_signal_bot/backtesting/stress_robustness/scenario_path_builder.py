@@ -30,17 +30,21 @@ def build_path_for_scenario(scenario: StressScenario, return_df: pd.DataFrame, e
 
     total_count = len(return_df)
 
-    for i, (idx, row) in enumerate(return_df.iterrows()):
-        orig_ret = row[ret_col]
+    idx_arr = return_df.index
+    ret_arr = return_df[ret_col].values
+    eq_arr = equity_df[eq_col].values if has_equity else None
+
+    for i in range(total_count):
+        orig_ret = ret_arr[i]
         stressed_ret = apply_stress_to_return(orig_ret, scenario, i, total_count)
 
-        orig_eq = equity_df.iloc[i][eq_col] if has_equity else None
+        orig_eq = eq_arr[i] if has_equity else None
 
         points.append(ScenarioPathPoint(
             point_id=create_scenario_path_point_id(),
             created_at_utc=datetime.datetime.now(datetime.UTC).isoformat(),
             scenario_id=scenario.scenario_id,
-            timestamp=str(idx),
+            timestamp=str(idx_arr[i]),
             original_return=orig_ret,
             stressed_return=stressed_ret,
             original_equity=orig_eq,
