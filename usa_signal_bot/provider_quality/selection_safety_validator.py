@@ -31,18 +31,20 @@ def validate_provider_ranking_safety(ranking: ProviderRanking) -> List[str]:
 
 def validate_provider_quality_context_safety(context: ProviderQualityContext) -> List[str]:
     errors = []
-    if not context.research_data_only: errors.append("research_data_only is False")
-    if context.produces_trade_signal: errors.append("produces_trade_signal is True")
-    if context.produces_order_decision: errors.append("produces_order_decision is True")
-    if context.network_used: errors.append("network_used is True")
-    if context.paid_api_used: errors.append("paid_api_used is True")
-    if context.scraping_used: errors.append("scraping_used is True")
-    if context.html_parsing_used: errors.append("html_parsing_used is True")
-    if context.broker_used: errors.append("broker_used is True")
-    if context.order_created: errors.append("order_created is True")
-    if context.paper_state_mutated: errors.append("paper_state_mutated is True")
-    if context.telegram_real_sent: errors.append("telegram_real_sent is True")
-    if context.dashboard_started: errors.append("dashboard_started is True")
+    if not context.research_data_only:
+        errors.append("research_data_only is False")
+
+    unsafe_flags = [
+        "produces_trade_signal", "produces_order_decision", "network_used",
+        "paid_api_used", "scraping_used", "html_parsing_used", "broker_used",
+        "order_created", "paper_state_mutated", "telegram_real_sent",
+        "dashboard_started"
+    ]
+
+    for flag in unsafe_flags:
+        if getattr(context, flag):
+            errors.append(f"{flag} is True")
+
     return errors
 
 def collect_provider_quality_risk_flags(context: Optional[ProviderQualityContext] = None) -> List[ProviderQualityRiskFlag]:
