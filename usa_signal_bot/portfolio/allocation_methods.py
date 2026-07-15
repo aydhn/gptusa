@@ -122,6 +122,39 @@ def apply_allocation_caps(
     return results
 
 
+def _create_allocation_result(
+    candidate: PortfolioCandidate,
+    request: AllocationRequest,
+    raw_weights: Dict[str, float],
+    status: AllocationStatus,
+    target_weight: float = 0.0,
+    target_notional: float = 0.0,
+    target_quantity: float = 0.0,
+    warnings: Optional[List[str]] = None,
+    errors: Optional[List[str]] = None,
+) -> AllocationResult:
+    return AllocationResult(
+        candidate_id=candidate.candidate_id,
+        symbol=candidate.symbol,
+        timeframe=candidate.timeframe,
+        method=request.method,
+        status=status,
+        target_weight=target_weight,
+        target_notional=target_notional,
+        target_quantity=target_quantity,
+        raw_weight=raw_weights.get(candidate.candidate_id, 0.0),
+        raw_notional=convert_weight_to_notional(
+            raw_weights.get(candidate.candidate_id, 0.0),
+            request.portfolio_equity,
+        ),
+        capped=False,
+        cap_reasons=[],
+        warnings=warnings or [],
+        errors=errors or [],
+        strategy_name=candidate.strategy_name,
+    )
+
+
 def _base_allocate(
     request: AllocationRequest,
     raw_weights: Dict[str, float],
@@ -139,25 +172,12 @@ def _base_allocate(
     for candidate in request.candidates:
         if candidate.status != PortfolioCandidateStatus.ELIGIBLE:
             results.append(
-                AllocationResult(
-                    candidate_id=candidate.candidate_id,
-                    symbol=candidate.symbol,
-                    timeframe=candidate.timeframe,
-                    method=request.method,
+                _create_allocation_result(
+                    candidate=candidate,
+                    request=request,
+                    raw_weights=raw_weights,
                     status=AllocationStatus.REJECTED,
-                    target_weight=0.0,
-                    target_notional=0.0,
-                    target_quantity=0.0,
-                    raw_weight=raw_weights.get(candidate.candidate_id, 0.0),
-                    raw_notional=convert_weight_to_notional(
-                        raw_weights.get(candidate.candidate_id, 0.0),
-                        request.portfolio_equity,
-                    ),
-                    capped=False,
-                    cap_reasons=[],
-                    warnings=[],
                     errors=["Candidate is not eligible."],
-                    strategy_name=candidate.strategy_name,
                 )
             )
             continue
@@ -165,25 +185,12 @@ def _base_allocate(
         price = infer_candidate_price(candidate)
         if not price or price <= 0:
             results.append(
-                AllocationResult(
-                    candidate_id=candidate.candidate_id,
-                    symbol=candidate.symbol,
-                    timeframe=candidate.timeframe,
-                    method=request.method,
+                _create_allocation_result(
+                    candidate=candidate,
+                    request=request,
+                    raw_weights=raw_weights,
                     status=AllocationStatus.REJECTED,
-                    target_weight=0.0,
-                    target_notional=0.0,
-                    target_quantity=0.0,
-                    raw_weight=raw_weights.get(candidate.candidate_id, 0.0),
-                    raw_notional=convert_weight_to_notional(
-                        raw_weights.get(candidate.candidate_id, 0.0),
-                        request.portfolio_equity,
-                    ),
-                    capped=False,
-                    cap_reasons=[],
                     warnings=["Missing or invalid price. Cannot allocate."],
-                    errors=[],
-                    strategy_name=candidate.strategy_name,
                 )
             )
             continue
@@ -197,25 +204,14 @@ def _base_allocate(
         status = AllocationStatus.ALLOCATED if weight > 0 else AllocationStatus.ZERO
 
         results.append(
-            AllocationResult(
-                candidate_id=candidate.candidate_id,
-                symbol=candidate.symbol,
-                timeframe=candidate.timeframe,
-                method=request.method,
+            _create_allocation_result(
+                candidate=candidate,
+                request=request,
+                raw_weights=raw_weights,
                 status=status,
                 target_weight=weight,
                 target_notional=notional,
                 target_quantity=qty,
-                raw_weight=raw_weights.get(candidate.candidate_id, 0.0),
-                raw_notional=convert_weight_to_notional(
-                    raw_weights.get(candidate.candidate_id, 0.0),
-                    request.portfolio_equity,
-                ),
-                capped=False,
-                cap_reasons=[],
-                warnings=[],
-                errors=[],
-                strategy_name=candidate.strategy_name,
             )
         )
 
