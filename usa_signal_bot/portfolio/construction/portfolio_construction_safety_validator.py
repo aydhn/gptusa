@@ -121,30 +121,22 @@ def collect_portfolio_construction_risk_flags(context: Optional[PortfolioConstru
     flags = set(context.risk_flags)
     flags.update(context.ingestion.risk_flags)
 
-    for ref in context.input_references:
-        flags.update(ref.risk_flags)
-    for c in context.candidates:
-        flags.update(c.risk_flags)
-    if context.policy:
-        flags.update(context.policy.risk_flags)
-    for m in context.method_contracts:
-        flags.update(m.risk_flags)
-    for s in context.scores:
-        flags.update(s.risk_flags)
-    for r in context.allocation_results:
-        flags.update(r.risk_flags)
-    if context.exposure_table:
-        flags.update(context.exposure_table.risk_flags)
-    for d in context.diagnostics:
-        flags.update(d.risk_flags)
-    if context.comparison_report:
-        flags.update(context.comparison_report.risk_flags)
-    if context.validation_report:
-        flags.update(context.validation_report.risk_flags)
-    if context.safety_boundary:
-        flags.update(context.safety_boundary.risk_flags)
-    if context.phase156_readiness_gate:
-        flags.update(context.phase156_readiness_gate.risk_flags)
+    list_attrs = [
+        "input_references", "candidates", "method_contracts",
+        "scores", "allocation_results", "diagnostics"
+    ]
+    for attr in list_attrs:
+        for item in getattr(context, attr, []):
+            flags.update(item.risk_flags)
+
+    scalar_attrs = [
+        "policy", "exposure_table", "comparison_report",
+        "validation_report", "safety_boundary", "phase156_readiness_gate"
+    ]
+    for attr in scalar_attrs:
+        item = getattr(context, attr, None)
+        if item:
+            flags.update(item.risk_flags)
 
     return list(flags)
 
