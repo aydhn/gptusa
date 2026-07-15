@@ -149,38 +149,61 @@ def validate_portfolio_sandbox_candidates(
             errors.append(f"Duplicate symbol detected: {item.symbol}")
         symbols.add(item.symbol)
 
-        if item.actual_target_weight is not None:
-            errors.append(f"Candidate {item.symbol} has actual_target_weight set.")
-            item.risk_flags.append(
-                PortfolioConstructionRiskFlag.ACTUAL_TARGET_WEIGHT_RISK
-            )
-        if item.actual_portfolio_weight is not None:
-            errors.append(f"Candidate {item.symbol} has actual_portfolio_weight set.")
-            item.risk_flags.append(
-                PortfolioConstructionRiskFlag.ACTUAL_PORTFOLIO_WEIGHT_RISK
-            )
-        if item.actual_allocation is not None:
-            errors.append(f"Candidate {item.symbol} has actual_allocation set.")
-            item.risk_flags.append(PortfolioConstructionRiskFlag.ACTUAL_ALLOCATION_RISK)
-        if item.actual_position_size is not None:
-            errors.append(f"Candidate {item.symbol} has actual_position_size set.")
-            item.risk_flags.append(
-                PortfolioConstructionRiskFlag.ACTUAL_POSITION_SIZE_RISK
-            )
-        if item.order_size is not None:
-            errors.append(f"Candidate {item.symbol} has order_size set.")
-            item.risk_flags.append(PortfolioConstructionRiskFlag.ORDER_SIZE_RISK)
-        if item.capital_allocation is not None:
-            errors.append(f"Candidate {item.symbol} has capital_allocation set.")
-            item.risk_flags.append(
-                PortfolioConstructionRiskFlag.CAPITAL_DEPLOYMENT_RISK
-            )
-        if item.live_signal:
-            errors.append(f"Candidate {item.symbol} has live_signal set to True.")
-            item.risk_flags.append(PortfolioConstructionRiskFlag.LIVE_TRADING_RISK)
-        if item.order_decision:
-            errors.append(f"Candidate {item.symbol} has order_decision set to True.")
-            item.risk_flags.append(PortfolioConstructionRiskFlag.REAL_ORDER_RISK)
+        checks = [
+            (
+                item.actual_target_weight is not None,
+                "actual_target_weight",
+                PortfolioConstructionRiskFlag.ACTUAL_TARGET_WEIGHT_RISK,
+                "set.",
+            ),
+            (
+                item.actual_portfolio_weight is not None,
+                "actual_portfolio_weight",
+                PortfolioConstructionRiskFlag.ACTUAL_PORTFOLIO_WEIGHT_RISK,
+                "set.",
+            ),
+            (
+                item.actual_allocation is not None,
+                "actual_allocation",
+                PortfolioConstructionRiskFlag.ACTUAL_ALLOCATION_RISK,
+                "set.",
+            ),
+            (
+                item.actual_position_size is not None,
+                "actual_position_size",
+                PortfolioConstructionRiskFlag.ACTUAL_POSITION_SIZE_RISK,
+                "set.",
+            ),
+            (
+                item.order_size is not None,
+                "order_size",
+                PortfolioConstructionRiskFlag.ORDER_SIZE_RISK,
+                "set.",
+            ),
+            (
+                item.capital_allocation is not None,
+                "capital_allocation",
+                PortfolioConstructionRiskFlag.CAPITAL_DEPLOYMENT_RISK,
+                "set.",
+            ),
+            (
+                item.live_signal,
+                "live_signal",
+                PortfolioConstructionRiskFlag.LIVE_TRADING_RISK,
+                "set to True.",
+            ),
+            (
+                item.order_decision,
+                "order_decision",
+                PortfolioConstructionRiskFlag.REAL_ORDER_RISK,
+                "set to True.",
+            ),
+        ]
+
+        for condition, attr_name, flag, suffix in checks:
+            if condition:
+                errors.append(f"Candidate {item.symbol} has {attr_name} {suffix}")
+                item.risk_flags.append(flag)
 
     return errors
 
