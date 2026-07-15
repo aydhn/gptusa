@@ -17,27 +17,29 @@ from usa_signal_bot.portfolio.risk_reporting.phase157_models import (
 from usa_signal_bot.core.enums import PortfolioRiskReportingRiskFlag
 from usa_signal_bot.portfolio.risk_reporting.governance_input_resolver import detect_forbidden_portfolio_risk_columns, detect_forbidden_portfolio_risk_fields
 
+PORTFOLIO_RISK_SAFETY_FLAGS = [
+    "live_trading_enabled",
+    "paper_trading_enabled",
+    "broker_execution_enabled",
+    "real_order_creation_enabled",
+    "paper_state_mutation_enabled",
+    "telegram_real_send_enabled",
+    "strategy_activation_allowed",
+    "actual_target_weights_produced",
+    "actual_portfolio_weights_produced",
+    "actual_allocation_produced",
+    "actual_position_size_produced",
+    "order_size_produced",
+    "capital_deployment_allowed",
+    "actual_portfolio_optimization_enabled",
+    "deployment_allowed",
+    "produces_live_signal",
+    "produces_order_decision",
+    "investment_advice"
+]
+
 def validate_portfolio_risk_context_safety(context: PortfolioRiskContext) -> List[str]:
-    errs = []
-    if context.live_trading_enabled: errs.append("live_trading_enabled")
-    if context.paper_trading_enabled: errs.append("paper_trading_enabled")
-    if context.broker_execution_enabled: errs.append("broker_execution_enabled")
-    if context.real_order_creation_enabled: errs.append("real_order_creation_enabled")
-    if context.paper_state_mutation_enabled: errs.append("paper_state_mutation_enabled")
-    if context.telegram_real_send_enabled: errs.append("telegram_real_send_enabled")
-    if context.strategy_activation_allowed: errs.append("strategy_activation_allowed")
-    if context.actual_target_weights_produced: errs.append("actual_target_weights_produced")
-    if context.actual_portfolio_weights_produced: errs.append("actual_portfolio_weights_produced")
-    if context.actual_allocation_produced: errs.append("actual_allocation_produced")
-    if context.actual_position_size_produced: errs.append("actual_position_size_produced")
-    if context.order_size_produced: errs.append("order_size_produced")
-    if context.capital_deployment_allowed: errs.append("capital_deployment_allowed")
-    if context.actual_portfolio_optimization_enabled: errs.append("actual_portfolio_optimization_enabled")
-    if context.deployment_allowed: errs.append("deployment_allowed")
-    if context.produces_live_signal: errs.append("produces_live_signal")
-    if context.produces_order_decision: errs.append("produces_order_decision")
-    if context.investment_advice: errs.append("investment_advice")
-    return errs
+    return [flag for flag in PORTFOLIO_RISK_SAFETY_FLAGS if getattr(context, flag, False)]
 
 def validate_portfolio_risk_summary_safety(summary: PortfolioRiskSummary) -> List[str]:
     return []
