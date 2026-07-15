@@ -129,7 +129,7 @@ def assign_heuristic_regime_labels_for_table(symbol: str | None, df: pd.DataFram
     conflicts = []
     fallbacks = []
 
-    for _, row in df.iterrows():
+    for row in df.to_dict('records'):
         res = assign_heuristic_regime_label_for_row(row, spec, score_cols)
         if symbol and not res.symbol:
             res.symbol = symbol
