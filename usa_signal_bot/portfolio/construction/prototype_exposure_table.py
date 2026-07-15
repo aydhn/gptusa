@@ -109,35 +109,33 @@ def prototype_exposure_table_to_dataframe(table: PrototypeExposureTable) -> pd.D
 
 def validate_prototype_exposure_table(table: PrototypeExposureTable) -> List[str]:
     errors = []
-    for r in table.records:
-        if r.actual_exposure is not None:
-            errors.append(f"Record {r.symbol} has actual_exposure.")
-            r.risk_flags.append(PortfolioConstructionRiskFlag.ACTUAL_PORTFOLIO_WEIGHT_RISK)
-        if r.actual_allocation is not None:
-            errors.append(f"Record {r.symbol} has actual_allocation.")
-            r.risk_flags.append(PortfolioConstructionRiskFlag.ACTUAL_ALLOCATION_RISK)
-        if r.actual_position_size is not None:
-            errors.append(f"Record {r.symbol} has actual_position_size.")
-            r.risk_flags.append(PortfolioConstructionRiskFlag.ACTUAL_POSITION_SIZE_RISK)
-        if r.order_size is not None:
-            errors.append(f"Record {r.symbol} has order_size.")
-            r.risk_flags.append(PortfolioConstructionRiskFlag.ORDER_SIZE_RISK)
-        if r.capital_allocation is not None:
-            errors.append(f"Record {r.symbol} has capital_allocation.")
-            r.risk_flags.append(PortfolioConstructionRiskFlag.CAPITAL_DEPLOYMENT_RISK)
 
-    if not table.no_actual_target_weights:
-        errors.append("Table no_actual_target_weights is False.")
-    if not table.no_actual_portfolio_weights:
-        errors.append("Table no_actual_portfolio_weights is False.")
-    if not table.no_actual_allocation:
-        errors.append("Table no_actual_allocation is False.")
-    if not table.no_actual_position_size:
-        errors.append("Table no_actual_position_size is False.")
-    if not table.no_order_size:
-        errors.append("Table no_order_size is False.")
-    if not table.no_capital_allocation:
-        errors.append("Table no_capital_allocation is False.")
+    record_checks = [
+        ("actual_exposure", PortfolioConstructionRiskFlag.ACTUAL_PORTFOLIO_WEIGHT_RISK),
+        ("actual_allocation", PortfolioConstructionRiskFlag.ACTUAL_ALLOCATION_RISK),
+        ("actual_position_size", PortfolioConstructionRiskFlag.ACTUAL_POSITION_SIZE_RISK),
+        ("order_size", PortfolioConstructionRiskFlag.ORDER_SIZE_RISK),
+        ("capital_allocation", PortfolioConstructionRiskFlag.CAPITAL_DEPLOYMENT_RISK),
+    ]
+
+    for r in table.records:
+        for attr, flag in record_checks:
+            if getattr(r, attr) is not None:
+                errors.append(f"Record {r.symbol} has {attr}.")
+                r.risk_flags.append(flag)
+
+    table_checks = [
+        "no_actual_target_weights",
+        "no_actual_portfolio_weights",
+        "no_actual_allocation",
+        "no_actual_position_size",
+        "no_order_size",
+        "no_capital_allocation",
+    ]
+
+    for attr in table_checks:
+        if not getattr(table, attr):
+            errors.append(f"Table {attr} is False.")
 
     return errors
 
