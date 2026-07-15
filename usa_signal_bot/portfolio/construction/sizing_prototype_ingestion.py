@@ -128,36 +128,21 @@ def sizing_prototype_supports_phase155(payload: Dict[str, Any]) -> Tuple[bool, L
     if not payload:
         return False, ["Payload is empty."]
 
-    block_reasons = []
-
     gate = payload.get("phase155_readiness_gate", {})
-    if not gate.get("ready_for_phase155", False):
-        block_reasons.append("ready_for_phase155 is False or missing.")
-
     ctx = payload.get("context", {})
-    if not ctx.get("safety_boundary_validated", False):
-        block_reasons.append("safety_boundary_validated is False.")
 
-    if not ctx.get("comparison_matrix_built", False):
-        block_reasons.append("comparison_matrix_built is False.")
-
-    if not ctx.get("risk_budget_adherence_built", False):
-        block_reasons.append("risk_budget_adherence_built is False.")
-
-    if not ctx.get("research_data_only", True):
-        block_reasons.append("research_data_only is False.")
-
-    if not ctx.get("sizing_research_prototype_only", True):
-        block_reasons.append("sizing_research_prototype_only is False.")
-
-    if ctx.get("actual_target_weights_produced", False) or ctx.get("target_weights_produced", False):
-         block_reasons.append("actual_target_weights_produced is True.")
-    if ctx.get("actual_allocation_produced", False) or ctx.get("allocation_output_produced", False):
-         block_reasons.append("actual_allocation_produced is True.")
-    if ctx.get("order_size_produced", False):
-         block_reasons.append("order_size_produced is True.")
-    if ctx.get("capital_deployment_allowed", False):
-         block_reasons.append("capital_deployment_allowed is True.")
+    checks = [
+        (not gate.get("ready_for_phase155", False), "ready_for_phase155 is False or missing."),
+        (not ctx.get("safety_boundary_validated", False), "safety_boundary_validated is False."),
+        (not ctx.get("comparison_matrix_built", False), "comparison_matrix_built is False."),
+        (not ctx.get("risk_budget_adherence_built", False), "risk_budget_adherence_built is False."),
+        (not ctx.get("research_data_only", True), "research_data_only is False."),
+        (not ctx.get("sizing_research_prototype_only", True), "sizing_research_prototype_only is False."),
+        (ctx.get("actual_target_weights_produced", False) or ctx.get("target_weights_produced", False), "actual_target_weights_produced is True."),
+        (ctx.get("actual_allocation_produced", False) or ctx.get("allocation_output_produced", False), "actual_allocation_produced is True."),
+        (ctx.get("order_size_produced", False), "order_size_produced is True."),
+        (ctx.get("capital_deployment_allowed", False), "capital_deployment_allowed is True.")
+    ]
 
     unsafe_flags = [
         "live_trading_enabled", "paper_trading_enabled", "broker_execution_enabled",
@@ -165,9 +150,10 @@ def sizing_prototype_supports_phase155(payload: Dict[str, Any]) -> Tuple[bool, L
         "deployment_allowed", "network_used", "dashboard_started", "daemon_started", "scheduler_enabled",
         "produces_live_signal", "produces_order_decision", "produces_portfolio_weights", "investment_advice"
     ]
-    for flag in unsafe_flags:
-        if ctx.get(flag, False):
-            block_reasons.append(f"{flag} is True.")
+
+    checks.extend([(ctx.get(flag, False), f"{flag} is True.") for flag in unsafe_flags])
+
+    block_reasons = [msg for condition, msg in checks if condition]
 
     return len(block_reasons) == 0, block_reasons
 
