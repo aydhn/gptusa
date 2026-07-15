@@ -94,7 +94,7 @@ def normalize_single_symbol_dataframe(df: pd.DataFrame, symbol: str, timeframe: 
 
     df = standardize_ohlcv_columns(df)
 
-    for idx, row in df.iterrows():
+    for idx, row in zip(df.index, df.to_dict('records')):
         try:
             bar = dataframe_row_to_ohlcv_bar(symbol, idx, row, timeframe, source)
             bars.append(bar)
