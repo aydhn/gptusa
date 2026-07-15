@@ -360,28 +360,22 @@ def validate_provider_ranking(item: ProviderRanking) -> None:
 def validate_provider_quality_context(item: ProviderQualityContext) -> None:
     if not item.research_data_only:
         raise ProviderQualityValidationError("research_data_only must be True")
-    if item.produces_trade_signal:
-        raise ProviderQualityValidationError("produces_trade_signal must be False")
-    if item.produces_order_decision:
-        raise ProviderQualityValidationError("produces_order_decision must be False")
-    if item.network_used:
-        raise ProviderQualityValidationError("network_used must be False")
-    if item.paid_api_used:
-        raise ProviderQualityValidationError("paid_api_used must be False")
-    if item.scraping_used:
-        raise ProviderQualityValidationError("scraping_used must be False")
-    if item.html_parsing_used:
-        raise ProviderQualityValidationError("html_parsing_used must be False")
-    if item.broker_used:
-        raise ProviderQualityValidationError("broker_used must be False")
-    if item.order_created:
-        raise ProviderQualityValidationError("order_created must be False")
-    if item.paper_state_mutated:
-        raise ProviderQualityValidationError("paper_state_mutated must be False")
-    if item.telegram_real_sent:
-        raise ProviderQualityValidationError("telegram_real_sent must be False")
-    if item.dashboard_started:
-        raise ProviderQualityValidationError("dashboard_started must be False")
+    required_false = [
+        "produces_trade_signal",
+        "produces_order_decision",
+        "network_used",
+        "paid_api_used",
+        "scraping_used",
+        "html_parsing_used",
+        "broker_used",
+        "order_created",
+        "paper_state_mutated",
+        "telegram_real_sent",
+        "dashboard_started",
+    ]
+    for attr in required_false:
+        if getattr(item, attr):
+            raise ProviderQualityValidationError(f"{attr} must be False")
 
 
 def validate_provider_quality_full_review(item: ProviderQualityFullReview) -> None:
