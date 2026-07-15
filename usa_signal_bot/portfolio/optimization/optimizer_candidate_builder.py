@@ -23,16 +23,16 @@ def merge_optimizer_candidate_overrides(candidates: List[OptimizerSandboxCandida
     if candidate_df is None or candidate_df.empty: return candidates
 
     cdict = {c.symbol: c for c in candidates}
-    for _, row in candidate_df.iterrows():
-        sym = row.get("symbol")
+    for row in candidate_df.itertuples(index=False):
+        sym = getattr(row, "symbol", None)
         if not sym: continue
         if sym not in cdict:
             c = OptimizerSandboxCandidate(symbol=sym, candidate_valid=True, eligible_for_optimizer_sandbox=True, research_data_only=True)
             cdict[sym] = c
         c = cdict[sym]
-        c.sandbox_score = row.get("sandbox_score", c.sandbox_score)
-        c.risk_budget_score = row.get("risk_budget_score", c.risk_budget_score)
-        c.concentration_group = row.get("concentration_group", c.concentration_group)
+        c.sandbox_score = getattr(row, "sandbox_score", c.sandbox_score)
+        c.risk_budget_score = getattr(row, "risk_budget_score", c.risk_budget_score)
+        c.concentration_group = getattr(row, "concentration_group", c.concentration_group)
     return list(cdict.values())
 
 def validate_optimizer_sandbox_candidates(items: List[OptimizerSandboxCandidate]) -> List[str]:
