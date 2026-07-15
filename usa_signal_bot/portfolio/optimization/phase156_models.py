@@ -573,39 +573,40 @@ def create_optimizer_prototype_full_review_id() -> str: return _gen_uuid()
 
 # Validation functions (stubs enforcing no-execution constraints)
 def validate_portfolio_construction_ingestion(r: PortfolioConstructionIngestionResult) -> List[str]:
-    errs = []
-    if not r.ready_for_phase156: errs.append("Ingestion not ready for Phase 156")
-    if not r.research_data_only: errs.append("Not strictly research_data_only")
-    if not r.allocation_sandbox_only and not r.allocation_sandbox_only: errs.append("Not strictly sandbox_only")
-    if not r.deterministic: errs.append("Not deterministic")
-    if r.live_trading_enabled: errs.append("Live trading enabled")
-    if r.paper_trading_enabled: errs.append("Paper trading enabled")
-    if r.broker_execution_enabled: errs.append("Broker execution enabled")
-    if r.real_order_creation_enabled: errs.append("Real order creation enabled")
-    if r.paper_state_mutation_enabled: errs.append("Paper state mutation enabled")
-    if r.telegram_real_send_enabled: errs.append("Telegram real send enabled")
-    if r.strategy_activation_allowed: errs.append("Strategy activation allowed")
-    if r.actual_target_weights_produced: errs.append("Actual target weights produced")
-    if r.actual_portfolio_weights_produced: errs.append("Actual portfolio weights produced")
-    if r.actual_allocation_produced: errs.append("Actual allocation produced")
-    if r.actual_position_size_produced: errs.append("Actual position size produced")
-    if r.order_size_produced: errs.append("Order size produced")
-    if r.capital_deployment_allowed: errs.append("Capital deployment allowed")
-    if r.portfolio_optimization_enabled: errs.append("Actual portfolio optimization enabled")
-    if r.rebalancing_execution_enabled: errs.append("Rebalancing execution enabled")
-    if r.deployment_allowed: errs.append("Deployment allowed")
-    if r.network_used: errs.append("Network used")
-    if r.paid_api_used: errs.append("Paid API used")
-    if r.scraping_used: errs.append("Scraping used")
-    if r.html_parsing_used: errs.append("HTML parsing used")
-    if r.dashboard_started: errs.append("Dashboard started")
-    if r.daemon_started: errs.append("Daemon started")
-    if r.scheduler_enabled: errs.append("Scheduler enabled")
-    if r.produces_live_signal: errs.append("Produces live signal")
-    if r.produces_order_decision: errs.append("Produces order decision")
-    if r.produces_portfolio_weights: errs.append("Produces portfolio weights")
-    if r.investment_advice: errs.append("Investment advice detected")
-    return errs
+    checks = [
+        (not r.ready_for_phase156, "Ingestion not ready for Phase 156"),
+        (not r.research_data_only, "Not strictly research_data_only"),
+        (not r.allocation_sandbox_only, "Not strictly sandbox_only"),
+        (not r.deterministic, "Not deterministic"),
+        (r.live_trading_enabled, "Live trading enabled"),
+        (r.paper_trading_enabled, "Paper trading enabled"),
+        (r.broker_execution_enabled, "Broker execution enabled"),
+        (r.real_order_creation_enabled, "Real order creation enabled"),
+        (r.paper_state_mutation_enabled, "Paper state mutation enabled"),
+        (r.telegram_real_send_enabled, "Telegram real send enabled"),
+        (r.strategy_activation_allowed, "Strategy activation allowed"),
+        (r.actual_target_weights_produced, "Actual target weights produced"),
+        (r.actual_portfolio_weights_produced, "Actual portfolio weights produced"),
+        (r.actual_allocation_produced, "Actual allocation produced"),
+        (r.actual_position_size_produced, "Actual position size produced"),
+        (r.order_size_produced, "Order size produced"),
+        (r.capital_deployment_allowed, "Capital deployment allowed"),
+        (r.portfolio_optimization_enabled, "Actual portfolio optimization enabled"),
+        (r.rebalancing_execution_enabled, "Rebalancing execution enabled"),
+        (r.deployment_allowed, "Deployment allowed"),
+        (r.network_used, "Network used"),
+        (r.paid_api_used, "Paid API used"),
+        (r.scraping_used, "Scraping used"),
+        (r.html_parsing_used, "HTML parsing used"),
+        (r.dashboard_started, "Dashboard started"),
+        (r.daemon_started, "Daemon started"),
+        (r.scheduler_enabled, "Scheduler enabled"),
+        (r.produces_live_signal, "Produces live signal"),
+        (r.produces_order_decision, "Produces order decision"),
+        (r.produces_portfolio_weights, "Produces portfolio weights"),
+        (r.investment_advice, "Investment advice detected"),
+    ]
+    return [msg for condition, msg in checks if condition]
 
 def validate_optimizer_sandbox_result(r: OptimizerSandboxResult) -> List[str]:
     errs = []
