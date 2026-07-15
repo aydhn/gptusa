@@ -9,6 +9,26 @@ from usa_signal_bot.portfolio.construction.phase155_models import (
 )
 from usa_signal_bot.core.enums import PortfolioConstructionRiskFlag
 
+
+def _create_score(symbol: str, score_kind: ConstraintAwareScoreKind, raw_score: float | None, source: str) -> ConstraintAwareScore:
+    return ConstraintAwareScore(
+        score_id=create_constraint_aware_score_id(),
+        created_at_utc=_now_str(),
+        symbol=symbol,
+        score_kind=score_kind,
+        raw_score=raw_score,
+        normalized_score=None,
+        penalty_applied=None,
+        score_valid=True,
+        research_data_only=True,
+        allocation_sandbox_only=True,
+        not_investment_advice=True,
+        warnings=[],
+        errors=[],
+        risk_flags=[],
+        metadata={"source": source}
+    )
+
 def build_constraint_aware_scores(
     candidates: List[PortfolioSandboxCandidate],
     policy: PortfolioConstructionPolicy
@@ -20,81 +40,33 @@ def build_constraint_aware_scores(
         if not cand.eligible_for_sandbox:
             continue
 
-        # Sizing score
-        scores.append(ConstraintAwareScore(
-            score_id=create_constraint_aware_score_id(),
-            created_at_utc=_now_str(),
-            symbol=cand.symbol,
-            score_kind=ConstraintAwareScoreKind.SIZING_SCORE,
-            raw_score=cand.sizing_score,
-            normalized_score=None,
-            penalty_applied=None,
-            score_valid=True,
-            research_data_only=True,
-            allocation_sandbox_only=True,
-            not_investment_advice=True,
-            warnings=[],
-            errors=[],
-            risk_flags=[],
-            metadata={"source": "candidate.sizing_score"}
+        scores.append(_create_score(
+            cand.symbol,
+            ConstraintAwareScoreKind.SIZING_SCORE,
+            cand.sizing_score,
+            "candidate.sizing_score"
         ))
 
-        # Risk Budget Score
-        scores.append(ConstraintAwareScore(
-            score_id=create_constraint_aware_score_id(),
-            created_at_utc=_now_str(),
-            symbol=cand.symbol,
-            score_kind=ConstraintAwareScoreKind.RISK_BUDGET_SCORE,
-            raw_score=cand.risk_budget_score,
-            normalized_score=None,
-            penalty_applied=None,
-            score_valid=True,
-            research_data_only=True,
-            allocation_sandbox_only=True,
-            not_investment_advice=True,
-            warnings=[],
-            errors=[],
-            risk_flags=[],
-            metadata={"source": "candidate.risk_budget_score"}
+        scores.append(_create_score(
+            cand.symbol,
+            ConstraintAwareScoreKind.RISK_BUDGET_SCORE,
+            cand.risk_budget_score,
+            "candidate.risk_budget_score"
         ))
 
-        # Robustness Score
-        scores.append(ConstraintAwareScore(
-            score_id=create_constraint_aware_score_id(),
-            created_at_utc=_now_str(),
-            symbol=cand.symbol,
-            score_kind=ConstraintAwareScoreKind.ROBUSTNESS_SCORE,
-            raw_score=cand.robustness_score,
-            normalized_score=None,
-            penalty_applied=None,
-            score_valid=True,
-            research_data_only=True,
-            allocation_sandbox_only=True,
-            not_investment_advice=True,
-            warnings=[],
-            errors=[],
-            risk_flags=[],
-            metadata={"source": "candidate.robustness_score"}
+        scores.append(_create_score(
+            cand.symbol,
+            ConstraintAwareScoreKind.ROBUSTNESS_SCORE,
+            cand.robustness_score,
+            "candidate.robustness_score"
         ))
 
-        # Composite Score
         composite = calculate_candidate_composite_score(cand, policy)
-        scores.append(ConstraintAwareScore(
-            score_id=create_constraint_aware_score_id(),
-            created_at_utc=_now_str(),
-            symbol=cand.symbol,
-            score_kind=ConstraintAwareScoreKind.COMPOSITE_SCORE,
-            raw_score=composite,
-            normalized_score=None,
-            penalty_applied=None,
-            score_valid=True,
-            research_data_only=True,
-            allocation_sandbox_only=True,
-            not_investment_advice=True,
-            warnings=[],
-            errors=[],
-            risk_flags=[],
-            metadata={"source": "policy_weighted_composite"}
+        scores.append(_create_score(
+            cand.symbol,
+            ConstraintAwareScoreKind.COMPOSITE_SCORE,
+            composite,
+            "policy_weighted_composite"
         ))
 
     return normalize_scores(scores)
