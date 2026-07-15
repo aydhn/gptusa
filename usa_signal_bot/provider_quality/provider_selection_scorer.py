@@ -80,6 +80,33 @@ def provider_ranking_decision_from_score(
     return ProviderRankingDecision.DO_NOT_USE_FOR_CURRENT_DATASET
 
 
+def _extract_component_score(
+    quality_score,
+    component_type: DataQualityComponent,
+    default_val: Optional[float] = None,
+) -> float:
+    if quality_score:
+        for c in quality_score.components:
+            if c.component == component_type:
+                return c.score
+    return default_val if default_val is not None else 50.0
+
+
+def _determine_blocked_status_and_warnings(
+    params: ProviderSelectionParams, s_val: float
+) -> tuple[bool, list[str]]:
+    blocked = False
+    warnings = []
+    if s_val < 100:
+        blocked = True
+        warnings.append("Safety score below 100 blocks selection.")
+    if params.quality_score and params.quality_score.blocked:
+        blocked = True
+    if params.trust_profile and params.trust_profile.trust_level.value == "BLOCKED":
+        blocked = True
+    return blocked, warnings
+
+
 def build_provider_selection_score(
     params: ProviderSelectionParams,
 ) -> ProviderSelectionScore:
@@ -90,43 +117,26 @@ def build_provider_selection_score(
 
     q_val = params.quality_score.total_score if params.quality_score else 50.0
     t_val = params.trust_profile.trust_score if params.trust_profile else 50.0
-
-    # Try to extract freshness from quality score components if not provided
-    if params.freshness_score is None and params.quality_score:
-        for c in params.quality_score.components:
-            if c.component == DataQualityComponent.FRESHNESS:
-                freshness_score_val = c.score
-                break
     f_val = (
-        freshness_score_val
-        if "freshness_score_val" in locals()
-        else (params.freshness_score if params.freshness_score is not None else 50.0)
+        params.freshness_score
+        if params.freshness_score is not None
+        else _extract_component_score(
+            params.quality_score, DataQualityComponent.FRESHNESS, 50.0
+        )
     )
-
-    # Try to extract safety from quality score components if not provided
-    if params.safety_score is None and params.quality_score:
-        for c in params.quality_score.components:
-            if c.component == DataQualityComponent.SAFETY_COMPLIANCE:
-                safety_score_val = c.score
-                break
     s_val = (
-        safety_score_val
-        if "safety_score_val" in locals()
-        else (params.safety_score if params.safety_score is not None else 100.0)
+        params.safety_score
+        if params.safety_score is not None
+        else _extract_component_score(
+            params.quality_score, DataQualityComponent.SAFETY_COMPLIANCE, 100.0
+        )
     )
-
     a_val = (
         params.availability_score if params.availability_score is not None else 100.0
     )
 
-    blocked = False
-    if s_val < 100:
-        blocked = True
-        warnings.append("Safety score below 100 blocks selection.")
-    if params.quality_score and params.quality_score.blocked:
-        blocked = True
-    if params.trust_profile and params.trust_profile.trust_level.value == "BLOCKED":
-        blocked = True
+    blocked, _new_warnings = _determine_blocked_status_and_warnings(params, s_val)
+    warnings.extend(_new_warnings)
 
     final_score = final_provider_selection_score(q_val, t_val, f_val, s_val, a_val)
     status = provider_selection_status_from_score(final_score, blocked)
