@@ -11,7 +11,7 @@ def align_strategy_and_benchmark_returns(strategy_return_df: pd.DataFrame, bench
     bm_df["timestamp"] = bm_df["timestamp"].astype(str)
     merged_df = pd.merge(strategy_return_df, bm_df, on="timestamp", how="inner")
     aligned_points = []
-    for _, row in merged_df.iterrows():
+    for row in merged_df.to_dict("records"):
         s_ret = row.get("simple_return")
         b_ret = row.get("benchmark_simple_return")
         exc = (s_ret - b_ret) if s_ret is not None and b_ret is not None else None
