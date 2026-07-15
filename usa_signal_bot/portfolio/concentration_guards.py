@@ -67,6 +67,55 @@ def validate_concentration_guard_config(config: ConcentrationGuardConfig) -> Non
         )
 
 
+
+def _check_group_concentration(
+    weights: dict,
+    guard_type: ConcentrationGuardType,
+    limit_weight: float,
+    breach_message: str,
+) -> List[ConcentrationCheck]:
+    checks = []
+    for key, weight in weights.items():
+        breached = weight > limit_weight
+        checks.append(
+            ConcentrationCheck(
+                guard_type=guard_type,
+                key=key,
+                observed_weight=weight,
+                limit_weight=limit_weight,
+                breached=breached,
+                message=breach_message if breached else "OK",
+            )
+        )
+    return checks
+
+
+def _check_single_candidate_concentration(
+    allocations: List[AllocationResult],
+    limit_weight: float,
+) -> List[ConcentrationCheck]:
+    checks = []
+    for a in allocations:
+        if a.status in [
+            AllocationStatus.ALLOCATED,
+            AllocationStatus.CAPPED,
+            AllocationStatus.REDUCED,
+        ]:
+            breached = a.target_weight > limit_weight
+            if breached:
+                checks.append(
+                    ConcentrationCheck(
+                        guard_type=ConcentrationGuardType.MAX_SINGLE_CANDIDATE_WEIGHT,
+                        key=a.candidate_id,
+                        observed_weight=a.target_weight,
+                        limit_weight=limit_weight,
+                        breached=breached,
+                        message="Breached max single candidate weight",
+                    )
+                )
+    return checks
+
+
 def build_concentration_report(
     allocations: List[AllocationResult],
     config: Optional[ConcentrationGuardConfig] = None,
@@ -81,63 +130,38 @@ def build_concentration_report(
 
     checks = []
 
-    for symbol, weight in calculate_weight_by_symbol(allocations).items():
-        breached = weight > cfg.max_symbol_weight
-        checks.append(
-            ConcentrationCheck(
-                guard_type=ConcentrationGuardType.MAX_SYMBOL_WEIGHT,
-                key=symbol,
-                observed_weight=weight,
-                limit_weight=cfg.max_symbol_weight,
-                breached=breached,
-                message="Breached max symbol weight" if breached else "OK",
-            )
+    checks.extend(
+        _check_group_concentration(
+            calculate_weight_by_symbol(allocations),
+            ConcentrationGuardType.MAX_SYMBOL_WEIGHT,
+            cfg.max_symbol_weight,
+            "Breached max symbol weight",
         )
+    )
 
-    for strategy, weight in calculate_weight_by_strategy(allocations).items():
-        breached = weight > cfg.max_strategy_weight
-        checks.append(
-            ConcentrationCheck(
-                guard_type=ConcentrationGuardType.MAX_STRATEGY_WEIGHT,
-                key=strategy,
-                observed_weight=weight,
-                limit_weight=cfg.max_strategy_weight,
-                breached=breached,
-                message="Breached max strategy weight" if breached else "OK",
-            )
+    checks.extend(
+        _check_group_concentration(
+            calculate_weight_by_strategy(allocations),
+            ConcentrationGuardType.MAX_STRATEGY_WEIGHT,
+            cfg.max_strategy_weight,
+            "Breached max strategy weight",
         )
+    )
 
-    for timeframe, weight in calculate_weight_by_timeframe(allocations).items():
-        breached = weight > cfg.max_timeframe_weight
-        checks.append(
-            ConcentrationCheck(
-                guard_type=ConcentrationGuardType.MAX_TIMEFRAME_WEIGHT,
-                key=timeframe,
-                observed_weight=weight,
-                limit_weight=cfg.max_timeframe_weight,
-                breached=breached,
-                message="Breached max timeframe weight" if breached else "OK",
-            )
+    checks.extend(
+        _check_group_concentration(
+            calculate_weight_by_timeframe(allocations),
+            ConcentrationGuardType.MAX_TIMEFRAME_WEIGHT,
+            cfg.max_timeframe_weight,
+            "Breached max timeframe weight",
         )
+    )
 
-    for a in allocations:
-        if a.status in [
-            AllocationStatus.ALLOCATED,
-            AllocationStatus.CAPPED,
-            AllocationStatus.REDUCED,
-        ]:
-            breached = a.target_weight > cfg.max_single_candidate_weight
-            if breached:
-                checks.append(
-                    ConcentrationCheck(
-                        guard_type=ConcentrationGuardType.MAX_SINGLE_CANDIDATE_WEIGHT,
-                        key=a.candidate_id,
-                        observed_weight=a.target_weight,
-                        limit_weight=cfg.max_single_candidate_weight,
-                        breached=breached,
-                        message="Breached max single candidate weight",
-                    )
-                )
+    checks.extend(
+        _check_single_candidate_concentration(
+            allocations, cfg.max_single_candidate_weight
+        )
+    )
 
     breach_count = sum(1 for c in checks if c.breached)
     review_status = (
