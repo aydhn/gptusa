@@ -9,95 +9,85 @@ from usa_signal_bot.portfolio.construction.phase155_models import (
 )
 from usa_signal_bot.core.enums import PortfolioConstructionRiskFlag
 
+def _create_rule(kind: AllocationSandboxSafetyRuleKind, name: str, expected: bool, observed: bool, rationale: str) -> AllocationSandboxSafetyBoundaryRule:
+    return AllocationSandboxSafetyBoundaryRule(
+        rule_id=create_allocation_sandbox_safety_boundary_rule_id(),
+        created_at_utc=_now_str(),
+        rule_kind=kind,
+        name=name,
+        required=True,
+        passed=(expected == observed),
+        expected_value=expected,
+        observed_value=observed,
+        rationale=rationale,
+        warnings=[],
+        errors=[] if expected == observed else [f"Failed: Expected {expected}, got {observed}"],
+        risk_flags=[],
+        metadata={}
+    )
+
 def build_allocation_sandbox_safety_boundary_rules(context_payload: Optional[Dict[str, Any]] = None) -> List[AllocationSandboxSafetyBoundaryRule]:
     if context_payload is None:
         context_payload = {}
 
-    rules = []
-
-    # helper for creating rule
-    def _rule(kind: AllocationSandboxSafetyRuleKind, name: str, expected: bool, observed: bool, rationale: str):
-        rules.append(AllocationSandboxSafetyBoundaryRule(
-            rule_id=create_allocation_sandbox_safety_boundary_rule_id(),
-            created_at_utc=_now_str(),
-            rule_kind=kind,
-            name=name,
-            required=True,
-            passed=(expected == observed),
-            expected_value=expected,
-            observed_value=observed,
-            rationale=rationale,
-            warnings=[],
-            errors=[] if expected == observed else [f"Failed: Expected {expected}, got {observed}"],
-            risk_flags=[],
-            metadata={}
-        ))
-
-    _rule(
-        AllocationSandboxSafetyRuleKind.RESEARCH_ALLOCATION_SANDBOX_ONLY,
-        "Research Allocation Sandbox Only",
-        True,
-        context_payload.get("research_allocation_sandbox_only", True),
-        "Must be a research sandbox."
-    )
-
-    _rule(
-        AllocationSandboxSafetyRuleKind.READ_ONLY_SIZING_ARTIFACTS,
-        "Read Only Sizing Artifacts",
-        True,
-        context_payload.get("read_only_sizing_artifacts", True),
-        "Must treat phase 154 outputs as read-only."
-    )
-
-    _rule(
-        AllocationSandboxSafetyRuleKind.NO_ACTUAL_TARGET_WEIGHTS,
-        "No Actual Target Weights",
-        False,
-        context_payload.get("actual_target_weights_produced", False),
-        "Must not produce actual target weights."
-    )
-
-    _rule(
-        AllocationSandboxSafetyRuleKind.NO_ACTUAL_ALLOCATION,
-        "No Actual Allocation",
-        False,
-        context_payload.get("actual_allocation_produced", False),
-        "Must not produce actual allocation."
-    )
-
-    _rule(
-        AllocationSandboxSafetyRuleKind.NO_ORDER_SIZE,
-        "No Order Size",
-        False,
-        context_payload.get("order_size_produced", False),
-        "Must not produce order size."
-    )
-
-    _rule(
-        AllocationSandboxSafetyRuleKind.NO_CAPITAL_DEPLOYMENT,
-        "No Capital Deployment",
-        False,
-        context_payload.get("capital_deployment_allowed", False),
-        "Must not allow capital deployment."
-    )
-
-    _rule(
-        AllocationSandboxSafetyRuleKind.NO_LIVE_TRADING,
-        "No Live Trading",
-        False,
-        context_payload.get("live_trading_enabled", False),
-        "Must not allow live trading."
-    )
-
-    _rule(
-        AllocationSandboxSafetyRuleKind.NO_BROKER_EXECUTION,
-        "No Broker Execution",
-        False,
-        context_payload.get("broker_execution_enabled", False),
-        "Must not allow broker execution."
-    )
-
-    return rules
+    return [
+        _create_rule(
+            AllocationSandboxSafetyRuleKind.RESEARCH_ALLOCATION_SANDBOX_ONLY,
+            "Research Allocation Sandbox Only",
+            True,
+            context_payload.get("research_allocation_sandbox_only", True),
+            "Must be a research sandbox."
+        ),
+        _create_rule(
+            AllocationSandboxSafetyRuleKind.READ_ONLY_SIZING_ARTIFACTS,
+            "Read Only Sizing Artifacts",
+            True,
+            context_payload.get("read_only_sizing_artifacts", True),
+            "Must treat phase 154 outputs as read-only."
+        ),
+        _create_rule(
+            AllocationSandboxSafetyRuleKind.NO_ACTUAL_TARGET_WEIGHTS,
+            "No Actual Target Weights",
+            False,
+            context_payload.get("actual_target_weights_produced", False),
+            "Must not produce actual target weights."
+        ),
+        _create_rule(
+            AllocationSandboxSafetyRuleKind.NO_ACTUAL_ALLOCATION,
+            "No Actual Allocation",
+            False,
+            context_payload.get("actual_allocation_produced", False),
+            "Must not produce actual allocation."
+        ),
+        _create_rule(
+            AllocationSandboxSafetyRuleKind.NO_ORDER_SIZE,
+            "No Order Size",
+            False,
+            context_payload.get("order_size_produced", False),
+            "Must not produce order size."
+        ),
+        _create_rule(
+            AllocationSandboxSafetyRuleKind.NO_CAPITAL_DEPLOYMENT,
+            "No Capital Deployment",
+            False,
+            context_payload.get("capital_deployment_allowed", False),
+            "Must not allow capital deployment."
+        ),
+        _create_rule(
+            AllocationSandboxSafetyRuleKind.NO_LIVE_TRADING,
+            "No Live Trading",
+            False,
+            context_payload.get("live_trading_enabled", False),
+            "Must not allow live trading."
+        ),
+        _create_rule(
+            AllocationSandboxSafetyRuleKind.NO_BROKER_EXECUTION,
+            "No Broker Execution",
+            False,
+            context_payload.get("broker_execution_enabled", False),
+            "Must not allow broker execution."
+        )
+    ]
 
 def build_allocation_sandbox_safety_boundary_result(rules: List[AllocationSandboxSafetyBoundaryRule]) -> AllocationSandboxSafetyBoundaryResult:
     passed = all(r.passed for r in rules if r.required)
