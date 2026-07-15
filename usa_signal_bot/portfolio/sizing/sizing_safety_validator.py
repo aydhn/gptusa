@@ -8,19 +8,21 @@ from usa_signal_bot.portfolio.sizing.phase154_models import (
 from usa_signal_bot.portfolio.sizing.sizing_input_resolver import FORBIDDEN_SIZING_COLUMNS
 
 def validate_sizing_context_safety(context: SizingPrototypeContext) -> list[str]:
-    errors = []
-    if context.live_trading_enabled: errors.append("Live trading is enabled.")
-    if context.paper_trading_enabled: errors.append("Paper trading is enabled.")
-    if context.broker_execution_enabled: errors.append("Broker execution is enabled.")
-    if context.actual_position_sizing_executed: errors.append("Actual position sizing executed.")
-    if context.target_weights_produced: errors.append("Target weights produced.")
-    if context.allocation_output_produced: errors.append("Allocation output produced.")
-    if context.capital_deployment_allowed: errors.append("Capital deployment allowed.")
-    if context.deployment_allowed: errors.append("Deployment allowed.")
-    if context.network_used: errors.append("Network fetching is enabled.")
-    if context.paid_api_used: errors.append("Paid API is enabled.")
-    if context.scraping_used: errors.append("Scraping is enabled.")
-    return errors
+    checks = [
+        ("live_trading_enabled", "Live trading is enabled."),
+        ("paper_trading_enabled", "Paper trading is enabled."),
+        ("broker_execution_enabled", "Broker execution is enabled."),
+        ("actual_position_sizing_executed", "Actual position sizing executed."),
+        ("target_weights_produced", "Target weights produced."),
+        ("allocation_output_produced", "Allocation output produced."),
+        ("capital_deployment_allowed", "Capital deployment allowed."),
+        ("deployment_allowed", "Deployment allowed."),
+        ("network_used", "Network fetching is enabled."),
+        ("paid_api_used", "Paid API is enabled."),
+        ("scraping_used", "Scraping is enabled.")
+    ]
+
+    return [msg for attr, msg in checks if getattr(context, attr, False)]
 
 def validate_sizing_policy_safety(policy: SizingPolicy) -> list[str]:
     errors = []
