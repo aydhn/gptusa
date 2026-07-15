@@ -3,19 +3,20 @@ from usa_signal_bot.portfolio.optimization.phase156_models import OptimizerProto
 from usa_signal_bot.portfolio.optimization.optimizer_input_resolver import detect_forbidden_optimizer_columns, detect_forbidden_optimizer_fields
 
 def validate_optimizer_context_safety(context: OptimizerPrototypeContext) -> List[str]:
-    errs = []
-    if context.actual_target_weights_produced: errs.append("actual_target_weights_produced")
-    if context.actual_allocation_produced: errs.append("actual_allocation_produced")
-    if context.actual_position_size_produced: errs.append("actual_position_size_produced")
-    if context.order_size_produced: errs.append("order_size_produced")
-    if context.capital_deployment_allowed: errs.append("capital_deployment_allowed")
-    if context.actual_portfolio_optimization_enabled: errs.append("actual_portfolio_optimization_enabled")
-    if context.broker_execution_enabled: errs.append("broker_execution_enabled")
-    if context.real_order_creation_enabled: errs.append("real_order_creation_enabled")
-    if context.paper_state_mutation_enabled: errs.append("paper_state_mutation_enabled")
-    if context.deployment_allowed: errs.append("deployment_allowed")
-    if context.investment_advice: errs.append("investment_advice")
-    return errs
+    attributes_to_check = [
+        "actual_target_weights_produced",
+        "actual_allocation_produced",
+        "actual_position_size_produced",
+        "order_size_produced",
+        "capital_deployment_allowed",
+        "actual_portfolio_optimization_enabled",
+        "broker_execution_enabled",
+        "real_order_creation_enabled",
+        "paper_state_mutation_enabled",
+        "deployment_allowed",
+        "investment_advice",
+    ]
+    return [attr for attr in attributes_to_check if getattr(context, attr)]
 
 def validate_optimizer_policy_safety(policy: OptimizerPolicy) -> List[str]:
     errs = []
