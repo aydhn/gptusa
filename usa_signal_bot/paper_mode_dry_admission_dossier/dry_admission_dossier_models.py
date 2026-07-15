@@ -449,46 +449,35 @@ def validate_rehearsal_blocker_event(item: PaperModeRehearsalBlockerEvent) -> No
 def validate_dry_admission_gate_dossier(item: DryAdmissionGateDossier) -> None:
     if item.sealed and not item.immutable:
         item.errors.append("Sealed dossier must be immutable")
-    if not item.manual_review_required:
-        item.errors.append("Manual review required flag must be true")
-    if not item.activation_denied:
-        item.errors.append("Activation denied flag must be true")
-    if item.activation_allowed:
-        item.errors.append("Dossier cannot allow activation")
-    if item.admission_allowed:
-        item.errors.append("Dossier cannot allow admission")
-    if item.transition_allowed:
-        item.errors.append("Dossier cannot allow transition")
-    if item.shadow_launch_allowed:
-        item.errors.append("Dossier cannot allow shadow launch")
-    if item.paper_mode_launch_allowed:
-        item.errors.append("Dossier cannot allow paper mode launch")
-    if item.rehearsal_allowed:
-        item.errors.append("Dossier cannot allow rehearsal")
-    if item.paper_mode_rehearsal_allowed:
-        item.errors.append("Dossier cannot allow paper mode rehearsal")
-    if not item.dry_admission_gate_passed:
-        item.errors.append("Dry admission gate passed flag must be true")
-    if not item.board_dossier_valid:
-        item.errors.append("Board dossier valid flag must be true")
-    if not item.acceptance_seal_valid:
-        item.errors.append("Acceptance seal valid flag must be true")
-    if not item.all_writes_blocked:
-        item.errors.append("All writes blocked flag must be true")
-    if item.order_created:
-        item.errors.append("Dossier cannot create order")
-    if item.mutation_detected:
-        item.errors.append("Dossier cannot detect mutation")
-    if item.allows_active_paper:
-        item.errors.append("Dossier cannot allow active paper")
-    if item.allows_broker_execution:
-        item.errors.append("Dossier cannot allow broker execution")
-    if item.allows_paper_state_mutation:
-        item.errors.append("Dossier cannot allow paper state mutation")
-    if item.allows_config_patch:
-        item.errors.append("Dossier cannot allow config patch")
-    if item.allows_telegram_real_send:
-        item.errors.append("Dossier cannot allow telegram real send")
+
+    required_true = [
+        (item.manual_review_required, "Manual review required flag must be true"),
+        (item.activation_denied, "Activation denied flag must be true"),
+        (item.dry_admission_gate_passed, "Dry admission gate passed flag must be true"),
+        (item.board_dossier_valid, "Board dossier valid flag must be true"),
+        (item.acceptance_seal_valid, "Acceptance seal valid flag must be true"),
+        (item.all_writes_blocked, "All writes blocked flag must be true"),
+    ]
+
+    required_false = [
+        (item.activation_allowed, "Dossier cannot allow activation"),
+        (item.admission_allowed, "Dossier cannot allow admission"),
+        (item.transition_allowed, "Dossier cannot allow transition"),
+        (item.shadow_launch_allowed, "Dossier cannot allow shadow launch"),
+        (item.paper_mode_launch_allowed, "Dossier cannot allow paper mode launch"),
+        (item.rehearsal_allowed, "Dossier cannot allow rehearsal"),
+        (item.paper_mode_rehearsal_allowed, "Dossier cannot allow paper mode rehearsal"),
+        (item.order_created, "Dossier cannot create order"),
+        (item.mutation_detected, "Dossier cannot detect mutation"),
+        (item.allows_active_paper, "Dossier cannot allow active paper"),
+        (item.allows_broker_execution, "Dossier cannot allow broker execution"),
+        (item.allows_paper_state_mutation, "Dossier cannot allow paper state mutation"),
+        (item.allows_config_patch, "Dossier cannot allow config patch"),
+        (item.allows_telegram_real_send, "Dossier cannot allow telegram real send"),
+    ]
+
+    item.errors.extend(msg for condition, msg in required_true if not condition)
+    item.errors.extend(msg for condition, msg in required_false if condition)
 
 def validate_dry_admission_dossier_full_review(item: DryAdmissionDossierFullReview) -> None:
     pass
