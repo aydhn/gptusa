@@ -15,45 +15,26 @@ from usa_signal_bot.core.enums import PortfolioConstructionRiskFlag
 def validate_portfolio_construction_context_safety(context: PortfolioConstructionContext) -> List[str]:
     errors = []
 
-    if context.live_trading_enabled:
-        errors.append("Context live_trading_enabled is True.")
-        context.risk_flags.append(PortfolioConstructionRiskFlag.LIVE_TRADING_RISK)
-    if context.paper_trading_enabled:
-        errors.append("Context paper_trading_enabled is True.")
-        context.risk_flags.append(PortfolioConstructionRiskFlag.PAPER_TRADING_RISK)
-    if context.broker_execution_enabled:
-        errors.append("Context broker_execution_enabled is True.")
-        context.risk_flags.append(PortfolioConstructionRiskFlag.BROKER_RISK)
-    if context.real_order_creation_enabled:
-        errors.append("Context real_order_creation_enabled is True.")
-        context.risk_flags.append(PortfolioConstructionRiskFlag.REAL_ORDER_RISK)
-    if context.paper_state_mutation_enabled:
-        errors.append("Context paper_state_mutation_enabled is True.")
-        context.risk_flags.append(PortfolioConstructionRiskFlag.PAPER_MUTATION_RISK)
-    if context.strategy_activation_allowed:
-        errors.append("Context strategy_activation_allowed is True.")
-        context.risk_flags.append(PortfolioConstructionRiskFlag.STRATEGY_ACTIVATION_RISK)
-    if context.actual_target_weights_produced:
-        errors.append("Context actual_target_weights_produced is True.")
-        context.risk_flags.append(PortfolioConstructionRiskFlag.ACTUAL_TARGET_WEIGHT_RISK)
-    if context.actual_portfolio_weights_produced:
-        errors.append("Context actual_portfolio_weights_produced is True.")
-        context.risk_flags.append(PortfolioConstructionRiskFlag.ACTUAL_PORTFOLIO_WEIGHT_RISK)
-    if context.actual_allocation_produced:
-        errors.append("Context actual_allocation_produced is True.")
-        context.risk_flags.append(PortfolioConstructionRiskFlag.ACTUAL_ALLOCATION_RISK)
-    if context.actual_position_size_produced:
-        errors.append("Context actual_position_size_produced is True.")
-        context.risk_flags.append(PortfolioConstructionRiskFlag.ACTUAL_POSITION_SIZE_RISK)
-    if context.order_size_produced:
-        errors.append("Context order_size_produced is True.")
-        context.risk_flags.append(PortfolioConstructionRiskFlag.ORDER_SIZE_RISK)
-    if context.capital_deployment_allowed:
-        errors.append("Context capital_deployment_allowed is True.")
-        context.risk_flags.append(PortfolioConstructionRiskFlag.CAPITAL_DEPLOYMENT_RISK)
-    if context.portfolio_optimization_enabled:
-        errors.append("Context portfolio_optimization_enabled is True.")
-        context.risk_flags.append(PortfolioConstructionRiskFlag.PORTFOLIO_OPTIMIZATION_RISK)
+    checks = [
+        ("live_trading_enabled", PortfolioConstructionRiskFlag.LIVE_TRADING_RISK),
+        ("paper_trading_enabled", PortfolioConstructionRiskFlag.PAPER_TRADING_RISK),
+        ("broker_execution_enabled", PortfolioConstructionRiskFlag.BROKER_RISK),
+        ("real_order_creation_enabled", PortfolioConstructionRiskFlag.REAL_ORDER_RISK),
+        ("paper_state_mutation_enabled", PortfolioConstructionRiskFlag.PAPER_MUTATION_RISK),
+        ("strategy_activation_allowed", PortfolioConstructionRiskFlag.STRATEGY_ACTIVATION_RISK),
+        ("actual_target_weights_produced", PortfolioConstructionRiskFlag.ACTUAL_TARGET_WEIGHT_RISK),
+        ("actual_portfolio_weights_produced", PortfolioConstructionRiskFlag.ACTUAL_PORTFOLIO_WEIGHT_RISK),
+        ("actual_allocation_produced", PortfolioConstructionRiskFlag.ACTUAL_ALLOCATION_RISK),
+        ("actual_position_size_produced", PortfolioConstructionRiskFlag.ACTUAL_POSITION_SIZE_RISK),
+        ("order_size_produced", PortfolioConstructionRiskFlag.ORDER_SIZE_RISK),
+        ("capital_deployment_allowed", PortfolioConstructionRiskFlag.CAPITAL_DEPLOYMENT_RISK),
+        ("portfolio_optimization_enabled", PortfolioConstructionRiskFlag.PORTFOLIO_OPTIMIZATION_RISK),
+    ]
+
+    for attr, flag in checks:
+        if getattr(context, attr, False):
+            errors.append(f"Context {attr} is True.")
+            context.risk_flags.append(flag)
 
     return errors
 
