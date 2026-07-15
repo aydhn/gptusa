@@ -22,41 +22,64 @@ def extract_phase153_readiness_gate(payload: dict[str, Any]) -> dict[str, Any] |
 def backtest_closure_supports_phase153(payload: dict[str, Any]) -> tuple[bool, list[str]]:
     errors = []
 
-    if not payload.get("ready_for_phase153", False):
-        gate = extract_phase153_readiness_gate(payload)
-        if gate and gate.get("ready_for_phase153", False):
-            pass # Gate is OK but top level isn't? We'll rely on the gate if we have to, but top level is safer
-        else:
-            errors.append("Not ready for Phase 153")
-
     gate = extract_phase153_readiness_gate(payload)
-    if not gate or not gate.get("ready_for_phase153", False):
+    gate_ready = gate.get("ready_for_phase153", False) if gate else False
+
+    if not payload.get("ready_for_phase153", False) and not gate_ready:
+        errors.append("Not ready for Phase 153")
+
+    if not gate_ready:
         errors.append("Phase 153 readiness gate is false or missing")
 
     safety = extract_handoff_safety_boundary(payload)
     if not safety or not safety.get("boundary_passed", False):
         errors.append("Handoff safety boundary passed is false or missing")
 
-    if not payload.get("phase153_handoff_contract_built", False) and not (payload.get("context") and payload.get("context").get("phase153_handoff_contract_built")):
-        errors.append("Phase 153 handoff contract built is false or missing")
+    context = payload.get("context")
 
-    if not payload.get("phase153_handoff_package_built", False) and not (payload.get("context") and payload.get("context").get("phase153_handoff_package_built")):
-        errors.append("Phase 153 handoff package built is false or missing")
+    required_built = [
+        ("phase153_handoff_contract_built", "Phase 153 handoff contract built is false or missing"),
+        ("phase153_handoff_package_built", "Phase 153 handoff package built is false or missing")
+    ]
+    for field, msg in required_built:
+        if not payload.get(field, False) and not (context and context.get(field)):
+            errors.append(msg)
 
-    if not payload.get("research_data_only", True) and not (payload.get("context") and payload.get("context").get("research_data_only", True)):
+    if not payload.get("research_data_only", True) and not (context and context.get("research_data_only", True)):
         errors.append("Research data only must be true")
 
-    if payload.get("portfolio_construction_executed", False) or payload.get("position_sizing_executed", False) or payload.get("target_weights_produced", False) or payload.get("allocation_output_produced", False):
-        errors.append("Actual portfolio construction or sizing fields are set to true")
+    forbidden_groups = [
+        (
+            [
+                "portfolio_construction_executed", "position_sizing_executed",
+                "target_weights_produced", "allocation_output_produced"
+            ],
+            "Actual portfolio construction or sizing fields are set to true"
+        ),
+        (
+            [
+                "live_trading_enabled", "paper_trading_enabled", "broker_execution_enabled",
+                "real_order_creation_enabled", "paper_state_mutation_enabled",
+                "telegram_real_send_enabled", "deployment_allowed", "network_used",
+                "dashboard_started", "daemon_started", "scheduler_enabled"
+            ],
+            "Live trading or similar dangerous fields are set to true"
+        ),
+        (
+            [
+                "produces_live_signal", "produces_order_decision", "produces_portfolio_weights"
+            ],
+            "Signal producing fields are set to true"
+        ),
+        (
+            ["investment_advice"],
+            "Investment advice is set to true"
+        )
+    ]
 
-    if payload.get("live_trading_enabled", False) or payload.get("paper_trading_enabled", False) or payload.get("broker_execution_enabled", False) or payload.get("real_order_creation_enabled", False) or payload.get("paper_state_mutation_enabled", False) or payload.get("telegram_real_send_enabled", False) or payload.get("deployment_allowed", False) or payload.get("network_used", False) or payload.get("dashboard_started", False) or payload.get("daemon_started", False) or payload.get("scheduler_enabled", False):
-        errors.append("Live trading or similar dangerous fields are set to true")
-
-    if payload.get("produces_live_signal", False) or payload.get("produces_order_decision", False) or payload.get("produces_portfolio_weights", False):
-        errors.append("Signal producing fields are set to true")
-
-    if payload.get("investment_advice", False):
-        errors.append("Investment advice is set to true")
+    for fields, msg in forbidden_groups:
+        if any(payload.get(f, False) for f in fields):
+            errors.append(msg)
 
     return len(errors) == 0, errors
 
