@@ -14,20 +14,20 @@ def compute_feature_correlation_pairs(df: pd.DataFrame, columns: list[str], thre
         return []
 
     corr_matrix = df[valid_cols].corr(method='pearson')
+    i_indices, j_indices = np.triu_indices(len(valid_cols), k=1)
+    vals = corr_matrix.values[i_indices, j_indices]
+    mask = ~np.isnan(vals) & (np.abs(vals) >= threshold)
     pairs = []
-
-    for i in range(len(valid_cols)):
-        for j in range(i + 1, len(valid_cols)):
-            col1 = valid_cols[i]
-            col2 = valid_cols[j]
-            val = corr_matrix.iloc[i, j]
-            if pd.notna(val) and abs(val) >= threshold:
-                pairs.append({
-                    "feature_1": col1,
-                    "feature_2": col2,
-                    "correlation": float(val),
-                    "abs_correlation": float(abs(val))
-                })
+    for idx in np.where(mask)[0]:
+        i = i_indices[idx]
+        j = j_indices[idx]
+        val = vals[idx]
+        pairs.append({
+            "feature_1": valid_cols[i],
+            "feature_2": valid_cols[j],
+            "correlation": float(val),
+            "abs_correlation": float(abs(val))
+        })
     return pairs
 
 def compute_redundancy_score(high_redundancy_pairs: list[dict[str, Any]], feature_count: int) -> float:
