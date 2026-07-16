@@ -18,9 +18,9 @@ def build_factor_lineage_metadata(factor: FactorDefinition, source_features: lis
 
 def validate_feature_lineage_metadata(payload: dict[str, Any]) -> list[str]:
     errors = []
-    unsafe_keys = ["secret", "token", "password", "key", "api_key", "broker_order_id", "signal", "order"]
     for k in payload.keys():
-        if any(u in k.lower() for u in unsafe_keys):
+        k_lower = k.lower()
+        if "secret" in k_lower or "token" in k_lower or "password" in k_lower or "key" in k_lower or "api_key" in k_lower or "broker_order_id" in k_lower or "signal" in k_lower or "order" in k_lower:
             errors.append(f"Unsafe key in lineage metadata: {k}")
     return errors
 
