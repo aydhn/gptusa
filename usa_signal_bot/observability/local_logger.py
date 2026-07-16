@@ -2,6 +2,7 @@ import json
 import logging
 from pathlib import Path
 from typing import Any, Dict, Optional
+from dataclasses import dataclass
 import datetime
 import traceback
 
@@ -57,6 +58,15 @@ def read_observability_events_jsonl(path: Path, limit: Optional[int] = None) -> 
                 break
     return res
 
+
+@dataclass
+class LogEventData:
+    source: str
+    message: str
+    severity: ObservabilitySeverity
+    event_type: ObservabilityEventType
+    payload: Optional[Dict[str, Any]] = None
+
 class LocalObservabilityLogger:
     def __init__(self, log_dir: Path, jsonl_filename: str = "events.jsonl", text_filename: str = "events.log"):
         self.log_dir = log_dir
@@ -76,42 +86,41 @@ class LocalObservabilityLogger:
         append_text_log(self._text_path, sanitize_log_text(msg))
         return self._jsonl_path
 
-    def _create_and_log(self, source: str, message: str, severity: ObservabilitySeverity,
-                        event_type: ObservabilityEventType, payload: Optional[Dict[str, Any]] = None) -> ObservabilityEvent:
+    def _create_and_log(self, data: LogEventData) -> ObservabilityEvent:
         event = ObservabilityEvent(
             event_id=create_observability_event_id(),
-            event_type=event_type,
-            severity=severity,
+            event_type=data.event_type,
+            severity=data.severity,
             timestamp_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
-            source=source,
-            message=message,
-            payload=payload or {}
+            source=data.source,
+            message=data.message,
+            payload=data.payload or {}
         )
         self.log_event(event)
         return event
 
     def info(self, source: str, message: str, payload: Optional[Dict[str, Any]] = None) -> ObservabilityEvent:
-        return self._create_and_log(source, message, ObservabilitySeverity.INFO, ObservabilityEventType.CUSTOM, payload)
+        return self._create_and_log(LogEventData(source=source, message=message, severity=ObservabilitySeverity.INFO, event_type=ObservabilityEventType.CUSTOM, payload=payload))
 
     def warning(self, source: str, message: str, payload: Optional[Dict[str, Any]] = None) -> ObservabilityEvent:
-        return self._create_and_log(source, message, ObservabilitySeverity.WARNING, ObservabilityEventType.WARNING, payload)
+        return self._create_and_log(LogEventData(source=source, message=message, severity=ObservabilitySeverity.WARNING, event_type=ObservabilityEventType.WARNING, payload=payload))
 
     def error(self, source: str, message: str, payload: Optional[Dict[str, Any]] = None) -> ObservabilityEvent:
-        return self._create_and_log(source, message, ObservabilitySeverity.ERROR, ObservabilityEventType.ERROR, payload)
+        return self._create_and_log(LogEventData(source=source, message=message, severity=ObservabilitySeverity.ERROR, event_type=ObservabilityEventType.ERROR, payload=payload))
 
     def command_started(self, command: str, payload: Optional[Dict[str, Any]] = None) -> ObservabilityEvent:
-        return self._create_and_log("cli", f"Command started: {command}", ObservabilitySeverity.INFO, ObservabilityEventType.COMMAND_STARTED, payload)
+        return self._create_and_log(LogEventData(source="cli", message=f"Command started: {command}", severity=ObservabilitySeverity.INFO, event_type=ObservabilityEventType.COMMAND_STARTED, payload=payload))
 
     def command_completed(self, command: str, duration_seconds: Optional[float] = None, payload: Optional[Dict[str, Any]] = None) -> ObservabilityEvent:
         p = payload or {}
         if duration_seconds is not None:
             p["duration_seconds"] = duration_seconds
-        return self._create_and_log("cli", f"Command completed: {command}", ObservabilitySeverity.INFO, ObservabilityEventType.COMMAND_COMPLETED, p)
+        return self._create_and_log(LogEventData(source="cli", message=f"Command completed: {command}", severity=ObservabilitySeverity.INFO, event_type=ObservabilityEventType.COMMAND_COMPLETED, payload=p))
 
     def command_failed(self, command: str, error: str, payload: Optional[Dict[str, Any]] = None) -> ObservabilityEvent:
         p = payload or {}
         p["error"] = error
-        return self._create_and_log("cli", f"Command failed: {command}", ObservabilitySeverity.ERROR, ObservabilityEventType.COMMAND_FAILED, p)
+        return self._create_and_log(LogEventData(source="cli", message=f"Command failed: {command}", severity=ObservabilitySeverity.ERROR, event_type=ObservabilityEventType.COMMAND_FAILED, payload=p))
 
     def jsonl_log_path(self) -> Path:
         return self._jsonl_path
