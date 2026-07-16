@@ -2,14 +2,14 @@ import pytest
 import json
 from pathlib import Path
 from usa_signal_bot.core.enums import ResourceProfileScope
-from usa_signal_bot.profiling.profiling_audit import create_profiling_audit_event, write_profiling_audit_jsonl, read_profiling_audit_jsonl
+from usa_signal_bot.profiling.profiling_audit import create_profiling_audit_event, write_profiling_audit_jsonl, read_profiling_audit_jsonl, ProfilingAuditParams
 
 def test_profiling_audit_creation_and_redaction():
-    event = create_profiling_audit_event("TEST", "SUCCESS", "msg", metadata={"api_key": "123"})
+    event = create_profiling_audit_event(ProfilingAuditParams(event_type="TEST", status="SUCCESS", message="msg", metadata={"api_key": "123"}))
     assert event.metadata["api_key"] == "***REDACTED***"
 
 def test_profiling_audit_io(tmp_path):
-    event = create_profiling_audit_event("TEST", "SUCCESS", "msg", scope=ResourceProfileScope.SCAN)
+    event = create_profiling_audit_event(ProfilingAuditParams(event_type="TEST", status="SUCCESS", message="msg", scope=ResourceProfileScope.SCAN))
     path = tmp_path / "audit.jsonl"
 
     write_profiling_audit_jsonl(path, [event])

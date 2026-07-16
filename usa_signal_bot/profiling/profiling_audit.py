@@ -18,16 +18,20 @@ class ProfilingAuditEvent:
     message: str
     metadata: dict[str, Any] = field(default_factory=dict)
 
-def create_profiling_audit_event(
-    event_type: str,
-    status: str,
-    message: str,
-    scope: ResourceProfileScope | None = None,
-    profile_id: str | None = None,
+@dataclass
+class ProfilingAuditParams:
+    event_type: str
+    status: str
+    message: str
+    scope: ResourceProfileScope | None = None
+    profile_id: str | None = None
     metadata: dict[str, Any] | None = None
+
+def create_profiling_audit_event(
+    params: ProfilingAuditParams
 ) -> ProfilingAuditEvent:
 
-    safe_metadata = dict(metadata) if metadata else {}
+    safe_metadata = dict(params.metadata) if params.metadata else {}
     for key in ["token", "secret", "api_key", "password"]:
         for k in list(safe_metadata.keys()):
             if key in k.lower():
@@ -36,11 +40,11 @@ def create_profiling_audit_event(
     return ProfilingAuditEvent(
         event_id=f"prof_audit_{uuid.uuid4().hex[:12]}",
         timestamp_utc=current_utc_iso(),
-        event_type=event_type,
-        status=status,
-        scope=scope,
-        profile_id=profile_id,
-        message=message,
+        event_type=params.event_type,
+        status=params.status,
+        scope=params.scope,
+        profile_id=params.profile_id,
+        message=params.message,
         metadata=safe_metadata
     )
 
