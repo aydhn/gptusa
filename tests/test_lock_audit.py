@@ -2,13 +2,13 @@ import tempfile
 from pathlib import Path
 
 from usa_signal_bot.scheduler.lock_audit import (
-    create_lock_audit_event, write_lock_audit_jsonl, read_lock_audit_jsonl,
+    create_lock_audit_event, LockAuditRequest, write_lock_audit_jsonl, read_lock_audit_jsonl,
     lock_audit_summary, lock_audit_summary_to_text
 )
 from usa_signal_bot.core.enums import RunLockScope
 
 def test_lock_audit_event():
-    evt = create_lock_audit_event("ACQUIRE", RunLockScope.SCAN, "SUCCESS", "lock1", "run1", "ok")
+    evt = create_lock_audit_event(LockAuditRequest(event_type="ACQUIRE", scope=RunLockScope.SCAN, status="SUCCESS", lock_id="lock1", owner_run_id="run1", message="ok"))
     assert evt.event_type == "ACQUIRE"
     assert evt.scope == RunLockScope.SCAN
     assert evt.status == "SUCCESS"
@@ -16,7 +16,7 @@ def test_lock_audit_event():
 def test_write_read_lock_audit():
     with tempfile.TemporaryDirectory() as td:
         p = Path(td) / "audit.jsonl"
-        evt = create_lock_audit_event("ACQUIRE", RunLockScope.SCAN, "SUCCESS")
+        evt = create_lock_audit_event(LockAuditRequest(event_type="ACQUIRE", scope=RunLockScope.SCAN, status="SUCCESS"))
 
         write_lock_audit_jsonl(p, [evt])
         records = read_lock_audit_jsonl(p)
