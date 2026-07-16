@@ -12,6 +12,7 @@ def test_generate_changelog_entry_for_release(tmp_path):
 
     entry = generate_changelog_entry_for_release(v, [sum_path])
     assert "Added feature A" in entry.changes[0] or "Added feature A" in entry.changes[1]
+    assert "Fixed bug B" in entry.changes[0] or "Fixed bug B" in entry.changes[1]
 
     d = changelog_entry_to_dict(entry)
     assert d["version"] == "1.0.0"
