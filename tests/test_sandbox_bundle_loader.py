@@ -2,7 +2,7 @@ import pytest
 import json
 from pathlib import Path
 from usa_signal_bot.release_sandbox.bundle_loader import (
-    load_bundle_for_sandbox, load_bundle_manifest_for_sandbox, bundle_loader_to_text
+    load_bundle_for_sandbox, load_bundle_manifest_for_sandbox, bundle_loader_to_text, load_bundle_validation_for_sandbox
 )
 
 def test_load_bundle_missing_path(tmp_path):
@@ -29,3 +29,13 @@ def test_load_bundle_valid(tmp_path):
     txt = bundle_loader_to_text(res)
     assert "ID=b1" in txt
     assert "Artifacts=1" in txt
+
+def test_load_bundle_validation_for_sandbox(tmp_path):
+    bundle_path = tmp_path / "bundle.json"
+    bundle_data = {
+        "validation": {"status": "PASS"}
+    }
+    with open(bundle_path, "w") as f:
+        json.dump(bundle_data, f)
+    res = load_bundle_validation_for_sandbox(bundle_path)
+    assert res == {"status": "PASS"}
