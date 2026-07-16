@@ -40,7 +40,7 @@ class MeanReversionRuleStrategy(Strategy):
             ]
         )
 
-    def _build_definition(self, min_score: float, rsi_low: float, rsi_high: float, percent_b_low: float, percent_b_high: float) -> RuleStrategyDefinition:
+    def _build_definition(self, params: Dict[str, Any]) -> RuleStrategyDefinition:
         return RuleStrategyDefinition(
             name="mean_reversion_rule",
             family=RuleStrategyFamily.MEAN_REVERSION,
@@ -50,8 +50,8 @@ class MeanReversionRuleStrategy(Strategy):
                     name="bollinger_extreme",
                     feature_name="close_bb_percent_b_20_2.0",
                     operator=RuleConditionOperator.OUTSIDE,
-                    lower=percent_b_low,
-                    upper=percent_b_high,
+                    lower=params.get("percent_b_low", 0.20),
+                    upper=params.get("percent_b_high", 0.80),
                     weight=40.0,
                     description="Bollinger %B is at extremes"
                 ),
@@ -59,8 +59,8 @@ class MeanReversionRuleStrategy(Strategy):
                     name="rsi_extreme",
                     feature_name="close_rsi_14",
                     operator=RuleConditionOperator.OUTSIDE,
-                    lower=rsi_low,
-                    upper=rsi_high,
+                    lower=params.get("rsi_low", 35.0),
+                    upper=params.get("rsi_high", 65.0),
                     weight=30.0,
                     description="RSI is at extremes"
                 ),
@@ -77,16 +77,14 @@ class MeanReversionRuleStrategy(Strategy):
             required_features=self.required_features(),
             default_action=SignalAction.WATCH,
             min_passed_conditions=2,
-            min_normalized_score=min_score
+            min_normalized_score=params.get("min_score", 55.0)
         )
 
     def generate_signals(self, batch: StrategyInputBatch, params: Optional[Dict[str, Any]] = None) -> List[StrategySignal]:
         self.assert_no_execution()
         p = self.validate_params(params)
 
-        definition = self._build_definition(
-            p["min_score"], p["rsi_low"], p["rsi_high"], p["percent_b_low"], p["percent_b_high"]
-        )
+        definition = self._build_definition(p)
         signals = []
 
         for frame in batch.frames:
