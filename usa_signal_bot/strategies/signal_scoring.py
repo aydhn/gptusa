@@ -213,38 +213,21 @@ def _determine_confidence_bucket(final_confidence: float) -> SignalConfidenceBuc
 
 def _build_scoring_result(
     signal: StrategySignal,
-    total_clamped: float,
-    components: Dict[str, float],
-    penalties: Dict[str, float],
-    bonuses: Dict[str, float],
-    final_confidence: float,
-    bucket: SignalConfidenceBucket,
-    notes: List[str],
+    breakdown: SignalScoreBreakdown,
     accepted: bool,
     warnings: List[str],
     errors: List[str],
 ) -> SignalScoringResult:
     # Update the signal (create a copy)
     scored_signal = copy.deepcopy(signal)
-    scored_signal.score = total_clamped
-    scored_signal.confidence = final_confidence
-    scored_signal.confidence_bucket = bucket
+    scored_signal.score = breakdown.total_score
+    scored_signal.confidence = breakdown.final_confidence
+    scored_signal.confidence_bucket = breakdown.confidence_bucket
     scored_signal.score_breakdown = {
-        "components": components,
-        "penalties": penalties,
-        "bonuses": bonuses,
+        "components": breakdown.components,
+        "penalties": breakdown.penalties,
+        "bonuses": breakdown.bonuses,
     }
-
-    breakdown = SignalScoreBreakdown(
-        signal_id=signal.signal_id,
-        total_score=total_clamped,
-        components=components,
-        penalties=penalties,
-        bonuses=bonuses,
-        final_confidence=final_confidence,
-        confidence_bucket=bucket,
-        notes=notes,
-    )
 
     return SignalScoringResult(
         original_signal=signal,
@@ -285,15 +268,20 @@ def score_signal(
 
         accepted = total_clamped >= config.min_score_for_review
 
+        breakdown = SignalScoreBreakdown(
+            signal_id=signal.signal_id,
+            total_score=total_clamped,
+            components=components,
+            penalties=penalties,
+            bonuses=bonuses,
+            final_confidence=final_confidence,
+            confidence_bucket=bucket,
+            notes=notes,
+        )
+
         return _build_scoring_result(
             signal,
-            total_clamped,
-            components,
-            penalties,
-            bonuses,
-            final_confidence,
-            bucket,
-            notes,
+            breakdown,
             accepted,
             warnings,
             errors,
