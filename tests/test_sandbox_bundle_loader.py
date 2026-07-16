@@ -9,6 +9,7 @@ def test_load_bundle_missing_path(tmp_path):
     bundle_path = tmp_path / "missing.json"
     res = load_bundle_for_sandbox(bundle_path)
     assert "error" in res
+    assert res["error"] == "Bundle not found."
 
 def test_load_bundle_valid(tmp_path):
     bundle_path = tmp_path / "bundle.json"
@@ -33,3 +34,11 @@ def test_load_bundle_valid(tmp_path):
     txt = bundle_loader_to_text(res)
     assert "ID=b1" in txt
     assert "Artifacts=1" in txt
+
+def test_load_bundle_invalid_json(tmp_path):
+    bundle_path = tmp_path / "invalid.json"
+    with open(bundle_path, "w") as f:
+        f.write("{invalid_json}")
+
+    with pytest.raises(json.JSONDecodeError):
+        load_bundle_for_sandbox(bundle_path)
