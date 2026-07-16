@@ -4,7 +4,7 @@ from usa_signal_bot.strategies.strategy_interface import Strategy
 from usa_signal_bot.strategies.strategy_metadata import StrategyMetadata
 from usa_signal_bot.strategies.strategy_params import StrategyParameterSchema, StrategyParameterSpec
 from usa_signal_bot.strategies.strategy_input import StrategyInputBatch
-from usa_signal_bot.strategies.signal_contract import StrategySignal, create_watch_signal
+from usa_signal_bot.strategies.signal_contract import StrategySignal, create_watch_signal, WatchSignalParams
 from usa_signal_bot.core.enums import StrategyCategory, StrategyStatus, SignalAction
 
 class TrendFollowingSkeletonStrategy(Strategy):
@@ -54,14 +54,14 @@ class TrendFollowingSkeletonStrategy(Strategy):
 
                 if fast_val is not None and slow_val is not None:
                     if fast_val > slow_val:
-                        sig = create_watch_signal(
+                        sig = create_watch_signal(WatchSignalParams(
                             strategy_name=self.metadata.name,
                             symbol=frame.symbol,
                             timeframe=frame.timeframe,
                             timestamp_utc=last_row.get("timestamp_utc", now),
                             reason=f"{fast_col} ({fast_val:.2f}) > {slow_col} ({slow_val:.2f})",
                             confidence=conf
-                        )
+                        ))
                         sig.feature_snapshot = {fast_col: fast_val, slow_col: slow_val}
                         signals.append(sig)
 
@@ -115,14 +115,14 @@ class MeanReversionSkeletonStrategy(Strategy):
 
                 if pb_val is not None:
                     if pb_val < lower or pb_val > upper:
-                        sig = create_watch_signal(
+                        sig = create_watch_signal(WatchSignalParams(
                             strategy_name=self.metadata.name,
                             symbol=frame.symbol,
                             timeframe=frame.timeframe,
                             timestamp_utc=last_row.get("timestamp_utc", now),
                             reason=f"{pb_col} ({pb_val:.2f}) outside bounds ({lower}-{upper})",
                             confidence=conf
-                        )
+                        ))
                         sig.feature_snapshot = {pb_col: pb_val}
                         signals.append(sig)
 
@@ -175,14 +175,14 @@ class MomentumSkeletonStrategy(Strategy):
 
                 if rsi_val is not None and roc_val is not None:
                     if rsi_val > 70 or rsi_val < 30 or roc_val > 5 or roc_val < -5:
-                        sig = create_watch_signal(
+                        sig = create_watch_signal(WatchSignalParams(
                             strategy_name=self.metadata.name,
                             symbol=frame.symbol,
                             timeframe=frame.timeframe,
                             timestamp_utc=last_row.get("timestamp_utc", now),
                             reason=f"{rsi_col}={rsi_val:.2f}, {roc_col}={roc_val:.2f}",
                             confidence=conf
-                        )
+                        ))
                         sig.feature_snapshot = {rsi_col: rsi_val, roc_col: roc_val}
                         signals.append(sig)
 
@@ -235,14 +235,14 @@ class VolatilityBreakoutSkeletonStrategy(Strategy):
 
                 if comp_val is not None and dist_val is not None:
                     if comp_val > 0 and abs(dist_val) > 0.02:
-                        sig = create_watch_signal(
+                        sig = create_watch_signal(WatchSignalParams(
                             strategy_name=self.metadata.name,
                             symbol=frame.symbol,
                             timeframe=frame.timeframe,
                             timestamp_utc=last_row.get("timestamp_utc", now),
                             reason=f"Compression={comp_val:.2f}, Breakout Dist={dist_val:.2%}",
                             confidence=conf
-                        )
+                        ))
                         sig.feature_snapshot = {comp_col: comp_val, dist_col: dist_val}
                         signals.append(sig)
 

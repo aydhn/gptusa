@@ -1,6 +1,6 @@
 import pytest
 from usa_signal_bot.core.enums import SignalAction, SignalConfidenceBucket
-from usa_signal_bot.strategies.signal_contract import StrategySignal, validate_strategy_signal, confidence_to_bucket, signal_to_dict, signal_to_text, create_watch_signal, create_signal_id
+from usa_signal_bot.strategies.signal_contract import StrategySignal, validate_strategy_signal, confidence_to_bucket, signal_to_dict, signal_to_text, create_watch_signal, create_signal_id, WatchSignalParams
 from usa_signal_bot.core.exceptions import SignalContractError
 
 def test_signal_contract_valid():
@@ -41,7 +41,7 @@ def test_signal_contract_invalid_confidence():
 def test_signal_utils():
     assert confidence_to_bucket(0.9) == SignalConfidenceBucket.VERY_HIGH
 
-    sig = create_watch_signal("test", "AAPL", "1d", "2023-01-01T00:00:00Z", "test reason", 0.6)
+    sig = create_watch_signal(WatchSignalParams("test", "AAPL", "1d", "2023-01-01T00:00:00Z", "test reason", 0.6))
     assert sig.action == SignalAction.WATCH
     assert sig.confidence == 0.6
 

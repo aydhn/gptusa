@@ -5,6 +5,15 @@ from usa_signal_bot.core.enums import SignalAction, SignalConfidenceBucket, Sign
 from usa_signal_bot.core.exceptions import SignalContractError
 
 @dataclass
+class WatchSignalParams:
+    strategy_name: str
+    symbol: str
+    timeframe: str
+    timestamp_utc: str
+    reason: str
+    confidence: float = 0.5
+
+@dataclass
 class StrategySignal:
     signal_id: str
     strategy_name: str
@@ -122,19 +131,19 @@ def signal_to_text(signal: StrategySignal) -> str:
             lines.append(f"  Risk Flags: {', '.join(flags)}")
     return "\n".join(lines)
 
-def create_watch_signal(strategy_name: str, symbol: str, timeframe: str, timestamp_utc: str, reason: str, confidence: float = 0.5) -> StrategySignal:
-    signal_id = create_signal_id(strategy_name, symbol, timeframe, timestamp_utc)
+def create_watch_signal(params: WatchSignalParams) -> StrategySignal:
+    signal_id = create_signal_id(params.strategy_name, params.symbol, params.timeframe, params.timestamp_utc)
     return StrategySignal(
         signal_id=signal_id,
-        strategy_name=strategy_name,
-        symbol=symbol,
-        timeframe=timeframe,
-        timestamp_utc=timestamp_utc,
+        strategy_name=params.strategy_name,
+        symbol=params.symbol,
+        timeframe=params.timeframe,
+        timestamp_utc=params.timestamp_utc,
         action=SignalAction.WATCH,
-        confidence=confidence,
-        confidence_bucket=confidence_to_bucket(confidence),
-        score=confidence * 100.0,
-        reasons=[reason, "Candidate only, not for execution"],
+        confidence=params.confidence,
+        confidence_bucket=confidence_to_bucket(params.confidence),
+        score=params.confidence * 100.0,
+        reasons=[params.reason, "Candidate only, not for execution"],
         feature_snapshot={},
         risk_flags=[SignalRiskFlag.NONE],
         lifecycle_status=SignalLifecycleStatus.CREATED
