@@ -22,23 +22,27 @@ class LockAuditEvent:
     message: str
     metadata: Dict[str, Any] = field(default_factory=dict)
 
-def create_lock_audit_event(
-    event_type: str,
-    scope: RunLockScope,
-    status: str,
-    lock_id: Optional[str] = None,
-    owner_run_id: Optional[str] = None,
+@dataclass
+class LockAuditRequest:
+    event_type: str
+    scope: RunLockScope
+    status: str
+    lock_id: Optional[str] = None
+    owner_run_id: Optional[str] = None
     message: str = ""
+
+def create_lock_audit_event(
+    request: LockAuditRequest
 ) -> LockAuditEvent:
     return LockAuditEvent(
         event_id=f"audit_{uuid.uuid4().hex[:8]}",
         timestamp_utc=datetime.now(timezone.utc).isoformat(),
-        event_type=event_type,
-        scope=scope,
-        status=status,
-        lock_id=lock_id,
-        owner_run_id=owner_run_id,
-        message=message
+        event_type=request.event_type,
+        scope=request.scope,
+        status=request.status,
+        lock_id=request.lock_id,
+        owner_run_id=request.owner_run_id,
+        message=request.message
     )
 
 def lock_audit_event_to_dict(event: LockAuditEvent) -> dict:
