@@ -34,18 +34,13 @@ from usa_signal_bot.transaction_costs.volatility_penalty import (
 )
 
 
-def build_transaction_cost_breakdown(
+def _calculate_fee_proxy(
     input_payload: TransactionCostInput,
-    schedule: FeeScheduleProxy | None = None,
-    curve: SlippageCurve | None = None,
-) -> TransactionCostBreakdown:
-
-    warnings = []
-    components_bps = {}
-    components_usd = {}
-
-    # 1. Fee Proxy
-    fee_usd = 0.0
+    schedule: FeeScheduleProxy | None,
+    components_bps: dict,
+    components_usd: dict,
+    warnings: list
+) -> None:
     if schedule:
         fee_dict = estimate_total_fee_proxy_usd(
             input_payload.side,
@@ -78,7 +73,12 @@ def build_transaction_cost_breakdown(
     else:
         warnings.append("No fee schedule provided, using 0 fee.")
 
-    # 2. Spread Cost
+
+def _calculate_spread_cost(
+    input_payload: TransactionCostInput,
+    components_bps: dict,
+    components_usd: dict
+) -> None:
     spread_bps = estimate_spread_cost_bps(
         input_payload.spread_proxy_bps, input_payload.side
     )
@@ -88,7 +88,12 @@ def build_transaction_cost_breakdown(
         if spread_usd is not None:
             components_usd[TransactionCostComponent.SPREAD_COST.value] = spread_usd
 
-    # 3. Participation Slippage Cost
+
+def _calculate_participation_cost(
+    input_payload: TransactionCostInput,
+    components_bps: dict,
+    components_usd: dict
+) -> None:
     part_bps = estimate_participation_cost_bps(input_payload.participation_rate_pct)
     if part_bps is not None:
         components_bps[TransactionCostComponent.PARTICIPATION_PENALTY.value] = part_bps
@@ -98,7 +103,12 @@ def build_transaction_cost_breakdown(
                 part_usd
             )
 
-    # 4. Volatility Penalty
+
+def _calculate_volatility_penalty(
+    input_payload: TransactionCostInput,
+    components_bps: dict,
+    components_usd: dict
+) -> None:
     vol_bps = estimate_volatility_penalty_bps(input_payload.atr_pct)
     if vol_bps is not None:
         components_bps[TransactionCostComponent.VOLATILITY_PENALTY.value] = vol_bps
@@ -106,6 +116,21 @@ def build_transaction_cost_breakdown(
             components_usd[TransactionCostComponent.VOLATILITY_PENALTY.value] = (
                 input_payload.notional_usd * (vol_bps / 10000.0)
             )
+
+def build_transaction_cost_breakdown(
+    input_payload: TransactionCostInput,
+    schedule: FeeScheduleProxy | None = None,
+    curve: SlippageCurve | None = None,
+) -> TransactionCostBreakdown:
+
+    warnings = []
+    components_bps = {}
+    components_usd = {}
+
+    _calculate_fee_proxy(input_payload, schedule, components_bps, components_usd, warnings)
+    _calculate_spread_cost(input_payload, components_bps, components_usd)
+    _calculate_participation_cost(input_payload, components_bps, components_usd)
+    _calculate_volatility_penalty(input_payload, components_bps, components_usd)
 
     total_bps = sum(components_bps.values()) if components_bps else None
 
