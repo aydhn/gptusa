@@ -18,6 +18,16 @@ from usa_signal_bot.core.enums import (
 )
 
 @dataclass
+class DryAdmissionDossierAuditParams:
+    entity_type: str
+    entity_id: str
+    action: str
+    rationale: str
+    decision: str | None = None
+    evidence_refs: list[str] | None = None
+    risk_flags: list['DryAdmissionDossierRiskFlag'] | None = None
+
+@dataclass
 class DryAdmissionDossierEvidenceItem:
     evidence_id: str
     created_at_utc: str
