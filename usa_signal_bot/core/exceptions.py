@@ -1004,3 +1004,6 @@ class TradeLedgerError(USASignalBotError):
 
 class BasketReplayError(USASignalBotError):
     pass
+
+class AttributionValidationError(Exception):
+    pass

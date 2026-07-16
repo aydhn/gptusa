@@ -4633,3 +4633,30 @@ class DataRepairActionType(str, Enum):
     NEGATIVE_VOLUME = "NEGATIVE_VOLUME"
     ZERO_VOLUME = "ZERO_VOLUME"
     UNKNOWN = "UNKNOWN"
+
+
+class AttributionReportType(str, Enum):
+    FULL_ATTRIBUTION_REVIEW = 'FULL_ATTRIBUTION_REVIEW'
+    PERFORMANCE_ATTRIBUTION = 'PERFORMANCE_ATTRIBUTION'
+
+class AttributionDimension(str, Enum):
+    SYMBOL = 'SYMBOL'
+
+class ContributionDirection(str, Enum):
+    POSITIVE = 'POSITIVE'
+    NEGATIVE = 'NEGATIVE'
+    UNKNOWN = 'UNKNOWN'
+
+class AttributionQuality(str, Enum):
+    HIGH = 'HIGH'
+    LOW = 'LOW'
+    UNKNOWN = 'UNKNOWN'
+
+class SignalContributionStatus(str, Enum):
+    ACTIVE = 'ACTIVE'
+    UNKNOWN = 'UNKNOWN'
+
+class RiskContributionType(str, Enum):
+    MARKET = 'MARKET'
+
+    UNKNOWN = 'UNKNOWN'
