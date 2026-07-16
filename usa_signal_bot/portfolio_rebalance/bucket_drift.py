@@ -3,7 +3,7 @@ from usa_signal_bot.core.enums import DriftType
 from usa_signal_bot.portfolio_rebalance.rebalance_models import (
     CurrentPortfolioState, TargetPortfolioState, DriftMeasurement
 )
-from usa_signal_bot.portfolio_rebalance.exposure_drift import drift_for_exposure
+from usa_signal_bot.portfolio_rebalance.exposure_drift import drift_for_exposure, ExposureDriftParams
 
 def group_state_by_bucket(state: CurrentPortfolioState | TargetPortfolioState, bucket: DriftType) -> Dict[str, float]:
     positions = state.positions if isinstance(state, CurrentPortfolioState) else state.target_positions
@@ -45,7 +45,7 @@ def calculate_bucket_drift(
         tgt_val = target_buckets.get(key, 0.0)
 
         name = f"{bucket.value}_{key}"
-        measurement = drift_for_exposure(name, curr_val, tgt_val, equity, bucket, threshold_pct)
+        measurement = drift_for_exposure(ExposureDriftParams(name, curr_val, tgt_val, equity, bucket, threshold_pct))
 
         # Add warnings for high drift
         if measurement.absolute_drift is not None and measurement.absolute_drift > (threshold_pct * 2):
