@@ -42,9 +42,9 @@ def validate_no_execution_language_in_feature_text(text: str) -> FeatureFoundati
 
 def validate_no_sensitive_data_in_feature_payload(payload: dict[str, Any]) -> FeatureFoundationValidationReport:
     report = FeatureFoundationValidationReport(True, 0, 0, 0, 0, [], [], [])
-    unsafe_keys = ["api_key", "token", "secret", "password", "broker_order_id", "live_order_id", "sent_to_broker"]
     for k in payload.keys():
-        if any(u in k.lower() for u in unsafe_keys):
+        k_lower = k.lower()
+        if "api_key" in k_lower or "token" in k_lower or "secret" in k_lower or "password" in k_lower or "broker_order_id" in k_lower or "live_order_id" in k_lower or "sent_to_broker" in k_lower:
             report.valid = False
             report.error_count += 1
             report.errors.append(f"Sensitive key detected: {k}")
