@@ -122,36 +122,39 @@ def apply_allocation_caps(
     return results
 
 
-def _create_allocation_result(
-    candidate: PortfolioCandidate,
-    request: AllocationRequest,
-    raw_weights: Dict[str, float],
-    status: AllocationStatus,
-    target_weight: float = 0.0,
-    target_notional: float = 0.0,
-    target_quantity: float = 0.0,
-    warnings: Optional[List[str]] = None,
-    errors: Optional[List[str]] = None,
-) -> AllocationResult:
+@dataclass
+class AllocationResultParams:
+    candidate: PortfolioCandidate
+    request: AllocationRequest
+    raw_weights: Dict[str, float]
+    status: AllocationStatus
+    target_weight: float = 0.0
+    target_notional: float = 0.0
+    target_quantity: float = 0.0
+    warnings: Optional[List[str]] = None
+    errors: Optional[List[str]] = None
+
+
+def _create_allocation_result(params: AllocationResultParams) -> AllocationResult:
     return AllocationResult(
-        candidate_id=candidate.candidate_id,
-        symbol=candidate.symbol,
-        timeframe=candidate.timeframe,
-        method=request.method,
-        status=status,
-        target_weight=target_weight,
-        target_notional=target_notional,
-        target_quantity=target_quantity,
-        raw_weight=raw_weights.get(candidate.candidate_id, 0.0),
+        candidate_id=params.candidate.candidate_id,
+        symbol=params.candidate.symbol,
+        timeframe=params.candidate.timeframe,
+        method=params.request.method,
+        status=params.status,
+        target_weight=params.target_weight,
+        target_notional=params.target_notional,
+        target_quantity=params.target_quantity,
+        raw_weight=params.raw_weights.get(params.candidate.candidate_id, 0.0),
         raw_notional=convert_weight_to_notional(
-            raw_weights.get(candidate.candidate_id, 0.0),
-            request.portfolio_equity,
+            params.raw_weights.get(params.candidate.candidate_id, 0.0),
+            params.request.portfolio_equity,
         ),
         capped=False,
         cap_reasons=[],
-        warnings=warnings or [],
-        errors=errors or [],
-        strategy_name=candidate.strategy_name,
+        warnings=params.warnings or [],
+        errors=params.errors or [],
+        strategy_name=params.candidate.strategy_name,
     )
 
 
@@ -173,11 +176,13 @@ def _base_allocate(
         if candidate.status != PortfolioCandidateStatus.ELIGIBLE:
             results.append(
                 _create_allocation_result(
-                    candidate=candidate,
-                    request=request,
-                    raw_weights=raw_weights,
-                    status=AllocationStatus.REJECTED,
-                    errors=["Candidate is not eligible."],
+                    AllocationResultParams(
+                        candidate=candidate,
+                        request=request,
+                        raw_weights=raw_weights,
+                        status=AllocationStatus.REJECTED,
+                        errors=["Candidate is not eligible."],
+                    )
                 )
             )
             continue
@@ -186,11 +191,13 @@ def _base_allocate(
         if not price or price <= 0:
             results.append(
                 _create_allocation_result(
-                    candidate=candidate,
-                    request=request,
-                    raw_weights=raw_weights,
-                    status=AllocationStatus.REJECTED,
-                    warnings=["Missing or invalid price. Cannot allocate."],
+                    AllocationResultParams(
+                        candidate=candidate,
+                        request=request,
+                        raw_weights=raw_weights,
+                        status=AllocationStatus.REJECTED,
+                        warnings=["Missing or invalid price. Cannot allocate."],
+                    )
                 )
             )
             continue
@@ -205,13 +212,15 @@ def _base_allocate(
 
         results.append(
             _create_allocation_result(
-                candidate=candidate,
-                request=request,
-                raw_weights=raw_weights,
-                status=status,
-                target_weight=weight,
-                target_notional=notional,
-                target_quantity=qty,
+                AllocationResultParams(
+                    candidate=candidate,
+                    request=request,
+                    raw_weights=raw_weights,
+                    status=status,
+                    target_weight=weight,
+                    target_notional=notional,
+                    target_quantity=qty,
+                )
             )
         )
 
