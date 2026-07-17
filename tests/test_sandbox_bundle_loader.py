@@ -42,3 +42,25 @@ def test_load_bundle_invalid_json(tmp_path):
 
     with pytest.raises(json.JSONDecodeError):
         load_bundle_for_sandbox(bundle_path)
+
+def test_load_bundle_manifest_empty(tmp_path):
+    bundle_path = tmp_path / "bundle_no_manifest.json"
+    bundle_data = {
+        "artifacts": [{"name": "art1"}]
+    }
+    with open(bundle_path, "w") as f:
+        json.dump(bundle_data, f)
+
+    man = load_bundle_manifest_for_sandbox(bundle_path)
+    assert man == {}
+
+def test_load_bundle_manifest_present(tmp_path):
+    bundle_path = tmp_path / "bundle_with_manifest.json"
+    bundle_data = {
+        "manifest": {"key1": "val1"}
+    }
+    with open(bundle_path, "w") as f:
+        json.dump(bundle_data, f)
+
+    man = load_bundle_manifest_for_sandbox(bundle_path)
+    assert man == {"key1": "val1"}
