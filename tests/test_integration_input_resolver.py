@@ -47,3 +47,12 @@ def test_detect_forbidden_integration_fields_detects_forbidden():
     payload = {"some_field": "live_signal"}
     detected = detect_forbidden_integration_fields(payload)
     assert detected == ["live_signal"]
+
+def test_detect_forbidden_integration_fields_error_path():
+    with patch("usa_signal_bot.integration.integration_input_resolver.json.dumps") as mock_dumps:
+        mock_dumps.side_effect = Exception("Serialization failed")
+
+        detected = detect_forbidden_integration_fields({"key": "value"})
+
+        assert detected == []
+        mock_dumps.assert_called_once_with({"key": "value"})
