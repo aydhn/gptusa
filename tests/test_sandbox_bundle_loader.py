@@ -42,3 +42,16 @@ def test_load_bundle_invalid_json(tmp_path):
 
     with pytest.raises(json.JSONDecodeError):
         load_bundle_for_sandbox(bundle_path)
+
+def test_bundle_loader_to_text_edge_cases():
+    empty_payload = {}
+    txt = bundle_loader_to_text(empty_payload)
+    assert txt == "Bundle Loaded: ID=unknown, Version=unknown, Artifacts=0"
+
+    manifest_only = {"manifest": {"bundle_id": "test-123", "bundle_version": "v1.2"}}
+    txt2 = bundle_loader_to_text(manifest_only)
+    assert txt2 == "Bundle Loaded: ID=test-123, Version=v1.2, Artifacts=0"
+
+    artifacts_only = {"artifacts": [{"name": "a1"}, {"name": "a2"}]}
+    txt3 = bundle_loader_to_text(artifacts_only)
+    assert txt3 == "Bundle Loaded: ID=unknown, Version=unknown, Artifacts=2"
