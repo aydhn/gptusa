@@ -50,3 +50,22 @@ def test_attach_sandbox_preview_to_execution_payload():
         assert "sandbox_preview_id" in updated_payload
         assert updated_payload["sandbox_preview_id"] == "prev_abc"
         assert updated_payload["execution_id"] == "exec_123"
+
+
+def test_sandbox_preview_from_research_execution_payload():
+    from usa_signal_bot.core.enums import SandboxValidationStatus
+    from usa_signal_bot.release_sandbox.research_execution_adapter import (
+        sandbox_preview_from_research_execution_payload,
+    )
+
+    initial_payload = {"execution_id": "exec_123"}
+
+    output = sandbox_preview_from_research_execution_payload(initial_payload)
+
+    assert output.output_type == "RESEARCH_EXECUTION_PREVIEW"
+    assert output.status == SandboxValidationStatus.PASS
+    assert output.summary["execution_id"] == "exec_123"
+    assert output.payload["note"] == "Dry run preview of research execution. No real backtest run."
+    assert not output.safety_flags
+    assert not output.warnings
+    assert not output.errors
