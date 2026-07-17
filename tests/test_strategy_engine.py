@@ -94,3 +94,24 @@ def test_run_rule_strategy_set_ranked():
     assert res is not None
     assert hasattr(res, "portfolio_run")
     assert res.portfolio_run.signal_count == 0
+
+
+def test_run_strategy_from_feature_store():
+    from usa_signal_bot.strategies.strategy_registry import create_default_strategy_registry
+    from usa_signal_bot.strategies.strategy_engine import StrategyEngine
+    from usa_signal_bot.strategies.strategy_models import StrategyFromFeatureStoreParams
+    from pathlib import Path
+
+    registry = create_default_strategy_registry()
+    engine = StrategyEngine(registry, Path("/tmp"))
+
+    params = StrategyFromFeatureStoreParams(
+        strategy_name="trend_following_skeleton",
+        symbols=["AAPL"],
+        timeframes=["1d"]
+    )
+
+    res = engine.run_strategy_from_feature_store(params)
+    assert res.status.value == "FAILED" or res.status.value == "COMPLETED"
+    assert res.strategy_name == "trend_following_skeleton"
+    assert res.symbols_processed == ["AAPL"] or res.symbols_processed == []

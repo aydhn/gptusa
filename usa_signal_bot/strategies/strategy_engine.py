@@ -5,7 +5,7 @@ from typing import List, Dict, Any, Optional
 from usa_signal_bot.strategies.strategy_registry import StrategyRegistry
 from usa_signal_bot.strategies.strategy_input import StrategyInputBatch, load_strategy_feature_frames_from_feature_store, filter_valid_strategy_frames
 from usa_signal_bot.strategies.signal_contract import StrategySignal
-from usa_signal_bot.strategies.strategy_models import StrategyRunResult, create_strategy_run_id
+from usa_signal_bot.strategies.strategy_models import StrategyRunResult, create_strategy_run_id, StrategyFromFeatureStoreParams
 from usa_signal_bot.strategies.signal_validation import validate_signal_list, assert_signals_valid
 from usa_signal_bot.strategies.signal_store import write_signals_jsonl, write_signal_validation_report_json, build_signal_output_path
 from usa_signal_bot.core.enums import StrategyRunStatus
@@ -115,23 +115,23 @@ class StrategyEngine:
 
         return results
 
-    def run_strategy_from_feature_store(self, strategy_name: str, symbols: List[str], timeframes: List[str], params: Optional[Dict[str, Any]] = None, write_outputs: bool = False) -> StrategyRunResult:
+    def run_strategy_from_feature_store(self, params: StrategyFromFeatureStoreParams) -> StrategyRunResult:
         try:
-            strategy = self.registry.get(strategy_name)
+            strategy = self.registry.get(params.strategy_name)
             feature_names = strategy.metadata.required_features + strategy.metadata.optional_features
 
-            batch = load_strategy_feature_frames_from_feature_store(self.data_root, symbols, timeframes, feature_names)
-            return self.run_strategy(strategy_name, batch, params, write_outputs)
+            batch = load_strategy_feature_frames_from_feature_store(self.data_root, params.symbols, params.timeframes, feature_names)
+            return self.run_strategy(params.strategy_name, batch, params.params, params.write_outputs)
         except Exception as e:
-            run_id = create_strategy_run_id(strategy_name)
+            run_id = create_strategy_run_id(params.strategy_name)
             now_utc = datetime.datetime.now(datetime.timezone.utc).isoformat()
             return StrategyRunResult(
                 run_id=run_id,
-                strategy_name=strategy_name,
+                strategy_name=params.strategy_name,
                 status=StrategyRunStatus.FAILED,
                 signals=[],
-                symbols_processed=symbols,
-                timeframes_processed=timeframes,
+                symbols_processed=params.symbols,
+                timeframes_processed=params.timeframes,
                 warnings=[],
                 errors=[str(e)],
                 created_at_utc=now_utc

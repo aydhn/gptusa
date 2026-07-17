@@ -84,3 +84,11 @@ def summarize_strategy_run(result: StrategyRunResult) -> StrategyExecutionSummar
         errors=result.errors,
         average_confidence=avg_conf
     )
+
+@dataclass
+class StrategyFromFeatureStoreParams:
+    strategy_name: str
+    symbols: List[str]
+    timeframes: List[str]
+    params: Optional[Dict[str, Any]] = None
+    write_outputs: bool = False
