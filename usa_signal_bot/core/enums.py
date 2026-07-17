@@ -4660,3 +4660,51 @@ class RiskContributionType(str, Enum):
     MARKET = 'MARKET'
 
     UNKNOWN = 'UNKNOWN'
+
+class SectorClusterSource(str, Enum):
+    FILE = "FILE"
+    API = "API"
+
+class ExposureType(str, Enum):
+    LONG = "LONG"
+    SHORT = "SHORT"
+
+class ConcentrationRiskLevel(str, Enum):
+    LOW = "LOW"
+    MEDIUM = "MEDIUM"
+    HIGH = "HIGH"
+    CRITICAL = "CRITICAL"
+
+class PortfolioGuardDecision(str, Enum):
+    PASS = "PASS"
+    FAIL = "FAIL"
+    WARN = "WARN"
+
+class PortfolioAllocationStatus(str, Enum):
+    PENDING = "PENDING"
+    ALLOCATED = "ALLOCATED"
+    FAILED = "FAILED"
+
+class PortfolioConstructionMode(str, Enum):
+    STANDARD = "STANDARD"
+
+class PortfolioConstructionReportType(str, Enum):
+    FULL = "FULL"
+
+class PortfolioReviewStatus(str, Enum):
+    PENDING = "PENDING"
+    APPROVED = "APPROVED"
+    REJECTED = "REJECTED"
+
+class PortfolioConstructionStatus(str, Enum):
+    DRAFT = "DRAFT"
+    FINAL = "FINAL"
+
+class AllocationMethod(str, Enum):
+    EQUAL_WEIGHT = "EQUAL_WEIGHT"
+    RISK_PARITY = "RISK_PARITY"
+
+class AllocationStatus(str, Enum):
+    PENDING = "PENDING"
+    ALLOCATED = "ALLOCATED"
+    FAILED = "FAILED"
