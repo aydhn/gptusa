@@ -201,3 +201,52 @@ def test_session_summary_to_text():
     positive_summary = {"REGULAR": 5, "PREMARKET": 2, "AFTER_HOURS": 0}
     expected_positive = "Session Summary:\n  REGULAR: 5 rows\n  PREMARKET: 2 rows"
     assert session_summary_to_text(positive_summary) == expected_positive
+
+
+
+def test_classify_timestamp_session_comprehensive():
+    from unittest.mock import MagicMock
+    from usa_signal_bot.calendar.session_classifier import classify_timestamp_session
+    from usa_signal_bot.core.enums import MarketSessionType
+
+    cal_mock = MagicMock()
+
+    # Branch: not timestamp_str or len(timestamp_str) < 10
+    assert classify_timestamp_session("", cal_mock) == MarketSessionType.UNKNOWN
+    assert classify_timestamp_session("2024", cal_mock) == MarketSessionType.UNKNOWN
+
+    # Branch: calendar.is_weekend(date_str)
+    cal_mock.is_weekend.return_value = True
+    cal_mock.is_holiday.return_value = False
+    assert classify_timestamp_session("2024-01-06", cal_mock) == MarketSessionType.WEEKEND
+
+    # Branch: calendar.is_holiday(date_str)
+    cal_mock.is_weekend.return_value = False
+    cal_mock.is_holiday.return_value = True
+    assert classify_timestamp_session("2024-01-01", cal_mock) == MarketSessionType.HOLIDAY
+
+    # Reset calendar flags
+    cal_mock.is_weekend.return_value = False
+    cal_mock.is_holiday.return_value = False
+
+    # Branch: len(timestamp_str) <= 10 or " " not in timestamp_str and "T" not in timestamp_str
+    assert classify_timestamp_session("2024-01-02", cal_mock) == MarketSessionType.REGULAR
+    assert classify_timestamp_session("2024-01-02_08:00", cal_mock) == MarketSessionType.REGULAR
+
+    # Branch: len(time_part) < 5
+    assert classify_timestamp_session("2024-01-02 12", cal_mock) == MarketSessionType.REGULAR
+
+    # Setup time components
+    cal_mock.regular_session_times.return_value = ("09:30", "16:00")
+
+    # Branch: time_part < open_time
+    assert classify_timestamp_session("2024-01-02 08:00", cal_mock) == MarketSessionType.PREMARKET
+    assert classify_timestamp_session("2024-01-02T08:00", cal_mock) == MarketSessionType.PREMARKET
+
+    # Branch: time_part >= close_time
+    assert classify_timestamp_session("2024-01-02 16:30", cal_mock) == MarketSessionType.AFTER_HOURS
+    assert classify_timestamp_session("2024-01-02T16:30", cal_mock) == MarketSessionType.AFTER_HOURS
+
+    # Branch: else (REGULAR intraday)
+    assert classify_timestamp_session("2024-01-02 12:00", cal_mock) == MarketSessionType.REGULAR
+    assert classify_timestamp_session("2024-01-02T12:00", cal_mock) == MarketSessionType.REGULAR
