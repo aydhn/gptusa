@@ -4,6 +4,7 @@ from pathlib import Path
 import json
 import uuid
 from datetime import datetime, timezone
+from collections import deque
 
 @dataclass
 class WorkloadAuditEvent:
@@ -26,9 +27,15 @@ def write_workload_audit_jsonl(path: Path, events: List[WorkloadAuditEvent]) -> 
 
 def read_workload_audit_jsonl(path: Path, limit: Optional[int] = None) -> List[Dict[str, Any]]:
     if not path.exists(): return []
-    with open(path, "r", encoding="utf-8") as f: lines = [json.loads(line) for line in f]
-    lines.reverse()
-    return lines[:limit] if limit else lines
+    with open(path, "r", encoding="utf-8") as f:
+        if limit is None:
+            lines = [json.loads(line) for line in f]
+            lines.reverse()
+            return lines
+        last_lines = deque(f, maxlen=limit)
+    res = [json.loads(line) for line in last_lines]
+    res.reverse()
+    return res
 
 def workload_audit_summary(events: List[Dict[str, Any]]) -> Dict[str, Any]:
     types, statuses = {}, {}
