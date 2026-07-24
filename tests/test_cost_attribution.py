@@ -28,9 +28,18 @@ def test_aggregate_cost_by_component():
     assert "FeesAndCommissions" in names
 
 def test_calculate_cost_drag_pct():
-    assert calculate_cost_drag_pct(100.0, 10.0) == 10.0
-    assert calculate_cost_drag_pct(-100.0, 10.0) is None
+    # Happy path
+    assert calculate_cost_drag_pct(100.0, 25.0) == 25.0
+    assert calculate_cost_drag_pct(200.0, 10.0) == 5.0
+
+    # Edge cases - missing data
+    assert calculate_cost_drag_pct(None, 25.0) is None
     assert calculate_cost_drag_pct(100.0, None) is None
+    assert calculate_cost_drag_pct(None, None) is None
+
+    # Edge cases - invalid data
+    assert calculate_cost_drag_pct(0.0, 25.0) is None
+    assert calculate_cost_drag_pct(-10.0, 25.0) is None
 
 def test_identify_cost_degraded_groups():
     events = _get_mock_events()
