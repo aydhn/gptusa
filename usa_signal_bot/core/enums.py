@@ -1,6 +1,13 @@
 from enum import Enum
 
 
+
+class SessionValidationStatus(str, Enum):
+    VALID = "VALID"
+    INVALID = "INVALID"
+    WARNING = "WARNING"
+    MISSING = "MISSING"
+
 class BacktestClosureStatus(str, Enum):
     DRAFT = "DRAFT"
     CREATED = "CREATED"
