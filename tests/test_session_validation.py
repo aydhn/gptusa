@@ -15,6 +15,44 @@ def test_session_validation():
     assert res.non_trading_day_rows == 1
     assert res.missing_trading_days == 2
 
+
+def test_validate_rows_against_calendar_details():
+    cal = LocalMarketCalendar()
+
+    # 1. Empty rows
+    res_empty = validate_rows_against_calendar("SPY", [], cal)
+    assert res_empty.status == SessionValidationStatus.MISSING
+    assert res_empty.row_count == 0
+    assert "No rows provided for validation." in res_empty.warnings
+
+    # 2. Happy path - VALID
+    rows_valid = [
+        {"date": "2024-01-02"},
+        {"date": "2024-01-03"},
+        {"date": "2024-01-04"}
+    ]
+    res_valid = validate_rows_against_calendar("SPY", rows_valid, cal)
+    assert res_valid.status == SessionValidationStatus.VALID
+
+    # 3. Missing days - WARNING
+    rows_warning = [
+        {"date": "2024-01-02"},
+        {"date": "2024-01-04"}
+    ]
+    res_warning = validate_rows_against_calendar("SPY", rows_warning, cal)
+    assert res_warning.status == SessionValidationStatus.WARNING
+    assert "Missing 1 trading days." in res_warning.warnings
+
+    # 4. Too many missing - INVALID
+    # Create rows with a 15 day gap, which will trigger the missing_days > 10 condition
+    # assuming we have < 100 rows so that 15 > len(rows) * 0.1
+    rows_invalid_missing = [{"date": "2024-01-02"}]
+    # Add a date that is far enough away to have > 10 missing days in between
+    rows_invalid_missing.append({"date": "2024-01-25"})
+    res_invalid_missing = validate_rows_against_calendar("SPY", rows_invalid_missing, cal)
+    assert res_invalid_missing.status == SessionValidationStatus.INVALID
+    assert "Too many missing trading days." in res_invalid_missing.errors
+
 def test_validate_non_trading_rows():
     cal = LocalMarketCalendar()
 
