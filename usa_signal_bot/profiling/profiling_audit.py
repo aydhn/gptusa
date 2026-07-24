@@ -1,4 +1,5 @@
 import json
+import logging
 import uuid
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -6,6 +7,8 @@ from typing import Any
 
 from usa_signal_bot.core.enums import ResourceProfileScope
 from usa_signal_bot.profiling.resource_timer import current_utc_iso
+
+logger = logging.getLogger(__name__)
 
 @dataclass
 class ProfilingAuditEvent:
@@ -80,8 +83,8 @@ def read_profiling_audit_jsonl(path: Path, limit: int | None = None) -> list[dic
                 continue
             try:
                 records.append(json.loads(line))
-            except json.JSONDecodeError:
-                pass
+            except json.JSONDecodeError as e:
+                logger.warning(f"Failed to decode JSON from audit log: {e}")
 
     if limit is not None:
         records = records[-limit:]
