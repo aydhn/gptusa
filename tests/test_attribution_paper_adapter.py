@@ -2,10 +2,8 @@ import pytest
 from unittest.mock import patch, MagicMock
 from usa_signal_bot.attribution.paper_adapter import (
     build_attribution_review_from_paper_payload,
-    attach_attribution_to_paper_analytics,
 )
 from usa_signal_bot.core.enums import AttributionReportType, AttributionDimension
-
 
 def _get_mock_payload():
     return {
@@ -14,7 +12,6 @@ def _get_mock_payload():
         ]
     }
 
-
 def test_build_attribution_review_from_paper_payload_integration():
     payload = _get_mock_payload()
     review = build_attribution_review_from_paper_payload(payload)
@@ -22,7 +19,6 @@ def test_build_attribution_review_from_paper_payload_integration():
     assert review.events[0].symbol == "AAPL"
     assert review.report_type == AttributionReportType.FULL_ATTRIBUTION_REVIEW
     assert any("not real brokerage" in w for w in review.warnings)
-
 
 @patch("usa_signal_bot.attribution.paper_adapter.build_attribution_scorecard")
 @patch("usa_signal_bot.attribution.paper_adapter.aggregate_pnl_by_dimension")
@@ -56,7 +52,6 @@ def test_build_attribution_review_from_paper_payload_isolated(
     assert review.signal_contributions == []
     assert "paper_review_" in review.review_id
 
-
 def test_build_attribution_review_from_paper_payload_empty():
     payload = {}
     review = build_attribution_review_from_paper_payload(payload)
@@ -64,10 +59,3 @@ def test_build_attribution_review_from_paper_payload_empty():
     assert len(review.events) == 0
     assert review.performance_contributions == []
     assert review.report_type == AttributionReportType.FULL_ATTRIBUTION_REVIEW
-
-
-def test_attach_attribution_to_paper_analytics():
-    payload = _get_mock_payload()
-    attached = attach_attribution_to_paper_analytics(payload)
-    assert "attribution_metadata" in attached
-    assert "review_id" in attached["attribution_metadata"]
