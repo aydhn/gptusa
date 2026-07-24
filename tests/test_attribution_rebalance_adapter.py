@@ -16,10 +16,27 @@ def _get_mock_review():
     )
 
 def test_attach_attribution_to_rebalance_review():
-    payload = {"status": "ok"}
+    # Test with empty payload
+    payload = {}
     review = _get_mock_review()
     attached = attach_attribution_to_rebalance_review(payload, review)
     assert "attribution_metadata" in attached
+    assert attached["attribution_metadata"]["review_id"] == "r1"
+
+    # Test with existing payload
+    payload = {"status": "ok", "some_key": "some_value"}
+    attached = attach_attribution_to_rebalance_review(payload, review)
+    assert "attribution_metadata" in attached
+    assert attached["attribution_metadata"]["review_id"] == "r1"
+    assert attached["status"] == "ok"
+    assert attached["some_key"] == "some_value"
+
+    # Test with existing attribution_metadata (should be overwritten)
+    payload = {"attribution_metadata": {"review_id": "old_id"}}
+    attached = attach_attribution_to_rebalance_review(payload, review)
+    assert "attribution_metadata" in attached
+    assert attached["attribution_metadata"]["review_id"] == "r1"
+
 
 def test_rebalance_action_contribution_summary():
     review = _get_mock_review()
