@@ -3,7 +3,7 @@
 from typing import Any, Dict, List
 from datetime import datetime, timezone
 from usa_signal_bot.core.enums import AttributionReportType
-from usa_signal_bot.attribution.attribution_models import AttributionReview, create_attribution_review_id, attribution_review_to_dict
+from usa_signal_bot.attribution.attribution_models import AttributionReview, create_attribution_review_id
 from usa_signal_bot.attribution.trade_normalizer import normalize_backtest_trades
 from usa_signal_bot.attribution.pnl_attribution import aggregate_pnl_by_dimension
 from usa_signal_bot.core.enums import AttributionDimension
