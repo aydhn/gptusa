@@ -34,3 +34,41 @@ def test_local_market_calendar():
 
     days = cal.trading_days_between("2024-01-01", "2024-01-03")
     assert days == ["2024-01-02", "2024-01-03"]
+
+def test_is_weekend_comprehensive():
+    """Test is_weekend functionality, including caching and edge cases."""
+    # Ensure isolation
+    import pytest
+    from datetime import datetime
+
+    cal = LocalMarketCalendar()
+
+    # 1. Test happy path (weekdays)
+    assert cal.is_weekend("2024-01-01") is False  # Monday
+    assert cal.is_weekend("2024-01-02") is False  # Tuesday
+    assert cal.is_weekend("2024-01-05") is False  # Friday
+
+    # 2. Test happy path (weekends)
+    assert cal.is_weekend("2024-01-06") is True   # Saturday
+    assert cal.is_weekend("2024-01-07") is True   # Sunday
+
+    # 3. Verify caching logic (cache misses then hits)
+    # Clear cache for the test
+    cal._weekend_cache.clear()
+
+    assert cal.is_weekend("2024-01-01") is False
+    assert "2024-01-01" in cal._weekend_cache
+
+    # Manually modify the cache to verify it uses the cached value
+    cal._weekend_cache["2024-01-01"] = True
+    assert cal.is_weekend("2024-01-01") is True
+
+    # Reset for other tests
+    cal._weekend_cache["2024-01-01"] = False
+
+    # 4. Test error condition (invalid date format)
+    with pytest.raises(ValueError, match="time data '01-01-2024' does not match format '%Y-%m-%d'"):
+        cal.is_weekend("01-01-2024")
+
+    with pytest.raises(ValueError):
+        cal.is_weekend("not-a-date")
