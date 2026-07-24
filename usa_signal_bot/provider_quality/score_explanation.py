@@ -1,4 +1,3 @@
-import re
 from typing import List
 from usa_signal_bot.provider_quality.phase109_models import (
     ProviderDataQualityScore,
