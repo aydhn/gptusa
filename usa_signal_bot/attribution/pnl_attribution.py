@@ -1,6 +1,6 @@
 """Gross and net PnL attribution calculators."""
 
-from typing import Dict, List, Optional
+from typing import List
 from collections import defaultdict
 
 from usa_signal_bot.core.enums import (
@@ -15,7 +15,7 @@ from usa_signal_bot.attribution.attribution_models import (
 )
 
 
-def calculate_win_rate(events: List[AttributionTradeEvent]) -> Optional[float]:
+def calculate_win_rate(events: List[AttributionTradeEvent]) -> float | None:
     win = sum(1 for e in events if e.net_pnl_usd is not None and e.net_pnl_usd > 0)
     loss = sum(1 for e in events if e.net_pnl_usd is not None and e.net_pnl_usd <= 0)
     total = win + loss
@@ -25,7 +25,7 @@ def calculate_win_rate(events: List[AttributionTradeEvent]) -> Optional[float]:
 
 
 def classify_contribution_direction(
-    net_pnl_usd: Optional[float],
+    net_pnl_usd: float | None,
 ) -> ContributionDirection:
     if net_pnl_usd is None:
         return ContributionDirection.INSUFFICIENT_DATA
@@ -55,7 +55,7 @@ def calculate_contribution_for_group(
     name: str,
     dimension: AttributionDimension,
     events: List[AttributionTradeEvent],
-    total_net_pnl: Optional[float] = None,
+    total_net_pnl: float | None = None,
 ) -> AttributionContribution:
     gross = 0.0
     net = 0.0
