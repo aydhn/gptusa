@@ -76,3 +76,21 @@ def test_write_example_early_close_file_success(tmp_path):
     with open(p, "r", encoding="utf-8") as f:
         data = json.load(f)
     assert len(data) == len(default_us_equities_early_closes())
+
+def test_load_holidays_missing_file(tmp_path):
+    p = tmp_path / "nonexistent.json"
+    with pytest.raises(HolidayStoreError, match="Holiday file not found"):
+        load_holidays_from_json(p)
+
+def test_load_holidays_path_traversal():
+    p = Path("../holidays.json")
+    from unittest.mock import patch
+    with patch("pathlib.Path.is_file", return_value=True):
+        with pytest.raises(HolidayStoreError, match="Path traversal prevented."):
+            load_holidays_from_json(p)
+
+def test_load_holidays_exception(tmp_path):
+    p = tmp_path / "invalid.json"
+    p.write_text("invalid json")
+    with pytest.raises(HolidayStoreError, match="Failed to load holidays from"):
+        load_holidays_from_json(p)
