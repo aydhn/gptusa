@@ -319,3 +319,28 @@ def test_trading_day_result_to_text_no_enum_value():
     assert "Is Trading Day: True" in text
     assert "Prev: 2023-10-27" in text
     assert "Next: 2023-10-30" in text
+
+def test_market_session_to_text_no_enum_value():
+    class DummyEnumString:
+        def __str__(self):
+            return "MarketSessionTypeStr"
+
+    session = MarketSession(
+        session_id="id3",
+        calendar_name="NYSE",
+        date="2023-10-29",
+        session_type=DummyEnumString(),
+        open_time_local="09:30",
+        close_time_local="16:00",
+        timezone="America/New_York",
+        is_trading_session=True,
+        is_early_close=False,
+        source="CalendarDataSource",
+    )
+
+    text = market_session_to_text(session)
+    assert "Session: 2023-10-29" in text
+    assert "Type: MarketSessionTypeStr" in text
+    assert "Trading: True" in text
+    assert "Early Close: False" in text
+    assert "Times: 09:30 - 16:00 America/New_York" in text
