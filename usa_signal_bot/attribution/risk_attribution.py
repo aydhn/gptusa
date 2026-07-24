@@ -1,6 +1,6 @@
 """Volatility, concentration, and cost fragility proxy attribution."""
 
-from typing import Any, Dict, List
+from typing import List
 from collections import defaultdict
 from usa_signal_bot.core.enums import AttributionDimension, RiskContributionType, ContributionDirection
 from usa_signal_bot.attribution.attribution_models import AttributionTradeEvent, RiskAttributionContribution, create_risk_attribution_contribution_id
