@@ -4642,6 +4642,14 @@ class AttributionReportType(str, Enum):
 class AttributionDimension(str, Enum):
     SYMBOL = 'SYMBOL'
     COST_COMPONENT = 'COST_COMPONENT'
+    STRATEGY = 'STRATEGY'
+    SIGNAL_FAMILY = 'SIGNAL_FAMILY'
+    SECTOR = 'SECTOR'
+    CLUSTER = 'CLUSTER'
+    REGIME = 'REGIME'
+    SIDE = 'SIDE'
+    SIZING_STATUS = 'SIZING_STATUS'
+    REBALANCE_ACTION = 'REBALANCE_ACTION'
 
 class ContributionDirection(str, Enum):
     POSITIVE = 'POSITIVE'
