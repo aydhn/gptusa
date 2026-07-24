@@ -96,8 +96,12 @@ def _verify_safe_mode(context: RuntimeContext, log_path_dir: Path) -> None:
             from usa_signal_bot.core.audit import audit_forbidden_operation
 
             audit_forbidden_operation("RuntimeInit", str(e), log_path_dir)
-        except:
-            pass
+        except Exception as audit_e:
+            import logging
+
+            logging.getLogger(__name__).warning(
+                "Audit failed during safe mode crash: %s", audit_e
+            )
         raise e
 
 
@@ -228,8 +232,12 @@ def _verify_safe_mode(context: RuntimeContext, log_path_dir: Path) -> None:
             from usa_signal_bot.core.audit import audit_forbidden_operation
 
             audit_forbidden_operation("RuntimeInit", str(e), log_path_dir)
-        except:
-            pass
+        except Exception as audit_e:
+            import logging
+
+            logging.getLogger(__name__).warning(
+                "Audit failed during safe mode crash: %s", audit_e
+            )
         raise e
 
 
