@@ -20,6 +20,7 @@ from usa_signal_bot.calendar.calendar_validation import (
     calendar_validation_report_to_text,
     validate_holiday_files,
     validate_calendar_review_report,
+    validate_session_validation_report_report,
 )
 
 
@@ -233,4 +234,104 @@ def test_validate_calendar_review_report_with_session_validations():
     assert report.error_count == 1
 
     assert report.issues[0].severity == "ERROR"
+    assert report.issues[0].field == "AAPL"
+
+def test_validate_session_validation_report_report_valid():
+    result = SessionValidationResult(
+        validation_id="val_1",
+        created_at_utc="2023-01-01T00:00:00Z",
+        symbol="AAPL",
+        calendar_name=MarketCalendarName.NYSE,
+        status=SessionValidationStatus.PASS,
+        row_count=100,
+        trading_day_count=10,
+        non_trading_day_rows=0,
+        missing_trading_days=0,
+        early_close_rows=0,
+        warnings=[],
+        errors=[]
+    )
+    report = validate_session_validation_report_report(result)
+    assert report.valid is True
+    assert report.issue_count == 0
+    assert report.warning_count == 0
+    assert report.error_count == 0
+
+def test_validate_session_validation_report_report_invalid_with_errors():
+    result = SessionValidationResult(
+        validation_id="val_2",
+        created_at_utc="2023-01-01T00:00:00Z",
+        symbol="AAPL",
+        calendar_name=MarketCalendarName.NYSE,
+        status=SessionValidationStatus.INVALID,
+        row_count=100,
+        trading_day_count=10,
+        non_trading_day_rows=0,
+        missing_trading_days=0,
+        early_close_rows=0,
+        warnings=[],
+        errors=["Some error"]
+    )
+    report = validate_session_validation_report_report(result)
+    assert report.valid is False
+    assert report.issue_count == 2
+    assert report.warning_count == 0
+    assert report.error_count == 2
+    assert "Session validation is INVALID" in report.errors
+    assert "Some error" in report.errors
+
+def test_validate_session_validation_report_report_warning():
+    result = SessionValidationResult(
+        validation_id="val_3",
+        created_at_utc="2023-01-01T00:00:00Z",
+        symbol="AAPL",
+        calendar_name=MarketCalendarName.NYSE,
+        status=SessionValidationStatus.WARNING,
+        row_count=100,
+        trading_day_count=10,
+        non_trading_day_rows=0,
+        missing_trading_days=0,
+        early_close_rows=0,
+        warnings=["Some warning"],
+        errors=[]
+    )
+    report = validate_session_validation_report_report(result)
+    assert report.valid is True
+    assert report.issue_count == 2
+    assert report.warning_count == 2
+    assert report.error_count == 0
+    assert "Session validation is WARNING" in report.warnings
+    assert "Some warning" in report.warnings
+
+def test_validate_calendar_review_report_with_session_validations_warning():
+    sv1 = SessionValidationResult(
+        validation_id="val_1",
+        created_at_utc="2023-01-01T00:00:00Z",
+        symbol="AAPL",
+        calendar_name=MarketCalendarName.NYSE,
+        status=SessionValidationStatus.WARNING,
+        row_count=100,
+        trading_day_count=10,
+        non_trading_day_rows=0,
+        missing_trading_days=0,
+        early_close_rows=0,
+    )
+    result = CalendarReviewResult(
+        review_id="rev_1",
+        created_at_utc="2023-01-01T00:00:00Z",
+        report_type=CalendarReportType.DAILY,
+        calendar_name=MarketCalendarName.NYSE,
+        sessions=[],
+        trading_day_results=[],
+        session_validations=[sv1],
+        warnings=[],
+        errors=[],
+    )
+    report = validate_calendar_review_report(result)
+    assert report.valid is True
+    assert report.issue_count == 1
+    assert report.warning_count == 1
+    assert report.error_count == 0
+
+    assert report.issues[0].severity == "WARNING"
     assert report.issues[0].field == "AAPL"
