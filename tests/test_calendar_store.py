@@ -149,3 +149,23 @@ def test_read_calendar_review_result_json_error(tmp_path):
             CalendarStorageError, match="Failed to read calendar review"
         ):
             read_calendar_review_result_json(path)
+
+
+
+def test_write_market_sessions_jsonl_error(tmp_path):
+    import pytest
+    from unittest.mock import patch, MagicMock
+    from usa_signal_bot.calendar.calendar_store import write_market_sessions_jsonl
+    from usa_signal_bot.core.exceptions import CalendarStorageError
+
+    with patch("builtins.open") as mock_open:
+        mock_open.side_effect = PermissionError("Permission denied")
+
+        mock_session = MagicMock()
+
+        with pytest.raises(
+            CalendarStorageError, match="Failed to write sessions to"
+        ):
+            write_market_sessions_jsonl(
+                tmp_path / "calendar" / "sessions.jsonl", [mock_session]
+            )
