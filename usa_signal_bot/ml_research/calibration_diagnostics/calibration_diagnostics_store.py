@@ -52,6 +52,17 @@ def calibration_readiness_gates_dir(data_root: Path) -> Path: return calibration
 def _ensure_dir(p: Path):
     p.mkdir(parents=True, exist_ok=True)
 
+
+def _write_jsonl_chunked(f, items, to_dict_func, chunk_size=1000):
+    chunk = []
+    for it in items:
+        chunk.append(json.dumps(to_dict_func(it)))
+        if len(chunk) >= chunk_size:
+            f.write('\n'.join(chunk) + '\n')
+            chunk.clear()
+    if chunk:
+        f.write('\n'.join(chunk) + '\n')
+
 def write_calibration_diagnostics_context_json(path: Path, item: CalibrationDiagnosticsContext) -> Path:
     _ensure_dir(path.parent)
     with open(path, 'w') as f: json.dump(calibration_diagnostics_context_to_dict(item), f, indent=2)
@@ -65,25 +76,25 @@ def write_calibration_diagnostics_full_review_json(path: Path, item: Calibration
 def write_calibration_candidates_jsonl(path: Path, items: List[CalibrationCandidateReference]) -> Path:
     _ensure_dir(path.parent)
     with open(path, 'w') as f:
-        for it in items: f.write(json.dumps(calibration_candidate_reference_to_dict(it)) + "\n")
+        _write_jsonl_chunked(f, items, calibration_candidate_reference_to_dict)
     return path
 
 def write_calibration_input_profiles_jsonl(path: Path, items: List[CalibrationInputProfile]) -> Path:
     _ensure_dir(path.parent)
     with open(path, 'w') as f:
-        for it in items: f.write(json.dumps(calibration_input_profile_to_dict(it)) + "\n")
+        _write_jsonl_chunked(f, items, calibration_input_profile_to_dict)
     return path
 
 def write_reliability_bins_jsonl(path: Path, items: List[ReliabilityBinResult]) -> Path:
     _ensure_dir(path.parent)
     with open(path, 'w') as f:
-        for it in items: f.write(json.dumps(reliability_bin_result_to_dict(it)) + "\n")
+        _write_jsonl_chunked(f, items, reliability_bin_result_to_dict)
     return path
 
 def write_calibration_metrics_jsonl(path: Path, items: List[CalibrationMetricResult]) -> Path:
     _ensure_dir(path.parent)
     with open(path, 'w') as f:
-        for it in items: f.write(json.dumps(calibration_metric_result_to_dict(it)) + "\n")
+        _write_jsonl_chunked(f, items, calibration_metric_result_to_dict)
     return path
 
 def write_brier_decomposition_json(path: Path, item: BrierDecompositionResult) -> Path:
@@ -94,25 +105,25 @@ def write_brier_decomposition_json(path: Path, item: BrierDecompositionResult) -
 def write_score_distribution_jsonl(path: Path, items: List[ScoreDistributionDiagnostic]) -> Path:
     _ensure_dir(path.parent)
     with open(path, 'w') as f:
-        for it in items: f.write(json.dumps(score_distribution_diagnostic_to_dict(it)) + "\n")
+        _write_jsonl_chunked(f, items, score_distribution_diagnostic_to_dict)
     return path
 
 def write_class_balance_jsonl(path: Path, items: List[ClassBalanceDiagnostic]) -> Path:
     _ensure_dir(path.parent)
     with open(path, 'w') as f:
-        for it in items: f.write(json.dumps(class_balance_diagnostic_to_dict(it)) + "\n")
+        _write_jsonl_chunked(f, items, class_balance_diagnostic_to_dict)
     return path
 
 def write_calibration_diagnostics_reports_jsonl(path: Path, items: List[CalibrationDiagnosticsReport]) -> Path:
     _ensure_dir(path.parent)
     with open(path, 'w') as f:
-        for it in items: f.write(json.dumps(calibration_diagnostics_report_to_dict(it)) + "\n")
+        _write_jsonl_chunked(f, items, calibration_diagnostics_report_to_dict)
     return path
 
 def write_post_training_validations_jsonl(path: Path, items: List[PostTrainingValidationResult]) -> Path:
     _ensure_dir(path.parent)
     with open(path, 'w') as f:
-        for it in items: f.write(json.dumps(post_training_validation_result_to_dict(it)) + "\n")
+        _write_jsonl_chunked(f, items, post_training_validation_result_to_dict)
     return path
 
 def write_calibration_governance_json(path: Path, item: CalibrationGovernanceResult) -> Path:
@@ -123,7 +134,7 @@ def write_calibration_governance_json(path: Path, item: CalibrationGovernanceRes
 def write_model_card_calibration_updates_jsonl(path: Path, items: List[ModelCardCalibrationUpdate]) -> Path:
     _ensure_dir(path.parent)
     with open(path, 'w') as f:
-        for it in items: f.write(json.dumps(model_card_calibration_update_to_dict(it)) + "\n")
+        _write_jsonl_chunked(f, items, model_card_calibration_update_to_dict)
     return path
 
 def write_calibration_readiness_gate_json(path: Path, item: CalibrationReadinessGate) -> Path:
