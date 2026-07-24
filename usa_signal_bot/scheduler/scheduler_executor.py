@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional, List
@@ -57,8 +61,8 @@ class LocalSchedulerExecutor:
                 if acq_res and acq_res.lock and self.concurrency_guard:
                     try:
                         self.concurrency_guard.release_if_owned(acq_res.lock, identity)
-                    except Exception:
-                        pass
+                    except Exception as e:
+                        logger.warning(f"Failed to release lock: {e}")
 
         if failed:
             status = SchedulerPlanStatus.FAILED
