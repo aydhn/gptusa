@@ -17,11 +17,27 @@ def _get_mock_review():
     )
 
 def test_attach_attribution_to_portfolio_construction_review():
+    # Happy path: valid payload and review
     payload = {"plan": "A"}
     review = _get_mock_review()
     attached = attach_attribution_to_portfolio_construction_review(payload, review)
     assert "attribution_metadata" in attached
     assert attached["attribution_metadata"]["review_id"] == "r1"
+    assert attached["plan"] == "A"
+
+    # Edge case: Empty payload
+    empty_payload = {}
+    attached_empty = attach_attribution_to_portfolio_construction_review(empty_payload, review)
+    assert "attribution_metadata" in attached_empty
+    assert attached_empty["attribution_metadata"]["review_id"] == "r1"
+
+    # Edge case: Review without ID
+    class ReviewWithoutID:
+        review_id = None
+
+    attached_none_id = attach_attribution_to_portfolio_construction_review({}, ReviewWithoutID())
+    assert "attribution_metadata" in attached_none_id
+    assert attached_none_id["attribution_metadata"]["review_id"] is None
 
 def test_portfolio_allocation_status_contribution():
     review = _get_mock_review()
