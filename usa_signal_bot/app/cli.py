@@ -876,8 +876,9 @@ def setup_phase152_cli(subparsers):
         from usa_signal_bot.app.cli_phase152_patch import register_phase152_commands
 
         register_phase152_commands(subparsers)
-    except ImportError:
-        pass
+    except ImportError as e:
+        import logging
+        logging.warning(f"Could not load Phase 152 commands: {e}")
 
     _setup_portfolio_foundation_ingest_commands(subparsers)
     _setup_portfolio_foundation_build_commands(subparsers)
