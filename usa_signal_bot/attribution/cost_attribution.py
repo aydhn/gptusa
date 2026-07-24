@@ -1,6 +1,6 @@
 """Cost, slippage, and impact attribution calculators."""
 
-from typing import Dict, List, Optional
+from typing import List
 from usa_signal_bot.core.enums import AttributionDimension
 from usa_signal_bot.attribution.attribution_models import (
     AttributionTradeEvent,
@@ -13,8 +13,8 @@ from usa_signal_bot.attribution.pnl_attribution import (
 
 
 def calculate_cost_drag_pct(
-    gross_pnl_usd: Optional[float], total_cost_usd: Optional[float]
-) -> Optional[float]:
+    gross_pnl_usd: float | None, total_cost_usd: float | None
+) -> float | None:
     if gross_pnl_usd is None or total_cost_usd is None or gross_pnl_usd <= 0:
         return None
     return (total_cost_usd / gross_pnl_usd) * 100.0
