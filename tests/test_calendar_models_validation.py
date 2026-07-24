@@ -134,5 +134,29 @@ class TestCalendarModelsValidation(unittest.TestCase):
             validate_market_holiday(h)
 
 
+    def test_validate_market_holiday_happy_path(self):
+        """Test that validating a valid MarketHoliday passes without error."""
+        h = MarketHoliday(
+            date="2023-01-01",
+            name="Valid Holiday",
+            calendar_name=CatchAllMockEnum("US_EQUITIES"),
+            source=CatchAllMockEnum("STATIC_DEFAULT"),
+        )
+        validate_market_holiday(h)
+
+    def test_validate_market_holiday_invalid_date(self):
+        """Test that validating a MarketHoliday with an invalid date string raises MarketCalendarError."""
+        from usa_signal_bot.core.exceptions import MarketCalendarError
+
+        h = MarketHoliday(
+            date="2023/01/01",
+            name="Invalid Holiday",
+            calendar_name=CatchAllMockEnum("US_EQUITIES"),
+            source=CatchAllMockEnum("STATIC_DEFAULT"),
+        )
+        with self.assertRaises(MarketCalendarError) as context:
+            validate_market_holiday(h)
+        self.assertIn("Invalid date format", str(context.exception))
+
 if __name__ == "__main__":
     unittest.main()
