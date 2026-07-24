@@ -1,6 +1,6 @@
 """Attribution scorecard generator."""
 
-from typing import Any, Dict, List, Optional
+from typing import List, Optional
 from usa_signal_bot.core.enums import AttributionQuality
 from usa_signal_bot.attribution.attribution_models import (
     AttributionTradeEvent,
