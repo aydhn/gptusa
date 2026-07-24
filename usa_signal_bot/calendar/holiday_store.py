@@ -1,7 +1,6 @@
 """Manual holiday/early-close store."""
 import json
 from pathlib import Path
-from typing import Any
 
 from usa_signal_bot.core.enums import MarketCalendarName, CalendarDataSource
 from usa_signal_bot.core.exceptions import HolidayStoreError
