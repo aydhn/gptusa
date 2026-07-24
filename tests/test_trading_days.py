@@ -1,4 +1,6 @@
 """Test trading days helpers."""
+import pytest
+from datetime import date
 from usa_signal_bot.calendar.trading_days import parse_date, format_date, count_trading_days, align_rows_to_trading_days, missing_trading_days_for_rows, non_trading_day_rows
 from usa_signal_bot.calendar.market_calendar import LocalMarketCalendar
 
@@ -22,3 +24,18 @@ def test_trading_days_helpers():
     non_trading = non_trading_day_rows(rows, cal)
     assert len(non_trading) == 1
     assert non_trading[0]["date"] == "2024-01-06"
+
+
+def test_parse_date():
+    assert parse_date("2024-01-02") == date(2024, 1, 2)
+    assert parse_date("2024-01-02 12:00:00") == date(2024, 1, 2)
+    assert parse_date("2024-01-02T12:00:00") == date(2024, 1, 2)
+
+    with pytest.raises(ValueError):
+        parse_date("invalid_date")
+
+    with pytest.raises(ValueError):
+        parse_date("2024-01-32")
+
+    with pytest.raises(ValueError):
+        parse_date("")
