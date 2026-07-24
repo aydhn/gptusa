@@ -1,6 +1,6 @@
 """Formatting and reporting for attribution data."""
 
-from typing import Any, Dict, List
+from typing import Dict, List, Mapping
 from usa_signal_bot.attribution.attribution_models import (
     AttributionTradeEvent, AttributionContribution, RiskAttributionContribution,
     SignalContribution, AttributionScorecard, AttributionReview
@@ -40,7 +40,7 @@ def attribution_review_to_text(item: AttributionReview, limit: int = 100) -> str
     lines.append("\n" + attribution_limitations_text())
     return "\n".join(lines)
 
-def attribution_store_summary_to_text(summary: Dict[str, Any]) -> str:
+def attribution_store_summary_to_text(summary: Mapping[str, object]) -> str:
     return f"Attribution Store Summary:\nTotal Reviews: {summary.get('reviews_count')}\nLatest Review: {summary.get('latest_review')}"
 
 def attribution_limitations_text() -> str:
