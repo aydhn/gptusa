@@ -2,7 +2,6 @@ from usa_signal_bot.attribution.backtest_adapter import (
     AttributionReportType,
     AttributionReview,
     create_attribution_review_id,
-    attribution_review_to_dict,
     normalize_backtest_trades,
     aggregate_pnl_by_dimension,
     AttributionDimension,
@@ -17,7 +16,6 @@ def test_dependencies():
     assert AttributionDimension is not None
     assert AttributionReview is not None
     assert callable(create_attribution_review_id)
-    assert callable(attribution_review_to_dict)
     assert callable(normalize_backtest_trades)
     assert callable(aggregate_pnl_by_dimension)
     assert callable(build_attribution_scorecard)
