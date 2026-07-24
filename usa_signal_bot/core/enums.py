@@ -4641,14 +4641,21 @@ class AttributionReportType(str, Enum):
 
 class AttributionDimension(str, Enum):
     SYMBOL = 'SYMBOL'
+    COST_COMPONENT = 'COST_COMPONENT'
 
 class ContributionDirection(str, Enum):
     POSITIVE = 'POSITIVE'
     NEGATIVE = 'NEGATIVE'
+    NEUTRAL = 'NEUTRAL'
+    INSUFFICIENT_DATA = 'INSUFFICIENT_DATA'
     UNKNOWN = 'UNKNOWN'
 
 class AttributionQuality(str, Enum):
     HIGH = 'HIGH'
+    ACCEPTABLE = 'ACCEPTABLE'
+    NOISY = 'NOISY'
+    WEAK = 'WEAK'
+    INSUFFICIENT_DATA = 'INSUFFICIENT_DATA'
     LOW = 'LOW'
     UNKNOWN = 'UNKNOWN'
 
