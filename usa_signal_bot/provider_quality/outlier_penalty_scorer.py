@@ -1,8 +1,11 @@
 import datetime
+import logging
 from typing import List, Dict, Any, Optional
 
 from usa_signal_bot.core.enums import DataQualityComponent, DataQualityGrade, ProviderQualityRiskFlag
 from usa_signal_bot.provider_quality.phase109_models import DataQualityScoreComponent, create_data_quality_component_id
+
+logger = logging.getLogger(__name__)
 
 def outlier_profile_grade(score: float) -> DataQualityGrade:
     if score >= 95:
@@ -35,8 +38,8 @@ def detect_basic_ohlcv_outliers(records: List[Dict[str, Any]]) -> List[str]:
                 outliers.append(f"Row {i}: close outside high/low range")
             if vol < 0:
                 outliers.append(f"Row {i}: volume < 0 ({vol})")
-        except (ValueError, TypeError):
-            pass # schema errors caught elsewhere
+        except (ValueError, TypeError) as e:
+            logger.debug(f"Schema error skipped in row {i}: {e}") # schema errors caught elsewhere
     return outliers
 
 def outlier_score_from_count(outlier_count: int, row_count: int) -> float:
