@@ -59,7 +59,9 @@ def default_shadow_launch_blocker_rules() -> list[ShadowLaunchBlockerRule]:
 
 def validate_shadow_launch_blocker_rules_complete(rules: list[ShadowLaunchBlockerRule]) -> list[str]:
     issues = []
-    covered_types = {r.attempt_type for r in rules if r.enabled and r.blocking and r.action in [ShadowLaunchBlockerAction.DENY, ShadowLaunchBlockerAction.DENY_AND_RECORD]}
+    action_deny = ShadowLaunchBlockerAction.DENY
+    action_deny_and_record = ShadowLaunchBlockerAction.DENY_AND_RECORD
+    covered_types = {r.attempt_type for r in rules if r.enabled and r.blocking and (r.action is action_deny or r.action is action_deny_and_record)}
 
     for required in dangerous_shadow_launch_attempt_types():
         if required not in covered_types:
