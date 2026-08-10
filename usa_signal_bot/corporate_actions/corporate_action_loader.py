@@ -67,36 +67,42 @@ def corporate_actions_from_provider_response(response: ProviderResponse) -> list
     if not response.metadata:
         return events
 
-    for symbol, sym_meta in response.metadata.get("symbols", {}).items():
+    symbols_meta = response.metadata.get("symbols", {})
+    if not symbols_meta:
+        return events
+
+    for symbol, sym_meta in symbols_meta.items():
         # Example extracting splits
-        for split in sym_meta.get("splits", []):
-            events.append(CorporateActionEvent(
-                event_id=create_corporate_action_event_id(symbol, CorporateActionType.SPLIT, split["date"]),
-                symbol=symbol,
-                action_type=CorporateActionType.SPLIT,
-                ex_date=split["date"],
-                value=None,
-                ratio_numerator=split.get("numerator"),
-                ratio_denominator=split.get("denominator"),
-                source=CorporateActionSource.PROVIDER_METADATA,
-                confidence=1.0,
-                metadata={"provider_raw": split}
-            ))
+        if "splits" in sym_meta:
+            for split in sym_meta["splits"]:
+                events.append(CorporateActionEvent(
+                    event_id=create_corporate_action_event_id(symbol, CorporateActionType.SPLIT, split["date"]),
+                    symbol=symbol,
+                    action_type=CorporateActionType.SPLIT,
+                    ex_date=split["date"],
+                    value=None,
+                    ratio_numerator=split.get("numerator"),
+                    ratio_denominator=split.get("denominator"),
+                    source=CorporateActionSource.PROVIDER_METADATA,
+                    confidence=1.0,
+                    metadata={"provider_raw": split}
+                ))
 
         # Example extracting dividends
-        for div in sym_meta.get("dividends", []):
-            events.append(CorporateActionEvent(
-                event_id=create_corporate_action_event_id(symbol, CorporateActionType.DIVIDEND, div["date"]),
-                symbol=symbol,
-                action_type=CorporateActionType.DIVIDEND,
-                ex_date=div["date"],
-                value=div.get("amount"),
-                ratio_numerator=None,
-                ratio_denominator=None,
-                source=CorporateActionSource.PROVIDER_METADATA,
-                confidence=1.0,
-                metadata={"provider_raw": div}
-            ))
+        if "dividends" in sym_meta:
+            for div in sym_meta["dividends"]:
+                events.append(CorporateActionEvent(
+                    event_id=create_corporate_action_event_id(symbol, CorporateActionType.DIVIDEND, div["date"]),
+                    symbol=symbol,
+                    action_type=CorporateActionType.DIVIDEND,
+                    ex_date=div["date"],
+                    value=div.get("amount"),
+                    ratio_numerator=None,
+                    ratio_denominator=None,
+                    source=CorporateActionSource.PROVIDER_METADATA,
+                    confidence=1.0,
+                    metadata={"provider_raw": div}
+                ))
 
     return events
 
