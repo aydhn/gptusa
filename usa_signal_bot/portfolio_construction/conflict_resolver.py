@@ -1,12 +1,11 @@
 from usa_signal_bot.portfolio_construction.portfolio_models import PortfolioConstructionPlan, PortfolioAllocationStatus, PortfolioGuardDecision
 from usa_signal_bot.core.enums import PortfolioConflictType
+from collections import defaultdict
 
 def detect_symbol_overlap_conflicts(plan: PortfolioConstructionPlan) -> list[dict[str, any]]:
     conflicts = []
-    symbol_sides = {}
+    symbol_sides = defaultdict(set)
     for a in plan.allocations:
-        if a.symbol not in symbol_sides:
-            symbol_sides[a.symbol] = set()
         symbol_sides[a.symbol].add(a.side)
 
     for sym, sides in symbol_sides.items():
@@ -36,10 +35,14 @@ def resolve_portfolio_conflicts(plan: PortfolioConstructionPlan) -> PortfolioCon
     plan.conflicts.extend(conflicts)
 
     # simple side conflict resolution: keep highest weight
+    symbol_allocs = defaultdict(list)
+    for a in plan.allocations:
+        symbol_allocs[a.symbol].append(a)
+
     for c in conflicts:
         if c.get("type") == "SIDE_CONFLICT":
             sym = c.get("symbol")
-            sym_allocs = [a for a in plan.allocations if a.symbol == sym]
+            sym_allocs = symbol_allocs.get(sym, [])
             if not sym_allocs: continue
             best = max(sym_allocs, key=lambda x: x.weight_pct_equity or 0.0)
             for a in sym_allocs:
