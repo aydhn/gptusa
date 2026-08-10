@@ -16,3 +16,11 @@ def test_no_side_effects():
     assert not res.telegram_real_send_enabled
     assert not res.real_order_creation_enabled
     assert not res.deployment_allowed
+
+from usa_signal_bot.integration.phase158_models import IntegrationBoundaryContract
+from usa_signal_bot.integration.full_system_integration_reporting import integration_boundary_contract_to_text
+
+def test_integration_boundary_contract_to_text():
+    contract = IntegrationBoundaryContract(contract_valid=True)
+    assert integration_boundary_contract_to_text(contract) == 'IntegrationBoundaryContract(valid=True)'
+    assert integration_boundary_contract_to_text(contract, limit=20) == 'IntegrationBoundaryC'
