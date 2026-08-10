@@ -4730,3 +4730,61 @@ class AllocationStatus(str, Enum):
     PENDING = "PENDING"
     ALLOCATED = "ALLOCATED"
     FAILED = "FAILED"
+
+
+class ProviderGovernanceStatus(str, Enum):
+    VALIDATED = "VALIDATED"
+    WARNING = "WARNING"
+    INVALID = "INVALID"
+    DRAFT = "DRAFT"
+
+class ProviderGovernanceRuleKind(str, Enum):
+    SAFETY = "SAFETY"
+    DATA_QUALITY = "DATA_QUALITY"
+
+class ProviderGovernanceRuleStatus(str, Enum):
+    ACTIVE = "ACTIVE"
+    INACTIVE = "INACTIVE"
+
+class ProviderGovernanceRiskFlag(str, Enum):
+    HIGH_RISK = "HIGH_RISK"
+    MEDIUM_RISK = "MEDIUM_RISK"
+    LOW_RISK = "LOW_RISK"
+
+class ProviderAcceptanceCriterionKind(str, Enum):
+    REQUIRED = "REQUIRED"
+    OPTIONAL = "OPTIONAL"
+
+class ProviderAcceptanceStatus(str, Enum):
+    ACCEPTED = "ACCEPTED"
+    REJECTED = "REJECTED"
+    PENDING = "PENDING"
+
+class DataLineageNodeKind(str, Enum):
+    SOURCE = "SOURCE"
+    TRANSFORMATION = "TRANSFORMATION"
+    OUTPUT = "OUTPUT"
+
+class DataLineageEdgeKind(str, Enum):
+    DEPENDENCY = "DEPENDENCY"
+    DATA_FLOW = "DATA_FLOW"
+
+class AuditTrailEventKind(str, Enum):
+    CREATE = "CREATE"
+    UPDATE = "UPDATE"
+    DELETE = "DELETE"
+    READ = "READ"
+
+class AuditArtifactStatus(str, Enum):
+    VALID = "VALID"
+    INVALID = "INVALID"
+    MISSING = "MISSING"
+
+class ProviderGovernanceDecision(str, Enum):
+    APPROVE = "APPROVE"
+    REJECT = "REJECT"
+    REQUIRE_CHANGES = "REQUIRE_CHANGES"
+
+class ProviderGovernanceReportType(str, Enum):
+    FULL = "FULL"
+    SUMMARY = "SUMMARY"
