@@ -16,3 +16,21 @@ def test_no_side_effects():
     assert not res.telegram_real_send_enabled
     assert not res.real_order_creation_enabled
     assert not res.deployment_allowed
+
+from usa_signal_bot.integration.phase158_models import IntegrationDependencyGraph
+from usa_signal_bot.integration.full_system_integration_reporting import integration_dependency_graph_to_text
+
+def test_integration_dependency_graph_to_text_valid():
+    item = IntegrationDependencyGraph(graph_valid=True)
+    result = integration_dependency_graph_to_text(item)
+    assert result == "IntegrationDependencyGraph(valid=True)"
+
+def test_integration_dependency_graph_to_text_invalid():
+    item = IntegrationDependencyGraph(graph_valid=False)
+    result = integration_dependency_graph_to_text(item)
+    assert result == "IntegrationDependencyGraph(valid=False)"
+
+def test_integration_dependency_graph_to_text_limit():
+    item = IntegrationDependencyGraph(graph_valid=True)
+    result = integration_dependency_graph_to_text(item, limit=20)
+    assert result == "IntegrationDependenc"
