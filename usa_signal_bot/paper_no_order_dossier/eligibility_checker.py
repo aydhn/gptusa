@@ -1,8 +1,6 @@
 from typing import Any
 import json
 from usa_signal_bot.core.enums import (
-    NoOrderSessionDossierDecision,
-    NoOrderSessionDossierStatus,
     NoOrderDossierRiskFlag
 )
 from usa_signal_bot.paper_no_order_dossier.bridge_ingestion import (
@@ -42,11 +40,11 @@ def no_order_dossier_safety_flags_from_bridge(payload: dict[str, Any]) -> list[N
         flags.append(NoOrderDossierRiskFlag.DANGEROUS_ROUTE_ALLOWED)
 
     session = extract_no_order_session(payload)
-    if session and session.get("status") in ["FAILED", "ERROR"]:
+    if session and session.get("status") in {"FAILED", "ERROR"}:
         flags.append(NoOrderDossierRiskFlag.NO_ORDER_SESSION_FAILED)
 
     replay = extract_bridge_replay_result(payload)
-    if replay and replay.get("status") in ["FAILED", "ERROR"]:
+    if replay and replay.get("status") in {"FAILED", "ERROR"}:
         flags.append(NoOrderDossierRiskFlag.BRIDGE_REPLAY_FAILED)
 
     return flags
