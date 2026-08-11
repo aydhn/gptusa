@@ -35,11 +35,17 @@ def resolve_portfolio_conflicts(plan: PortfolioConstructionPlan) -> PortfolioCon
     conflicts = detect_portfolio_conflicts(plan)
     plan.conflicts.extend(conflicts)
 
+    # Build symbol index for O(1) lookups
+    from collections import defaultdict
+    allocations_by_symbol = defaultdict(list)
+    for a in plan.allocations:
+        allocations_by_symbol[a.symbol].append(a)
+
     # simple side conflict resolution: keep highest weight
     for c in conflicts:
         if c.get("type") == "SIDE_CONFLICT":
             sym = c.get("symbol")
-            sym_allocs = [a for a in plan.allocations if a.symbol == sym]
+            sym_allocs = allocations_by_symbol.get(sym, [])
             if not sym_allocs: continue
             best = max(sym_allocs, key=lambda x: x.weight_pct_equity or 0.0)
             for a in sym_allocs:
