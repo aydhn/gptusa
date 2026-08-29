@@ -1,7 +1,8 @@
+import shlex
 import subprocess
 
 def run_cmd(cmd):
-    result = subprocess.run(f"python -m usa_signal_bot {cmd}", shell=True, capture_output=True, text=True)
+    result = subprocess.run(["python", "-m", "usa_signal_bot"] + shlex.split(cmd), capture_output=True, text=True)
     return result
 
 def test_simulator_dossier_cli():
