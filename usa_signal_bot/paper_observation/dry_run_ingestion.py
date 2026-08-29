@@ -17,7 +17,7 @@ def dry_run_ingestion_warnings(payload: dict[str, Any]) -> List[str]:
     warnings = []
     if not extract_dry_run_sessions(payload):
         warnings.append("Missing dry-run sessions.")
-    if len([e for e in extract_bridge_telemetry_events(payload) if e.get("event_type") == "BLOCKED_OPERATION"]) > 0 or payload.get("blocked_operation_count", 0) > 0:
+    if any(e.get("event_type") == "BLOCKED_OPERATION" for e in extract_bridge_telemetry_events(payload)) or payload.get("blocked_operation_count", 0) > 0:
         warnings.append("Blocked operations found in telemetry.")
     return warnings
 
