@@ -155,11 +155,10 @@ def validate_no_active_paper_language_in_board(text: str) -> PaperReadinessBoard
     return PaperReadinessBoardValidationReport(len(issues)==0, len(issues), 0, len(issues), 0, issues, [], [i.message for i in issues])
 
 def validate_no_paper_state_mutation_fields_in_board(payload: dict) -> PaperReadinessBoardValidationReport:
-    keys = " ".join(payload.keys())
+    bad_keys = {"paper_state_committed", "portfolio_state_mutated", "position_mutated"}
     issues = []
-    for bad in ["paper_state_committed", "portfolio_state_mutated", "position_mutated"]:
-        if bad in keys:
-            issues.append(PaperReadinessBoardValidationIssue("ERROR", "fields", f"Forbidden field: {bad}"))
+    for bad in bad_keys & payload.keys():
+        issues.append(PaperReadinessBoardValidationIssue("ERROR", "fields", f"Forbidden field: {bad}"))
     return PaperReadinessBoardValidationReport(len(issues)==0, len(issues), 0, len(issues), 0, issues, [], [i.message for i in issues])
 
 def validate_no_broker_execution_fields_in_board(payload: dict) -> PaperReadinessBoardValidationReport:
