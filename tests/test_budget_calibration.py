@@ -30,3 +30,25 @@ def test_calibrate_raise_budget():
     result = calibrate_budget_for_scope(ResourceProfileScope.TASK, profiles, budget)
     assert result.status == CalibrationStatus.CALIBRATED
     assert result.decision in [CalibrationDecision.SPLIT_TASK, CalibrationDecision.RAISE_BUDGET]
+
+
+from unittest.mock import patch, MagicMock
+
+def test_calibrate_all_budgets_happy_path():
+    from usa_signal_bot.profiling.budget_calibration import calibrate_all_budgets
+    mock_profile = MagicMock()
+    mock_result = MagicMock()
+    with patch('usa_signal_bot.profiling.budget_calibration.ResourceProfileScope') as mock_scope_class, patch('usa_signal_bot.profiling.budget_calibration.calibrate_budget_for_scope', return_value=mock_result) as mock_calibrate:
+        mock_scope_instance = MagicMock()
+        mock_scope_class.return_value = mock_scope_instance
+        results = calibrate_all_budgets([mock_profile], {'VALID_SCOPE': {'wall_time_seconds': 10.0}})
+        assert len(results) == 1
+        assert results[0] == mock_result
+        mock_scope_class.assert_called_once_with('VALID_SCOPE')
+        mock_calibrate.assert_called_once_with(mock_scope_instance, [mock_profile], {'wall_time_seconds': 10.0})
+
+def test_calibrate_all_budgets_value_error():
+    from usa_signal_bot.profiling.budget_calibration import calibrate_all_budgets
+    with patch('usa_signal_bot.profiling.budget_calibration.ResourceProfileScope', side_effect=ValueError):
+        results = calibrate_all_budgets([], {'INVALID_SCOPE': {'wall_time_seconds': 10.0}})
+        assert len(results) == 0
