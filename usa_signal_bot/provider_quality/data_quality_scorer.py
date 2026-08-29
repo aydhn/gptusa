@@ -1,7 +1,7 @@
 import datetime
 from typing import List, Dict, Any, Optional
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 @dataclass
 class ProviderDataQualityScoreParams:
