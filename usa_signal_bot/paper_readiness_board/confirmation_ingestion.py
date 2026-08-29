@@ -18,7 +18,6 @@ def extract_confirmation_candidate_id(payload: dict) -> Optional[str]:
     return payload.get("candidate_id")
 
 def extract_activation_denied_state(payload: dict) -> Tuple[Optional[bool], Optional[bool]]:
-    # return (activation_denied, activation_allowed)
     denied = payload.get("activation_denied")
     allowed = payload.get("activation_allowed")
     return denied, allowed
