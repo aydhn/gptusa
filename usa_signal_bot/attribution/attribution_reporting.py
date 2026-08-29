@@ -1,6 +1,6 @@
 """Formatting and reporting for attribution data."""
 
-from typing import Dict, List, Mapping
+from typing import List, Mapping
 from usa_signal_bot.attribution.attribution_models import (
     AttributionTradeEvent, AttributionContribution, RiskAttributionContribution,
     SignalContribution, AttributionScorecard, AttributionReview
