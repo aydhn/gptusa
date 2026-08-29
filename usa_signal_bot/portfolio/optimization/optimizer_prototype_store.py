@@ -32,13 +32,13 @@ def write_optimizer_prototype_full_review_json(path: Path, item: OptimizerProtot
 def write_optimizer_input_refs_jsonl(path: Path, items: List[OptimizerInputReference]) -> Path:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w") as f:
-        for i in items: f.write(json.dumps(i.to_dict()) + "\n")
+        f.writelines([json.dumps(i.to_dict()) + "\n" for i in items])
     return path
 
 def write_optimizer_candidates_jsonl(path: Path, items: List[OptimizerSandboxCandidate]) -> Path:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w") as f:
-        for i in items: f.write(json.dumps(i.to_dict()) + "\n")
+        f.writelines([json.dumps(i.to_dict()) + "\n" for i in items])
     return path
 
 def write_optimizer_policy_json(path: Path, item: OptimizerPolicy) -> Path:
@@ -49,25 +49,25 @@ def write_optimizer_policy_json(path: Path, item: OptimizerPolicy) -> Path:
 def write_objective_contracts_jsonl(path: Path, items: List[OptimizerObjectiveContract]) -> Path:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w") as f:
-        for i in items: f.write(json.dumps(i.to_dict()) + "\n")
+        f.writelines([json.dumps(i.to_dict()) + "\n" for i in items])
     return path
 
 def write_constraint_contracts_jsonl(path: Path, items: List[OptimizerConstraintContract]) -> Path:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w") as f:
-        for i in items: f.write(json.dumps(i.to_dict()) + "\n")
+        f.writelines([json.dumps(i.to_dict()) + "\n" for i in items])
     return path
 
 def write_optimizer_results_jsonl(path: Path, items: List[OptimizerSandboxResult]) -> Path:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w") as f:
-        for i in items: f.write(json.dumps(i.to_dict()) + "\n")
+        f.writelines([json.dumps(i.to_dict()) + "\n" for i in items])
     return path
 
 def write_objective_scores_jsonl(path: Path, items: List[OptimizerObjectiveScore]) -> Path:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w") as f:
-        for i in items: f.write(json.dumps(i.to_dict()) + "\n")
+        f.writelines([json.dumps(i.to_dict()) + "\n" for i in items])
     return path
 
 def write_objective_comparison_report_json(path: Path, item: ObjectiveComparisonReport) -> Path:
@@ -78,7 +78,7 @@ def write_objective_comparison_report_json(path: Path, item: ObjectiveComparison
 def write_optimizer_diagnostics_jsonl(path: Path, items: List[OptimizerDiagnosticRecord]) -> Path:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w") as f:
-        for i in items: f.write(json.dumps(i.to_dict()) + "\n")
+        f.writelines([json.dumps(i.to_dict()) + "\n" for i in items])
     return path
 
 def write_optimizer_validation_report_json(path: Path, item: OptimizerValidationReport) -> Path:
