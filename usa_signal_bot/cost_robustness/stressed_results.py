@@ -9,10 +9,7 @@ from usa_signal_bot.cost_robustness.robustness_models import (
 from usa_signal_bot.cost_robustness.fill_realism_stress import apply_fill_realism_mode_to_trade
 
 def stress_trade_result(trade: Dict[str, Any], scenario: CostStressScenario) -> CostStressedTradeResult:
-    # 1. Apply liquidity filter (if fails, return immediately?)
-    # For now, we process it and rely on the backtest builder to filter them out or mark as failed.
-
-    # 2. Apply fill realism
+    # Apply fill realism
     modified_trade = apply_fill_realism_mode_to_trade(trade, scenario)
 
     symbol = modified_trade.get('symbol', 'UNKNOWN')
