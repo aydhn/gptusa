@@ -1,5 +1,4 @@
 import datetime
-import uuid
 from typing import Dict, Any, Optional, Tuple, List
 
 from usa_signal_bot.core.enums import ProviderQualityRiskFlag
