@@ -7,10 +7,10 @@ from usa_signal_bot.incident.rollback_models import RollbackSource, create_rollb
 def _calc_checksum(p: Path) -> str | None:
     if not p.is_file():
         return None
-    # Calculate md5 only if file is less than 50MB
+    # Calculate sha256 only if file is less than 50MB
     if p.stat().st_size > 50 * 1024 * 1024:
         return None
-    h = hashlib.md5()
+    h = hashlib.sha256()
     with open(p, "rb") as f:
         for chunk in iter(lambda: f.read(4096), b""):
             h.update(chunk)
