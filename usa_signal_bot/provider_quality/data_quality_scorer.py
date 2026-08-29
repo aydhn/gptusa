@@ -18,7 +18,6 @@ class ProviderDataQualityScoreParams:
 
 from usa_signal_bot.core.enums import (
     DataQualityGrade,
-    ProviderQualityRiskFlag,
     DataQualityComponent,
 )
 from usa_signal_bot.provider_quality.phase109_models import (
