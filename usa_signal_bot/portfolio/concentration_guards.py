@@ -216,11 +216,6 @@ def apply_concentration_caps(
         if reason not in a.cap_reasons:
             a.cap_reasons.append(reason)
 
-        # Calculate proportional reductions if needed for group caps
-        # This is simplified for the base implementation:
-        # We would normally scale down all group members together.
-        # To keep it deterministic and simpler in Phase 32 without optimization,
-        # we rely on the normal allocation caps first.
     return allocations
 
 
