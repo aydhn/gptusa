@@ -3,7 +3,7 @@
 from typing import Dict, List, Mapping
 from usa_signal_bot.attribution.attribution_models import (
     AttributionTradeEvent, AttributionContribution, RiskAttributionContribution,
-    SignalContribution, AttributionScorecard, AttributionReview
+    SignalContribution, AttributionReview
 )
 from usa_signal_bot.attribution.pnl_attribution import pnl_attribution_to_text
 from usa_signal_bot.attribution.risk_attribution import risk_attribution_to_text
