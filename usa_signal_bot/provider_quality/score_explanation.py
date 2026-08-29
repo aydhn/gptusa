@@ -5,7 +5,6 @@ from usa_signal_bot.provider_quality.phase109_models import (
     ProviderSelectionScore,
     ProviderRanking
 )
-from usa_signal_bot.core.enums import ProviderQualityRiskFlag
 
 def score_explanation_safety_check(text: str) -> List[str]:
     unsafe_terms = [
