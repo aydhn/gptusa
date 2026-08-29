@@ -40,12 +40,9 @@ def cross_sectional_volatility_dispersion(confirmations: list[MultiTimeframeRegi
     return float(np.std(vols))
 
 def sector_proxy_dispersion(symbol_metadata: dict[str, dict[str, Any]] | None, confirmations: list[MultiTimeframeRegimeConfirmation]) -> dict[str, Any]:
-    # Placeholder for sector dispersion if metadata is provided
-    # In absence of paid API, we might not have sector data, so return empty or basic metrics
     if not symbol_metadata:
         return {"reason": "No sector metadata available"}
 
-    # Logic to group by sector and compute dispersion would go here
     return {"status": "Not implemented without sector data"}
 
 def dispersion_score(confirmations: list[MultiTimeframeRegimeConfirmation], symbol_rows: dict[str, list[dict[str, Any]]] | None = None) -> float | None:
