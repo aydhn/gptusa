@@ -16,10 +16,6 @@ import argparse
 import sys
 
 
-def mock_cli():
-    pass
-
-
 # Read original
 with open("usa_signal_bot/app/cli.py", "r") as f:
     content = f.read()
