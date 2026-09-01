@@ -102,7 +102,7 @@ class RollbackExecutor:
         validate_rollback_plan(plan)
         return plan
 
-    def execute_step(self, step: RollbackStep, force: bool = False, allow_overwrite: bool = False) -> RollbackStep:
+    def execute_step(self, step: RollbackStep, force: bool = False, allow_overwrite: bool = False, _zip_cache: dict | None = None) -> RollbackStep:
         if step.dry_run:
             step.status = RollbackStepStatus.DRY_RUN_OK
             return step
@@ -132,10 +132,17 @@ class RollbackExecutor:
                 step.status = RollbackStepStatus.EXECUTED
             elif step.action == "EXTRACT":
                 source_archive, inner_name = step.source_path.split("::", 1)
-                with zipfile.ZipFile(source_archive, 'r') as zf:
-                    target.parent.mkdir(parents=True, exist_ok=True)
+                target.parent.mkdir(parents=True, exist_ok=True)
+                if _zip_cache is not None:
+                    if source_archive not in _zip_cache:
+                        _zip_cache[source_archive] = zipfile.ZipFile(source_archive, 'r')
+                    zf = _zip_cache[source_archive]
                     with zf.open(inner_name) as z_in, open(target, 'wb') as f_out:
                         shutil.copyfileobj(z_in, f_out)
+                else:
+                    with zipfile.ZipFile(source_archive, 'r') as zf:
+                        with zf.open(inner_name) as z_in, open(target, 'wb') as f_out:
+                            shutil.copyfileobj(z_in, f_out)
                 step.status = RollbackStepStatus.EXECUTED
             else:
                 step.status = RollbackStepStatus.FAILED
@@ -171,14 +178,19 @@ class RollbackExecutor:
                 errors=["Plan is blocked."]
             )
 
-        for step in plan.steps:
-            res = self.execute_step(step, force=force, allow_overwrite=allow_overwrite)
-            if res.status in [RollbackStepStatus.EXECUTED, RollbackStepStatus.DRY_RUN_OK]:
-                executed.append(res)
-            elif res.status in [RollbackStepStatus.SKIPPED, RollbackStepStatus.BLOCKED]:
-                skipped.append(res)
-            else:
-                failed.append(res)
+        _zip_cache = {}
+        try:
+            for step in plan.steps:
+                res = self.execute_step(step, force=force, allow_overwrite=allow_overwrite, _zip_cache=_zip_cache)
+                if res.status in [RollbackStepStatus.EXECUTED, RollbackStepStatus.DRY_RUN_OK]:
+                    executed.append(res)
+                elif res.status in [RollbackStepStatus.SKIPPED, RollbackStepStatus.BLOCKED]:
+                    skipped.append(res)
+                else:
+                    failed.append(res)
+        finally:
+            for zf in _zip_cache.values():
+                zf.close()
 
         status = RollbackPlanStatus.EXECUTED
         if plan.dry_run:
