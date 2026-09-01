@@ -1,4 +1,3 @@
-import os
 import shutil
 import datetime
 from pathlib import Path
@@ -20,7 +19,7 @@ class CleanupExecutor:
             return False, "Path is outside data_root"
 
         if is_protected_path(path, self.project_root, self.data_root):
-             return False, "Path is protected"
+            return False, "Path is protected"
 
         return True, "Safe"
 
@@ -87,7 +86,7 @@ class CleanupExecutor:
                 else:
                     skipped.append(updated_c.path)
             else:
-                 skipped.append(c.path)
+                skipped.append(c.path)
 
         status = CleanupRunStatus.COMPLETED
         if failed:
