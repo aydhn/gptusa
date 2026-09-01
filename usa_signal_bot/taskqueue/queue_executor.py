@@ -3,6 +3,7 @@ from pathlib import Path
 from usa_signal_bot.taskqueue.task_models import LocalTask, TaskQueuePlan, TaskQueueRunResult, create_task_queue_run_id
 from usa_signal_bot.core.enums import LocalTaskStatus, TaskQueueStatus
 from datetime import datetime, timezone
+import concurrent.futures
 
 class TaskQueueDryRunExecutor:
     def __init__(self, data_root: Path, project_root: Optional[Path] = None):
@@ -12,12 +13,12 @@ class TaskQueueDryRunExecutor:
         if any(c.blocking for c in plan.conflicts):
             return TaskQueueRunResult(create_task_queue_run_id(), datetime.now(timezone.utc).isoformat(), TaskQueueStatus.BLOCKED, plan, [], plan.tasks, [], [], {}, ["Plan execution blocked due to plan-level conflicts."], [])
         executed, skipped, blocked, failed = [], [], [], []
-        for task in plan.tasks:
-            t = self.execute_task(task)
-            if t.status == LocalTaskStatus.COMPLETED: executed.append(t)
-            elif t.status == LocalTaskStatus.BLOCKED: blocked.append(t)
-            elif t.status == LocalTaskStatus.SKIPPED: skipped.append(t)
-            else: failed.append(t)
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            for t in executor.map(self.execute_task, plan.tasks):
+                if t.status == LocalTaskStatus.COMPLETED: executed.append(t)
+                elif t.status == LocalTaskStatus.BLOCKED: blocked.append(t)
+                elif t.status == LocalTaskStatus.SKIPPED: skipped.append(t)
+                else: failed.append(t)
         status = TaskQueueStatus.WARNING if failed or blocked else TaskQueueStatus.DRY_RUN_COMPLETED
         return TaskQueueRunResult(create_task_queue_run_id(), datetime.now(timezone.utc).isoformat(), status, plan, executed, skipped, blocked, failed, {}, [], [])
 
