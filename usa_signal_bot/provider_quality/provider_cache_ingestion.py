@@ -81,8 +81,14 @@ def ingest_provider_cache_review_payload(payload: Dict[str, Any], source_path: O
     )
 
 def ingest_latest_provider_cache_review_from_store(data_root: Any) -> ProviderCacheIngestionResult:
-    # We will implement the file read in the store module and pass the dict here
-    pass
+    from usa_signal_bot.provider_quality.provider_quality_store import get_latest_provider_quality_review, read_provider_quality_full_review_json
+
+    path = get_latest_provider_quality_review(data_root)
+    if path:
+        payload = read_provider_quality_full_review_json(path)
+        return ingest_provider_cache_review_payload(payload, source_path=str(path))
+
+    return ingest_provider_cache_review_payload({}, source_path=None)
 
 def provider_cache_ingestion_to_text(result: ProviderCacheIngestionResult) -> str:
     return f"Ingestion ID: {result.ingestion_id} | Valid: {result.valid_for_phase109} | Cache Ready: {result.provider_cache_ready}"
