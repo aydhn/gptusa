@@ -39,7 +39,7 @@ def validate_phase153_handoff_payload(payload: dict[str, Any]) -> list[str]:
 
     if ".." in str(payload):
         # Extremely basic path traversal check simulation
-        pass
+        errors.append("Path traversal detected: '..' found in payload")
 
     for key in ["target_weight", "allocation", "position_size", "order", "live_signal"]:
         if key in payload:
