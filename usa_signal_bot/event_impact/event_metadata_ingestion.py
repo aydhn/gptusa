@@ -86,7 +86,6 @@ def ingest_latest_event_metadata_review_from_store(data_root: Path) -> EventMeta
                 return res
     except Exception as e:
         logging.error(f"Failed to ingest from store: {e}")
-        pass
 
     return EventMetadataIngestionResult(
         ingestion_id=create_event_metadata_ingestion_id(),
