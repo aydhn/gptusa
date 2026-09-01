@@ -196,7 +196,7 @@ def select_candidates(ranking_report: SignalRankingReport, config: Optional[Cand
 
     for rs in ranking_report.ranked_signals:
         if rs.ranking_status.value == "FILTERED":
-            pass
+            continue
 
         cand = evaluate_candidate(rs, config)
         if cand.selection_status == CandidateSelectionStatus.REJECTED:
