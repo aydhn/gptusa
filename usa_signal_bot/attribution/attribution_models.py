@@ -282,7 +282,10 @@ def validate_attribution_contribution(item: AttributionContribution) -> None:
 
 
 def validate_risk_attribution_contribution(item: RiskAttributionContribution) -> None:
-    pass
+    if not item.name:
+        raise AttributionValidationError("Name cannot be empty.")
+    if item.concentration_contribution_pct is not None and (item.concentration_contribution_pct < -100 or item.concentration_contribution_pct > 100):
+        raise AttributionValidationError("Concentration percentage is outside expected bounds.")
 
 
 def validate_signal_contribution(item: SignalContribution) -> None:
