@@ -1,3 +1,4 @@
+import logging
 import json
 from pathlib import Path
 from typing import Any
@@ -52,8 +53,8 @@ def load_profiles_from_store(data_root: Path, scope: ResourceProfileScope | None
 
             if scope is None or profile.scope == scope:
                 profiles.append(profile)
-        except Exception:
-            pass
+        except Exception as e:
+            logging.warning(f"Failed to load profile {profile_path}: {e}")
 
     profiles.sort(key=lambda p: p.started_at_utc or "", reverse=True)
     if limit is not None:
