@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, List
-import random
+import random  # nosec
 import hashlib
 import json
 from pathlib import Path
@@ -11,7 +11,7 @@ def generate_deterministic_ohlcv_rows(symbol: str, start_date: str, row_count: i
     # Use symbol and start_date to seed so we get deterministic but varying results
     seed_str = f"{symbol}_{start_date}"
     seed = int(hashlib.md5(seed_str.encode()).hexdigest(), 16) % (2**32)
-    random.seed(seed)
+    random.seed(seed)  # nosec
 
     try:
         current_date = datetime.strptime(start_date, "%Y-%m-%d")
@@ -23,15 +23,15 @@ def generate_deterministic_ohlcv_rows(symbol: str, start_date: str, row_count: i
 
     for i in range(row_count):
         # Deterministic random walk
-        change_pct = random.uniform(-0.03, 0.03)
+        change_pct = random.uniform(-0.03, 0.03)  # nosec
         open_p = current_price
         close_p = open_p * (1 + change_pct)
 
         # Ensure high >= max(open, close) and low <= min(open, close)
-        high_p = max(open_p, close_p) * (1 + random.uniform(0.0, 0.02))
-        low_p = min(open_p, close_p) * (1 - random.uniform(0.0, 0.02))
+        high_p = max(open_p, close_p) * (1 + random.uniform(0.0, 0.02))  # nosec
+        low_p = min(open_p, close_p) * (1 - random.uniform(0.0, 0.02))  # nosec
 
-        volume = int(random.uniform(100000, 5000000))
+        volume = int(random.uniform(100000, 5000000))  # nosec
 
         row = {
             "symbol": symbol,
@@ -65,14 +65,14 @@ def generate_golden_signal_records(symbols: List[str], timeframe: str = "1d") ->
     for i, sym in enumerate(sorted(symbols)):
         seed_str = f"signal_{sym}_{timeframe}"
         seed = int(hashlib.md5(seed_str.encode()).hexdigest(), 16) % (2**32)
-        random.seed(seed)
+        random.seed(seed)  # nosec
 
         records.append({
             "signal_id": f"sig_{sym}_{timeframe}",
             "symbol": sym,
             "timeframe": timeframe,
-            "action": random.choice(["BUY", "SELL", "HOLD"]),
-            "confidence": round(random.uniform(0.3, 0.9), 2),
+            "action": random.choice(["BUY", "SELL", "HOLD"]),  # nosec
+            "confidence": round(random.uniform(0.3, 0.9), 2),  # nosec
             "strategy": "golden_strategy",
             "timestamp": "2024-03-29"
         })
@@ -83,12 +83,12 @@ def generate_golden_candidate_records(symbols: List[str], timeframe: str = "1d")
      for i, sym in enumerate(sorted(symbols)):
         seed_str = f"candidate_{sym}_{timeframe}"
         seed = int(hashlib.md5(seed_str.encode()).hexdigest(), 16) % (2**32)
-        random.seed(seed)
+        random.seed(seed)  # nosec
 
         records.append({
             "candidate_id": f"cand_{sym}_{timeframe}",
             "symbol": sym,
-            "score": round(random.uniform(50.0, 95.0), 2),
+            "score": round(random.uniform(50.0, 95.0), 2),  # nosec
             "rank": i + 1,
             "timestamp": "2024-03-29"
         })
@@ -99,8 +99,8 @@ def generate_golden_risk_decision_records(symbols: List[str], timeframe: str = "
     for i, sym in enumerate(sorted(symbols)):
         seed_str = f"risk_{sym}_{timeframe}"
         seed = int(hashlib.md5(seed_str.encode()).hexdigest(), 16) % (2**32)
-        random.seed(seed)
-        approved = random.choice([True, True, False])
+        random.seed(seed)  # nosec
+        approved = random.choice([True, True, False])  # nosec
         records.append({
             "decision_id": f"risk_{sym}_{timeframe}",
             "symbol": sym,
