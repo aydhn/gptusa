@@ -92,10 +92,11 @@ def validate_holiday_files(holidays: list[MarketHoliday], early_closes: list[Mar
             issues.append(CalendarValidationIssue(severity="WARNING", field="date", message=f"Duplicate holiday date: {h.date}"))
         holiday_dates.add(h.date)
 
+    early_close_dates = set()
     for c in early_closes:
-        # We can't strictly check if it's weekend here without market calendar instance,
-        # but typical validation would happen if it's fed to calendar engine.
-        pass
+        if c.date in early_close_dates:
+            issues.append(CalendarValidationIssue(severity="WARNING", field="date", message=f"Duplicate early close date: {c.date}"))
+        early_close_dates.add(c.date)
 
     warnings = [i.message for i in issues if i.severity == "WARNING"]
 
