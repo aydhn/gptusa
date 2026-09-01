@@ -1,5 +1,6 @@
 from pathlib import Path
 import datetime
+import concurrent.futures
 from usa_signal_bot.core.enums import RecoveryActionStatus, RecoveryPlanStatus
 from usa_signal_bot.incident.incident_models import IncidentRecord
 from usa_signal_bot.incident.recovery_models import RecoveryPlan, RecoveryPlanResult, RecoveryAction, RecoveryActionResult, create_recovery_plan_id, create_recovery_plan_result_id, validate_recovery_plan
@@ -36,7 +37,7 @@ class RecoveryPlanner:
 
         plan = RecoveryPlan(
             plan_id=create_recovery_plan_id(),
-            created_at_utc=datetime.datetime.utcnow().isoformat() + "Z",
+            created_at_utc=datetime.datetime.now(datetime.timezone.utc).isoformat().replace('+00:00', 'Z'),
             status=status,
             incident_ids=[i.incident_id for i in incidents],
             actions=actions,
@@ -66,7 +67,7 @@ class RecoveryPlanner:
             action_id=action.action_id,
             action_type=action.action_type,
             status=status,
-            executed_at_utc=datetime.datetime.utcnow().isoformat() + "Z",
+            executed_at_utc=datetime.datetime.now(datetime.timezone.utc).isoformat().replace('+00:00', 'Z'),
             dry_run=not execute_commands or action.dry_run,
             summary=summary,
             output_paths={},
@@ -81,7 +82,7 @@ class RecoveryPlanner:
         if status in [RecoveryPlanStatus.BLOCKED, RecoveryPlanStatus.SKIPPED]:
              return RecoveryPlanResult(
                 result_id=create_recovery_plan_result_id(),
-                created_at_utc=datetime.datetime.utcnow().isoformat() + "Z",
+                created_at_utc=datetime.datetime.now(datetime.timezone.utc).isoformat().replace('+00:00', 'Z'),
                 status=status,
                 plan=plan,
                 action_results=[],
@@ -90,15 +91,15 @@ class RecoveryPlanner:
                 errors=[]
              )
 
-        for action in plan.actions:
-            res = self.execute_action(action, execute_commands)
-            results.append(res)
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            futures = [executor.submit(self.execute_action, action, execute_commands) for action in plan.actions]
+            results = [future.result() for future in futures]
 
         final_status = RecoveryPlanStatus.DRY_RUN_COMPLETED if plan.dry_run or not execute_commands else RecoveryPlanStatus.COMPLETED
 
         return RecoveryPlanResult(
             result_id=create_recovery_plan_result_id(),
-            created_at_utc=datetime.datetime.utcnow().isoformat() + "Z",
+            created_at_utc=datetime.datetime.now(datetime.timezone.utc).isoformat().replace('+00:00', 'Z'),
             status=final_status,
             plan=plan,
             action_results=results,
