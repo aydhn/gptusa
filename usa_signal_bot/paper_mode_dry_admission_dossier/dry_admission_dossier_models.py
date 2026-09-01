@@ -490,4 +490,13 @@ def validate_dry_admission_gate_dossier(item: DryAdmissionGateDossier) -> None:
     item.errors.extend(msg for condition, msg in required_false if condition)
 
 def validate_dry_admission_dossier_full_review(item: DryAdmissionDossierFullReview) -> None:
-    pass
+    for dossier in item.dossiers:
+        validate_dry_admission_gate_dossier(dossier)
+    for evidence_item in item.evidence_items:
+        validate_dry_admission_dossier_evidence_item(evidence_item)
+    for acceptance_seal in item.acceptance_seals:
+        validate_dry_admission_acceptance_seal(acceptance_seal)
+    for rehearsal_blocker_rule in item.rehearsal_blocker_rules:
+        validate_rehearsal_blocker_rule(rehearsal_blocker_rule)
+    for rehearsal_blocker_event in item.rehearsal_blocker_events:
+        validate_rehearsal_blocker_event(rehearsal_blocker_event)
