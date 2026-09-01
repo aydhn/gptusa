@@ -16,8 +16,6 @@ class TracemallocProfiler:
         self._was_tracing = tracemalloc.is_tracing()
         if not self._was_tracing:
             tracemalloc.start()
-        else:
-            pass
 
     def stop(self) -> dict[str, int | None]:
         if not self.enabled:
