@@ -1,3 +1,4 @@
+import concurrent.futures
 import time
 from pathlib import Path
 from typing import Optional, List, Tuple
@@ -35,7 +36,11 @@ class MarketDataDownloader:
 
         batches = build_symbol_batches(request.symbols, self.policy.rate_limit.max_symbols_per_batch)
 
-        for idx, batch_symbols in enumerate(batches):
+        def process_batch(idx, batch_symbols):
+            local_errors = []
+            local_warnings = []
+            local_bars = []
+            local_resp = None
             batch_req = MarketDataRequest(
                 symbols=batch_symbols,
                 timeframe=request.timeframe,
@@ -45,13 +50,16 @@ class MarketDataDownloader:
                 adjusted=request.adjusted,
                 use_cache=request.use_cache
             )
-
             try:
+                # Rate limiting sleep (delay starting based on index to spread requests)
+                if idx > 0:
+                    time.sleep(idx * self.policy.rate_limit.min_seconds_between_requests)
+
                 # 1. Fetch from provider
-                resp = provider.fetch_ohlcv(batch_req)
+                local_resp = provider.fetch_ohlcv(batch_req)
 
                 # 2. Validation & Repair
-                final_bars = resp.bars
+                final_bars = local_resp.bars
                 if validate_before_cache and final_bars:
                     q_report, a_report = run_full_ohlcv_quality_validation(final_bars, batch_symbols, provider.name, request.timeframe)
 
@@ -68,29 +76,38 @@ class MarketDataDownloader:
                             final_bars, r_report = repair_ohlcv_bars(final_bars, batch_symbols, allow_drop_invalid=True)
                             r_path = self.data_root / "reports" / f"repair_{base_report_name}.json"
                             write_repair_report_json(r_path, r_report)
-                            all_warnings.append(f"Batch {idx} repaired: {r_report.dropped_bar_count} dropped")
+                            local_warnings.append(f"Batch {idx} repaired: {r_report.dropped_bar_count} dropped")
 
                             # Re-validate
                             q_report2, a_report2 = run_full_ohlcv_quality_validation(final_bars, batch_symbols, provider.name, request.timeframe)
                             if has_blocking_anomalies(a_report2):
-                                all_errors.append(f"Batch {idx} still has critical errors after repair.")
+                                local_errors.append(f"Batch {idx} still has critical errors after repair.")
                                 final_bars = [] # Do not cache or use
                         else:
-                            all_errors.append(f"Batch {idx} has blocking anomalies and repair is disabled.")
+                            local_errors.append(f"Batch {idx} has blocking anomalies and repair is disabled.")
                             final_bars = []
 
                 if final_bars:
-                    all_bars.extend(final_bars)
+                    local_bars.extend(final_bars)
 
-                all_errors.extend(resp.errors)
-                all_warnings.extend(resp.warnings)
-
-                # Rate limiting sleep if not the last batch
-                if idx < len(batches) - 1:
-                    time.sleep(self.policy.rate_limit.min_seconds_between_requests)
+                local_errors.extend(local_resp.errors)
+                local_warnings.extend(local_resp.warnings)
 
             except Exception as e:
-                all_errors.append(f"Batch {idx} failed: {e}")
+                local_errors.append(f"Batch {idx} failed: {e}")
+
+            return local_bars, local_errors, local_warnings, local_resp
+
+        max_workers = min(10, len(batches)) if batches else 1
+        with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
+            futures = [executor.submit(process_batch, idx, batch) for idx, batch in enumerate(batches)]
+            for future in concurrent.futures.as_completed(futures):
+                b_bars, b_errors, b_warnings, b_resp = future.result()
+                all_bars.extend(b_bars)
+                all_errors.extend(b_errors)
+                all_warnings.extend(b_warnings)
+                if b_resp and not ('resp' in locals()):
+                    resp = b_resp
 
         # 3. Cache the results if enabled
         if write_cache and all_bars and self.policy.cache.enabled:
