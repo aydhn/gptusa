@@ -28,7 +28,7 @@ def ingest_provider_cache_review_payload(payload: Dict[str, Any], source_path: O
     if not context:
         return ProviderCacheIngestionResult(
             ingestion_id=create_provider_cache_ingestion_id(),
-            created_at_utc=datetime.datetime.utcnow().isoformat() + "Z",
+            created_at_utc=datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None).isoformat() + "Z",
             source_path=source_path,
             source_review_id=payload.get("review_id"),
             source_context_id=None,
@@ -56,7 +56,7 @@ def ingest_provider_cache_review_payload(payload: Dict[str, Any], source_path: O
 
     return ProviderCacheIngestionResult(
         ingestion_id=create_provider_cache_ingestion_id(),
-        created_at_utc=datetime.datetime.utcnow().isoformat() + "Z",
+        created_at_utc=datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None).isoformat() + "Z",
         source_path=source_path,
         source_review_id=payload.get("review_id"),
         source_context_id=context.get("context_id"),
