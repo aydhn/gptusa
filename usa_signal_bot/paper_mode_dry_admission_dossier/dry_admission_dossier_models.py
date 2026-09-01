@@ -411,9 +411,6 @@ def dry_admission_dossier_full_review_to_dict(item: DryAdmissionDossierFullRevie
         "errors": item.errors,
     }
 
-def validate_dry_admission_dossier_evidence_item(item: DryAdmissionDossierEvidenceItem) -> None:
-    pass
-
 def validate_dry_admission_acceptance_seal(item: DryAdmissionAcceptanceSeal) -> None:
     if item.sealed and not item.immutable:
         item.errors.append("Sealed seal must be immutable")
