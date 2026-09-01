@@ -335,3 +335,30 @@ def test_validate_calendar_review_report_with_session_validations_warning():
 
     assert report.issues[0].severity == "WARNING"
     assert report.issues[0].field == "AAPL"
+
+
+def test_validate_holiday_files_duplicate_early_closes():
+    early_closes = [
+        MarketEarlyClose(
+            date="2024-11-29",
+            close_time_local="13:00",
+            name="Black Friday",
+            calendar_name=MarketCalendarName.NYSE,
+            source=CalendarDataSource.TEST,
+        ),
+        MarketEarlyClose(
+            date="2024-11-29",
+            close_time_local="13:00",
+            name="Duplicate Black Friday",
+            calendar_name=MarketCalendarName.NYSE,
+            source=CalendarDataSource.TEST,
+        ),
+    ]
+    rep = validate_holiday_files([], early_closes)
+
+    assert rep.valid is True
+    assert rep.issue_count == 1
+    assert rep.warning_count == 1
+    assert rep.error_count == 0
+    assert rep.issues[0].severity == "WARNING"
+    assert "Duplicate early close date: 2024-11-29" in rep.issues[0].message
