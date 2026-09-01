@@ -363,6 +363,7 @@ def setup_parser():
     setup_phase145_cli(subparsers)
     setup_phase147_cli(subparsers)
     setup_phase150_cli(subparsers)
+    setup_phase151_cli(subparsers)
 
     return parser
 
@@ -736,6 +737,8 @@ def handle_ml_closure_commands(args):
 
 
 def handle_command(args):
+    if hasattr(args, 'func'):
+        return args.func(args)
     handle_walk_forward_commands(args)
     handle_backtest_run_commands(args)
     handle_portfolio_foundation_commands(args)
@@ -753,8 +756,9 @@ def phase151_stress_robustness_info():
     )
 
 
-def setup_phase151_cli(parser):
-    pass
+def setup_phase151_cli(subparsers):
+    parser = subparsers.add_parser("stress-robustness-info", help="Print info about Phase 151")
+    parser.set_defaults(func=lambda args: phase151_stress_robustness_info())
 
 
 def _setup_portfolio_foundation_ingest_commands(subparsers):
