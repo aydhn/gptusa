@@ -10,7 +10,7 @@ from usa_signal_bot.core.exceptions import GoldenFixtureError
 def generate_deterministic_ohlcv_rows(symbol: str, start_date: str, row_count: int, base_price: float = 100.0) -> List[Dict[str, Any]]:
     # Use symbol and start_date to seed so we get deterministic but varying results
     seed_str = f"{symbol}_{start_date}"
-    seed = int(hashlib.md5(seed_str.encode()).hexdigest(), 16) % (2**32)
+    seed = int(hashlib.sha256(seed_str.encode()).hexdigest(), 16) % (2**32)
     random.seed(seed)
 
     try:
@@ -64,7 +64,7 @@ def generate_golden_signal_records(symbols: List[str], timeframe: str = "1d") ->
     records = []
     for i, sym in enumerate(sorted(symbols)):
         seed_str = f"signal_{sym}_{timeframe}"
-        seed = int(hashlib.md5(seed_str.encode()).hexdigest(), 16) % (2**32)
+        seed = int(hashlib.sha256(seed_str.encode()).hexdigest(), 16) % (2**32)
         random.seed(seed)
 
         records.append({
@@ -82,7 +82,7 @@ def generate_golden_candidate_records(symbols: List[str], timeframe: str = "1d")
      records = []
      for i, sym in enumerate(sorted(symbols)):
         seed_str = f"candidate_{sym}_{timeframe}"
-        seed = int(hashlib.md5(seed_str.encode()).hexdigest(), 16) % (2**32)
+        seed = int(hashlib.sha256(seed_str.encode()).hexdigest(), 16) % (2**32)
         random.seed(seed)
 
         records.append({
@@ -98,7 +98,7 @@ def generate_golden_risk_decision_records(symbols: List[str], timeframe: str = "
     records = []
     for i, sym in enumerate(sorted(symbols)):
         seed_str = f"risk_{sym}_{timeframe}"
-        seed = int(hashlib.md5(seed_str.encode()).hexdigest(), 16) % (2**32)
+        seed = int(hashlib.sha256(seed_str.encode()).hexdigest(), 16) % (2**32)
         random.seed(seed)
         approved = random.choice([True, True, False])
         records.append({
