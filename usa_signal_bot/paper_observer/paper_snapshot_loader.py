@@ -10,12 +10,17 @@ def load_observer_read_only_paper_snapshot(paper_payload: Optional[Dict[str, Any
 
 def redact_observer_snapshot_sensitive_fields(snapshot: Dict[str, Any]) -> Dict[str, Any]:
     redacted = copy.deepcopy(snapshot)
-    if "secrets" in redacted:
-        redacted["secrets"] = "***REDACTED***"
-    if "api_keys" in redacted:
-        redacted["api_keys"] = "***REDACTED***"
-    if "tokens" in redacted:
-        redacted["tokens"] = "***REDACTED***"
+    def _redact_inplace(node: Any):
+        if isinstance(node, dict):
+            for k, v in node.items():
+                if k in ("secrets", "api_keys", "tokens"):
+                    node[k] = "***REDACTED***"
+                else:
+                    _redact_inplace(v)
+        elif isinstance(node, list):
+            for i in node:
+                _redact_inplace(i)
+    _redact_inplace(redacted)
     return redacted
 
 def observer_snapshot_hash(snapshot: Dict[str, Any]) -> str:
