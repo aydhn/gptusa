@@ -1,6 +1,7 @@
 from datetime import datetime, timezone
 import platform
 import subprocess
+import shutil
 from pathlib import Path
 from typing import Optional
 import logging
@@ -11,9 +12,12 @@ logger = logging.getLogger(__name__)
 
 def get_git_commit_safe(project_root: Optional[Path] = None) -> Optional[str]:
     try:
-        cwd = project_root if project_root else Path.cwd()
+        cwd = (project_root if project_root else Path.cwd()).resolve()
+        git_exe = shutil.which('git')
+        if not git_exe:
+            return None
         result = subprocess.run(
-            ["git", "rev-parse", "HEAD"],
+            [git_exe, "rev-parse", "HEAD"],
             cwd=cwd,
             capture_output=True,
             text=True,
@@ -28,9 +32,12 @@ def get_git_commit_safe(project_root: Optional[Path] = None) -> Optional[str]:
 
 def get_git_branch_safe(project_root: Optional[Path] = None) -> Optional[str]:
     try:
-        cwd = project_root if project_root else Path.cwd()
+        cwd = (project_root if project_root else Path.cwd()).resolve()
+        git_exe = shutil.which('git')
+        if not git_exe:
+            return None
         result = subprocess.run(
-            ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+            [git_exe, "rev-parse", "--abbrev-ref", "HEAD"],
             cwd=cwd,
             capture_output=True,
             text=True,
