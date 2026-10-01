@@ -1,5 +1,5 @@
 """Local Market Calendar Engine."""
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 
 from usa_signal_bot.core.enums import MarketCalendarName, MarketSessionType, MarketDayType, CalendarDataSource
 from usa_signal_bot.calendar.calendar_models import MarketHoliday, MarketEarlyClose, MarketSession, TradingDayResult
@@ -30,9 +30,15 @@ class LocalMarketCalendar:
             self._default_open = "09:00"
             self._default_close = "17:00"
 
+    def _parse_date(self, date_str: str) -> date:
+        try:
+            return date(int(date_str[:4]), int(date_str[5:7]), int(date_str[8:10]))
+        except (ValueError, TypeError):
+            return datetime.strptime(date_str, "%Y-%m-%d").date()
+
     def is_weekend(self, date_str: str) -> bool:
         if date_str not in self._weekend_cache:
-            dt = datetime.strptime(date_str, "%Y-%m-%d")
+            dt = self._parse_date(date_str)
             self._weekend_cache[date_str] = dt.weekday() >= 5
         return self._weekend_cache[date_str]
 
@@ -106,7 +112,7 @@ class LocalMarketCalendar:
         return session.open_time_local or self._default_open, session.close_time_local or self._default_close
 
     def previous_trading_day(self, date_str: str, lookback_days: int = 10) -> str | None:
-        dt = datetime.strptime(date_str, "%Y-%m-%d")
+        dt = self._parse_date(date_str)
         for i in range(1, lookback_days + 1):
             prev_dt = dt - timedelta(days=i)
             prev_str = prev_dt.strftime("%Y-%m-%d")
@@ -115,7 +121,7 @@ class LocalMarketCalendar:
         return None
 
     def next_trading_day(self, date_str: str, lookahead_days: int = 10) -> str | None:
-        dt = datetime.strptime(date_str, "%Y-%m-%d")
+        dt = self._parse_date(date_str)
         for i in range(1, lookahead_days + 1):
             next_dt = dt + timedelta(days=i)
             next_str = next_dt.strftime("%Y-%m-%d")
@@ -124,13 +130,13 @@ class LocalMarketCalendar:
         return None
 
     def trading_days_between(self, start_date: str, end_date: str) -> list[str]:
-        start_dt = datetime.strptime(start_date, "%Y-%m-%d")
-        end_dt = datetime.strptime(end_date, "%Y-%m-%d")
+        start_dt = self._parse_date(start_date)
+        end_dt = self._parse_date(end_date)
 
         days = []
         curr = start_dt
         while curr <= end_dt:
-            curr_str = curr.strftime("%Y-%m-%d")
+            curr_str = curr.isoformat()
             if self.is_trading_day(curr_str):
                 days.append(curr_str)
             curr += timedelta(days=1)
@@ -166,13 +172,13 @@ class LocalMarketCalendar:
         )
 
     def review_range(self, start_date: str, end_date: str) -> list[TradingDayResult]:
-        start_dt = datetime.strptime(start_date, "%Y-%m-%d")
-        end_dt = datetime.strptime(end_date, "%Y-%m-%d")
+        start_dt = self._parse_date(start_date)
+        end_dt = self._parse_date(end_date)
 
         results = []
         curr = start_dt
         while curr <= end_dt:
-            curr_str = curr.strftime("%Y-%m-%d")
+            curr_str = curr.isoformat()
             results.append(self._review_day(curr_str))
             curr += timedelta(days=1)
 
