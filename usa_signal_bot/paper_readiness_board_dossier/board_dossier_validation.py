@@ -239,9 +239,7 @@ def validate_no_shadow_launch_language_in_board_dossier(text: str) -> BoardDossi
 
 def validate_no_paper_state_mutation_fields_in_board_dossier(payload: dict[str, Any]) -> BoardDossierValidationReport:
     issues = []
-    import json
-    text = json.dumps(payload, default=str)
-    banned = [
+    banned = {
         "paper_state_committed",
         "paper_order_executed",
         "paper_order_created",
@@ -249,10 +247,19 @@ def validate_no_paper_state_mutation_fields_in_board_dossier(payload: dict[str, 
         "position_mutated",
         "cash_mutated",
         "equity_mutated"
-    ]
-    for word in banned:
-        if f'"{word}": true' in text or f'"{word}": True' in text:
-            issues.append(BoardDossierValidationIssue("BLOCK", f"Paper state mutation field detected true: {word}"))
+    }
+
+    def _check(obj):
+        if isinstance(obj, dict):
+            for k, v in obj.items():
+                if k in banned and v is True:
+                    issues.append(BoardDossierValidationIssue("BLOCK", f"Paper state mutation field detected true: {k}"))
+                _check(v)
+        elif isinstance(obj, list):
+            for item in obj:
+                _check(item)
+
+    _check(payload)
 
     return BoardDossierValidationReport(
         valid=len(issues) == 0,
@@ -267,18 +274,27 @@ def validate_no_paper_state_mutation_fields_in_board_dossier(payload: dict[str, 
 
 def validate_no_broker_execution_fields_in_board_dossier(payload: dict[str, Any]) -> BoardDossierValidationReport:
     issues = []
-    import json
-    text = json.dumps(payload, default=str)
-    banned = [
+    banned = {
         "broker_order_id",
         "live_order_id",
         "sent_to_broker",
         "execution_venue",
         "real_fill_id"
-    ]
-    for word in banned:
-        if f'"{word}"' in text:
-            issues.append(BoardDossierValidationIssue("BLOCK", f"Broker execution field detected: {word}"))
+    }
+
+    def _check(obj):
+        if isinstance(obj, dict):
+            for k, v in obj.items():
+                if str(k) in banned:
+                    issues.append(BoardDossierValidationIssue("BLOCK", f"Broker execution field detected: {k}"))
+                _check(v)
+        elif isinstance(obj, list):
+            for item in obj:
+                _check(item)
+        elif isinstance(obj, str) and obj in banned:
+            issues.append(BoardDossierValidationIssue("BLOCK", f"Broker execution field detected: {obj}"))
+
+    _check(payload)
 
     return BoardDossierValidationReport(
         valid=len(issues) == 0,
