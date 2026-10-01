@@ -51,10 +51,6 @@ class MarketDataDownloader:
                 use_cache=request.use_cache
             )
             try:
-                # Rate limiting sleep (delay starting based on index to spread requests)
-                if idx > 0:
-                    time.sleep(idx * self.policy.rate_limit.min_seconds_between_requests)
-
                 # 1. Fetch from provider
                 local_resp = provider.fetch_ohlcv(batch_req)
 
@@ -100,7 +96,11 @@ class MarketDataDownloader:
 
         max_workers = min(10, len(batches)) if batches else 1
         with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
-            futures = [executor.submit(process_batch, idx, batch) for idx, batch in enumerate(batches)]
+            futures = []
+            for idx, batch in enumerate(batches):
+                if idx > 0:
+                    time.sleep(self.policy.rate_limit.min_seconds_between_requests)
+                futures.append(executor.submit(process_batch, idx, batch))
             for future in concurrent.futures.as_completed(futures):
                 b_bars, b_errors, b_warnings, b_resp = future.result()
                 all_bars.extend(b_bars)
