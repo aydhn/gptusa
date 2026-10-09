@@ -13,6 +13,7 @@ from pathlib import Path
 
 import argparse
 
+from usa_signal_bot.decision.cli import setup_decision_cli
 from usa_signal_bot.evidence.cli import setup_evidence_cli
 import sys
 
@@ -369,6 +370,7 @@ def _command_registrars():
         setup_phase156_cli,
         setup_phase157_cli,
         setup_evidence_cli,
+        setup_decision_cli,
     )
 
 
