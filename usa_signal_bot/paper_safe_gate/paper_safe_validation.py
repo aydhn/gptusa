@@ -6,23 +6,15 @@ from usa_signal_bot.paper_safe_gate.paper_safe_gate_models import (
     PaperSafeGateFullReview
 )
 
-@dataclass
-class PaperSafeValidationIssue:
-    severity: str
-    field: Optional[str]
-    message: str
-    details: Dict[str, Any] = field(default_factory=dict)
+from usa_signal_bot.paper_common.validation_types import ValidationIssue, ValidationReport
 
 @dataclass
-class PaperSafeValidationReport:
-    valid: bool
-    issue_count: int
-    warning_count: int
-    error_count: int
-    blocked_count: int
-    issues: List[PaperSafeValidationIssue]
-    warnings: List[str]
-    errors: List[str]
+class PaperSafeValidationIssue(ValidationIssue):
+    pass
+
+@dataclass
+class PaperSafeValidationReport(ValidationReport):
+    pass
 
 def _build_valid_report() -> PaperSafeValidationReport:
     return PaperSafeValidationReport(

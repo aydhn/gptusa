@@ -8,23 +8,15 @@ from usa_signal_bot.pre_paper_handoff_freeze_gate.handoff_freeze_models import (
     PrePaperHandoffFreezeFullReview
 )
 
-@dataclass
-class HandoffFreezeValidationIssue:
-    severity: str
-    field: Optional[str]
-    message: str
-    details: dict[str, Any] = field(default_factory=dict)
+from usa_signal_bot.paper_common.validation_types import ValidationIssue, ValidationReport
 
 @dataclass
-class HandoffFreezeValidationReport:
-    valid: bool
-    issue_count: int
-    warning_count: int
-    error_count: int
-    blocked_count: int
-    issues: List[HandoffFreezeValidationIssue]
-    warnings: List[str]
-    errors: List[str]
+class HandoffFreezeValidationIssue(ValidationIssue):
+    pass
+
+@dataclass
+class HandoffFreezeValidationReport(ValidationReport):
+    pass
 
 def _create_report(issues: List[HandoffFreezeValidationIssue]) -> HandoffFreezeValidationReport:
     warnings = [i.message for i in issues if i.severity == "WARNING"]

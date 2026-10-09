@@ -11,23 +11,15 @@ from usa_signal_bot.paper_quarantine.quarantine_models import (
 )
 from usa_signal_bot.core.exceptions import QuarantineValidationError
 
-@dataclass
-class QuarantineValidationIssue:
-    severity: str
-    field: str | None
-    message: str
-    details: dict[str, Any] = field(default_factory=dict)
+from usa_signal_bot.paper_common.validation_types import ValidationIssue, ValidationReport
 
 @dataclass
-class QuarantineValidationReport:
-    valid: bool
-    issue_count: int
-    warning_count: int
-    error_count: int
-    blocked_count: int
-    issues: list[QuarantineValidationIssue]
-    warnings: list[str]
-    errors: list[str]
+class QuarantineValidationIssue(ValidationIssue):
+    pass
+
+@dataclass
+class QuarantineValidationReport(ValidationReport):
+    pass
 
 def _check_broker_fields(payload: dict[str, Any]) -> list[QuarantineValidationIssue]:
     issues = []

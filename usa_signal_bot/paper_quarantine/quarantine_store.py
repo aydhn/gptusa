@@ -1,4 +1,3 @@
-import json
 from pathlib import Path
 from typing import Any
 
@@ -17,6 +16,9 @@ from usa_signal_bot.paper_quarantine.quarantine_models import (
     quarantine_enrollment_review_to_dict,
 )
 from usa_signal_bot.core.exceptions import QuarantineStorageError
+from usa_signal_bot.paper_common.io import (
+    ensure_dir, write_json, write_jsonl, read_json, list_files, count_files,
+)
 
 def quarantine_store_dir(data_root: Path) -> Path:
     return data_root / "paper_quarantine"
@@ -39,58 +41,33 @@ def quarantine_audit_dir(data_root: Path) -> Path:
 def quarantine_reviews_dir(data_root: Path) -> Path:
     return quarantine_store_dir(data_root) / "reviews"
 
-def _ensure_dir(path: Path) -> Path:
-    path.mkdir(parents=True, exist_ok=True)
-    return path
+_ensure_dir = ensure_dir
 
 def write_quarantined_candidate_json(path: Path, item: QuarantinedPaperCandidate) -> Path:
-    _ensure_dir(path.parent)
-    with open(path, "w") as f:
-        json.dump(quarantined_paper_candidate_to_dict(item), f, indent=2)
-    return path
+    return write_json(path, quarantined_paper_candidate_to_dict(item))
 
 def write_promotion_ticket_json(path: Path, item: ReadOnlyPromotionTicket) -> Path:
-    _ensure_dir(path.parent)
-    with open(path, "w") as f:
-        json.dump(read_only_promotion_ticket_to_dict(item), f, indent=2)
-    return path
+    return write_json(path, read_only_promotion_ticket_to_dict(item))
 
 def write_bridge_plan_json(path: Path, item: SupervisedDryRunBridgePlan) -> Path:
-    _ensure_dir(path.parent)
-    with open(path, "w") as f:
-        json.dump(supervised_dry_run_bridge_plan_to_dict(item), f, indent=2)
-    return path
+    return write_json(path, supervised_dry_run_bridge_plan_to_dict(item))
 
 def write_paper_snapshot_ref_json(path: Path, item: PaperSnapshotRef) -> Path:
-    _ensure_dir(path.parent)
-    with open(path, "w") as f:
-        json.dump(paper_snapshot_ref_to_dict(item), f, indent=2)
-    return path
+    return write_json(path, paper_snapshot_ref_to_dict(item))
 
 def write_quarantine_audit_jsonl(path: Path, items: list[QuarantineAuditEntry]) -> Path:
-    _ensure_dir(path.parent)
-    with open(path, "a") as f:
-        for item in items:
-            f.write(json.dumps(quarantine_audit_entry_to_dict(item)) + "\n")
-    return path
+    return write_jsonl(path, (quarantine_audit_entry_to_dict(i) for i in items), mode="a")
 
 def write_quarantine_enrollment_review_json(path: Path, item: QuarantineEnrollmentReview) -> Path:
-    _ensure_dir(path.parent)
-    with open(path, "w") as f:
-        json.dump(quarantine_enrollment_review_to_dict(item), f, indent=2)
-    return path
+    return write_json(path, quarantine_enrollment_review_to_dict(item))
 
 def read_quarantine_enrollment_review_json(path: Path) -> dict[str, Any]:
     if not path.exists():
         raise QuarantineStorageError(f"Review file not found: {path}")
-    with open(path, "r") as f:
-        return json.load(f)
+    return read_json(path)
 
 def list_quarantine_enrollment_reviews(data_root: Path) -> list[Path]:
-    d = quarantine_reviews_dir(data_root)
-    if not d.exists():
-        return []
-    return sorted(list(d.glob("*.json")), reverse=True)
+    return list_files(quarantine_reviews_dir(data_root), "*.json", reverse=True)
 
 def get_latest_quarantine_enrollment_review(data_root: Path) -> Path | None:
     reviews = list_quarantine_enrollment_reviews(data_root)
@@ -109,5 +86,5 @@ def quarantine_store_summary(data_root: Path) -> dict[str, Any]:
     ]
     summary = {}
     for d in dirs:
-        summary[d.name] = len(list(d.glob("*.*"))) if d.exists() else 0
+        summary[d.name] = count_files(d, "*.*")
     return summary
