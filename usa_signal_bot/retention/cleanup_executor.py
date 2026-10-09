@@ -1,3 +1,4 @@
+import concurrent.futures
 import shutil
 import datetime
 from pathlib import Path
@@ -76,9 +77,16 @@ class CleanupExecutor:
         failed = []
         bytes_freed = 0
 
-        for c in plan.candidates:
-            if c.status in (CleanupCandidateStatus.CANDIDATE, CleanupCandidateStatus.REVIEW_REQUIRED):
-                updated_c, freed = self.execute_candidate(c, force)
+        futures = []
+        with concurrent.futures.ThreadPoolExecutor() as pool:
+            for c in plan.candidates:
+                if c.status in (CleanupCandidateStatus.CANDIDATE, CleanupCandidateStatus.REVIEW_REQUIRED):
+                    futures.append(pool.submit(self.execute_candidate, c, force))
+                else:
+                    skipped.append(c.path)
+
+            for future in futures:
+                updated_c, freed = future.result()
                 if updated_c.status == CleanupCandidateStatus.DELETED:
                     deleted.append(updated_c.path)
                     bytes_freed += freed
@@ -86,8 +94,6 @@ class CleanupExecutor:
                     failed.append(updated_c.path)
                 else:
                     skipped.append(updated_c.path)
-            else:
-                skipped.append(c.path)
 
         status = CleanupRunStatus.COMPLETED
         if failed:
