@@ -951,3 +951,28 @@ def validate_portfolio_foundation_full_review(
     item: PortfolioFoundationFullReview,
 ) -> list[str]:
     return []
+
+
+# --- Definitions recovered from git history (deleted by an accidental overwrite) ---
+
+
+
+def _to_dict(obj: 'Any') -> 'dict[str, Any]':
+    if hasattr(obj, '__dataclass_fields__'):
+        res = {}
+        for k in obj.__dataclass_fields__.keys():
+            v = getattr(obj, k)
+            if isinstance(v, list):
+                res[k] = [_to_dict(x) for x in v]
+            elif isinstance(v, dict):
+                res[k] = {vk: _to_dict(vv) for vk, vv in v.items()}
+            elif hasattr(v, '__dataclass_fields__'):
+                res[k] = _to_dict(v)
+            elif hasattr(v, 'value'):
+                res[k] = getattr(v, 'value')
+            else:
+                res[k] = v
+        return res
+    if hasattr(obj, 'value'):
+        return getattr(obj, 'value')
+    return obj

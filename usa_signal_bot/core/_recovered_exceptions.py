@@ -158,6 +158,11 @@ class EnvironmentConfigError(ConfigError):
     pass
 
 
+class HealthCheckError(USASignalBotError):
+    """Raised when a health check fails."""
+    pass
+
+
 class StorageIntegrityError(StorageError):
     """Raised when a file's integrity check fails."""
     pass
@@ -665,6 +670,12 @@ class BoundaryValidationError(PaperBoundaryCertificateError):
 
 
 class PaperSafeBoundaryIngestionError(PaperSafeGateError): pass
+
+
+class BoundaryReplayPlanError(PaperSafeGateError): pass
+
+
+class PaperSafeGateValidationError(PaperSafeGateError): pass
 
 
 class PaperSafeDossierValidationError(PaperSafeDossierError):

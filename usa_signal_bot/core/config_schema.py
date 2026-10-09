@@ -5100,3 +5100,119 @@ class Phase159NotificationsConfig:
     dry_run: bool = True
     preview_only: bool = True
     telegram_real_send: bool = False
+
+
+# --- Definitions recovered from git history (deleted by an accidental overwrite) ---
+
+
+
+@dataclass
+class RiskConfig:
+    max_position_pct: 'float' = 0.1
+    max_total_exposure_pct: 'float' = 0.8
+    max_daily_loss_pct: 'float' = 0.03
+    max_open_positions: 'int' = 10
+
+
+@dataclass
+class SignalScoringConfigSchema:
+    enabled: 'bool' = True
+    min_score: 'float' = 0.0
+    max_score: 'float' = 100.0
+    base_score: 'float' = 50.0
+    confidence_weight: 'float' = 25.0
+    reason_quality_weight: 'float' = 15.0
+    feature_snapshot_weight: 'float' = 10.0
+    risk_penalty_weight: 'float' = 20.0
+    max_allowed_score_without_backtest: 'float' = 70.0
+    overconfidence_penalty: 'float' = 15.0
+    min_score_for_review: 'float' = 40.0
+
+
+@dataclass
+class SignalQualityConfig:
+    enabled: 'bool' = True
+    min_confidence_for_review: 'float' = 0.25
+    min_score_for_review: 'float' = 40.0
+    reject_missing_reasons: 'bool' = True
+    reject_missing_feature_snapshot: 'bool' = True
+    reject_expired_signals: 'bool' = True
+    overconfidence_warning_threshold: 'float' = 0.7
+    max_rejected_ratio_warning: 'float' = 0.8
+    allow_empty_signal_list: 'bool' = True
+
+
+@dataclass
+class ConfluenceConfig:
+    enabled: 'bool' = True
+    default_aggregation_mode: 'str' = 'by_symbol_timeframe'
+    min_signals_for_confluence: 'int' = 2
+    conflict_penalty: 'float' = 25.0
+    strong_threshold: 'float' = 70.0
+    moderate_threshold: 'float' = 50.0
+    weak_threshold: 'float' = 25.0
+    write_confluence_reports: 'bool' = True
+
+
+@dataclass
+class LiquidityGuardConfig:
+    enabled: 'bool' = True
+    lookback_bars: 'int' = 60
+    min_price: 'float' = 2.0
+    penny_stock_price_threshold: 'float' = 5.0
+    min_avg_daily_volume: 'float' = 500000.0
+    min_avg_dollar_volume: 'float' = 5000000.0
+    thin_avg_daily_volume: 'float' = 1000000.0
+    thin_avg_dollar_volume: 'float' = 10000000.0
+    max_stale_days: 'int' = 5
+    block_signal_on_illiquid: 'bool' = True
+    warn_on_thin_liquidity: 'bool' = True
+
+
+@dataclass
+class SpreadSlippageProxyConfig:
+    enabled: 'bool' = True
+    max_spread_proxy_bps: 'float' = 100.0
+    max_slippage_proxy_bps: 'float' = 150.0
+    high_spread_proxy_bps: 'float' = 200.0
+    high_slippage_proxy_bps: 'float' = 300.0
+    use_atr_penalty: 'bool' = True
+    use_gap_penalty: 'bool' = True
+    use_low_price_penalty: 'bool' = True
+
+
+@dataclass
+class VolumeParticipationConfig:
+    enabled: 'bool' = True
+    default_notional_usd: 'float' = 1000.0
+    max_participation_pct: 'float' = 1.0
+    high_participation_pct: 'float' = 5.0
+    critical_participation_pct: 'float' = 10.0
+    block_backtest_fill_on_critical_participation: 'bool' = True
+
+
+@dataclass
+class BorrowabilityProxyConfig:
+    enabled: 'bool' = True
+    no_real_borrow_feed: 'bool' = True
+    low_price_penalty: 'bool' = True
+    low_liquidity_penalty: 'bool' = True
+    high_volatility_penalty: 'bool' = True
+    lifecycle_risk_penalty: 'bool' = True
+    corporate_action_risk_penalty: 'bool' = True
+    block_short_on_likely_unavailable: 'bool' = True
+    require_review_on_hard_to_borrow_proxy: 'bool' = True
+
+
+@dataclass
+class RebalanceThresholdsConfig:
+    enabled: 'bool' = True
+    min_symbol_drift_pct: 'float' = 1.0
+    min_exposure_drift_pct: 'float' = 3.0
+    min_bucket_drift_pct: 'float' = 5.0
+    min_trade_notional_usd: 'float' = 25.0
+    max_turnover_pct_equity: 'float' = 10.0
+    max_action_count: 'int' = 50
+    cost_sensitive_multiplier: 'float' = 1.5
+    regime_sensitive_multiplier: 'float' = 1.5
+    drawdown_sensitive_multiplier: 'float' = 2.0

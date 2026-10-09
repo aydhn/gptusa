@@ -1,52 +1,8 @@
 import os
 
-# Append Health Checks to health.py
-health_patch = """
-def check_phase114_provider_freeze_config_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 config health check passed"}
 
-def check_phase114_provider_governance_ingestion_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 governance ingestion health check passed"}
 
-def check_phase114_freeze_policy_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 freeze policy health check passed"}
 
-def check_phase114_freeze_evidence_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 freeze evidence health check passed"}
-
-def check_phase114_freeze_bundle_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 freeze bundle health check passed"}
-
-def check_phase114_multi_provider_review_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 multi provider review health check passed"}
-
-def check_phase114_provider_consistency_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 provider consistency health check passed"}
-
-def check_phase114_provider_coverage_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 provider coverage health check passed"}
-
-def check_phase114_provider_safety_final_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 provider safety final health check passed"}
-
-def check_phase114_rehearsal_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 rehearsal health check passed"}
-
-def check_phase114_output_contract_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 output contract health check passed"}
-
-def check_phase114_no_execution_final_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 no execution final health check passed"}
-
-def check_phase114_provider_freeze_store_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 provider freeze store health check passed"}
-
-def check_phase114_notification_boundary_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 notification boundary health check passed"}
-"""
-
-with open('usa_signal_bot/core/health.py', 'a') as f:
-    f.write(health_patch)
 
 def check_phase115_provider_final_acceptance_config_health(context: 'Any') -> 'Any':
     config = context.config.provider_final_acceptance
@@ -659,50 +615,20 @@ def check_phase126_regime_foundation_store_health(context: 'Any') -> 'Any':
 def check_phase126_notification_boundary_health(context: 'Any') -> 'Any':
     return type('HealthCheckResult', (), {'status': 'PASS', 'details': 'Notification boundary OK'})()
 
-def check_phase127_regime_feature_engineering_config_health(context: 'Any') -> 'Any':
-    return HealthCheckResult(component="Phase127RegimeFeatureEngineeringConfig", status=HealthStatus.HEALTHY, message="OK")
 
-def check_phase127_regime_foundation_ingestion_health(context: 'Any') -> 'Any':
-    return HealthCheckResult(component="Phase127RegimeFoundationIngestion", status=HealthStatus.HEALTHY, message="OK")
 
-def check_phase127_market_state_input_loader_health(context: 'Any') -> 'Any':
-    return HealthCheckResult(component="Phase127MarketStateInputLoader", status=HealthStatus.HEALTHY, message="OK")
 
-def check_phase127_market_state_metric_specs_health(context: 'Any') -> 'Any':
-    return HealthCheckResult(component="Phase127MarketStateMetricSpecs", status=HealthStatus.HEALTHY, message="OK")
 
-def check_phase127_regime_feature_specs_health(context: 'Any') -> 'Any':
-    return HealthCheckResult(component="Phase127RegimeFeatureSpecs", status=HealthStatus.HEALTHY, message="OK")
 
-def check_phase127_market_state_metrics_engine_health(context: 'Any') -> 'Any':
-    return HealthCheckResult(component="Phase127MarketStateMetricsEngine", status=HealthStatus.HEALTHY, message="OK")
 
-def check_phase127_rolling_market_state_metrics_health(context: 'Any') -> 'Any':
-    return HealthCheckResult(component="Phase127RollingMarketStateMetrics", status=HealthStatus.HEALTHY, message="OK")
 
-def check_phase127_cross_sectional_market_state_metrics_health(context: 'Any') -> 'Any':
-    return HealthCheckResult(component="Phase127CrossSectionalMarketStateMetrics", status=HealthStatus.HEALTHY, message="OK")
 
-def check_phase127_factor_context_regime_mapper_health(context: 'Any') -> 'Any':
-    return HealthCheckResult(component="Phase127FactorContextRegimeMapper", status=HealthStatus.HEALTHY, message="OK")
 
-def check_phase127_regime_feature_table_builder_health(context: 'Any') -> 'Any':
-    return HealthCheckResult(component="Phase127RegimeFeatureTableBuilder", status=HealthStatus.HEALTHY, message="OK")
 
-def check_phase127_candidate_preparation_health(context: 'Any') -> 'Any':
-    return HealthCheckResult(component="Phase127CandidatePreparation", status=HealthStatus.HEALTHY, message="OK")
 
-def check_phase127_candidate_readiness_gate_health(context: 'Any') -> 'Any':
-    return HealthCheckResult(component="Phase127CandidateReadinessGate", status=HealthStatus.HEALTHY, message="OK")
 
-def check_phase127_regime_feature_output_safety_health(context: 'Any') -> 'Any':
-    return HealthCheckResult(component="Phase127RegimeFeatureOutputSafety", status=HealthStatus.HEALTHY, message="OK")
 
-def check_phase127_regime_feature_engineering_store_health(context: 'Any') -> 'Any':
-    return HealthCheckResult(component="Phase127RegimeFeatureEngineeringStore", status=HealthStatus.HEALTHY, message="OK")
 
-def check_phase127_notification_boundary_health(context: 'Any') -> 'Any':
-    return HealthCheckResult(component="Phase127NotificationBoundary", status=HealthStatus.HEALTHY, message="OK")
 
 def check_phase127_regime_feature_engineering_config_health(context: 'Any') -> 'Any':
     return HealthCheckResult(component="Phase127RegimeFeatureEngineeringConfig", status=HealthStatus.HEALTHY, message="OK")
@@ -1094,47 +1020,19 @@ def check_phase137_dataset_assembly_safety_health(context: 'Any') -> 'Any': retu
 def check_phase137_dataset_assembly_store_health(context: 'Any') -> 'Any': return type('HealthCheckResult', (), {'status': 'PASS', 'component': 'phase137', 'message': 'OK'})()
 def check_phase137_notification_boundary_health(context: 'Any') -> 'Any': return type('HealthCheckResult', (), {'status': 'PASS', 'component': 'phase137', 'message': 'OK'})()
 
-def check_phase114_provider_freeze_config_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 config health check passed"}
 
-def check_phase114_provider_governance_ingestion_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 governance ingestion health check passed"}
 
-def check_phase114_freeze_policy_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 freeze policy health check passed"}
 
-def check_phase114_freeze_evidence_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 freeze evidence health check passed"}
 
-def check_phase114_freeze_bundle_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 freeze bundle health check passed"}
 
-def check_phase114_multi_provider_review_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 multi provider review health check passed"}
 
-def check_phase114_provider_consistency_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 provider consistency health check passed"}
 
-def check_phase114_provider_coverage_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 provider coverage health check passed"}
 
-def check_phase114_provider_safety_final_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 provider safety final health check passed"}
 
-def check_phase114_rehearsal_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 rehearsal health check passed"}
 
-def check_phase114_output_contract_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 output contract health check passed"}
 
-def check_phase114_no_execution_final_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 no execution final health check passed"}
 
-def check_phase114_provider_freeze_store_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 provider freeze store health check passed"}
 
-def check_phase114_notification_boundary_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 notification boundary health check passed"}
 
 
 def check_phase138_baseline_scaffolding_config_health(context: 'RuntimeContext') -> 'HealthCheckResult':
@@ -1648,47 +1546,19 @@ def check_phase143_notification_boundary_health(context: 'RuntimeContext') -> 'H
     return _check_config(context, 'phase143_notifications.telegram_real_send', expected_value=False)
 
 
-def check_phase114_provider_freeze_config_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 config health check passed"}
 
-def check_phase114_provider_governance_ingestion_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 governance ingestion health check passed"}
 
-def check_phase114_freeze_policy_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 freeze policy health check passed"}
 
-def check_phase114_freeze_evidence_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 freeze evidence health check passed"}
 
-def check_phase114_freeze_bundle_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 freeze bundle health check passed"}
 
-def check_phase114_multi_provider_review_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 multi provider review health check passed"}
 
-def check_phase114_provider_consistency_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 provider consistency health check passed"}
 
-def check_phase114_provider_coverage_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 provider coverage health check passed"}
 
-def check_phase114_provider_safety_final_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 provider safety final health check passed"}
 
-def check_phase114_rehearsal_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 rehearsal health check passed"}
 
-def check_phase114_output_contract_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 output contract health check passed"}
 
-def check_phase114_no_execution_final_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 no execution final health check passed"}
 
-def check_phase114_provider_freeze_store_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 provider freeze store health check passed"}
 
-def check_phase114_notification_boundary_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 notification boundary health check passed"}
 
 def check_phase144_drift_monitoring_config_health(context: 'RuntimeContext') -> 'Any':
     return HealthCheckResult(
@@ -2885,131 +2755,47 @@ def check_phase160_final_closure_store_health(context: 'Any') -> 'HealthCheckRes
         timestamp=generate_timestamp()
     )
 
-def check_phase114_provider_freeze_config_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 config health check passed"}
 
-def check_phase114_provider_governance_ingestion_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 governance ingestion health check passed"}
 
-def check_phase114_freeze_policy_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 freeze policy health check passed"}
 
-def check_phase114_freeze_evidence_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 freeze evidence health check passed"}
 
-def check_phase114_freeze_bundle_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 freeze bundle health check passed"}
 
-def check_phase114_multi_provider_review_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 multi provider review health check passed"}
 
-def check_phase114_provider_consistency_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 provider consistency health check passed"}
 
-def check_phase114_provider_coverage_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 provider coverage health check passed"}
 
-def check_phase114_provider_safety_final_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 provider safety final health check passed"}
 
-def check_phase114_rehearsal_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 rehearsal health check passed"}
 
-def check_phase114_output_contract_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 output contract health check passed"}
 
-def check_phase114_no_execution_final_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 no execution final health check passed"}
 
-def check_phase114_provider_freeze_store_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 provider freeze store health check passed"}
 
-def check_phase114_notification_boundary_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 notification boundary health check passed"}
 
-def check_phase114_provider_freeze_config_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 config health check passed"}
 
-def check_phase114_provider_governance_ingestion_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 governance ingestion health check passed"}
 
-def check_phase114_freeze_policy_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 freeze policy health check passed"}
 
-def check_phase114_freeze_evidence_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 freeze evidence health check passed"}
 
-def check_phase114_freeze_bundle_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 freeze bundle health check passed"}
 
-def check_phase114_multi_provider_review_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 multi provider review health check passed"}
 
-def check_phase114_provider_consistency_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 provider consistency health check passed"}
 
-def check_phase114_provider_coverage_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 provider coverage health check passed"}
 
-def check_phase114_provider_safety_final_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 provider safety final health check passed"}
 
-def check_phase114_rehearsal_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 rehearsal health check passed"}
 
-def check_phase114_output_contract_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 output contract health check passed"}
 
-def check_phase114_no_execution_final_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 no execution final health check passed"}
 
-def check_phase114_provider_freeze_store_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 provider freeze store health check passed"}
 
-def check_phase114_notification_boundary_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 notification boundary health check passed"}
 
-def check_phase114_provider_freeze_config_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 config health check passed"}
 
-def check_phase114_provider_governance_ingestion_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 governance ingestion health check passed"}
 
-def check_phase114_freeze_policy_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 freeze policy health check passed"}
 
-def check_phase114_freeze_evidence_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 freeze evidence health check passed"}
 
-def check_phase114_freeze_bundle_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 freeze bundle health check passed"}
 
-def check_phase114_multi_provider_review_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 multi provider review health check passed"}
 
-def check_phase114_provider_consistency_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 provider consistency health check passed"}
 
-def check_phase114_provider_coverage_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 provider coverage health check passed"}
 
-def check_phase114_provider_safety_final_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 provider safety final health check passed"}
 
-def check_phase114_rehearsal_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 rehearsal health check passed"}
 
-def check_phase114_output_contract_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 output contract health check passed"}
 
-def check_phase114_no_execution_final_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 no execution final health check passed"}
 
-def check_phase114_provider_freeze_store_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 provider freeze store health check passed"}
 
-def check_phase114_notification_boundary_health(context: 'Any') -> 'Any':
-    return {"status": "ok", "message": "Phase 114 notification boundary health check passed"}
 
 def check_phase114_provider_freeze_config_health(context: 'Any') -> 'Any':
     return {"status": "ok", "message": "Phase 114 config health check passed"}

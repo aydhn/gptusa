@@ -111,3 +111,78 @@ def create_final_paper_safe_gate_review_id(): return "review_id"
 
 class PaperSafeGateReportType(str, Enum):
     FULL = "FULL"
+
+
+# --- Definitions recovered from git history (deleted by an accidental overwrite) ---
+import uuid
+import json
+from dataclasses import asdict
+from typing import Dict
+from typing import List
+from typing import Optional
+from datetime import datetime
+from datetime import timezone
+from usa_signal_bot.core.enums import BoundaryCertificateReplayOutcome
+from usa_signal_bot.core.exceptions import PaperSafeGateValidationError
+from usa_signal_bot.core.exceptions import BoundaryReplayPlanError
+
+
+@dataclass
+class PaperSafeGateFullReview:
+    review_id: 'str'
+    created_at_utc: 'str'
+    report_type: 'PaperSafeGateReportType'
+    gates: 'List[FinalPaperSafeGate]'
+    replay_plans: 'List[BoundaryCertificateReplayPlan]'
+    replay_results: 'List[BoundaryCertificateReplayResult]'
+    integrity_audits: 'List[FrozenEvidenceIntegrityAudit]'
+    rules: 'List[PaperSafeGateRule]'
+    assertions: 'List[PaperSafeGateAssertion]'
+    audit_entries: 'List[PaperSafeGateAuditEntry]'
+    output_paths: 'Dict[str, str]'
+    warnings: 'List[str]'
+    errors: 'List[str]'
+
+
+def boundary_certificate_replay_plan_to_dict(item: 'BoundaryCertificateReplayPlan') -> 'dict':
+    return asdict(item)
+
+
+def boundary_certificate_replay_result_to_dict(item: 'BoundaryCertificateReplayResult') -> 'dict':
+    return asdict(item)
+
+
+def frozen_evidence_integrity_audit_to_dict(item: 'FrozenEvidenceIntegrityAudit') -> 'dict':
+    return asdict(item)
+
+
+def paper_safe_gate_rule_to_dict(item: 'PaperSafeGateRule') -> 'dict':
+    return asdict(item)
+
+
+def paper_safe_gate_assertion_to_dict(item: 'PaperSafeGateAssertion') -> 'dict':
+    return asdict(item)
+
+
+def final_paper_safe_gate_to_dict(item: 'FinalPaperSafeGate') -> 'dict':
+    return asdict(item)
+
+
+def paper_safe_gate_audit_entry_to_dict(item: 'PaperSafeGateAuditEntry') -> 'dict':
+    return asdict(item)
+
+
+def paper_safe_gate_full_review_to_dict(item: 'PaperSafeGateFullReview') -> 'dict':
+    return asdict(item)
+
+
+def create_boundary_replay_result_id(prefix='boundary_replay_result'):
+    return f'{prefix}_{uuid.uuid4().hex[:8]}'
+
+
+def create_paper_safe_audit_id(prefix='paper_safe_audit'):
+    return f'{prefix}_{uuid.uuid4().hex[:8]}'
+
+
+def create_paper_safe_full_review_id(prefix='paper_safe_full_review'):
+    return f'{prefix}_{uuid.uuid4().hex[:8]}'
