@@ -32,8 +32,8 @@ def synthetic_market(seed: int = 7, n_symbols: int = 30, n_days: int = 2600) -> 
         ret = beta * mkt + idio
         px = 50.0 * np.exp(np.cumsum(ret))
         sym = f"SYN{i:02d}"
-        start = 0 if i < n_symbols * 0.7 else int(rng.integers(200, n_days // 2))
-        end = None if i % 5 else int(rng.integers(n_days // 2, n_days - 100))
+        start = 0 if i < n_symbols * 0.7 else int(rng.integers(min(200, n_days // 10), n_days // 2))
+        end = None if i % 5 else int(rng.integers(n_days // 2, n_days - min(100, n_days // 10)))
         s = pd.Series(px, index=index, name=sym)
         if start:
             s.iloc[:start] = np.nan
