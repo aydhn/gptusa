@@ -22,3 +22,10 @@ def test_validate_observer_snapshot_read_only():
     errors = validate_observer_snapshot_read_only(snapshot)
     assert len(errors) == 1
     assert "paper_state_committed=True" in errors[0]
+
+def test_redact_sensitive_fields_nested():
+    snapshot = {"nested": {"api_keys": "my_secret", "a": 1}, "list": [{"tokens": "abc"}]}
+    redacted = redact_observer_snapshot_sensitive_fields(snapshot)
+    assert redacted["nested"]["api_keys"] == "***REDACTED***"
+    assert redacted["nested"]["a"] == 1
+    assert redacted["list"][0]["tokens"] == "***REDACTED***"
