@@ -1,6 +1,6 @@
 # Kanıt Hattı Durumu (2026-10-09)
 
-**Gerçek piyasa verisiyle sonuç YOKTUR.** Ortamda `yfinance` kurulu değil ve veri indirme sizin onayınızı gerektiriyor; bu yüzden boru hattı sentetik, tohumlu rastgele yürüyüş verisiyle doğrulandı. Sentetik sonuç strateji kanıtı değildir: yalnız hattın sızıntısız, maliyetli ve deterministik çalıştığını gösterir.
+**Gerçek veri sonucu aşağıda ("Gerçek veri sonucu" bölümü): iki strateji de kıyasın altında kaldı, karar NEGATİF.** Boru hattı ayrıca sentetik veriyle doğrulandı; sentetik sonuç strateji kanıtı değildir.
 
 ## Ne var (`usa_signal_bot/evidence/`)
 - `universe.py`: point-in-time üyelik (başlangıç/bitiş), ileriye bakış yok.
@@ -17,7 +17,21 @@
 
 İki strateji de sentetik (alfasız) piyasada kıyasın altında kaldı: beklenen sonuç, hat sahte alfa üretmiyor.
 
-## Gerçek veriyle çalıştırma (sizin adımınız)
-1. `pip install -r requirements.txt` ve ücretsiz kaynaktan (bkz. `FREE_DATA_SOURCES.md`) her sembol için `data/prices/<SYMBOL>.csv` (Date, Adj Close) hazırlayın; mümkünse `symbol,start,end` üyelik tablosu ve `splits.csv` ekleyin.
-2. `python -m usa_signal_bot evidence-run --source csv --csv-dir data/prices --memberships data/memberships.csv --write`
-3. Üyelik tablosu yoksa rapor "hayatta kalma yanlılığı" uyarısı basar; bu durumda sonuç iyimserdir.
+## Gerçek veri sonucu (yfinance, 2010-01-01 sonrası, 50 büyük hisse, 4217 gün)
+Veri: `usa_signal_bot/evidence/fetch.py` ile Yahoo (ücretsiz, resmi olmayan uç) günlük düzeltilmiş kapanış; 50/50 sembol, 32 split satırı, fiyat doğrulama sorunu 0. Maliyet: 1 bps komisyon + 5 bps kayma. Walk-forward: 504 gün eğitim / 126 test / 5 gün purge.
+
+| Strateji | OOS CAGR | Sharpe (%95 CI) | MaxDD | Kıyas CAGR / Sharpe | Karar |
+|---|---|---|---|---|---|
+| SMA trend | ~%15,4 | 1,00 [0,56; 1,58] | ~%-27,7 | ~%17,3 / 1,06 | NEGATİF |
+| Momentum 12-1 | ~%17,1 | 0,93 [0,46; 1,46] | ~%-37,1 | ~%17,3 / 1,06 | NEGATİF |
+
+Kıyas: eşit ağırlıklı aynı evren. İki strateji de kıyası geçemedi.
+
+**Sınırlar:** evren elle seçilmiş, bugün hayatta olan büyük isimler (statik liste) → hayatta kalma yanlılığı; gerçek sonuç bundan daha kötü olabilir, daha iyi değil. Yahoo verisi revize edilebilir/eksik olabilir. Tek dönem, tek parametre ızgarası. Bu, yatırım tavsiyesi veya kâr beklentisi değildir.
+
+Diğer hatlar aynı veriyle: `decision-simulate` (yerel simüle ledger) son özkaynak 101.942 / başlangıç 100.000, CAGR ~%0,1, Sharpe ~0,05, MaxDD ~%-22,1. `ml-loop-train`: OOS rank IC ~0,0126 (eşik 0,02), baz çizgisi 0, sızıntı temiz → REJECTED; aktivasyon yok.
+
+## Yeniden çalıştırma
+1. `python -c "from usa_signal_bot.evidence.fetch import fetch_daily, DEFAULT_TICKERS; print(fetch_daily(DEFAULT_TICKERS, 'data/prices'))"` (indirme; `data/` gitignore'da).
+2. `python -m usa_signal_bot evidence-run --source csv --csv-dir data/prices --write`
+3. Üyelik tablosu (`--memberships`) verilirse hayatta kalma uyarısı kalkar.
