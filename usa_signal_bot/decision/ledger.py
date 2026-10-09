@@ -36,6 +36,9 @@ class PaperLedger:
     initial_cash: float = 100_000.0
     cost: CostModel = field(default_factory=CostModel)
     journal_path: Optional[Path] = None
+    cash_rate_annual: float = 0.0  # interest on idle cash (annual, compounded by calendar days)
+    interest_earned: float = 0.0
+    _last_accrual: Optional[str] = None
     cash: float = 0.0
     positions: Dict[str, PositionState] = field(default_factory=dict)
     fills: List[SimulatedFill] = field(default_factory=list)
@@ -143,6 +146,18 @@ class PaperLedger:
             else:
                 self.positions[sym] = PositionState(qty, px, px, day_index)
             self._record(SimulatedFill(date, sym, "BUY", qty, px, fee, "REBALANCE"))
+
+    def accrue_interest(self, date: str) -> float:
+        """Credit interest on positive cash for the calendar days since the previous accrual (first call: none)."""
+        gained = 0.0
+        if self._last_accrual is not None and self.cash > 0 and self.cash_rate_annual:
+            days = (pd.Timestamp(date) - pd.Timestamp(self._last_accrual)).days
+            if days > 0:
+                gained = self.cash * ((1.0 + self.cash_rate_annual) ** (days / 365.0) - 1.0)
+                self.cash += gained
+                self.interest_earned += gained
+        self._last_accrual = date
+        return gained
 
     def mark(self, prices: Mapping[str, float], date: str) -> float:
         for sym, pos in self.positions.items():

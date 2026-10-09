@@ -13,6 +13,7 @@ import pandas as pd
 
 from usa_signal_bot.evidence.costs import CostModel
 from usa_signal_bot.evidence.metrics import summarize
+from usa_signal_bot.evidence.rates import RateLike, align_rate, daily_from_annual
 
 WeightFn = Callable[..., pd.DataFrame]
 
@@ -47,13 +48,19 @@ class WalkForwardResult:
 
 
 def backtest_weights(
-    weights: pd.DataFrame, returns: pd.DataFrame, cost: CostModel
+    weights: pd.DataFrame, returns: pd.DataFrame, cost: CostModel, cash_rate: RateLike = 0.0
 ) -> Tuple[pd.Series, pd.Series]:
-    """Net daily returns and turnover for decision weights ``weights`` (decided at close t, held t+1)."""
+    """Net daily returns and turnover for decision weights ``weights`` (decided at close t, held t+1).
+
+    The uninvested fraction (1 - sum of held weights, never negative) earns ``cash_rate`` (annual; float or dated
+    Series), so idle cash is not treated as a zero-return asset.
+    """
     held = weights.shift(1).fillna(0.0)
     gross = (held * returns.fillna(0.0)).sum(axis=1)
     turnover = (held - held.shift(1).fillna(0.0)).abs().sum(axis=1)
-    net = gross - cost.cost_series(turnover)
+    idle = (1.0 - held.sum(axis=1)).clip(lower=0.0)
+    interest = idle * daily_from_annual(align_rate(cash_rate, returns.index))
+    net = gross + interest - cost.cost_series(turnover)
     return net, turnover
 
 
@@ -80,14 +87,15 @@ def run_walk_forward(
     cost: CostModel,
     cfg: WalkForwardConfig,
     benchmark_weights: pd.DataFrame,
+    cash_rate: RateLike = 0.0,
 ) -> WalkForwardResult:
     returns = prices.pct_change(fill_method=None)
     candidates: List[Tuple[Dict[str, int], pd.Series, pd.Series]] = []
     for params in param_grid:
         w = weight_fn(prices, members, **params)
-        net, turn = backtest_weights(w, returns, cost)
+        net, turn = backtest_weights(w, returns, cost, cash_rate)
         candidates.append((params, net, turn))
-    bench_net, _ = backtest_weights(benchmark_weights, returns, cost)
+    bench_net, _ = backtest_weights(benchmark_weights, returns, cost, cash_rate)
 
     index = prices.index
     oos_parts: List[pd.Series] = []

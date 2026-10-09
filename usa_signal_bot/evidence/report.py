@@ -20,6 +20,9 @@ from usa_signal_bot.evidence.factors import (
     value_proxy_weights,
     vol_targeted_mix_weights,
 )
+from usa_signal_bot.evidence.hypothesis_log import HypothesisLog
+from usa_signal_bot.evidence.rates import RateLike, real_cagr
+from usa_signal_bot.evidence.spa import spa_test
 from usa_signal_bot.evidence.stats import deflated_sharpe_ratio, pbo_cscv
 from usa_signal_bot.evidence.strategies import equal_weight_benchmark, momentum_weights, sma_trend_weights
 from usa_signal_bot.evidence.universe import PointInTimeUniverse
@@ -56,6 +59,10 @@ class EvidenceReport:
     survivorship_warning: bool
     n_trials_total: int = 0
     global_pbo: float = float("nan")
+    spa_p: float = float("nan")  # Hansen SPA p-value: best candidate's outperformance vs benchmark, all candidates considered
+    rc_p: float = float("nan")  # White's Reality Check p-value
+    cash_rate_note: str = ""
+    inflation: float = 0.0
 
     def to_markdown(self) -> str:
         lines = ["# Strateji Kanıt Raporu (walk-forward, maliyet dahil)", "", f"> {DISCLAIMER}", ""]
@@ -74,29 +81,31 @@ class EvidenceReport:
             lines.append("- **Uyarı:** üyelik tablosu verilmedi; statik evren hayatta kalma yanlılığı içerir.")
         lines += [
             f"- Toplam denenen aday (DSR düzeltmesi için N): {self.n_trials_total}; tüm adaylar PBO ≈ {self.global_pbo:.2f}",
+            f"- Hansen SPA p ≈ {self.spa_p:.3f}, White Reality Check p ≈ {self.rc_p:.3f} (kıyasa göre en iyi adayın üstünlüğü, tüm adaylar dikkate alınarak)",
+            f"- Nakit faizi: {self.cash_rate_note}; enflasyon varsayımı yıllık %{self.inflation*100:.1f} (reel CAGR için)",
             "- `value`/`quality` aileleri fiyat-türevli VEKİLDİR (temel veri yok).",
         ]
-        lines += ["", "| Strateji | OOS CAGR | OOS Sharpe | Sharpe %95 GA | DSR | DSR (kıyasa göre) | PBO | MaxDD | Yıllık turnover | Kıyas CAGR | Kıyas Sharpe | Karar |",
-                  "|---|---|---|---|---|---|---|---|---|---|---|---|"]
+        lines += ["", "| Strateji | OOS CAGR | Reel CAGR | OOS Sharpe | Sharpe %95 GA | DSR | DSR (kıyasa göre) | PBO | MaxDD | Yıllık turnover | Kıyas CAGR | Kıyas Sharpe | Karar |",
+                  "|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
         for r in self.results:
             lo, hi = r.sharpe_ci
             lines.append(
-                f"| {r.name} | {r.oos.cagr:.1%} | {r.oos.sharpe:.2f} | [{lo:.2f}, {hi:.2f}] | {r.dsr:.2f} | {r.dsr_excess:.2f} | {r.pbo:.2f} | {r.oos.max_drawdown:.1%} "
+                f"| {r.name} | {r.oos.cagr:.1%} | {real_cagr(r.oos.cagr, self.inflation):.1%} | {r.oos.sharpe:.2f} | [{lo:.2f}, {hi:.2f}] | {r.dsr:.2f} | {r.dsr_excess:.2f} | {r.pbo:.2f} | {r.oos.max_drawdown:.1%} "
                 f"| {r.avg_annual_turnover:.1f} | {r.benchmark.cagr:.1%} | {r.benchmark.sharpe:.2f} | {r.verdict} |"
             )
         lines += [
             "",
-            "Karar kuralı: `POZİTİF` yalnız OOS Sharpe %95 GA alt sınırı > 0, OOS CAGR **ve** Sharpe > kıyas, **ve** kıyasa göre fazla getirinin DSR'ı (tüm denenen adaylar için düzeltilmiş) ≥ 0,95 ise; "
+            "Karar kuralı: `POZİTİF` yalnız OOS Sharpe %95 GA alt sınırı > 0, OOS CAGR **ve** Sharpe > kıyas, kıyasa göre fazla getirinin DSR'ı (tüm denenen adaylar için düzeltilmiş) ≥ 0,95 **ve** SPA p ≤ 0,05 ise; "
             "OOS Sharpe ≤ 0 veya CAGR < kıyas ise `NEGATİF`; aksi halde `BELİRSİZ`. Negatif sonuç negatif yazılır.",
         ]
         return "\n".join(lines) + "\n"
 
 
-def _verdict(oos: PerformanceSummary, bench: PerformanceSummary, ci: tuple, dsr_excess: float = 1.0) -> str:
+def _verdict(oos: PerformanceSummary, bench: PerformanceSummary, ci: tuple, dsr_excess: float = 1.0, spa_p: float = 0.0) -> str:
     lo = ci[0]
     if oos.sharpe <= 0 or oos.cagr < bench.cagr or oos.sharpe < bench.sharpe:
         return "NEGATİF"
-    if lo == lo and lo > 0 and dsr_excess == dsr_excess and dsr_excess >= 0.95:
+    if lo == lo and lo > 0 and dsr_excess == dsr_excess and dsr_excess >= 0.95 and spa_p == spa_p and spa_p <= 0.05:
         return "POZİTİF"
     return "BELİRSİZ"
 
@@ -107,6 +116,10 @@ def run_evidence(
     cfg: Optional[WalkForwardConfig] = None,
     seed: int = 0,
     families: Optional[List[str]] = None,
+    hypothesis_log: Optional[HypothesisLog] = None,
+    run_id: str = "run",
+    cash_rate: RateLike = 0.0,
+    inflation: float = 0.0,
 ) -> EvidenceReport:
     cost = cost or CostModel()
     cfg = cfg or WalkForwardConfig()
@@ -132,7 +145,7 @@ def run_evidence(
         strategies = {k: v for k, v in strategies.items() if k in families}
     runs = {}
     for name, (fn, grid) in strategies.items():
-        runs[name] = run_walk_forward(prices, members, fn, grid, cost, cfg, bench_w)
+        runs[name] = run_walk_forward(prices, members, fn, grid, cost, cfg, bench_w, cash_rate)
     n_total = sum(len(g) for _fn, g in strategies.values())
     all_trials = [wf.trial_returns for wf in runs.values() if not wf.trial_returns.empty]
     pooled = pd.concat(all_trials, axis=1) if all_trials else pd.DataFrame()
@@ -142,6 +155,17 @@ def run_evidence(
     ex_pool = pd.concat(ex_trials, axis=1) if ex_trials else pd.DataFrame()
     ex_srs = (ex_pool.mean() / ex_pool.std(ddof=1).replace(0, np.nan)).dropna() if not ex_pool.empty else pd.Series(dtype=float)
     var_ex = float(ex_srs.var(ddof=1)) if len(ex_srs) > 1 else None
+    spa_p = rc_p = float("nan")
+    if not ex_pool.empty and len(ex_pool.dropna()) >= 20:
+        sp = spa_test(ex_pool.dropna().to_numpy(), n_boot=500, seed=seed)
+        spa_p, rc_p = sp.p_value_spa, sp.p_value_rc
+    if hypothesis_log is not None and not pooled.empty:
+        for name, wf in runs.items():
+            for (params_i, col) in zip(strategies[name][1], wf.trial_returns.columns):
+                r = wf.trial_returns[col].dropna()
+                if len(r) > 1 and r.std(ddof=1) > 0:
+                    hypothesis_log.append(run_id, name, params_i, len(r), float(r.mean() / r.std(ddof=1)), data.label)
+        n_total = max(n_total, hypothesis_log.n_trials(data.label))
     global_pbo = float("nan")
     if pooled.shape[1] >= 2 and len(pooled) >= 16:
         global_pbo = pbo_cscv(pooled.dropna(axis=1).to_numpy(), 8).pbo
@@ -162,10 +186,11 @@ def run_evidence(
         if t.shape[1] >= 2 and len(t) >= 16:
             pbo = pbo_cscv(t.to_numpy(), 8).pbo
         results.append(
-            StrategyEvidence(name, oos, bench, ci, wf.avg_turnover, len(wf.folds), _verdict(oos, bench, ci, dsr_ex),
+            StrategyEvidence(name, oos, bench, ci, wf.avg_turnover, len(wf.folds), _verdict(oos, bench, ci, dsr_ex, spa_p),
                              dsr, dsr_ex, pbo, wf.trial_returns.shape[1])
         )
     return EvidenceReport(
         data.label, prices.shape[1], prices.shape[0], issues, cost, results,
-        survivorship_warning=data.static_universe, n_trials_total=n_total, global_pbo=global_pbo,
+        survivorship_warning=data.static_universe, n_trials_total=n_total, global_pbo=global_pbo, spa_p=spa_p, rc_p=rc_p,
+        cash_rate_note=("tarihsel seri" if hasattr(cash_rate, "index") else f"sabit yıllık %{float(cash_rate)*100:.2f}"), inflation=inflation,
     )

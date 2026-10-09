@@ -32,6 +32,7 @@ def simulate_paper(
     for i, d in enumerate(dates):
         px = prices.iloc[i]
         day = d.strftime("%Y-%m-%d")
+        ledger.accrue_interest(day)
         ledger.close_missing(px, day)
         if pending is not None:
             ledger.rebalance_to(pending.target_weights, px, day, i, pending.exits)

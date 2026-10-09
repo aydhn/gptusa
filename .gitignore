@@ -15,6 +15,7 @@ usa_signal_bot/release/__pycache__
 scripts/*
 !scripts/run_smoke.py
 !scripts/windows_*.py
+!scripts/run_tests_isolated.py
 tests/fixtures/advanced_acceptance/
 usa_signal_bot/app/cli.py_patch.py
 usa_signal_bot/app/cli.py_patch_2.py

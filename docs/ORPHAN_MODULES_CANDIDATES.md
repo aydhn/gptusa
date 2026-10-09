@@ -1,4 +1,6 @@
-# Yetim modül adayları (2026-10-09) — SİLİNMEDİ
+# Yetim modül adayları (2026-10-09) — 2026-10-10'da 706 modül SİLİNDİ (git geçmişinde; `git log --diff-filter=D`)
+
+> Silme notu: kullanıcı onayıyla 810 aday silinecekti; `usa_signal_bot/tests/` altındaki 35 test dosyası (yanlışlıkla modül sayılmıştı) ve güvenlik adlı (firewall/quarantine/blocker/non_activation/safe_gate/sandbox_bridge/no_write) modüller ile bunların paket kardeşleri geri yüklendi. Silme sonrası dosya başına testte: daha önce temiz olan hiçbir dosya bozulmadı. Aşağıdaki liste silme ÖNCESİ adaylardır.
 
 Yöntem: `usa_signal_bot/**` içindeki her modülün AST import grafiği; kökler = `tests/`, `usa_signal_bot/tests/`, `scripts/`, `app/cli.py`, `__main__`. Köklerden ulaşılamayan modüller aşağıda (toplam 846 / 3004). **Sınırlar:** `importlib`/string ile dinamik yüklemeler görülmez; yalnız testlerden import edilen ama başka yerden edilmeyen modüller 'ulaşılabilir' sayılır; kullanıcının ~580 tahmini farklı yöntemden gelir. Silmeden önce paket bazında gözden geçirilmelidir (özellikle `paper_*` iskelet paketleri CLAUDE.md'ye göre kasıtlı olabilir).
 

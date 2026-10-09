@@ -17,7 +17,7 @@ def cmd_decision_simulate(args) -> None:
     data = load_csv_market(args.csv_dir, args.memberships) if args.source == "csv" else synthetic_market(seed=args.seed)
     members = PointInTimeUniverse.from_frame(data.memberships).membership_matrix(data.prices.index, data.prices.columns)
     journal = Path(args.journal) if args.journal else None
-    ledger = PaperLedger(initial_cash=args.cash, cost=CostModel(args.commission_bps, args.slippage_bps), journal_path=journal)
+    ledger = PaperLedger(initial_cash=args.cash, cost=CostModel(args.commission_bps, args.slippage_bps), journal_path=journal, cash_rate_annual=args.cash_rate)
     decisions = simulate_paper(data.prices, members, DecisionConfig(), ledger)
     equity = __import__("pandas").Series(ledger.equity_curve)
     perf = summarize(equity.pct_change().dropna())
@@ -33,6 +33,7 @@ def setup_decision_cli(subparsers) -> None:
     p.add_argument("--memberships", default=None)
     p.add_argument("--seed", type=int, default=7)
     p.add_argument("--cash", type=float, default=100000.0)
+    p.add_argument("--cash-rate", type=float, default=0.02, help="Annual interest on idle cash (ASSUMPTION; default 2%%)")
     p.add_argument("--commission-bps", type=float, default=1.0)
     p.add_argument("--slippage-bps", type=float, default=5.0)
     p.add_argument("--journal", default=None, help="Optional JSONL path for simulated fills")
