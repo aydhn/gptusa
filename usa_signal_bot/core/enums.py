@@ -4730,3 +4730,6 @@ class AllocationStatus(str, Enum):
     PENDING = "PENDING"
     ALLOCATED = "ALLOCATED"
     FAILED = "FAILED"
+
+
+from usa_signal_bot.core._recovered_enums import *  # noqa: E402,F401,F403

@@ -1007,3 +1007,6 @@ class BasketReplayError(USASignalBotError):
 
 class AttributionValidationError(Exception):
     pass
+
+
+from usa_signal_bot.core._recovered_exceptions import *  # noqa: E402,F401,F403
