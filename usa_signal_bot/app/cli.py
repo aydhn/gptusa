@@ -1,5 +1,4 @@
 import sys
-import click
 
 from usa_signal_bot.ml_research.ensemble_evaluation.ensemble_prototype_report import (
     build_ensemble_prototype_full_review,
@@ -14,11 +13,6 @@ from pathlib import Path
 
 import argparse
 import sys
-
-
-# Read original
-with open("usa_signal_bot/app/cli.py", "r") as f:
-    content = f.read()
 
 
 def setup_phase156_cli(subparsers):
@@ -354,14 +348,25 @@ def setup_parser():
     parser = argparse.ArgumentParser(prog="python -m usa_signal_bot")
     subparsers = parser.add_subparsers(dest="command")
 
-    setup_phase143_cli(subparsers)
-    setup_phase155_cli(subparsers)
-    setup_phase145_cli(subparsers)
-    setup_phase147_cli(subparsers)
-    setup_phase150_cli(subparsers)
-    setup_phase151_cli(subparsers)
+    for register in _command_registrars():
+        register(subparsers)
 
     return parser
+
+
+def _command_registrars():
+    """Single list of all CLI command registrars; add new setup_* functions here."""
+    return (
+        setup_phase143_cli,
+        setup_phase145_cli,
+        setup_phase147_cli,
+        setup_phase150_cli,
+        setup_phase151_cli,
+        setup_phase152_cli,
+        setup_phase155_cli,
+        setup_phase156_cli,
+        setup_phase157_cli,
+    )
 
 
 def handle_walk_forward_commands(args):
@@ -871,14 +876,52 @@ def _setup_portfolio_foundation_lifecycle_commands(subparsers):
     )
 
 
-def setup_phase152_cli(subparsers):
-    try:
-        from usa_signal_bot.app.cli_phase152_patch import register_phase152_commands
+def cmd_backtest_closure_info(args):
+    print("Phase 152: Realistic Backtest Robustness Final Audit & Closure")
+    print("This phase acts strictly as a read-only final audit and closure phase.")
+    print("It explicitly prohibits:")
+    print(" - Live/paper trading")
+    print(" - Broker execution")
+    print(" - Paper state mutation")
+    print(" - Deployment")
+    print(" - Portfolio construction / Position sizing / Allocation")
+    print("Produces a read-only research handoff package for Phase 153.")
 
-        register_phase152_commands(subparsers)
-    except ImportError as e:
-        import logging
-        logging.warning(f"Could not load Phase 152 commands: {e}")
+
+def cmd_backtest_closure_review(args):
+    from usa_signal_bot.backtesting.closure.backtest_closure_report import (
+        build_backtest_closure_full_review,
+    )
+
+    review = build_backtest_closure_full_review()
+    print(
+        f"Backtest closure review generated. Ready for Phase 153: {review.context.ready_for_phase153}"
+    )
+    if args.write:
+        from usa_signal_bot.backtesting.closure.backtest_closure_store import (
+            write_backtest_closure_full_review_json,
+            backtest_closure_reviews_dir,
+        )
+
+        path = (
+            backtest_closure_reviews_dir(Path("data"))
+            / f"backtest_closure_full_review_{review.review_id}.json"
+        )
+        write_backtest_closure_full_review_json(path, review)
+        print(f"Written to {path}")
+
+
+def setup_phase152_cli(subparsers):
+    p = subparsers.add_parser(
+        "backtest-closure-info", help="Show info about Phase 152 backtest closure"
+    )
+    p.set_defaults(func=cmd_backtest_closure_info)
+
+    p = subparsers.add_parser(
+        "backtest-closure-review", help="Run full backtest closure review"
+    )
+    p.add_argument("--write", action="store_true", help="Write artifacts to disk")
+    p.set_defaults(func=cmd_backtest_closure_review)
 
     _setup_portfolio_foundation_ingest_commands(subparsers)
     _setup_portfolio_foundation_build_commands(subparsers)
@@ -886,514 +929,11 @@ def setup_phase152_cli(subparsers):
     _setup_portfolio_foundation_lifecycle_commands(subparsers)
 
 
-def sizing_prototype_info():
-    """Display info about Phase 154 Deterministic Position Sizing Prototypes."""
-    print(
-        "Phase 154: Deterministic Position Sizing Prototypes, Sizing Diagnostics and Sizing Safety Validation."
-    )
-    print("This phase produces RESEARCH-ONLY PROTOTYPES.")
-    print(
-        "IT DOES NOT PRODUCE actual position sizes, target weights, allocations, or order sizes."
-    )
-    print("IT IS NOT live trading, paper trading, or broker execution.")
-    print("NO capital deployment or active portfolio optimization occurs here.")
-    print("Ready for Phase 155 determines if sandbox allocation can commence.")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-def sizing_ingest_portfolio_foundation(write):
-    print("Ingesting Portfolio Foundation Artifacts...")
-    if write:
-        print("Written to storage (mock).")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-def sizing_artifact_load(write):
-    print("Loading Artifacts...")
-    if write:
-        print("Written to storage (mock).")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-def resolve_sizing_inputs(write):
-    print("Resolving Sizing Inputs...")
-    if write:
-        print("Written to storage (mock).")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-def build_sizing_policy(write):
-    print("Building Sizing Policy...")
-    if write:
-        print("Written to storage (mock).")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-def build_sizing_method_contracts(write):
-    print("Building Method Contracts...")
-    if write:
-        print("Written to storage (mock).")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-def build_fixed_fractional_sizing(write):
-    print("Building Fixed Fractional Prototypes...")
-    if write:
-        print("Written to storage (mock).")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-def build_volatility_adjusted_sizing(write):
-    print("Building Volatility Adjusted Prototypes...")
-    if write:
-        print("Written to storage (mock).")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-def build_drawdown_adjusted_sizing(write):
-    print("Building Drawdown Adjusted Prototypes...")
-    if write:
-        print("Written to storage (mock).")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-def build_cost_aware_sizing(write):
-    print("Building Cost Aware Prototypes...")
-    if write:
-        print("Written to storage (mock).")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-def build_liquidity_aware_sizing(write):
-    print("Building Liquidity Aware Prototypes...")
-    if write:
-        print("Written to storage (mock).")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-def build_robustness_adjusted_sizing(write):
-    print("Building Robustness Adjusted Prototypes...")
-    if write:
-        print("Written to storage (mock).")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-def apply_sizing_cap_floor_rules(write):
-    print("Applying Cap/Floor Rules...")
-    if write:
-        print("Written to storage (mock).")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-def build_sizing_comparison_matrix(write):
-    print("Building Comparison Matrix...")
-    if write:
-        print("Written to storage (mock).")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-def build_sizing_diagnostics(write):
-    print("Building Diagnostics...")
-    if write:
-        print("Written to storage (mock).")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-def build_sizing_sensitivity_report(write):
-    print("Building Sensitivity Report...")
-    if write:
-        print("Written to storage (mock).")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-def build_risk_budget_adherence_report(write):
-    print("Building Risk Budget Adherence Report...")
-    if write:
-        print("Written to storage (mock).")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-def validate_sizing_safety_boundary(write):
-    print("Validating Safety Boundary...")
-    if write:
-        print("Written to storage (mock).")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-def phase155_readiness_gate(write):
-    print("Checking Phase 155 Readiness Gate...")
-    if write:
-        print("Written to storage (mock).")
-
-
-def sizing_schema_check():
-    print("Schema Check Passed.")
-
-
-def sizing_safety_check():
-    print("Safety Check Passed.")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-def sizing_prototype_context(write):
-    print("Sizing Prototype Context...")
-    if write:
-        print("Written to storage (mock).")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-def sizing_prototype_review(write):
-    print("Sizing Prototype Full Review...")
-    if write:
-        print("Written to storage (mock).")
-
-
-def sizing_prototype_summary():
-    print("Sizing Prototype Summary.")
-
-
-def sizing_prototype_validate():
-    print("Sizing Prototype Valid.")
-
-
 # Phase 151 dummy cli stubs
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-
-
-def portfolio_construction_info():
-    """Print info about Phase 155"""
-    typer.echo("Phase 155 Portfolio Construction Prototype & Allocation Sandbox")
-    typer.echo(portfolio_construction_limitations_text())
-
-
-def build_policy(write: bool = False):
-    """Build and preview a default sandbox policy"""
-    policy = build_default_portfolio_construction_policy()
-    typer.echo(f"Policy Built: {policy.policy_name}")
-    typer.echo(f"Max Sandbox Weight: {policy.max_sandbox_weight_fraction}")
-
-
-def build_equal_sandbox(write: bool = False):
-    """Build equal sandbox allocation using default policy"""
-    policy = build_default_portfolio_construction_policy()
-    results = build_equal_sandbox_allocation([], policy)
-    typer.echo(f"Built equal allocation with {len(results)} records.")
-
-
-def build_exposure_table(write: bool = False):
-    """Build prototype exposure table"""
-    table = build_prototype_exposure_table([], [])
-    typer.echo(f"Built exposure table with hash: {table.table_hash}")
-
-
-def portfolio_review(write: bool = False):
-    """Run full portfolio construction review"""
-    context = build_portfolio_construction_context()
-    policy = build_default_portfolio_construction_policy()
-    contracts = build_sandbox_allocation_method_contracts(policy)
-    table = build_prototype_exposure_table([], [])
-    comp = build_allocation_sandbox_comparison_report([], table, [])
-    val = build_portfolio_construction_validation_report(policy, contracts, comp)
-    rules = build_allocation_sandbox_safety_boundary_rules()
-    bound = build_allocation_sandbox_safety_boundary_result(rules)
-    gate = build_phase156_readiness_gate(policy, contracts, comp, val, bound)
-
-    context.policy = policy
-    context.method_contracts = contracts
-    context.exposure_table = table
-    context.comparison_report = comp
-    context.validation_report = val
-    context.safety_boundary = bound
-    context.phase156_readiness_gate = gate
-
-    review = build_portfolio_construction_full_review(context)
-    typer.echo(f"Review ID: {review.review_id}")
-    typer.echo(f"Safety Passed: {bound.boundary_passed}")
-    typer.echo(f"Ready for Phase 156: {gate.ready_for_phase156}")
-
-
-def full_system_integration_info():
-    """Display Phase 158 full system integration info."""
-    typer.echo(
-        "Phase 158 is the full-system integration and dry-run acceptance rehearsal phase. It is not for deployment or trading."
-    )
-
-
-def integration_ingest_phase158_handoff():
-    """Ingest Phase 158 handoff package."""
-    typer.echo("Handoff ingested (dry-run).")
-
-
-def integration_artifact_load():
-    """Load integration artifacts."""
-    typer.echo("Artifacts loaded (dry-run).")
-
-
-def resolve_integration_inputs():
-    """Resolve integration inputs."""
-    typer.echo("Inputs resolved (dry-run).")
-
-
-def build_system_artifact_inventory(write: bool = False):
-    """Build system artifact inventory."""
-    typer.echo(f"Inventory built. Write: {write}")
-
-
-def build_integration_dependency_graph(write: bool = False):
-    """Build integration dependency graph."""
-    typer.echo(f"Dependency graph built. Write: {write}")
-
-
-def build_integration_boundary_contract(write: bool = False):
-    """Build integration boundary contract."""
-    typer.echo(f"Boundary contract built. Write: {write}")
-
-
-def build_e2e_rehearsal_plan(write: bool = False):
-    """Build E2E rehearsal plan."""
-    typer.echo(f"E2E plan built. Write: {write}")
-
-
-def execute_dry_run_rehearsal(write: bool = False):
-    """Execute dry run rehearsal."""
-    typer.echo(f"Dry run executed. Write: {write}")
-
-
-def build_acceptance_rehearsal_result(write: bool = False):
-    """Build acceptance rehearsal result."""
-    typer.echo(f"Acceptance result built. Write: {write}")
-
-
-def build_schema_compatibility_report(write: bool = False):
-    """Build schema compatibility report."""
-    typer.echo(f"Schema compatibility report built. Write: {write}")
-
-
-def build_cli_integration_report(write: bool = False):
-    """Build CLI integration report."""
-    typer.echo(f"CLI integration report built. Write: {write}")
-
-
-def build_config_integration_report(write: bool = False):
-    """Build config integration report."""
-    typer.echo(f"Config integration report built. Write: {write}")
-
-
-def build_storage_integration_report(write: bool = False):
-    """Build storage integration report."""
-    typer.echo(f"Storage integration report built. Write: {write}")
-
-
-def build_health_integration_report(write: bool = False):
-    """Build health integration report."""
-    typer.echo(f"Health integration report built. Write: {write}")
-
-
-def build_quality_observability_integration_report(write: bool = False):
-    """Build quality observability integration report."""
-    typer.echo(f"Quality observability report built. Write: {write}")
-
-
-def build_notification_dry_run_integration_report(write: bool = False):
-    """Build notification dry run integration report."""
-    typer.echo(f"Notification dry run report built. Write: {write}")
-
-
-def validate_integration_safety_boundary(write: bool = False):
-    """Validate integration safety boundary."""
-    typer.echo(f"Safety boundary validated. Write: {write}")
-
-
-def build_final_delivery_preparation_checklist(write: bool = False):
-    """Build final delivery preparation checklist."""
-    typer.echo(f"Checklist built. Write: {write}")
-
-
-def phase159_readiness_gate(write: bool = False):
-    """Check Phase 159 readiness gate."""
-    typer.echo(f"Phase 159 readiness gate evaluated. Write: {write}")
-
-
-def full_system_integration_context(write: bool = False):
-    """Build full system integration context."""
-    typer.echo(f"Context built. Write: {write}")
-
-
-def full_system_integration_review(write: bool = False):
-    """Build full system integration review."""
-    typer.echo(f"Full review built. Write: {write}")
-
-
-def full_system_integration_summary():
-    """Print full system integration summary."""
-    typer.echo("Integration summary displayed.")
-
-
-def full_system_integration_validate():
-    """Validate full system integration."""
-    typer.echo("Integration validated.")
-
-
-# Phase 160 specific commands
-@click.command(name="final-closure-info")
-def cmd_final_closure_info():
-    """Print information about Phase 160."""
-    print("USA Signal Bot - Phase 160 (Final System Audit and Project Closure)")
-    print(
-        "This phase is STRICTLY for the final system audit, final delivery certificate, and project closure."
-    )
-    print("It is NOT a deployment phase. It is NOT a trading or broker approval phase.")
-    print("Outputs are NOT investment advice.")
-
-
-@click.command(name="final-ingest-phase160-handoff")
-@click.option("--write", is_flag=True, help="Write output to local storage")
-def cmd_final_ingest_phase160_handoff(write: bool):
-    """Ingest the Phase160 handoff package."""
-    from usa_signal_bot.release.final_closure.phase159_handoff_ingestion import (
-        ingest_latest_phase160_handoff_package_from_store,
-        phase160_handoff_ingestion_to_text,
-    )
-    from pathlib import Path
-
-    result = ingest_latest_phase160_handoff_package_from_store(Path("data"))
-    print(phase160_handoff_ingestion_to_text(result))
-
-
-@click.command(name="final-closure-summary")
-def cmd_final_closure_summary():
-    """Print a summary of the project closure status."""
-    print("160 fazlık USA Signal Bot prompt-chain tamamlandı.")
-    print("Proje başarıyla audit edildi ve mimari seviyesinde kapatıldı.")
-    print(
-        "Canlı/paper/broker aktivasyonu için yeni ve kontrollü bir çalışma gerekmektedir."
-    )
 
 
 # In a real app we'd add the rest of the commands here with similar wrappers.
 # The user asked to add CLI commands, we'll add a few more main ones.
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-
-
-# @click.option("--write", is_flag=True, help="Write to storage")
-
-
-# Phase 160 specific commands
 
 
 # In a real app we'd add the rest of the commands here with similar wrappers.
