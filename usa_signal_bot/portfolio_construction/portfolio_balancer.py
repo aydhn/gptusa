@@ -56,12 +56,14 @@ class PortfolioBalancer:
         assessments = assess_all_concentration(plan.exposure_snapshot, cfg)
         plan.concentration_assessments.extend(assessments)
 
+        allocations_by_symbol = {}
+        for alloc in plan.allocations:
+            allocations_by_symbol.setdefault(alloc.symbol, []).append(alloc)
+
         for a in assessments:
             if a.decision in [PortfolioGuardDecision.CAP, PortfolioGuardDecision.REDUCE]:
-                # find matching allocations and reduce
-                for alloc in plan.allocations:
-                    # simplistic check for symbol matches
-                    if a.exposure_type.value == "SYMBOL" and alloc.symbol == a.name:
+                if hasattr(a.exposure_type, "value") and a.exposure_type.value == "SYMBOL" or a.exposure_type == "SYMBOL":
+                    for alloc in allocations_by_symbol.get(a.name, []):
                         self._cap_allocation(alloc, a.limit_pct_equity, plan.exposure_snapshot.total_equity_usd)
         return plan
 
