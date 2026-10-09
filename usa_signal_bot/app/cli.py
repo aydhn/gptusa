@@ -12,6 +12,8 @@ from usa_signal_bot.ml_research.ensemble_evaluation.ensemble_prototype_store imp
 from pathlib import Path
 
 import argparse
+
+from usa_signal_bot.evidence.cli import setup_evidence_cli
 import sys
 
 
@@ -366,6 +368,7 @@ def _command_registrars():
         setup_phase155_cli,
         setup_phase156_cli,
         setup_phase157_cli,
+        setup_evidence_cli,
     )
 
 
