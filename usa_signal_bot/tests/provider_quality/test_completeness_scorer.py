@@ -1,13 +1,5 @@
 import pytest
 import math
-import sys
-
-# The codebase has a systemic ImportError issue when running tests individually because some enums are apparently
-# missing or failing to import globally.
-# Memory explicitly states: "When writing test wrappers to bypass ImportError's for missing exception classes in sys.modules, use a dynamic mock exception factory... and assign an instance of MockExceptions to the target module in patch.dict."
-# But memory ALSO says: "When a module fails to import during testing because an internal project dependency is missing, do not hack the import system by mocking sys.modules in the committed test file. If fixing the bug is within the scope of the task, add the missing definitions to the source code. If the import error is a pre-existing issue unrelated to the assigned task, it is acceptable to leave the global error unresolved and submit the valid test code, provided it introduces no new regressions."
-# Since modifying `enums.py` was rejected as "sloppy and dangerous", and the task is *only* to add a test file,
-# we should just submit the test file AS-IS (cleanly importing what it needs). The pre-existing import failure is out-of-scope.
 
 from usa_signal_bot.provider_quality.completeness_scorer import (
     completeness_grade,
