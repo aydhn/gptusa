@@ -126,10 +126,7 @@ def dry_admission_acceptance_seal_summary(seal: DryAdmissionAcceptanceSeal) -> d
     }
 
 def dry_admission_acceptance_seal_to_text(seal: DryAdmissionAcceptanceSeal) -> str:
-    text = f"Dry-Admission Acceptance Seal [{seal.seal_id}]:
-"
-    text += f"- Status: {seal.status.value}
-"
-    text += f"- Sealed/Immutable: {seal.sealed}/{seal.immutable}
-"
+    text = f"Dry-Admission Acceptance Seal [{seal.seal_id}]:\n"
+    text += f"- Status: {seal.status.value}\n"
+    text += f"- Sealed/Immutable: {seal.sealed}/{seal.immutable}\n"
     return text

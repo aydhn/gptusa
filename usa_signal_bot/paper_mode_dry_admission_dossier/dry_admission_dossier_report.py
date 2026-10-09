@@ -14,36 +14,21 @@ from usa_signal_bot.paper_mode_dry_admission_dossier.dry_admission_dossier_audit
 
 def dry_admission_dossier_limitations_text() -> str:
     return (
-        "Dry-Admission Dossier Limitations:
-"
-        "- No broker/live/demo order.
-"
-        "- No active paper enable.
-"
-        "- No paper admission.
-"
-        "- No shadow launch.
-"
-        "- No paper-mode launch.
-"
-        "- No rehearsal.
-"
-        "- No real paper mutation.
-"
-        "- No paper order.
-"
-        "- No Telegram real send.
-"
-        "- No production config patch.
-"
-        "- Dry-admission dossier is not activation.
-"
-        "- Dry-admission acceptance seal is metadata-only.
-"
-        "- Rehearsal blocker denies rehearsal.
-"
-        "- Not investment advice.
-"
+        "Dry-Admission Dossier Limitations:\n"
+        "- No broker/live/demo order.\n"
+        "- No active paper enable.\n"
+        "- No paper admission.\n"
+        "- No shadow launch.\n"
+        "- No paper-mode launch.\n"
+        "- No rehearsal.\n"
+        "- No real paper mutation.\n"
+        "- No paper order.\n"
+        "- No Telegram real send.\n"
+        "- No production config patch.\n"
+        "- Dry-admission dossier is not activation.\n"
+        "- Dry-admission acceptance seal is metadata-only.\n"
+        "- Rehearsal blocker denies rehearsal.\n"
+        "- Not investment advice.\n"
     )
 
 def build_dry_admission_dossier_full_review(payload: dict[str, Any]) -> DryAdmissionDossierFullReview:

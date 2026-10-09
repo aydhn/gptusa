@@ -60,11 +60,8 @@ def dry_admission_gate_supports_dossier(payload: dict[str, Any]) -> tuple[bool, 
 
 def dry_admission_gate_ingestion_to_text(payload: dict[str, Any]) -> str:
     supports, reasons = dry_admission_gate_supports_dossier(payload)
-    text = f"Dry-Admission Gate Ingestion:
-"
-    text += f"- Supports Dossier: {supports}
-"
+    text = f"Dry-Admission Gate Ingestion:\n"
+    text += f"- Supports Dossier: {supports}\n"
     if reasons:
-        text += f"- Reasons: {', '.join(reasons)}
-"
+        text += f"- Reasons: {', '.join(reasons)}\n"
     return text

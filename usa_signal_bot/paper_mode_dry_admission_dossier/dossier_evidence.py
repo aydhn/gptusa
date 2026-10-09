@@ -119,14 +119,11 @@ def dry_admission_evidence_summary(items: list[DryAdmissionDossierEvidenceItem])
 
 def dry_admission_dossier_evidence_to_text(items: list[DryAdmissionDossierEvidenceItem], limit: int = 100) -> str:
     summary = dry_admission_evidence_summary(items)
-    text = f"Dry-Admission Dossier Evidence (Score: {summary['score']:.2f}):
-"
-    text += f"- Total: {summary['total']}, Available: {summary['available']}
-"
+    text = f"Dry-Admission Dossier Evidence (Score: {summary['score']:.2f}):\n"
+    text += f"- Total: {summary['total']}, Available: {summary['available']}\n"
 
     missing = dry_admission_evidence_missing_types(items)
     if missing:
-        text += f"- Missing Required: {', '.join(missing[:limit])}
-"
+        text += f"- Missing Required: {', '.join(missing[:limit])}\n"
 
     return text

@@ -164,13 +164,10 @@ def validate_no_broker_execution_fields_in_dry_admission_dossier(payload: dict[s
     return _create_report(issues)
 
 def dry_admission_dossier_validation_report_to_text(report: DryAdmissionDossierValidationReport) -> str:
-    text = f"Validation Report: {'VALID' if report.valid else 'INVALID'}
-"
-    text += f"- Issues: {report.issue_count} (Errors: {report.error_count}, Blocked: {report.blocked_count}, Warnings: {report.warning_count})
-"
+    text = f"Validation Report: {'VALID' if report.valid else 'INVALID'}\n"
+    text += f"- Issues: {report.issue_count} (Errors: {report.error_count}, Blocked: {report.blocked_count}, Warnings: {report.warning_count})\n"
     if not report.valid:
-        text += f"- Errors: {', '.join(report.errors[:5])}
-"
+        text += f"- Errors: {', '.join(report.errors[:5])}\n"
     return text
 
 def assert_dry_admission_dossier_valid(report: DryAdmissionDossierValidationReport) -> None:

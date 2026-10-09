@@ -80,11 +80,8 @@ def eligibility_checker_to_text(payload: dict[str, Any]) -> str:
     decision = evaluate_dry_admission_dossier_eligibility(payload)
     reasons = dry_admission_dossier_eligibility_reasons(payload)
 
-    text = f"Dry-Admission Dossier Eligibility:
-"
-    text += f"- Decision: {decision.value}
-"
+    text = f"Dry-Admission Dossier Eligibility:\n"
+    text += f"- Decision: {decision.value}\n"
     if reasons:
-        text += f"- Reasons: {', '.join(reasons)}
-"
+        text += f"- Reasons: {', '.join(reasons)}\n"
     return text

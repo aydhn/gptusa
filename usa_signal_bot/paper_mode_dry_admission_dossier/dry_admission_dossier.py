@@ -165,12 +165,8 @@ def dry_admission_dossier_summary(dossier: DryAdmissionGateDossier) -> dict[str,
 
 def dry_admission_dossier_to_text(dossier: DryAdmissionGateDossier, limit: int = 100) -> str:
     summary = dry_admission_dossier_summary(dossier)
-    text = f"Dry-Admission Dossier [{dossier.dossier_id}]:
-"
-    text += f"- Status/Decision: {summary['status']} / {summary['decision']}
-"
-    text += f"- Sealed/Immutable: {summary['sealed']}/{summary['immutable']}
-"
-    text += f"- Evidence/Seal/Writes: {summary['evidence_count']}/{summary['seal_valid']}/{summary['all_writes_blocked']}
-"
+    text = f"Dry-Admission Dossier [{dossier.dossier_id}]:\n"
+    text += f"- Status/Decision: {summary['status']} / {summary['decision']}\n"
+    text += f"- Sealed/Immutable: {summary['sealed']}/{summary['immutable']}\n"
+    text += f"- Evidence/Seal/Writes: {summary['evidence_count']}/{summary['seal_valid']}/{summary['all_writes_blocked']}\n"
     return text

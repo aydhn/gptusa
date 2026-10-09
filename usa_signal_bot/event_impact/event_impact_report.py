@@ -85,5 +85,4 @@ def event_impact_limitations_text() -> str:
     return "LIMITATIONS: No real trading, no broker, no scraping. Metadata only."
 
 def event_impact_full_review_to_text(review: EventImpactFullReview, limit: int = 300) -> str:
-    return f"Full Review {review.review_id}
-" + event_impact_limitations_text()
+    return f"Full Review {review.review_id}\n" + event_impact_limitations_text()

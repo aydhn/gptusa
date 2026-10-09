@@ -66,10 +66,8 @@ def dry_admission_acceptance_seal_validator_summary(seal: DryAdmissionAcceptance
 
 def dry_admission_acceptance_seal_validator_to_text(payload: dict[str, Any]) -> str:
     valid = payload.get("valid", False)
-    text = f"Seal Validator: {'PASS' if valid else 'FAIL'}
-"
+    text = f"Seal Validator: {'PASS' if valid else 'FAIL'}\n"
     errors = payload.get("errors", [])
     if errors:
-        text += f"- Errors: {', '.join(errors)}
-"
+        text += f"- Errors: {', '.join(errors)}\n"
     return text
