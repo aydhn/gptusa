@@ -11,10 +11,11 @@ class CleanupExecutor:
     def __init__(self, data_root: Path, project_root: Path | None = None):
         self.data_root = data_root
         self.project_root = project_root
+        self._resolved_data_root = data_root.resolve()
 
     def verify_path_is_safe_to_delete(self, path: Path) -> tuple[bool, str]:
         try:
-            path.resolve().relative_to(self.data_root.resolve())
+            path.resolve().relative_to(self._resolved_data_root)
         except ValueError:
             return False, "Path is outside data_root"
 
