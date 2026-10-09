@@ -42,6 +42,8 @@ class WalkForwardResult:
     benchmark_returns: pd.Series
     folds: List[FoldResult] = field(default_factory=list)
     avg_turnover: float = 0.0
+    # net returns of EVERY parameter candidate over the stitched OOS dates (inputs for DSR/PBO; n_trials = columns)
+    trial_returns: pd.DataFrame = field(default_factory=pd.DataFrame)
 
 
 def backtest_weights(
@@ -117,4 +119,5 @@ def run_walk_forward(
     oos_all = pd.concat(oos_parts)
     bench_all = pd.concat(bench_parts)
     turn_all = pd.concat(turn_parts)
-    return WalkForwardResult(oos_all, bench_all, folds, float(turn_all.mean() * 252))
+    trials = pd.concat([net.rename(str(i)) for i, (_p, net, _t) in enumerate(candidates)], axis=1).loc[oos_all.index]
+    return WalkForwardResult(oos_all, bench_all, folds, float(turn_all.mean() * 252), trials)

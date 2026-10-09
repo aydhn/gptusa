@@ -22,13 +22,21 @@ DEFAULT_TICKERS: List[str] = [
 ]
 
 
-def fetch_daily(tickers: Iterable[str], out_dir: str, start: str = "2010-01-01", pause: float = 0.3) -> dict:
+def fetch_daily(
+    tickers: Iterable[str], out_dir: str, start: str = "2010-01-01", pause: float = 0.3, max_age_days: float = 1.0
+) -> dict:
+    """Download adjusted daily closes; files younger than ``max_age_days`` are reused (cache), pause is the rate limit."""
     import yfinance as yf  # imported lazily: only needed for downloads
 
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
-    ok, failed, split_rows = [], [], []
+    ok, failed, split_rows, cached_syms = [], [], [], []
     for sym in tickers:
+        cached = out / f"{sym}.csv"
+        if cached.exists() and time.time() - cached.stat().st_mtime <= max_age_days * 86400:
+            ok.append(sym)
+            cached_syms.append(sym)
+            continue
         try:
             hist = yf.Ticker(sym).history(start=start, auto_adjust=True, actions=True)
         except Exception as exc:  # network / endpoint errors are reported, not hidden
@@ -46,5 +54,11 @@ def fetch_daily(tickers: Iterable[str], out_dir: str, start: str = "2010-01-01",
                 split_rows.append((sym, pd.Timestamp(d).tz_localize(None).normalize().date(), float(r)))
         ok.append(sym)
         time.sleep(pause)
-    pd.DataFrame(split_rows, columns=["symbol", "date", "ratio"]).to_csv(out / "splits.csv", index=False)
+    new = pd.DataFrame(split_rows, columns=["symbol", "date", "ratio"])
+    old_path = out / "splits.csv"
+    if old_path.exists():  # keep split rows of cached symbols; replace rows of freshly fetched ones
+        old = pd.read_csv(old_path)
+        fresh = set(ok) - set(cached_syms)
+        new = pd.concat([old[~old["symbol"].isin(fresh)], new], ignore_index=True)
+    new.to_csv(old_path, index=False)
     return {"ok": ok, "failed": failed, "splits": len(split_rows)}

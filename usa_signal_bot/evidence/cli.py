@@ -16,7 +16,8 @@ def cmd_evidence_run(args) -> None:
         data = load_csv_market(args.csv_dir, args.memberships)
     else:
         data = synthetic_market(seed=args.seed)
-    report = run_evidence(data, CostModel(args.commission_bps, args.slippage_bps), seed=args.seed)
+    report = run_evidence(data, CostModel(args.commission_bps, args.slippage_bps), seed=args.seed,
+                          families=args.families.split(",") if args.families else None)
     text = report.to_markdown()
     print(text)
     if args.write:
@@ -34,6 +35,7 @@ def setup_evidence_cli(subparsers) -> None:
     p.add_argument("--seed", type=int, default=7)
     p.add_argument("--commission-bps", type=float, default=1.0)
     p.add_argument("--slippage-bps", type=float, default=5.0)
+    p.add_argument("--families", default=None, help="Comma-separated strategy family names (default: all)")
     p.add_argument("--write", action="store_true")
     p.add_argument("--out", default="data/evidence/evidence_report.md")
     p.set_defaults(func=cmd_evidence_run)

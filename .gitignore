@@ -12,7 +12,9 @@ temp.diff
 tests/fixtures/
 data/
 usa_signal_bot/release/__pycache__
-scripts/
+scripts/*
+!scripts/run_smoke.py
+!scripts/windows_*.py
 tests/fixtures/advanced_acceptance/
 usa_signal_bot/app/cli.py_patch.py
 usa_signal_bot/app/cli.py_patch_2.py

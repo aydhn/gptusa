@@ -35,3 +35,23 @@ Diğer hatlar aynı veriyle: `decision-simulate` (yerel simüle ledger) son özk
 1. `python -c "from usa_signal_bot.evidence.fetch import fetch_daily, DEFAULT_TICKERS; print(fetch_daily(DEFAULT_TICKERS, 'data/prices'))"` (indirme; `data/` gitignore'da).
 2. `python -m usa_signal_bot evidence-run --source csv --csv-dir data/prices --write`
 3. Üyelik tablosu (`--memberships`) verilirse hayatta kalma uyarısı kalkar.
+
+## Aşama 5 genişletmesi: DSR/PBO + yeni strateji aileleri (aynı gerçek veri, 50 hisse, statik liste)
+Yeni modüller: `evidence/stats.py` (PSR, beklenen-max-Sharpe — örnek uzunluğu T'ye bağlı —, DSR [Bailey & López de Prado 2014], PBO/CSCV [Bailey ve ark. 2017]), `ml_loop/cpcv.py` (Combinatorial Purged CV), `evidence/factors.py` (düşük oynaklık, değer/kalite **vekilleri**, faktör karışımı, rejim filtresi, vol hedefi). Toplam 23 aday denendi; DSR bu N için düzeltilir. "Kıyasa göre DSR" = (OOS − kıyas) getirisinin DSR'ı.
+
+| Strateji | OOS CAGR | OOS Sharpe | DSR | Kıyasa göre DSR | PBO | Karar |
+|---|---|---|---|---|---|---|
+| SMA trend | ~%15,4 | 1,00 | 1,00 | 0,00 | 0,17 | NEGATİF |
+| Momentum 12-1 | ~%17,1 | 0,93 | 1,00 | 0,02 | 0,14 | NEGATİF |
+| Düşük oynaklık | ~%11,8 | 0,91 | 1,00 | 0,00 | 0,77 | NEGATİF |
+| Değer (vekil) | ~%18,9 | 0,91 | 1,00 | 0,10 | 0,57 | NEGATİF |
+| Kalite (vekil) | ~%17,6 | 1,05 | 1,00 | 0,02 | 0,51 | NEGATİF |
+| Faktör karışımı | ~%16,1 | 0,98 | 1,00 | 0,00 | 0,71 | NEGATİF |
+| Karışım + rejim filtresi | ~%13,4 | 1,03 | 1,00 | 0,00 | 0,71 | NEGATİF |
+| Karışım + vol hedefi | ~%11,7 | 1,05 | 1,00 | 0,00 | 0,40 | NEGATİF |
+
+Kıyas (eşit ağırlık): CAGR ~%17,3, Sharpe 1,06. **Sonuç: hiçbir aile kıyasa göre anlamlı üstünlük göstermedi (karar NEGATİF).** Mutlak DSR ≈ 1,00 yalnız "Sharpe sıfırdan farklı" demektir (uzun örnek, ~4200 gün; piyasa betası); kıyasa göre DSR ≈ 0–0,10. Tüm adaylar PBO ≈ 0,40. İlk sürümdeki karar kuralı yalnız CAGR'a baktığı için iki vekil aileyi "POZİTİF" göstermişti; kural düzeltildi (kıyastan düşük Sharpe veya kıyasa göre DSR < 0,95 → pozitif olamaz).
+
+**Sınırlar (değişmedi):** statik 50 hisselik liste, hayatta kalma yanlılığı; değer/kalite gerçek temel veri değil fiyat vekili; tek dönem. `evidence/edgar.py` SEC EDGAR'dan delist (Form 25/15-12) tarihlerini önbellekli ve ≤10 req/s çeker; ancak EDGAR endeks (S&P) üyelik geçmişi ve delist edilmiş hisselerin fiyatını vermez, delist hisselerin CIK'i çağıran tarafından sağlanmalıdır ve ücretsiz kaynaklarda fiyatları çoğunlukla yoktur — bu yüzden hayatta kalma yanlılığı **kaldırılmış sayılmaz**, yalnız üyelik tablosu üretimi ve sınırı belgelenmiştir. Bu çıktı yatırım tavsiyesi değildir.
+
+Topluluk kodları (pypbo, purgedcv, skfolio) yalnız çapraz kontrol fikri olarak düşünüldü; kod kopyalanmadı, yeni bağımlılık eklenmedi. Formüller makaleye göre ve birim testlerle (Monte Carlo ile E[max], T bağımlılığı, bilinen PSR değeri, gürültü→PBO≈0,5) doğrulandı: `tests/test_selection_bias_stats.py`.

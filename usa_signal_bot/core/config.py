@@ -20,7 +20,7 @@ from usa_signal_bot.core.config_schema import (
     Phase133MonitoringPolicyConfig,
     Phase133DriftTrackingConfig,
     Phase133DegradationDiagnosticsConfig,
-    Phase133NotificationsConfig as AppConfig,
+    Phase133NotificationsConfig,
     AdvancedFeaturesConfig,
     Phase118FeaturePolicyConfig,
     Phase118CrossSectionalConfig,

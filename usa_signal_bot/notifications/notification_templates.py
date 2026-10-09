@@ -446,3 +446,51 @@ def format_backtest_run_report_message(review): return 'NotificationMessage()'
 def format_backtest_run_warning_message(gate): return 'NotificationMessage()'
 def format_backtest_determinism_warning_message(artifact): return 'NotificationMessage()'
 def notifications_from_backtest_run_review(review): return []
+
+
+def chunk_message_text(text: str, max_length: int = 3500) -> list:
+    """Split text into chunks of at most max_length characters."""
+    if max_length <= 0:
+        raise ValueError("max_length must be positive")
+    if not text:
+        return [""]
+    return [text[i:i + max_length] for i in range(0, len(text), max_length)]
+
+
+def sanitize_message_text(text: str) -> str:
+    """Escape Markdown control characters."""
+    out = text or ""
+    for ch in ("\\", "*", "_", "`", "["):
+        out = out.replace(ch, "\\" + ch)
+    return out
+
+
+def append_disclaimer(body: str, config) -> str:
+    """Append the configured disclaimer when enabled."""
+    if getattr(config, "include_disclaimer", False) and getattr(config, "disclaimer_text", ""):
+        return f"{body}\n\n{config.disclaimer_text}"
+    return body
+
+
+def format_scan_summary_message(result):
+    """Build a read-only scan summary NotificationMessage."""
+    import datetime as _dt
+    from usa_signal_bot.core.enums import NotificationType, NotificationChannel, NotificationPriority
+    from usa_signal_bot.notifications.notification_models import NotificationMessage as _Msg, create_notification_message_id
+    body = (
+        f"**Run:** {result.run_id}\n"
+        f"**Status:** {getattr(result.status, 'value', result.status)}\n"
+        f"**Signals:** {result.signal_count}\n"
+        f"**Candidates Found:** {result.candidate_count}\n"
+        f"**Risk Approved:** {result.risk_approved_count}\n"
+        f"**Warnings:** {len(result.warnings)}"
+    )
+    return _Msg(
+        message_id=create_notification_message_id(),
+        notification_type=NotificationType.SCAN_SUMMARY,
+        channel=NotificationChannel.TELEGRAM,
+        priority=NotificationPriority.NORMAL,
+        title=f"Scan Summary {result.run_id}",
+        body=body,
+        created_at_utc=_dt.datetime.now(_dt.timezone.utc).isoformat(),
+    )

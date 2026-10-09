@@ -882,6 +882,7 @@ class ReadinessGateStatus(str, Enum):
     INSUFFICIENT_DATA = "INSUFFICIENT_DATA"
     NOT_EVALUATED = "NOT_EVALUATED"
     UNKNOWN = "UNKNOWN"
+    PASSED = "PASSED"
 
 
 class PromotionDossierRiskFlag(str, Enum):
@@ -2811,6 +2812,7 @@ class PaperReadinessBoardDossierStatus(str, Enum):
     REJECTED = "REJECTED"
     ARCHIVED = "ARCHIVED"
     UNKNOWN = "UNKNOWN"
+    FAILED = "FAILED"
 
 
 class PaperReadinessBoardDossierDecision(str, Enum):
@@ -3069,6 +3071,7 @@ class DryAdmissionGateRiskFlag(str, Enum):
     DRY_ADMISSION_ASSERTION_FAILED = "DRY_ADMISSION_ASSERTION_FAILED"
     SECRET_RISK = "SECRET_RISK"
     UNKNOWN = "UNKNOWN"
+    BLOCKER_EVENTS_MISSING = "BLOCKER_EVENTS_MISSING"
 
 
 class DryAdmissionGateReportType(str, Enum):
@@ -3778,6 +3781,10 @@ class RuntimeMode(str, Enum):
     ACTIVE_PAPER_DISABLED = "ACTIVE_PAPER_DISABLED"
     BROKER_EXECUTION_DISABLED = "BROKER_EXECUTION_DISABLED"
     UNKNOWN = "UNKNOWN"
+    DRY_RUN = "DRY_RUN"
+    LOCAL_SCAN_LOOP = "LOCAL_SCAN_LOOP"
+    MANUAL_ONCE = "MANUAL_ONCE"
+    SCHEDULE_PLAN_ONLY = "SCHEDULE_PLAN_ONLY"
 
 
 class ConfigSurfaceDomain(str, Enum):
@@ -3849,6 +3856,17 @@ class ProviderCapability(str, Enum):
     GET_PROVIDER_STATUS = "GET_PROVIDER_STATUS"
     GET_RATE_LIMIT_METADATA = "GET_RATE_LIMIT_METADATA"
     UNKNOWN = "UNKNOWN"
+    ADJUSTED_CLOSE = "ADJUSTED_CLOSE"
+    BULK_DOWNLOAD = "BULK_DOWNLOAD"
+    CACHE_READ = "CACHE_READ"
+    CACHE_WRITE = "CACHE_WRITE"
+    DIVIDENDS = "DIVIDENDS"
+    OFFLINE_FIXTURE = "OFFLINE_FIXTURE"
+    OHLCV_DAILY = "OHLCV_DAILY"
+    OHLCV_INTRADAY = "OHLCV_INTRADAY"
+    SINGLE_SYMBOL = "SINGLE_SYMBOL"
+    SPLITS = "SPLITS"
+    SYMBOL_METADATA = "SYMBOL_METADATA"
 
 
 class ProviderContractStatus(str, Enum):
@@ -4322,6 +4340,10 @@ class DataProviderName(str, Enum):
     LOCAL_CSV = "LOCAL_CSV"
     SYNTHETIC_TEST_FIXTURE = "SYNTHETIC_TEST_FIXTURE"
     UNKNOWN = "UNKNOWN"
+    LOCAL_CACHE = "LOCAL_CACHE"
+    LOCAL_FIXTURE = "LOCAL_FIXTURE"
+    MANUAL_FILE = "MANUAL_FILE"
+    SYNTHETIC_TEST = "SYNTHETIC_TEST"
 
 
 class DataProviderAdapterStatus(str, Enum):
@@ -4699,6 +4721,11 @@ class ProviderQualityStatus(str, Enum):
     FAILED = "FAILED"
     ARCHIVED = "ARCHIVED"
     UNKNOWN = "UNKNOWN"
+    ACCEPTABLE = "ACCEPTABLE"
+    DEGRADED = "DEGRADED"
+    EXCELLENT = "EXCELLENT"
+    GOOD = "GOOD"
+    POOR = "POOR"
 
 
 class ProviderQualityDecision(str, Enum):
@@ -4723,6 +4750,7 @@ class DataQualityComponent(str, Enum):
     CACHE_RELIABILITY = "CACHE_RELIABILITY"
     SAFETY_COMPLIANCE = "SAFETY_COMPLIANCE"
     UNKNOWN = "UNKNOWN"
+    ACCURACY = "ACCURACY"
 
 
 class DataQualityGrade(str, Enum):
@@ -5190,6 +5218,9 @@ class WalkForwardMode(str, Enum):
     ANCHORED_EXPANDING = "ANCHORED_EXPANDING"
     ROLLING_WINDOW = "ROLLING_WINDOW"
     UNKNOWN = "UNKNOWN"
+    ANCHORED = "ANCHORED"
+    EXPANDING = "EXPANDING"
+    ROLLING = "ROLLING"
 
 
 class ProviderGovernanceRiskFlag(str, Enum):
@@ -5706,6 +5737,7 @@ class IndicatorCategory(str, Enum):
     QUALITY_CONTEXT = "QUALITY_CONTEXT"
     CALENDAR_CONTEXT = "CALENDAR_CONTEXT"
     UNKNOWN = "UNKNOWN"
+    CUSTOM = "CUSTOM"
 
 
 class FeatureCategory(str, Enum):
@@ -7972,6 +8004,12 @@ class RegimeAlignmentStatus(str, Enum):
     FAILED = "FAILED"
     ARCHIVED = "ARCHIVED"
     UNKNOWN = "UNKNOWN"
+    ALIGNED = "ALIGNED"
+    CONFLICTED = "CONFLICTED"
+    DIVERGENT = "DIVERGENT"
+    INSUFFICIENT_DATA = "INSUFFICIENT_DATA"
+    MIXED = "MIXED"
+    MOSTLY_ALIGNED = "MOSTLY_ALIGNED"
 
 
 class RegimeAlignmentDecision(str, Enum):
@@ -9685,6 +9723,9 @@ class DriftSeverity(str, Enum):
     HIGH = "HIGH"
     BLOCKING = "BLOCKING"
     UNKNOWN = "UNKNOWN"
+    CRITICAL = "CRITICAL"
+    INSUFFICIENT_DATA = "INSUFFICIENT_DATA"
+    MODERATE = "MODERATE"
 
 
 class MLGovernanceClosureStatus(str, Enum):
@@ -10282,6 +10323,8 @@ class BacktestRunStatus(str, Enum):
     FAILED = "FAILED"
     ARCHIVED = "ARCHIVED"
     UNKNOWN = "UNKNOWN"
+    COMPLETED = "COMPLETED"
+    PARTIAL_SUCCESS = "PARTIAL_SUCCESS"
 
 
 class BacktestRunDecision(str, Enum):
@@ -10850,6 +10893,7 @@ class BenchmarkType(str, Enum):
     ETF = "ETF"
     CASH = "CASH"
     CUSTOM = "CUSTOM"
+    CUSTOM_SYMBOL = "CUSTOM_SYMBOL"
 
 
 class BenchmarkComparisonDecision(str, Enum):
@@ -10955,6 +10999,10 @@ class BaselineComparisonStatus(str, Enum):
     BLOCKED = "BLOCKED"
     NOT_CHECKED = "NOT_CHECKED"
     UNKNOWN = "UNKNOWN"
+    FAIL = "FAIL"
+    INSUFFICIENT_DATA = "INSUFFICIENT_DATA"
+    PASS = "PASS"
+    WARN = "WARN"
 
 
 class RelativePerformanceValidationRuleKind(str, Enum):
@@ -12353,6 +12401,11 @@ class RiskBudgetStatus(str, Enum):
     WARNING = "WARNING"
     NOT_EVALUATED = "NOT_EVALUATED"
     UNKNOWN = "UNKNOWN"
+    AVAILABLE = "AVAILABLE"
+    BLOCKED = "BLOCKED"
+    EXHAUSTED = "EXHAUSTED"
+    REDUCED_BY_DRAWDOWN = "REDUCED_BY_DRAWDOWN"
+    REDUCED_BY_REGIME = "REDUCED_BY_REGIME"
 
 
 class ConcentrationGuardType(str, Enum):
@@ -13190,6 +13243,7 @@ class MetricType(str, Enum):
     SUMMARY = "SUMMARY"
     STATUS = "STATUS"
     CUSTOM = "CUSTOM"
+    COUNT = "COUNT"
 
 
 class OperationalMetricStatus(str, Enum):
@@ -13198,6 +13252,7 @@ class OperationalMetricStatus(str, Enum):
     CRITICAL = "CRITICAL"
     MISSING = "MISSING"
     UNKNOWN = "UNKNOWN"
+    HEALTHY = "HEALTHY"
 
 
 class LogRotationStatus(str, Enum):
@@ -13843,6 +13898,7 @@ class MarketCalendarName(str, Enum):
     US_ETF = "US_ETF"
     CUSTOM = "CUSTOM"
     UNKNOWN = "UNKNOWN"
+    NYSE = "NYSE"
 
 
 class MarketSessionType(str, Enum):
@@ -13871,6 +13927,7 @@ class CalendarDataSource(str, Enum):
     PROVIDER_METADATA = "PROVIDER_METADATA"
     LOCAL_CACHE = "LOCAL_CACHE"
     UNKNOWN = "UNKNOWN"
+    TEST = "TEST"
 
 
 class CorporateActionType(str, Enum):
@@ -13924,6 +13981,7 @@ class CalendarReportType(str, Enum):
     SESSION_VALIDATION = "SESSION_VALIDATION"
     TRADING_DAY_REVIEW = "TRADING_DAY_REVIEW"
     FULL_CALENDAR_REVIEW = "FULL_CALENDAR_REVIEW"
+    DAILY = "DAILY"
 
 
 class CorporateActionReportType(str, Enum):
@@ -15032,6 +15090,7 @@ class SandboxStatus(str, Enum):
     INVALID = "INVALID"
     ARCHIVED = "ARCHIVED"
     UNKNOWN = "UNKNOWN"
+    WARNING = "WARNING"
 
 
 class SandboxActivationStatus(str, Enum):
@@ -15123,3 +15182,113 @@ class SandboxReportType(str, Enum):
     PREVIEW_RUN = "PREVIEW_RUN"
     SAFETY_VALIDATION = "SAFETY_VALIDATION"
     FULL_SANDBOX_REVIEW = "FULL_SANDBOX_REVIEW"
+
+
+class MLFoundationStatus(str, Enum):
+    PENDING = "PENDING"
+    CREATED = "CREATED"
+    VALIDATED = "VALIDATED"
+    BLOCKED = "BLOCKED"
+    FAILED = "FAILED"
+    DRAFT = "DRAFT"
+
+
+class EnsembleScaffoldingStatus(str, Enum):
+    PENDING = "PENDING"
+    CREATED = "CREATED"
+    DRAFT = "DRAFT"
+    VALIDATED = "VALIDATED"
+    BLOCKED = "BLOCKED"
+    FAILED = "FAILED"
+
+
+class DriftMetricKind(str, Enum):
+    MEAN_SHIFT = "MEAN_SHIFT"
+    STD_SHIFT = "STD_SHIFT"
+    PSI = "PSI"
+    KS_STATISTIC = "KS_STATISTIC"
+    MISSING_RATE_SHIFT = "MISSING_RATE_SHIFT"
+    UNKNOWN = "UNKNOWN"
+
+
+class DriftBaselineKind(str, Enum):
+    FEATURE_DRIFT = "FEATURE_DRIFT"
+    PREDICTION_DRIFT = "PREDICTION_DRIFT"
+    SCORE_DISTRIBUTION_DRIFT = "SCORE_DISTRIBUTION_DRIFT"
+    CALIBRATION_DRIFT = "CALIBRATION_DRIFT"
+    RESIDUAL_DRIFT = "RESIDUAL_DRIFT"
+    LABEL_DISTRIBUTION_DRIFT = "LABEL_DISTRIBUTION_DRIFT"
+    REGIME_DRIFT = "REGIME_DRIFT"
+    UNKNOWN = "UNKNOWN"
+
+
+class DriftBaselineStatus(str, Enum):
+    PENDING = "PENDING"
+    VALID = "VALID"
+    INVALID = "INVALID"
+    PARTIAL = "PARTIAL"
+    MISSING = "MISSING"
+    UNKNOWN = "UNKNOWN"
+
+
+class DriftMonitoringDecision(str, Enum):
+    READY = "READY"
+    BLOCKED = "BLOCKED"
+    REVIEW_REQUIRED = "REVIEW_REQUIRED"
+    UNKNOWN = "UNKNOWN"
+
+
+class DriftMonitoringReportType(str, Enum):
+    BASELINE_REVIEW = "BASELINE_REVIEW"
+    METRIC_REVIEW = "METRIC_REVIEW"
+    GOVERNANCE_REVIEW = "GOVERNANCE_REVIEW"
+    FULL_PHASE144_REVIEW = "FULL_PHASE144_REVIEW"
+
+
+class DriftMonitoringStatus(str, Enum):
+    PENDING = "PENDING"
+    CREATED = "CREATED"
+    DRAFT = "DRAFT"
+    VALIDATED = "VALIDATED"
+    BLOCKED = "BLOCKED"
+    FAILED = "FAILED"
+
+
+class DriftReadinessStatus(str, Enum):
+    PENDING = "PENDING"
+    PASSED = "PASSED"
+    FAILED = "FAILED"
+    BLOCKED = "BLOCKED"
+    WARNING = "WARNING"
+
+
+class NonActivationDriftRuleKind(str, Enum):
+    NO_LIVE_MONITORING = "NO_LIVE_MONITORING"
+    NO_ORDER_CREATION = "NO_ORDER_CREATION"
+    NO_BROKER_EXECUTION = "NO_BROKER_EXECUTION"
+    NO_SIGNAL_ACTIVATION = "NO_SIGNAL_ACTIVATION"
+    OFFLINE_ONLY = "OFFLINE_ONLY"
+
+
+class PostEnsembleGovernanceRuleKind(str, Enum):
+    NO_LIVE_MONITORING = "NO_LIVE_MONITORING"
+    NO_ORDER_CREATION = "NO_ORDER_CREATION"
+    NO_BROKER_EXECUTION = "NO_BROKER_EXECUTION"
+    NO_SIGNAL_ACTIVATION = "NO_SIGNAL_ACTIVATION"
+    OFFLINE_ONLY = "OFFLINE_ONLY"
+
+
+class PostEnsembleGovernanceStatus(str, Enum):
+    PENDING = "PENDING"
+    PASSED = "PASSED"
+    FAILED = "FAILED"
+    BLOCKED = "BLOCKED"
+    WARNING = "WARNING"
+
+
+class DriftMonitoringRiskFlag(str, Enum):
+    MISSING_BASELINE = "MISSING_BASELINE"
+    INSUFFICIENT_DATA = "INSUFFICIENT_DATA"
+    LEAKAGE_RISK = "LEAKAGE_RISK"
+    LIVE_MONITORING_RISK = "LIVE_MONITORING_RISK"
+    UNKNOWN = "UNKNOWN"

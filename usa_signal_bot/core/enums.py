@@ -7,6 +7,7 @@ class SessionValidationStatus(str, Enum):
     INVALID = "INVALID"
     WARNING = "WARNING"
     MISSING = "MISSING"
+    PASS = "PASS"
 
 class BacktestClosureStatus(str, Enum):
     DRAFT = "DRAFT"
@@ -441,6 +442,19 @@ class NotificationType(str, Enum):
     PORTFOLIO_RISK_REPORT = "PORTFOLIO_RISK_REPORT"
     PORTFOLIO_RISK_WARNING = "PORTFOLIO_RISK_WARNING"
     PORTFOLIO_BAND_CLOSURE_WARNING = "PORTFOLIO_BAND_CLOSURE_WARNING"
+    COMPARISON_REPORT = "COMPARISON_REPORT"
+    CUSTOM = "CUSTOM"
+    EXECUTION_GAP_WARNING = "EXECUTION_GAP_WARNING"
+    HEALTH_SUMMARY = "HEALTH_SUMMARY"
+    PORTFOLIO_BASKET = "PORTFOLIO_BASKET"
+    RISK_DECISIONS = "RISK_DECISIONS"
+    RUNTIME_ERROR = "RUNTIME_ERROR"
+    SCAN_SUMMARY = "SCAN_SUMMARY"
+    SIGNAL_CANDIDATE = "SIGNAL_CANDIDATE"
+    SIGNAL_DRIFT_WARNING = "SIGNAL_DRIFT_WARNING"
+    ADVANCED_ACCEPTANCE_REPORT = "ADVANCED_ACCEPTANCE_REPORT"
+    FINAL_FREEZE_WARNING = "FINAL_FREEZE_WARNING"
+    RELEASE_CANDIDATE_WARNING = "RELEASE_CANDIDATE_WARNING"
 
 
 class AlertType(str, Enum):
@@ -471,6 +485,16 @@ class AlertType(str, Enum):
     PORTFOLIO_RISK_REPORT_BLOCKED = "PORTFOLIO_RISK_REPORT_BLOCKED"
     PORTFOLIO_RISK_SAFETY_BOUNDARY_BLOCKED = "PORTFOLIO_RISK_SAFETY_BOUNDARY_BLOCKED"
     PORTFOLIO_BAND_CLOSURE_BLOCKED = "PORTFOLIO_BAND_CLOSURE_BLOCKED"
+    EXECUTION_GAP_WARNING = "EXECUTION_GAP_WARNING"
+    HEALTH_ERROR = "HEALTH_ERROR"
+    HIGH_QUALITY_CANDIDATE = "HIGH_QUALITY_CANDIDATE"
+    PAPER_BACKTEST_DIVERGENCE = "PAPER_BACKTEST_DIVERGENCE"
+    PORTFOLIO_BASKET_REVIEW = "PORTFOLIO_BASKET_REVIEW"
+    RISK_REJECTED_WARNING = "RISK_REJECTED_WARNING"
+    RUNTIME_ERROR = "RUNTIME_ERROR"
+    SCAN_COMPLETED = "SCAN_COMPLETED"
+    SCAN_FAILED = "SCAN_FAILED"
+    SIGNAL_DRIFT_WARNING = "SIGNAL_DRIFT_WARNING"
 
 
 class PortfolioFoundationStatus(str, Enum):
@@ -873,6 +897,7 @@ class EnsemblePrototypeStatus(str, Enum):
 
 
 class EnsemblePrototypeDecision(str, Enum):
+    BUILD_READINESS_GATE = "BUILD_READINESS_GATE"
     MISSING_SYMBOL = "MISSING_SYMBOL"
     EMPTY_DATASET = "EMPTY_DATASET"
     DUPLICATE_BAR = "DUPLICATE_BAR"
@@ -886,6 +911,7 @@ class EnsemblePrototypeDecision(str, Enum):
 
 
 class EnsemblePrototypeKind(str, Enum):
+    COEFFICIENT_BLEND_PROTOTYPE = "COEFFICIENT_BLEND_PROTOTYPE"
     MISSING_SYMBOL = "MISSING_SYMBOL"
     EMPTY_DATASET = "EMPTY_DATASET"
     DUPLICATE_BAR = "DUPLICATE_BAR"
@@ -899,6 +925,7 @@ class EnsemblePrototypeKind(str, Enum):
 
 
 class OfflineEnsemblePredictionKind(str, Enum):
+    RESEARCH_ENSEMBLE_SCORE = "RESEARCH_ENSEMBLE_SCORE"
     MISSING_SYMBOL = "MISSING_SYMBOL"
     EMPTY_DATASET = "EMPTY_DATASET"
     DUPLICATE_BAR = "DUPLICATE_BAR"
@@ -1003,6 +1030,7 @@ class EnsembleRegistryEntryStatus(str, Enum):
 
 
 class EnsemblePrototypeBoundaryRuleKind(str, Enum):
+    OFFLINE_PROTOTYPE_ONLY = "OFFLINE_PROTOTYPE_ONLY"
     MISSING_SYMBOL = "MISSING_SYMBOL"
     EMPTY_DATASET = "EMPTY_DATASET"
     DUPLICATE_BAR = "DUPLICATE_BAR"
@@ -1507,6 +1535,8 @@ class PortfolioConstructionStatus(str, Enum):
     NEGATIVE_VOLUME = "NEGATIVE_VOLUME"
     ZERO_VOLUME = "ZERO_VOLUME"
     UNKNOWN = "UNKNOWN"
+    COMPLETED = "COMPLETED"
+    EMPTY = "EMPTY"
 
 
 class PortfolioConstructionDecision(str, Enum):
@@ -3807,6 +3837,11 @@ class FinalClosureRiskFlag(str, Enum):
     NEGATIVE_VOLUME = "NEGATIVE_VOLUME"
     ZERO_VOLUME = "ZERO_VOLUME"
     UNKNOWN = "UNKNOWN"
+    ARTIFACT_CHAIN_INCOMPLETE = "ARTIFACT_CHAIN_INCOMPLETE"
+    ENGINE_CERTIFICATE_INVALID = "ENGINE_CERTIFICATE_INVALID"
+    FINAL_CHECK_FAILED = "FINAL_CHECK_FAILED"
+    FREEZE_SEAL_INVALID = "FREEZE_SEAL_INVALID"
+    PHASE126_KICKOFF_GATE_FAILED = "PHASE126_KICKOFF_GATE_FAILED"
 
 
 class FinalClosureReportType(str, Enum):
@@ -3815,23 +3850,40 @@ class FinalClosureReportType(str, Enum):
     PROJECT_CLOSURE_REPORT = "PROJECT_CLOSURE_REPORT"
     FINAL_SAFETY_CLOSURE_REPORT = "FINAL_SAFETY_CLOSURE_REPORT"
     FULL_PHASE160_REVIEW = "FULL_PHASE160_REVIEW"
+    FULL_PHASE125_REVIEW = "FULL_PHASE125_REVIEW"
 
 
 from enum import Enum
 
 
 class RepairItemType(Enum):
+    COST_FILTER = "cost_filter"
+    DATA_QUALITY_RULE = "data_quality_rule"
+    DIAGNOSTIC_TAGGING = "diagnostic_tagging"
+    FEATURE_ENGINEERING = "feature_engineering"
+    LIQUIDITY_FILTER = "liquidity_filter"
+    REBALANCE_RULE = "rebalance_rule"
+    REGIME_GATE = "regime_gate"
+    SIGNAL_FILTER = "signal_filter"
+    SIZING_RULE = "sizing_rule"
+    STRATEGY_RULE = "strategy_rule"
+    UNKNOWN = "unknown"
     CODE_FIX = "code_fix"
     CONFIG_CHANGE = "config_change"
     DATA_FIX = "data_fix"
 
 
 class RepairPriority(Enum):
+    CRITICAL = "critical"
+    MEDIUM = "medium"
+    DEFERRED = "deferred"
+    UNKNOWN = "unknown"
     LOW = "low"
     HIGH = "high"
 
 
 class RepairStatus(Enum):
+    NEW = "new"
     OPEN = "open"
     CLOSED = "closed"
 
@@ -3949,6 +4001,8 @@ class BaselineMLScaffoldingStatus(str, Enum):
     NEGATIVE_VOLUME = "NEGATIVE_VOLUME"
     ZERO_VOLUME = "ZERO_VOLUME"
     UNKNOWN = "UNKNOWN"
+    BLOCKED = "BLOCKED"
+    VALIDATED = "VALIDATED"
 
 
 class BaselineMLScaffoldingDecision(str, Enum):
@@ -3965,6 +4019,7 @@ class BaselineMLScaffoldingDecision(str, Enum):
     NEGATIVE_VOLUME = "NEGATIVE_VOLUME"
     ZERO_VOLUME = "ZERO_VOLUME"
     UNKNOWN = "UNKNOWN"
+    BUILD_READINESS_GATE = "BUILD_READINESS_GATE"
 
 
 class BaselineArtifactKind(str, Enum):
@@ -4052,6 +4107,13 @@ class BaselineMLScaffoldingRiskFlag(str, Enum):
     NEGATIVE_VOLUME = "NEGATIVE_VOLUME"
     ZERO_VOLUME = "ZERO_VOLUME"
     UNKNOWN = "UNKNOWN"
+    DATASET_ASSEMBLY_REVIEW_INVALID = "DATASET_ASSEMBLY_REVIEW_INVALID"
+    DATASET_ASSEMBLY_REVIEW_MISSING = "DATASET_ASSEMBLY_REVIEW_MISSING"
+    HEAVY_ML_DEPENDENCY_RISK = "HEAVY_ML_DEPENDENCY_RISK"
+    MODEL_PREDICTION_ATTEMPTED = "MODEL_PREDICTION_ATTEMPTED"
+    MODEL_TRAINING_ATTEMPTED = "MODEL_TRAINING_ATTEMPTED"
+    PHASE137_NOT_READY = "PHASE137_NOT_READY"
+    TRADE_SIGNAL_COLUMN_RISK = "TRADE_SIGNAL_COLUMN_RISK"
 
 
 class BaselineMLScaffoldingReportType(str, Enum):
@@ -4066,6 +4128,7 @@ class BaselineMLScaffoldingReportType(str, Enum):
     NEGATIVE_VOLUME = "NEGATIVE_VOLUME"
     ZERO_VOLUME = "ZERO_VOLUME"
     UNKNOWN = "UNKNOWN"
+    FULL_PHASE138_REVIEW = "FULL_PHASE138_REVIEW"
 
 
 class BaselineModelFamilyKind(str, Enum):
@@ -4296,6 +4359,7 @@ class BaselineScaffoldingReadinessStatus(str, Enum):
     NEGATIVE_VOLUME = "NEGATIVE_VOLUME"
     ZERO_VOLUME = "ZERO_VOLUME"
     UNKNOWN = "UNKNOWN"
+    BLOCKED = "BLOCKED"
 
 
 class BaselineScaffoldingReadinessRuleKind(str, Enum):
@@ -4407,6 +4471,8 @@ class CompatibilityValidationRuleKind(str, Enum):
 class RegimeContextValidationQuality(str, Enum):
     HIGH = "HIGH"
     INVALID = "INVALID"
+    BLOCKED = "BLOCKED"
+    WARNING = "WARNING"
 
 
 class RegimeContextValidationRiskFlag(str, Enum):
@@ -4421,36 +4487,68 @@ class CompatibilityValidationStatus(str, Enum):
 class RegimeContextValidationStatus(str, Enum):
     PASS = "PASS"
     FAIL = "FAIL"
+    FAILED = "FAILED"
+    VALIDATED = "VALIDATED"
 
 
 class RegimeContextValidationDecision(str, Enum):
     PASS = "PASS"
     FAIL = "FAIL"
+    BLOCK = "BLOCK"
+    BUILD_ACCEPTANCE_GATE = "BUILD_ACCEPTANCE_GATE"
 
 
 class ConditionalDiagnosticKind(str, Enum):
     PASS = "PASS"
     FAIL = "FAIL"
+    CHURN_SENSITIVE_CONTEXT_DIAGNOSTIC = "CHURN_SENSITIVE_CONTEXT_DIAGNOSTIC"
+    CONFLICTED_CONTEXT_DIAGNOSTIC = "CONFLICTED_CONTEXT_DIAGNOSTIC"
+    CROSS_SYMBOL_DISAGREEMENT_DIAGNOSTIC = "CROSS_SYMBOL_DISAGREEMENT_DIAGNOSTIC"
+    DATA_QUALITY_LIMITED_DIAGNOSTIC = "DATA_QUALITY_LIMITED_DIAGNOSTIC"
+    LOW_COMPATIBILITY_DIAGNOSTIC = "LOW_COMPATIBILITY_DIAGNOSTIC"
+    LOW_STABILITY_CONTEXT_DIAGNOSTIC = "LOW_STABILITY_CONTEXT_DIAGNOSTIC"
+    MISSING_ARTIFACT_DIAGNOSTIC = "MISSING_ARTIFACT_DIAGNOSTIC"
+    UNCERTAIN_COMPATIBILITY_DIAGNOSTIC = "UNCERTAIN_COMPATIBILITY_DIAGNOSTIC"
 
 
 class RegimeContextAcceptanceStatus(str, Enum):
     ACCEPTED = "ACCEPTED"
     WARNING_ACCEPTED = "WARNING_ACCEPTED"
+    REJECTED = "REJECTED"
 
 
 class RegimeContextAcceptanceRuleKind(str, Enum):
     PASS = "PASS"
     FAIL = "FAIL"
+    ALIGNMENT_VALID = "ALIGNMENT_VALID"
+    COMPATIBILITY_VALIDATION_PASSED = "COMPATIBILITY_VALIDATION_PASSED"
+    CONDITIONAL_DIAGNOSTICS_VALID = "CONDITIONAL_DIAGNOSTICS_VALID"
+    CONFLICTED_CONTEXT_REVIEWED = "CONFLICTED_CONTEXT_REVIEWED"
+    CROSS_SYMBOL_VALIDATION_ACCEPTABLE = "CROSS_SYMBOL_VALIDATION_ACCEPTABLE"
+    DATA_QUALITY_LIMITS_DOCUMENTED = "DATA_QUALITY_LIMITS_DOCUMENTED"
+    LOW_COMPATIBILITY_WITH_EXPLANATION_ALLOWED = "LOW_COMPATIBILITY_WITH_EXPLANATION_ALLOWED"
+    NO_EXECUTION_OUTPUT = "NO_EXECUTION_OUTPUT"
+    NO_MODEL_TRAINING = "NO_MODEL_TRAINING"
+    NO_ORDER_OUTPUT = "NO_ORDER_OUTPUT"
+    NO_PORTFOLIO_OUTPUT = "NO_PORTFOLIO_OUTPUT"
+    NO_SIGNAL_OUTPUT = "NO_SIGNAL_OUTPUT"
+    READY_FOR_PHASE133 = "READY_FOR_PHASE133"
+    UNCERTAIN_CONTEXT_WITH_EXPLANATION_ALLOWED = "UNCERTAIN_CONTEXT_WITH_EXPLANATION_ALLOWED"
 
 
 class RegimeContextValidationReportType(str, Enum):
     PASS = "PASS"
     FAIL = "FAIL"
+    FULL_PHASE132_REVIEW = "FULL_PHASE132_REVIEW"
 
 
 class ConditionalDiagnosticSeverity(str, Enum):
     PASS = "PASS"
     FAIL = "FAIL"
+    BLOCKING = "BLOCKING"
+    HIGH_WARNING = "HIGH_WARNING"
+    INFO = "INFO"
+    WARNING = "WARNING"
 
 
 class RegimeContextValidationRiskFlag(str, Enum):
@@ -4507,9 +4605,12 @@ class DataReadinessStatus(str, Enum):
 
 class DataCoverageStatus(str, Enum):
     FULL = "FULL"
+    COMPLETE = "COMPLETE"
     PARTIAL = "PARTIAL"
+    STALE = "STALE"
     MISSING = "MISSING"
     EMPTY = "EMPTY"
+    INVALID = "INVALID"
 
 
 class TimeFrame(str, Enum):
@@ -4556,16 +4657,30 @@ class AssetType(str, Enum):
     NEGATIVE_VOLUME = "NEGATIVE_VOLUME"
     ZERO_VOLUME = "ZERO_VOLUME"
     UNKNOWN = "UNKNOWN"
+    ETF = "ETF"
 
 
 class UniverseSourceType(str, Enum):
     FILE = "FILE"
     API = "API"
+    LOCAL_IMPORT = "LOCAL_IMPORT"
+    MANUAL_SEED = "MANUAL_SEED"
+    PRESET = "PRESET"
+    RESERVED_EXTERNAL = "RESERVED_EXTERNAL"
+    SNAPSHOT = "SNAPSHOT"
+    USER_CSV = "USER_CSV"
 
 
 class UniverseLayer(str, Enum):
     BASE = "BASE"
     FILTERED = "FILTERED"
+    CANDIDATE = "CANDIDATE"
+    CORE = "CORE"
+    CUSTOM = "CUSTOM"
+    INDEX_ETF = "INDEX_ETF"
+    MEGA_CAP = "MEGA_CAP"
+    SECTOR_ETF = "SECTOR_ETF"
+    WATCHLIST = "WATCHLIST"
 
 
 class UniverseConflictResolution(str, Enum):
@@ -4576,11 +4691,18 @@ class UniverseConflictResolution(str, Enum):
 class UniverseSnapshotStatus(str, Enum):
     VALID = "VALID"
     INVALID = "INVALID"
+    ACTIVE = "ACTIVE"
+    ARCHIVED = "ARCHIVED"
+    DRAFT = "DRAFT"
+    VALIDATED = "VALIDATED"
 
 
 class TimeframeRole(str, Enum):
     PRIMARY = "PRIMARY"
     SECONDARY = "SECONDARY"
+    CONFIRMATION = "CONFIRMATION"
+    DAILY = "DAILY"
+    INTRADAY = "INTRADAY"
 
 
 class SymbolReadinessStatus(str, Enum):
@@ -4640,6 +4762,9 @@ class DataRepairActionType(str, Enum):
     NEGATIVE_VOLUME = "NEGATIVE_VOLUME"
     ZERO_VOLUME = "ZERO_VOLUME"
     UNKNOWN = "UNKNOWN"
+    DROP_DUPLICATE_BAR = "DROP_DUPLICATE_BAR"
+    DROP_INVALID_BAR = "DROP_INVALID_BAR"
+    FILL_MISSING_VOLUME_WITH_ZERO = "FILL_MISSING_VOLUME_WITH_ZERO"
 
 
 class AttributionReportType(str, Enum):
@@ -4657,6 +4782,12 @@ class AttributionDimension(str, Enum):
     SIDE = 'SIDE'
     SIZING_STATUS = 'SIZING_STATUS'
     REBALANCE_ACTION = 'REBALANCE_ACTION'
+    ACTION = "ACTION"
+    HOLDING_PERIOD = "HOLDING_PERIOD"
+    MONTH = "MONTH"
+    TIMEFRAME = "TIMEFRAME"
+    UNKNOWN = "UNKNOWN"
+    YEAR = "YEAR"
 
 class ContributionDirection(str, Enum):
     POSITIVE = 'POSITIVE'
@@ -4664,6 +4795,7 @@ class ContributionDirection(str, Enum):
     NEUTRAL = 'NEUTRAL'
     INSUFFICIENT_DATA = 'INSUFFICIENT_DATA'
     UNKNOWN = 'UNKNOWN'
+    MIXED = "MIXED"
 
 class AttributionQuality(str, Enum):
     HIGH = 'HIGH'
@@ -4677,38 +4809,77 @@ class AttributionQuality(str, Enum):
 class SignalContributionStatus(str, Enum):
     ACTIVE = 'ACTIVE'
     UNKNOWN = 'UNKNOWN'
+    CONTRIBUTIVE = "CONTRIBUTIVE"
+    COST_DEGRADED = "COST_DEGRADED"
+    DETRIMENTAL = "DETRIMENTAL"
+    NEUTRAL = "NEUTRAL"
 
 class RiskContributionType(str, Enum):
     MARKET = 'MARKET'
 
     UNKNOWN = 'UNKNOWN'
+    CONCENTRATION = "CONCENTRATION"
+    DRAWDOWN = "DRAWDOWN"
+    REGIME_TRANSITION = "REGIME_TRANSITION"
+    VOLATILITY = "VOLATILITY"
 
 class SectorClusterSource(str, Enum):
     FILE = "FILE"
     API = "API"
+    ETF_PROXY_HEURISTIC = "ETF_PROXY_HEURISTIC"
+    MANUAL_REGISTRY = "MANUAL_REGISTRY"
+    UNKNOWN = "UNKNOWN"
 
 class ExposureType(str, Enum):
     LONG = "LONG"
     SHORT = "SHORT"
+    CLUSTER = "CLUSTER"
+    COST_BUCKET = "COST_BUCKET"
+    GROSS = "GROSS"
+    LIQUIDITY_BUCKET = "LIQUIDITY_BUCKET"
+    NET = "NET"
+    REGIME = "REGIME"
+    SECTOR = "SECTOR"
+    STRATEGY = "STRATEGY"
+    SYMBOL = "SYMBOL"
 
 class ConcentrationRiskLevel(str, Enum):
     LOW = "LOW"
     MEDIUM = "MEDIUM"
     HIGH = "HIGH"
     CRITICAL = "CRITICAL"
+    INSUFFICIENT_DATA = "INSUFFICIENT_DATA"
+    MODERATE = "MODERATE"
+    UNKNOWN = "UNKNOWN"
 
 class PortfolioGuardDecision(str, Enum):
     PASS = "PASS"
     FAIL = "FAIL"
     WARN = "WARN"
+    BLOCK = "BLOCK"
+    CAP = "CAP"
+    CLEAR = "CLEAR"
+    INSUFFICIENT_DATA = "INSUFFICIENT_DATA"
+    REDUCE = "REDUCE"
 
 class PortfolioAllocationStatus(str, Enum):
     PENDING = "PENDING"
     ALLOCATED = "ALLOCATED"
     FAILED = "FAILED"
+    APPROVED = "APPROVED"
+    BLOCKED = "BLOCKED"
+    CAPPED = "CAPPED"
+    REDUCED = "REDUCED"
+    SUPPRESSED = "SUPPRESSED"
 
 class PortfolioConstructionMode(str, Enum):
     STANDARD = "STANDARD"
+    CONFIDENCE_WEIGHTED = "CONFIDENCE_WEIGHTED"
+    DISABLED = "DISABLED"
+    EQUAL_WEIGHT = "EQUAL_WEIGHT"
+    HYBRID = "HYBRID"
+    SCORE_WEIGHTED = "SCORE_WEIGHTED"
+    SIZE_RESULT_WEIGHTED = "SIZE_RESULT_WEIGHTED"
 
 class PortfolioConstructionReportType(str, Enum):
     FULL = "FULL"
@@ -4717,19 +4888,31 @@ class PortfolioReviewStatus(str, Enum):
     PENDING = "PENDING"
     APPROVED = "APPROVED"
     REJECTED = "REJECTED"
+    ACCEPTABLE = "ACCEPTABLE"
+    NEEDS_REVIEW = "NEEDS_REVIEW"
 
 class PortfolioConstructionStatus(str, Enum):
+    EMPTY = "EMPTY"
+    COMPLETED = "COMPLETED"
     DRAFT = "DRAFT"
     FINAL = "FINAL"
 
 class AllocationMethod(str, Enum):
+    RISK_SCORE_WEIGHTED = "RISK_SCORE_WEIGHTED"
+    NOTIONAL_FROM_RISK_DECISION = "NOTIONAL_FROM_RISK_DECISION"
     EQUAL_WEIGHT = "EQUAL_WEIGHT"
     RISK_PARITY = "RISK_PARITY"
+    RANK_WEIGHTED = "RANK_WEIGHTED"
 
 class AllocationStatus(str, Enum):
     PENDING = "PENDING"
     ALLOCATED = "ALLOCATED"
     FAILED = "FAILED"
+    CAPPED = "CAPPED"
+    ERROR = "ERROR"
+    REDUCED = "REDUCED"
+    REJECTED = "REJECTED"
+    ZERO = "ZERO"
 
 
 from usa_signal_bot.core._recovered_enums import *  # noqa: E402,F401,F403

@@ -88,6 +88,18 @@ class DriftInputReference:
     risk_flags: List[Any]
     metadata: Dict[str, Any]
 
+from enum import Enum as _Enum
+
+
+class MonitoringWindowKind(str, _Enum):
+    TRAIN_REFERENCE_WINDOW = "TRAIN_REFERENCE_WINDOW"
+    VALIDATION_REFERENCE_WINDOW = "VALIDATION_REFERENCE_WINDOW"
+    TEST_REFERENCE_WINDOW = "TEST_REFERENCE_WINDOW"
+    ROLLING_WINDOW = "ROLLING_WINDOW"
+    CALENDAR_WINDOW = "CALENDAR_WINDOW"
+    UNKNOWN = "UNKNOWN"
+
+
 @dataclass
 class MonitoringWindowPolicy:
     policy_id: str

@@ -24,6 +24,7 @@ class PromotionThresholds:
     min_ic_gain_over_baseline: float = 0.02
     min_positive_fold_fraction: float = 0.6
     require_clean_leakage: bool = True
+    min_dsr: Optional[float] = None  # optional selection-bias gate; needs metrics['dsr'] when set
 
 
 @dataclass
@@ -76,6 +77,8 @@ class ModelRegistry:
             reasons.append("gain over baseline too small")
         if m.get("positive_fold_fraction", 0.0) < th.min_positive_fold_fraction:
             reasons.append("too few positive folds")
+        if th.min_dsr is not None and m.get("dsr", float("-inf")) < th.min_dsr:
+            reasons.append(f"dsr {m.get('dsr')} < {th.min_dsr}")
         rec.gate_reasons = reasons
         rec.status = ELIGIBLE if not reasons else REJECTED
         self._save(rec)

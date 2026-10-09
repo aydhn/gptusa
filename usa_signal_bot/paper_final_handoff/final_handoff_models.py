@@ -1,7 +1,32 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from typing import Any, Optional
 @dataclass
 class FinalHandoffReview:
-    review_id: str
+    review_id: str = ""
+    handoff_review_id: Optional[str] = field(default=None, repr=False)
+    created_at_utc: str = field(default="", repr=False)
+    status: Any = field(default=None, repr=False)
+    candidate_id: Optional[str] = field(default=None, repr=False)
+    source_handoff_id: Optional[str] = field(default=None, repr=False)
+    source_rehearsal_run_id: Optional[str] = field(default=None, repr=False)
+    source_final_lock_id: Optional[str] = field(default=None, repr=False)
+    evidence_refs: list = field(default_factory=list, repr=False)
+    decision: Any = field(default=None, repr=False)
+    safety_flags: list = field(default_factory=list, repr=False)
+    manual_review_required: bool = field(default=True, repr=False)
+    allows_active_paper: bool = field(default=False, repr=False)
+    allows_broker_execution: bool = field(default=False, repr=False)
+    allows_paper_state_mutation: bool = field(default=False, repr=False)
+    allows_config_patch: bool = field(default=False, repr=False)
+    warnings: list = field(default_factory=list, repr=False)
+    errors: list = field(default_factory=list, repr=False)
+    metadata: dict = field(default_factory=dict, repr=False)
+
+    def __post_init__(self):
+        if not self.review_id and self.handoff_review_id:
+            self.review_id = self.handoff_review_id
+        if not self.handoff_review_id:
+            self.handoff_review_id = self.review_id or None
 
 
 # --- Definitions recovered from git history (deleted by an accidental overwrite) ---

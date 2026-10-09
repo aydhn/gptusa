@@ -6,6 +6,18 @@ from typing import Any
 class PaperSafeDossierFullReview:
     review_id: str
     metadata: dict[str, Any] = field(default_factory=dict)
+    created_at_utc: str = ""
+    report_type: Any = None
+    dossiers: list = field(default_factory=list)
+    evidence_items: list = field(default_factory=list)
+    non_execution_seals: list = field(default_factory=list)
+    runtime_maps: list = field(default_factory=list)
+    component_items: list = field(default_factory=list)
+    route_items: list = field(default_factory=list)
+    audit_entries: list = field(default_factory=list)
+    output_paths: dict = field(default_factory=dict)
+    warnings: list = field(default_factory=list)
+    errors: list = field(default_factory=list)
 
 
 # --- Definitions recovered from git history (deleted by an accidental overwrite) ---

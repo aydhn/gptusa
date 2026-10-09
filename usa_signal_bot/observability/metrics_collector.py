@@ -115,6 +115,11 @@ import datetime
 from usa_signal_bot.core.enums import OperationalMetricStatus
 from usa_signal_bot.core.enums import MetricType
 from usa_signal_bot.observability.observability_models import OperationalMetric
+
+
+def _now_str() -> str:
+    return datetime.datetime.now(datetime.timezone.utc).isoformat()
+
 from usa_signal_bot.observability.observability_models import OperationalMetricsSnapshot
 from usa_signal_bot.observability.observability_models import LogFileSummary
 from usa_signal_bot.observability.observability_models import create_operational_metric_id
@@ -215,6 +220,9 @@ class OperationalMetricsCollector:
     def collect_release_metrics(self) -> 'List[OperationalMetric]':
         p = self.data_root / 'release' / 'builds'
         return [self._collect_dir_count_metric('release_build_count', p)]
+
+    def collect_attribution_metrics(self) -> 'List[OperationalMetric]':
+        return []
 
     def collect_notification_metrics(self) -> 'List[OperationalMetric]':
         return []
