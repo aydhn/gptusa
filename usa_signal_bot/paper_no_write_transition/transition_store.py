@@ -1,4 +1,3 @@
-import json
 from pathlib import Path
 from typing import Any, Optional
 from usa_signal_bot.paper_no_write_transition.no_write_transition_models import (
@@ -19,30 +18,20 @@ from usa_signal_bot.paper_no_write_transition.no_write_transition_models import 
     no_write_transition_audit_entry_to_dict,
     no_write_transition_full_review_to_dict
 )
-def ensure_dir(path):
-    path.mkdir(parents=True, exist_ok=True)
-    return path
+from usa_signal_bot.paper_common.io import (
+    ensure_dir, write_json as _common_write_json, read_json, append_jsonl, list_files, count_files,
+)
 
 
 def write_json(path, data):
-    import json
-    with open(path, "w") as f:
-        json.dump(data, f, indent=4)
-
-def read_json(path):
-    import json
-    with open(path, "r") as f:
-        return json.load(f)
+    _common_write_json(path, data, indent=4, ensure_parent=False)
 
 
 class JSONLStore:
     def __init__(self, directory):
         self.directory = directory
     def append_batch(self, filename, items):
-        import json
-        with open(self.directory / filename, "a") as f:
-            for item in items:
-                f.write(json.dumps(item) + "\n")
+        append_jsonl(self.directory / filename, items, ensure_parent=False)
 
 
 def no_write_transition_store_dir(data_root: Path) -> Path:
@@ -116,7 +105,7 @@ def read_no_write_transition_full_review_json(path: Path) -> dict[str, Any]:
 
 def list_no_write_transition_full_reviews(data_root: Path) -> list[Path]:
     d = transition_full_reviews_dir(data_root)
-    return sorted(list(d.glob("*.json")))
+    return list_files(d, "*.json", sort=True)
 
 def get_latest_no_write_transition_full_review(data_root: Path) -> Optional[Path]:
     files = list_no_write_transition_full_reviews(data_root)

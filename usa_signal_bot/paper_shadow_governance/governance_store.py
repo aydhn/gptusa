@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 from typing import Any, Dict, List, Optional
-import json
+from usa_signal_bot.paper_common.io import ensure_dir, write_json, append_jsonl, read_json
 
 from usa_signal_bot.paper_shadow_governance.shadow_governance_models import (
     ShadowSessionComparisonReport, ShadowAcceptanceScorecard, ShadowEvidencePack,
@@ -12,74 +12,46 @@ from usa_signal_bot.paper_shadow_governance.shadow_governance_models import (
 )
 
 def shadow_governance_store_dir(data_root: Path) -> Path:
-    d = data_root / "paper_shadow_governance"
-    d.mkdir(parents=True, exist_ok=True)
-    return d
+    return ensure_dir(data_root / "paper_shadow_governance")
 
 def shadow_comparison_reports_dir(data_root: Path) -> Path:
-    d = shadow_governance_store_dir(data_root) / "comparison_reports"
-    d.mkdir(parents=True, exist_ok=True)
-    return d
+    return ensure_dir(shadow_governance_store_dir(data_root) / "comparison_reports")
 
 def shadow_scorecards_dir(data_root: Path) -> Path:
-    d = shadow_governance_store_dir(data_root) / "scorecards"
-    d.mkdir(parents=True, exist_ok=True)
-    return d
+    return ensure_dir(shadow_governance_store_dir(data_root) / "scorecards")
 
 def shadow_evidence_packs_dir(data_root: Path) -> Path:
-    d = shadow_governance_store_dir(data_root) / "evidence_packs"
-    d.mkdir(parents=True, exist_ok=True)
-    return d
+    return ensure_dir(shadow_governance_store_dir(data_root) / "evidence_packs")
 
 def shadow_decisions_dir(data_root: Path) -> Path:
-    d = shadow_governance_store_dir(data_root) / "decisions"
-    d.mkdir(parents=True, exist_ok=True)
-    return d
+    return ensure_dir(shadow_governance_store_dir(data_root) / "decisions")
 
 def shadow_audit_logs_dir(data_root: Path) -> Path:
-    d = shadow_governance_store_dir(data_root) / "audit_logs"
-    d.mkdir(parents=True, exist_ok=True)
-    return d
+    return ensure_dir(shadow_governance_store_dir(data_root) / "audit_logs")
 
 def shadow_governance_reviews_dir(data_root: Path) -> Path:
-    d = shadow_governance_store_dir(data_root) / "reviews"
-    d.mkdir(parents=True, exist_ok=True)
-    return d
+    return ensure_dir(shadow_governance_store_dir(data_root) / "reviews")
 
 def write_shadow_comparison_report_json(path: Path, item: ShadowSessionComparisonReport) -> Path:
-    with open(path, 'w', encoding='utf-8') as f:
-        json.dump(shadow_session_comparison_report_to_dict(item), f, indent=2)
-    return path
+    return write_json(path, shadow_session_comparison_report_to_dict(item), ensure_parent=False)
 
 def write_shadow_acceptance_scorecard_json(path: Path, item: ShadowAcceptanceScorecard) -> Path:
-    with open(path, 'w', encoding='utf-8') as f:
-        json.dump(shadow_acceptance_scorecard_to_dict(item), f, indent=2)
-    return path
+    return write_json(path, shadow_acceptance_scorecard_to_dict(item), ensure_parent=False)
 
 def write_shadow_evidence_pack_json(path: Path, item: ShadowEvidencePack) -> Path:
-    with open(path, 'w', encoding='utf-8') as f:
-        json.dump(shadow_evidence_pack_to_dict(item), f, indent=2)
-    return path
+    return write_json(path, shadow_evidence_pack_to_dict(item), ensure_parent=False)
 
 def write_shadow_decision_result_json(path: Path, item: ShadowDecisionBoardResult) -> Path:
-    with open(path, 'w', encoding='utf-8') as f:
-        json.dump(shadow_decision_board_result_to_dict(item), f, indent=2)
-    return path
+    return write_json(path, shadow_decision_board_result_to_dict(item), ensure_parent=False)
 
 def write_shadow_audit_entries_jsonl(path: Path, items: List[ShadowGovernanceAuditEntry]) -> Path:
-    with open(path, 'a', encoding='utf-8') as f:
-        for it in items:
-            f.write(json.dumps(shadow_governance_audit_entry_to_dict(it)) + "\n")
-    return path
+    return append_jsonl(path, (shadow_governance_audit_entry_to_dict(it) for it in items), ensure_parent=False)
 
 def write_shadow_governance_review_json(path: Path, item: ShadowGovernanceReview) -> Path:
-    with open(path, 'w', encoding='utf-8') as f:
-        json.dump(shadow_governance_review_to_dict(item), f, indent=2)
-    return path
+    return write_json(path, shadow_governance_review_to_dict(item), ensure_parent=False)
 
 def read_shadow_governance_review_json(path: Path) -> Dict[str, Any]:
-    with open(path, 'r', encoding='utf-8') as f:
-        return json.load(f)
+    return read_json(path)
 
 def list_shadow_governance_reviews(data_root: Path) -> List[Path]:
     d = shadow_governance_reviews_dir(data_root)

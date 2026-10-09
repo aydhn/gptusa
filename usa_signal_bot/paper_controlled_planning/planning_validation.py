@@ -9,23 +9,15 @@ from usa_signal_bot.paper_controlled_planning.planning_models import (
 )
 from usa_signal_bot.core.exceptions import ControlledPlanningValidationError
 
-@dataclass
-class ControlledPlanningValidationIssue:
-    severity: str
-    field: Optional[str]
-    message: str
-    details: dict[str, Any] = field(default_factory=dict)
+from usa_signal_bot.paper_common.validation_types import ValidationIssue, ValidationReport
 
 @dataclass
-class ControlledPlanningValidationReport:
-    valid: bool
-    issue_count: int
-    warning_count: int
-    error_count: int
-    blocked_count: int
-    issues: List[ControlledPlanningValidationIssue]
-    warnings: List[str]
-    errors: List[str]
+class ControlledPlanningValidationIssue(ValidationIssue):
+    pass
+
+@dataclass
+class ControlledPlanningValidationReport(ValidationReport):
+    pass
 
 def validate_controlled_planning_ticket_report(item: ControlledPlanningTicket) -> ControlledPlanningValidationReport:
     issues = []

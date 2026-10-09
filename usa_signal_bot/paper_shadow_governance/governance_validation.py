@@ -1,27 +1,18 @@
 from typing import Any, Dict, List, Optional
 from dataclasses import dataclass, field
+from usa_signal_bot.paper_common.validation_types import ValidationIssue, ValidationReport
 from usa_signal_bot.paper_shadow_governance.shadow_governance_models import (
     ShadowSessionComparisonReport, ShadowAcceptanceScorecard, ShadowDecisionBoardResult, ShadowGovernanceReview
 )
 from usa_signal_bot.core.exceptions import ShadowGovernanceValidationError
 
 @dataclass
-class ShadowGovernanceValidationIssue:
-    severity: str
-    field: Optional[str]
-    message: str
-    details: Dict[str, Any] = field(default_factory=dict)
+class ShadowGovernanceValidationIssue(ValidationIssue):
+    pass
 
 @dataclass
-class ShadowGovernanceValidationReport:
-    valid: bool
-    issue_count: int
-    warning_count: int
-    error_count: int
-    blocked_count: int
-    issues: List[ShadowGovernanceValidationIssue]
-    warnings: List[str]
-    errors: List[str]
+class ShadowGovernanceValidationReport(ValidationReport):
+    pass
 
 def check_boolean_false(obj, attr_name) -> Optional[ShadowGovernanceValidationIssue]:
     val = getattr(obj, attr_name, False)

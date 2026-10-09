@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from usa_signal_bot.paper_common.io import ensure_dir, list_files, count_files
 from typing import Any, List, Optional
 import json
 from usa_signal_bot.paper_observation.observation_models import (
@@ -17,44 +18,28 @@ class EnhancedJSONEncoder(json.JSONEncoder):
         return super().default(o)
 
 def observation_store_dir(data_root: Path) -> Path:
-    p = data_root / "paper_observation"
-    p.mkdir(parents=True, exist_ok=True)
-    return p
+    return ensure_dir(data_root / "paper_observation")
 
 def observation_windows_dir(data_root: Path) -> Path:
-    p = observation_store_dir(data_root) / "windows"
-    p.mkdir(parents=True, exist_ok=True)
-    return p
+    return ensure_dir(observation_store_dir(data_root) / "windows")
 
 def checkpoint_history_dir(data_root: Path) -> Path:
-    p = observation_store_dir(data_root) / "checkpoints"
-    p.mkdir(parents=True, exist_ok=True)
-    return p
+    return ensure_dir(observation_store_dir(data_root) / "checkpoints")
 
 def telemetry_summaries_dir(data_root: Path) -> Path:
-    p = observation_store_dir(data_root) / "telemetry"
-    p.mkdir(parents=True, exist_ok=True)
-    return p
+    return ensure_dir(observation_store_dir(data_root) / "telemetry")
 
 def observation_scorecards_dir(data_root: Path) -> Path:
-    p = observation_store_dir(data_root) / "scorecards"
-    p.mkdir(parents=True, exist_ok=True)
-    return p
+    return ensure_dir(observation_store_dir(data_root) / "scorecards")
 
 def exit_reviews_dir(data_root: Path) -> Path:
-    p = observation_store_dir(data_root) / "exit_reviews"
-    p.mkdir(parents=True, exist_ok=True)
-    return p
+    return ensure_dir(observation_store_dir(data_root) / "exit_reviews")
 
 def observation_audit_dir(data_root: Path) -> Path:
-    p = observation_store_dir(data_root) / "audit"
-    p.mkdir(parents=True, exist_ok=True)
-    return p
+    return ensure_dir(observation_store_dir(data_root) / "audit")
 
 def observation_reviews_dir(data_root: Path) -> Path:
-    p = observation_store_dir(data_root) / "reviews"
-    p.mkdir(parents=True, exist_ok=True)
-    return p
+    return ensure_dir(observation_store_dir(data_root) / "reviews")
 
 def write_observation_window_json(path: Path, item: ObservationWindow) -> Path:
     with open(path, "w", encoding="utf-8") as f:
@@ -98,8 +83,7 @@ def read_observation_review_json(path: Path) -> dict[str, Any]:
         return json.load(f)
 
 def list_observation_reviews(data_root: Path) -> List[Path]:
-    p = observation_reviews_dir(data_root)
-    return list(p.glob("*.json"))
+    return list_files(observation_reviews_dir(data_root), "*.json")
 
 def get_latest_observation_review(data_root: Path) -> Optional[Path]:
     files = list_observation_reviews(data_root)
@@ -110,6 +94,6 @@ def get_latest_observation_review(data_root: Path) -> Optional[Path]:
 def observation_store_summary(data_root: Path) -> dict[str, Any]:
     return {
         "reviews": len(list_observation_reviews(data_root)),
-        "windows": len(list(observation_windows_dir(data_root).glob("*.json"))),
-        "exit_reviews": len(list(exit_reviews_dir(data_root).glob("*.json")))
+        "windows": count_files(observation_windows_dir(data_root), "*.json"),
+        "exit_reviews": count_files(exit_reviews_dir(data_root), "*.json")
     }

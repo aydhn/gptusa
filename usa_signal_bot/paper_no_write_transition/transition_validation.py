@@ -7,23 +7,15 @@ from usa_signal_bot.paper_no_write_transition.no_write_transition_models import 
     NoWriteTransitionFullReview
 )
 
-@dataclass
-class NoWriteTransitionValidationIssue:
-    severity: str
-    field: str | None
-    message: str
-    details: dict[str, Any] = field(default_factory=dict)
+from usa_signal_bot.paper_common.validation_types import ValidationIssue, ValidationReport
 
 @dataclass
-class NoWriteTransitionValidationReport:
-    valid: bool
-    issue_count: int
-    warning_count: int
-    error_count: int
-    blocked_count: int
-    issues: list[NoWriteTransitionValidationIssue]
-    warnings: list[str]
-    errors: list[str]
+class NoWriteTransitionValidationIssue(ValidationIssue):
+    pass
+
+@dataclass
+class NoWriteTransitionValidationReport(ValidationReport):
+    pass
 
 def _build_report(issues: list[NoWriteTransitionValidationIssue]) -> NoWriteTransitionValidationReport:
     warnings = [i.message for i in issues if i.severity == "WARNING"]

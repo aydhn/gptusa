@@ -4,23 +4,15 @@ from usa_signal_bot.paper_observer.observer_models import (
     PaperObserverEnrollment, ObserverRuntimeContext, ObserverRuntimeSession, PaperObserverReview
 )
 
-@dataclass
-class ObserverValidationIssue:
-    severity: str
-    field: Optional[str]
-    message: str
-    details: Dict[str, Any] = field(default_factory=dict)
+from usa_signal_bot.paper_common.validation_types import ValidationIssue, ValidationReport
 
 @dataclass
-class ObserverValidationReport:
-    valid: bool
-    issue_count: int
-    warning_count: int
-    error_count: int
-    blocked_count: int
-    issues: List[ObserverValidationIssue]
-    warnings: List[str]
-    errors: List[str]
+class ObserverValidationIssue(ValidationIssue):
+    pass
+
+@dataclass
+class ObserverValidationReport(ValidationReport):
+    pass
 
 def _create_report(issues: List[ObserverValidationIssue]) -> ObserverValidationReport:
     warnings = [i for i in issues if i.severity == "WARNING"]

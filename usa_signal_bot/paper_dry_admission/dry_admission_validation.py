@@ -9,12 +9,11 @@ from usa_signal_bot.paper_dry_admission.dry_admission_models import (
     DryAdmissionFullReview
 )
 
+from usa_signal_bot.paper_common.validation_types import ValidationIssue, ValidationReport
+
 @dataclass
-class DryAdmissionValidationIssue:
-    severity: str
-    field: str | None
-    message: str
-    details: dict[str, Any] = field(default_factory=dict)
+class DryAdmissionValidationIssue(ValidationIssue):
+    pass
 
 @dataclass
 class DryAdmissionValidationReport:

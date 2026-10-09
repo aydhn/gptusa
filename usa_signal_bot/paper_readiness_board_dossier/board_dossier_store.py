@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
 from typing import Any
+from usa_signal_bot.paper_common.io import read_json, list_files, count_files
 from usa_signal_bot.core.serialization import dataclass_to_dict
 from usa_signal_bot.paper_readiness_board_dossier.board_dossier_models import (
     PaperReadinessBoardDossier,
@@ -86,14 +87,10 @@ def write_board_dossier_full_review_json(path: Path, item: BoardDossierFullRevie
     return path
 
 def read_board_dossier_full_review_json(path: Path) -> dict[str, Any]:
-    with open(path, "r") as f:
-        return json.load(f)
+    return read_json(path)
 
 def list_board_dossier_full_reviews(data_root: Path) -> list[Path]:
-    d = board_dossier_full_reviews_dir(data_root)
-    if not d.exists():
-        return []
-    return sorted(list(d.glob("*.json")), reverse=True)
+    return list_files(board_dossier_full_reviews_dir(data_root), "*.json", sort=True, reverse=True)
 
 def get_latest_board_dossier_full_review(data_root: Path) -> Path | None:
     files = list_board_dossier_full_reviews(data_root)
@@ -101,7 +98,7 @@ def get_latest_board_dossier_full_review(data_root: Path) -> Path | None:
 
 def board_dossier_store_summary(data_root: Path) -> dict[str, Any]:
     return {
-        "dossiers": len(list(board_dossiers_dir(data_root).glob("*.json"))) if board_dossiers_dir(data_root).exists() else 0,
-        "acceptance_seals": len(list(acceptance_board_seals_dir(data_root).glob("*.json"))) if acceptance_board_seals_dir(data_root).exists() else 0,
-        "full_reviews": len(list(board_dossier_full_reviews_dir(data_root).glob("*.json"))) if board_dossier_full_reviews_dir(data_root).exists() else 0
+        "dossiers": count_files(board_dossiers_dir(data_root), "*.json"),
+        "acceptance_seals": count_files(acceptance_board_seals_dir(data_root), "*.json"),
+        "full_reviews": count_files(board_dossier_full_reviews_dir(data_root), "*.json")
     }

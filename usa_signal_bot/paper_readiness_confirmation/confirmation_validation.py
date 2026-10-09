@@ -1,5 +1,6 @@
 from typing import Any
 from dataclasses import dataclass, field
+from usa_signal_bot.paper_common.validation_types import ValidationIssue, ValidationReport
 import json
 
 from usa_signal_bot.paper_readiness_confirmation.confirmation_models import (
@@ -10,22 +11,12 @@ from usa_signal_bot.paper_readiness_confirmation.confirmation_models import (
 )
 
 @dataclass
-class ReadinessConfirmationValidationIssue:
-    severity: str
-    field: str | None
-    message: str
-    details: dict[str, Any] = field(default_factory=dict)
+class ReadinessConfirmationValidationIssue(ValidationIssue):
+    pass
 
 @dataclass
-class ReadinessConfirmationValidationReport:
-    valid: bool
-    issue_count: int
-    warning_count: int
-    error_count: int
-    blocked_count: int
-    issues: list[ReadinessConfirmationValidationIssue]
-    warnings: list[str]
-    errors: list[str]
+class ReadinessConfirmationValidationReport(ValidationReport):
+    pass
 
 def _build_report(issues: list[ReadinessConfirmationValidationIssue]) -> ReadinessConfirmationValidationReport:
     warnings = [i.message for i in issues if i.severity == "WARNING"]

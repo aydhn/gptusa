@@ -5,23 +5,15 @@ from usa_signal_bot.paper_firewall_audit.firewall_audit_models import (
     ReadinessAuditCheckpoint, FirewallAuditReview
 )
 
-@dataclass
-class FirewallAuditValidationIssue:
-    severity: str
-    field: str | None
-    message: str
-    details: dict[str, Any] = field(default_factory=dict)
+from usa_signal_bot.paper_common.validation_types import ValidationIssue, ValidationReport
 
 @dataclass
-class FirewallAuditValidationReport:
-    valid: bool
-    issue_count: int
-    warning_count: int
-    error_count: int
-    blocked_count: int
-    issues: List[FirewallAuditValidationIssue]
-    warnings: List[str]
-    errors: List[str]
+class FirewallAuditValidationIssue(ValidationIssue):
+    pass
+
+@dataclass
+class FirewallAuditValidationReport(ValidationReport):
+    pass
 
 def validate_firewall_replay_plan_report(item: FirewallReplayPlan) -> FirewallAuditValidationReport:
     issues = []

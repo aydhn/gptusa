@@ -9,23 +9,15 @@ from usa_signal_bot.paper_final_handoff.final_handoff_models import (
 )
 from usa_signal_bot.core.exceptions import FinalHandoffValidationError
 
-@dataclass
-class FinalHandoffValidationIssue:
-    severity: str
-    field: str | None
-    message: str
-    details: Dict[str, Any] = field(default_factory=dict)
+from usa_signal_bot.paper_common.validation_types import ValidationIssue, ValidationReport
 
 @dataclass
-class FinalHandoffValidationReport:
-    valid: bool
-    issue_count: int
-    warning_count: int
-    error_count: int
-    blocked_count: int
-    issues: List[FinalHandoffValidationIssue]
-    warnings: List[str]
-    errors: List[str]
+class FinalHandoffValidationIssue(ValidationIssue):
+    pass
+
+@dataclass
+class FinalHandoffValidationReport(ValidationReport):
+    pass
 
 def validate_final_handoff_review_report(item: FinalHandoffReview) -> FinalHandoffValidationReport:
     issues = []

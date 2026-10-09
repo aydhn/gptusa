@@ -1,6 +1,6 @@
-import json
 import functools
 from pathlib import Path
+from usa_signal_bot.paper_common.io import (ensure_dir, write_json, write_jsonl, read_json, count_files)
 from typing import Any, List
 from usa_signal_bot.paper_mode_dry_admission_gate.dry_admission_gate_models import (
     FinalPaperModeDryAdmissionGate,
@@ -24,108 +24,66 @@ from usa_signal_bot.paper_mode_dry_admission_gate.dry_admission_gate_models impo
 )
 
 def dry_admission_gate_store_dir(data_root: Path) -> Path:
-    d = data_root / "paper_mode_dry_admission_gate"
-    d.mkdir(parents=True, exist_ok=True)
-    return d
+    return ensure_dir(data_root / "paper_mode_dry_admission_gate")
 
 def final_dry_admission_gates_dir(data_root: Path) -> Path:
-    d = dry_admission_gate_store_dir(data_root) / "gates"
-    d.mkdir(parents=True, exist_ok=True)
-    return d
+    return ensure_dir(dry_admission_gate_store_dir(data_root) / "gates")
 
 def shadow_replay_plans_dir(data_root: Path) -> Path:
-    d = dry_admission_gate_store_dir(data_root) / "shadow_replay_plans"
-    d.mkdir(parents=True, exist_ok=True)
-    return d
+    return ensure_dir(dry_admission_gate_store_dir(data_root) / "shadow_replay_plans")
 
 def shadow_replay_results_dir(data_root: Path) -> Path:
-    d = dry_admission_gate_store_dir(data_root) / "shadow_replay_results"
-    d.mkdir(parents=True, exist_ok=True)
-    return d
+    return ensure_dir(dry_admission_gate_store_dir(data_root) / "shadow_replay_results")
 
 def shadow_replay_items_dir(data_root: Path) -> Path:
-    d = dry_admission_gate_store_dir(data_root) / "shadow_replay_items"
-    d.mkdir(parents=True, exist_ok=True)
-    return d
+    return ensure_dir(dry_admission_gate_store_dir(data_root) / "shadow_replay_items")
 
 def board_evidence_freezes_dir(data_root: Path) -> Path:
-    d = dry_admission_gate_store_dir(data_root) / "board_evidence_freezes"
-    d.mkdir(parents=True, exist_ok=True)
-    return d
+    return ensure_dir(dry_admission_gate_store_dir(data_root) / "board_evidence_freezes")
 
 def dry_admission_rules_dir(data_root: Path) -> Path:
-    d = dry_admission_gate_store_dir(data_root) / "rules"
-    d.mkdir(parents=True, exist_ok=True)
-    return d
+    return ensure_dir(dry_admission_gate_store_dir(data_root) / "rules")
 
 def dry_admission_assertions_dir(data_root: Path) -> Path:
-    d = dry_admission_gate_store_dir(data_root) / "assertions"
-    d.mkdir(parents=True, exist_ok=True)
-    return d
+    return ensure_dir(dry_admission_gate_store_dir(data_root) / "assertions")
 
 def dry_admission_audit_dir(data_root: Path) -> Path:
-    d = dry_admission_gate_store_dir(data_root) / "audit"
-    d.mkdir(parents=True, exist_ok=True)
-    return d
+    return ensure_dir(dry_admission_gate_store_dir(data_root) / "audit")
 
 def dry_admission_full_reviews_dir(data_root: Path) -> Path:
-    d = dry_admission_gate_store_dir(data_root) / "full_reviews"
-    d.mkdir(parents=True, exist_ok=True)
-    return d
+    return ensure_dir(dry_admission_gate_store_dir(data_root) / "full_reviews")
 
 
 def write_final_dry_admission_gate_json(path: Path, item: FinalPaperModeDryAdmissionGate) -> Path:
-    d = final_paper_mode_dry_admission_gate_to_dict(item)
-    path.write_text(json.dumps(d, indent=2))
-    return path
+    return write_json(path, final_paper_mode_dry_admission_gate_to_dict(item), ensure_parent=False)
 
 def write_shadow_replay_plan_json(path: Path, item: ShadowLaunchReplayPlan) -> Path:
-    d = shadow_launch_replay_plan_to_dict(item)
-    path.write_text(json.dumps(d, indent=2))
-    return path
+    return write_json(path, shadow_launch_replay_plan_to_dict(item), ensure_parent=False)
 
 def write_shadow_replay_result_json(path: Path, item: ShadowLaunchReplayResult) -> Path:
-    d = shadow_launch_replay_result_to_dict(item)
-    path.write_text(json.dumps(d, indent=2))
-    return path
+    return write_json(path, shadow_launch_replay_result_to_dict(item), ensure_parent=False)
 
 def write_shadow_replay_items_jsonl(path: Path, items: List[ShadowLaunchReplayItem]) -> Path:
-    with open(path, "w") as f:
-        for item in items:
-            f.write(json.dumps(shadow_launch_replay_item_to_dict(item)) + "\n")
-    return path
+    return write_jsonl(path, (shadow_launch_replay_item_to_dict(item) for item in items), ensure_parent=False)
 
 def write_board_evidence_freeze_json(path: Path, item: BoardEvidenceFreezeBundle) -> Path:
-    d = board_evidence_freeze_bundle_to_dict(item)
-    path.write_text(json.dumps(d, indent=2))
-    return path
+    return write_json(path, board_evidence_freeze_bundle_to_dict(item), ensure_parent=False)
 
 def write_dry_admission_rules_jsonl(path: Path, items: List[DryAdmissionGateRule]) -> Path:
-    with open(path, "w") as f:
-        for item in items:
-            f.write(json.dumps(dry_admission_gate_rule_to_dict(item)) + "\n")
-    return path
+    return write_jsonl(path, (dry_admission_gate_rule_to_dict(item) for item in items), ensure_parent=False)
 
 def write_dry_admission_assertions_jsonl(path: Path, items: List[DryAdmissionGateAssertion]) -> Path:
-    with open(path, "w") as f:
-        for item in items:
-            f.write(json.dumps(dry_admission_gate_assertion_to_dict(item)) + "\n")
-    return path
+    return write_jsonl(path, (dry_admission_gate_assertion_to_dict(item) for item in items), ensure_parent=False)
 
 def write_dry_admission_audit_jsonl(path: Path, items: List[DryAdmissionGateAuditEntry]) -> Path:
-    with open(path, "w") as f:
-        for item in items:
-            f.write(json.dumps(dry_admission_gate_audit_entry_to_dict(item)) + "\n")
-    return path
+    return write_jsonl(path, (dry_admission_gate_audit_entry_to_dict(item) for item in items), ensure_parent=False)
 
 def write_dry_admission_full_review_json(path: Path, item: DryAdmissionGateFullReview) -> Path:
-    d = dry_admission_gate_full_review_to_dict(item)
-    path.write_text(json.dumps(d, indent=2))
-    return path
+    return write_json(path, dry_admission_gate_full_review_to_dict(item), ensure_parent=False)
 
 @functools.lru_cache(maxsize=128)
 def _cached_read_json(path: Path) -> dict[str, Any]:
-    return json.loads(path.read_text())
+    return read_json(path)
 
 def read_dry_admission_full_review_json(path: Path) -> dict[str, Any]:
     if not path.exists():
@@ -142,9 +100,9 @@ def get_latest_dry_admission_full_review(data_root: Path) -> Path | None:
 
 def dry_admission_store_summary(data_root: Path) -> dict[str, Any]:
     return {
-        "gates": len(list(final_dry_admission_gates_dir(data_root).glob("*.json"))),
-        "shadow_replay_plans": len(list(shadow_replay_plans_dir(data_root).glob("*.json"))),
-        "shadow_replay_results": len(list(shadow_replay_results_dir(data_root).glob("*.json"))),
-        "board_evidence_freezes": len(list(board_evidence_freezes_dir(data_root).glob("*.json"))),
+        "gates": count_files(final_dry_admission_gates_dir(data_root), "*.json"),
+        "shadow_replay_plans": count_files(shadow_replay_plans_dir(data_root), "*.json"),
+        "shadow_replay_results": count_files(shadow_replay_results_dir(data_root), "*.json"),
+        "board_evidence_freezes": count_files(board_evidence_freezes_dir(data_root), "*.json"),
         "full_reviews": len(list_dry_admission_full_reviews(data_root))
     }

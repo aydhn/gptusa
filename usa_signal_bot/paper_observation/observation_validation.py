@@ -3,23 +3,15 @@ from typing import Any
 import re
 from usa_signal_bot.paper_observation.observation_models import ObservationWindow, CheckpointHistoryEntry, ObservationScorecard, QuarantineExitReview, ObservationReview
 
-@dataclass
-class ObservationValidationIssue:
-    severity: str
-    field: str | None
-    message: str
-    details: dict[str, Any] = field(default_factory=dict)
+from usa_signal_bot.paper_common.validation_types import ValidationIssue, ValidationReport
 
 @dataclass
-class ObservationValidationReport:
-    valid: bool
-    issue_count: int
-    warning_count: int
-    error_count: int
-    blocked_count: int
-    issues: list[ObservationValidationIssue]
-    warnings: list[str]
-    errors: list[str]
+class ObservationValidationIssue(ValidationIssue):
+    pass
+
+@dataclass
+class ObservationValidationReport(ValidationReport):
+    pass
 
 DANGEROUS_PATTERNS = [
     "live approved", "sent to broker", "kesin al", "garanti",

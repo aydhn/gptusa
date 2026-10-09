@@ -7,23 +7,15 @@ from usa_signal_bot.paper_dry_run_bridge.dry_run_models import (
     DryRunBridgeReview
 )
 
-@dataclass
-class DryRunBridgeValidationIssue:
-    severity: str
-    field: Optional[str]
-    message: str
-    details: dict[str, Any] = field(default_factory=dict)
+from usa_signal_bot.paper_common.validation_types import ValidationIssue, ValidationReport
 
 @dataclass
-class DryRunBridgeValidationReport:
-    valid: bool
-    issue_count: int
-    warning_count: int
-    error_count: int
-    blocked_count: int
-    issues: List[DryRunBridgeValidationIssue]
-    warnings: List[str]
-    errors: List[str]
+class DryRunBridgeValidationIssue(ValidationIssue):
+    pass
+
+@dataclass
+class DryRunBridgeValidationReport(ValidationReport):
+    pass
 
 def _create_report(issues: List[DryRunBridgeValidationIssue]) -> DryRunBridgeValidationReport:
     warnings = [i.message for i in issues if i.severity == "WARNING"]

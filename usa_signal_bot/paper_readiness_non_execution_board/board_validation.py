@@ -1,5 +1,6 @@
 from typing import Any, Dict, List
 from dataclasses import dataclass, field
+from usa_signal_bot.paper_common.validation_types import ValidationIssue, ValidationReport
 from usa_signal_bot.paper_readiness_non_execution_board.non_execution_board_models import (
     PaperReadinessNonExecutionBoard,
     RuntimeMapReplayResult,
@@ -9,22 +10,12 @@ from usa_signal_bot.paper_readiness_non_execution_board.non_execution_board_mode
 from usa_signal_bot.core.exceptions import NonExecutionBoardValidationError
 
 @dataclass
-class NonExecutionBoardValidationIssue:
-    severity: str
-    field: str | None
-    message: str
-    details: Dict[str, Any] = field(default_factory=dict)
+class NonExecutionBoardValidationIssue(ValidationIssue):
+    pass
 
 @dataclass
-class NonExecutionBoardValidationReport:
-    valid: bool
-    issue_count: int
-    warning_count: int
-    error_count: int
-    blocked_count: int
-    issues: List[NonExecutionBoardValidationIssue]
-    warnings: List[str]
-    errors: List[str]
+class NonExecutionBoardValidationReport(ValidationReport):
+    pass
 
 def validate_non_execution_board_report(item: PaperReadinessNonExecutionBoard) -> NonExecutionBoardValidationReport:
     from usa_signal_bot.paper_readiness_non_execution_board.board_validator import validate_non_execution_board_safety

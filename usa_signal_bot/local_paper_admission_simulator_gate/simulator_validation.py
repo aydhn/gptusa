@@ -2,23 +2,15 @@ from dataclasses import dataclass, field
 from typing import Any
 from .simulator_gate_models import FinalLocalPaperAdmissionSimulatorGate, RehearsalReplayResult, DryAdmissionEvidenceFreezeBundle, SimulatorGateFullReview
 
-@dataclass
-class SimulatorValidationIssue:
-    severity: str
-    field: str | None
-    message: str
-    details: dict[str, Any] = field(default_factory=dict)
+from usa_signal_bot.paper_common.validation_types import ValidationIssue, ValidationReport
 
 @dataclass
-class SimulatorValidationReport:
-    valid: bool
-    issue_count: int
-    warning_count: int
-    error_count: int
-    blocked_count: int
-    issues: list[SimulatorValidationIssue]
-    warnings: list[str]
-    errors: list[str]
+class SimulatorValidationIssue(ValidationIssue):
+    pass
+
+@dataclass
+class SimulatorValidationReport(ValidationReport):
+    pass
 
 def validate_final_simulator_gate_report(item: FinalLocalPaperAdmissionSimulatorGate) -> SimulatorValidationReport:
     return SimulatorValidationReport(True, 0, 0, 0, 0, [], [], [])

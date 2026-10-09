@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+from usa_signal_bot.paper_common.validation_types import ValidationIssue, ValidationReport
 from typing import Any, Dict, List
 from .dossier_models import (
     ObserverPromotionDossier,
@@ -9,22 +10,12 @@ from .dossier_models import (
 from usa_signal_bot.core.exceptions import PromotionDossierValidationError
 
 @dataclass
-class PromotionDossierValidationIssue:
-    severity: str
-    field: str | None
-    message: str
-    details: Dict[str, Any] = field(default_factory=dict)
+class PromotionDossierValidationIssue(ValidationIssue):
+    pass
 
 @dataclass
-class PromotionDossierValidationReport:
-    valid: bool
-    issue_count: int
-    warning_count: int
-    error_count: int
-    blocked_count: int
-    issues: List[PromotionDossierValidationIssue]
-    warnings: List[str]
-    errors: List[str]
+class PromotionDossierValidationReport(ValidationReport):
+    pass
 
 def validate_promotion_dossier_report(item: ObserverPromotionDossier) -> PromotionDossierValidationReport:
     issues = []

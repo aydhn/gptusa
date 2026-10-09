@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+from usa_signal_bot.paper_common.validation_types import ValidationIssue, ValidationReport
 from typing import Any
 from usa_signal_bot.paper_readiness_board_dossier.board_dossier_models import (
     PaperReadinessBoardDossier,
@@ -15,15 +16,8 @@ class BoardDossierValidationIssue:
     details: dict[str, Any] = field(default_factory=dict)
 
 @dataclass
-class BoardDossierValidationReport:
-    valid: bool
-    issue_count: int
-    warning_count: int
-    error_count: int
-    blocked_count: int
-    issues: list[BoardDossierValidationIssue]
-    warnings: list[str]
-    errors: list[str]
+class BoardDossierValidationReport(ValidationReport):
+    pass
 
 def validate_board_dossier_report(item: PaperReadinessBoardDossier) -> BoardDossierValidationReport:
     issues = []

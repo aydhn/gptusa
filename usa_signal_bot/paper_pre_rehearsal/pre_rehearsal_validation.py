@@ -10,23 +10,15 @@ from usa_signal_bot.paper_pre_rehearsal.pre_rehearsal_models import (
 )
 from usa_signal_bot.core.exceptions import PrePaperValidationError
 
-@dataclass
-class PrePaperValidationIssue:
-    severity: str
-    field: Optional[str]
-    message: str
-    details: Dict[str, Any] = field(default_factory=dict)
+from usa_signal_bot.paper_common.validation_types import ValidationIssue, ValidationReport
 
 @dataclass
-class PrePaperValidationReport:
-    valid: bool
-    issue_count: int
-    warning_count: int
-    error_count: int
-    blocked_count: int
-    issues: List[PrePaperValidationIssue]
-    warnings: List[str]
-    errors: List[str]
+class PrePaperValidationIssue(ValidationIssue):
+    pass
+
+@dataclass
+class PrePaperValidationReport(ValidationReport):
+    pass
 
 def _create_report(issues: List[PrePaperValidationIssue]) -> PrePaperValidationReport:
     errors = [i for i in issues if i.severity == "ERROR"]

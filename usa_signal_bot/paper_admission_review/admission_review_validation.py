@@ -10,23 +10,15 @@ from .admission_review_models import (
     AdmissionReviewFullReport
 )
 
-@dataclass
-class AdmissionReviewValidationIssue:
-    severity: str
-    field: Optional[str]
-    message: str
-    details: Dict[str, Any] = field(default_factory=dict)
+from usa_signal_bot.paper_common.validation_types import ValidationIssue, ValidationReport
 
 @dataclass
-class AdmissionReviewValidationReport:
-    valid: bool
-    issue_count: int
-    warning_count: int
-    error_count: int
-    blocked_count: int
-    issues: List[AdmissionReviewValidationIssue]
-    warnings: List[str]
-    errors: List[str]
+class AdmissionReviewValidationIssue(ValidationIssue):
+    pass
+
+@dataclass
+class AdmissionReviewValidationReport(ValidationReport):
+    pass
 
 def _build_validation_report(issues: List[AdmissionReviewValidationIssue]) -> AdmissionReviewValidationReport:
     errors = [i for i in issues if i.severity in ["ERROR", "BLOCK"]]

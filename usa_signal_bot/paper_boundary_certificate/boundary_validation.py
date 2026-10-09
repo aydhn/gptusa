@@ -6,23 +6,15 @@ from usa_signal_bot.paper_boundary_certificate.boundary_certificate_models impor
 )
 from usa_signal_bot.core.exceptions import BoundaryValidationError
 
-@dataclass
-class BoundaryValidationIssue:
-    severity: str
-    field: str | None
-    message: str
-    details: dict[str, Any] = field(default_factory=dict)
+from usa_signal_bot.paper_common.validation_types import ValidationIssue, ValidationReport
 
 @dataclass
-class BoundaryValidationReport:
-    valid: bool
-    issue_count: int
-    warning_count: int
-    error_count: int
-    blocked_count: int
-    issues: list[BoundaryValidationIssue]
-    warnings: list[str]
-    errors: list[str]
+class BoundaryValidationIssue(ValidationIssue):
+    pass
+
+@dataclass
+class BoundaryValidationReport(ValidationReport):
+    pass
 
 def validate_boundary_certificate_report(item: PaperSandboxBoundaryCertificate) -> BoundaryValidationReport:
     issues = []

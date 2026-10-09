@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 import dataclasses
+from usa_signal_bot.paper_common.io import ensure_dir, read_json, list_files, count_files
 
 from usa_signal_bot.paper_observer.observer_models import (
     PaperObserverEnrollment, ObserverRuntimeContext, ObserverRuntimeSession,
@@ -9,9 +10,7 @@ from usa_signal_bot.paper_observer.observer_models import (
     paper_observer_review_to_dict
 )
 
-def _ensure_dir(path: Path) -> Path:
-    path.mkdir(parents=True, exist_ok=True)
-    return path
+_ensure_dir = ensure_dir
 
 def paper_observer_store_dir(data_root: Path) -> Path:
     return _ensure_dir(data_root / "paper_observer")
@@ -70,12 +69,10 @@ def write_paper_observer_review_json(path: Path, item: PaperObserverReview) -> P
     return _write_json(path, paper_observer_review_to_dict(item))
 
 def read_paper_observer_review_json(path: Path) -> Dict[str, Any]:
-    with open(path, 'r') as f:
-        return json.load(f)
+    return read_json(path)
 
 def list_paper_observer_reviews(data_root: Path) -> List[Path]:
-    rev_dir = observer_reviews_dir(data_root)
-    return sorted(list(rev_dir.glob("*.json")), reverse=True)
+    return list_files(observer_reviews_dir(data_root), "*.json", sort=True, reverse=True)
 
 def get_latest_paper_observer_review(data_root: Path) -> Optional[Path]:
     files = list_paper_observer_reviews(data_root)
@@ -83,7 +80,7 @@ def get_latest_paper_observer_review(data_root: Path) -> Optional[Path]:
 
 def paper_observer_store_summary(data_root: Path) -> Dict[str, Any]:
     return {
-        "enrollments": len(list(observer_enrollments_dir(data_root).glob("*.json"))),
-        "sessions": len(list(observer_sessions_dir(data_root).glob("*.json"))),
+        "enrollments": count_files(observer_enrollments_dir(data_root), "*.json"),
+        "sessions": count_files(observer_sessions_dir(data_root), "*.json"),
         "reviews": len(list_paper_observer_reviews(data_root))
     }

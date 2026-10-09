@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+from usa_signal_bot.paper_common.validation_types import ValidationIssue, ValidationReport
 from typing import Any, Dict, List
 from usa_signal_bot.paper_shadow.shadow_models import (
     ShadowSimulationContext, ShadowPortfolioState, ShadowRehearsalSession, ShadowRehearsalReview
@@ -6,22 +7,12 @@ from usa_signal_bot.paper_shadow.shadow_models import (
 from usa_signal_bot.paper_shadow.shadow_validator import validate_shadow_session_safety
 
 @dataclass
-class ShadowValidationIssue:
-    severity: str
-    field: str | None
-    message: str
-    details: Dict[str, Any] = field(default_factory=dict)
+class ShadowValidationIssue(ValidationIssue):
+    pass
 
 @dataclass
-class ShadowValidationReport:
-    valid: bool
-    issue_count: int
-    warning_count: int
-    error_count: int
-    blocked_count: int
-    issues: List[ShadowValidationIssue]
-    warnings: List[str]
-    errors: List[str]
+class ShadowValidationReport(ValidationReport):
+    pass
 
 def validate_shadow_context_report(item: ShadowSimulationContext) -> ShadowValidationReport:
     errors = []

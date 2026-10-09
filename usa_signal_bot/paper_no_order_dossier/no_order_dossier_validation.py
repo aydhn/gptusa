@@ -8,23 +8,15 @@ from usa_signal_bot.paper_no_order_dossier.no_order_dossier_models import (
     NoOrderDossierFullReview
 )
 
-@dataclass
-class NoOrderDossierValidationIssue:
-    severity: str
-    field: str | None
-    message: str
-    details: dict[str, Any] = field(default_factory=dict)
+from usa_signal_bot.paper_common.validation_types import ValidationIssue, ValidationReport
 
 @dataclass
-class NoOrderDossierValidationReport:
-    valid: bool
-    issue_count: int
-    warning_count: int
-    error_count: int
-    blocked_count: int
-    issues: list[NoOrderDossierValidationIssue]
-    warnings: list[str]
-    errors: list[str]
+class NoOrderDossierValidationIssue(ValidationIssue):
+    pass
+
+@dataclass
+class NoOrderDossierValidationReport(ValidationReport):
+    pass
 
 def validate_no_order_dossier_report(item: NoOrderPaperSessionDossier) -> NoOrderDossierValidationReport:
     issues = []

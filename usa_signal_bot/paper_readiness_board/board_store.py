@@ -2,6 +2,8 @@
 from pathlib import Path
 from typing import Any, List, Optional
 import json
+from usa_signal_bot.paper_common.io import list_files
+from usa_signal_bot.paper_common.validation_types import ValidationIssue, ValidationReport
 from usa_signal_bot.paper_readiness_board.readiness_board_models import (
     PaperReadinessBoardReview, PaperReadinessBoardGate, RuntimeWriteBlockEvent,
     WriteBlockedRuntimeAdapterProof, ActivationFirewallRule, ActivationFirewallEvent,
@@ -76,9 +78,7 @@ def read_board_full_review_json(path: Path) -> dict:
     with open(path, "r") as f: return json.load(f)
 
 def list_board_full_reviews(data_root: Path) -> List[Path]:
-    d = board_full_reviews_dir(data_root)
-    if not d.exists(): return []
-    return list(d.glob("*.json"))
+    return list_files(board_full_reviews_dir(data_root), "*.json")
 
 def get_latest_board_full_review(data_root: Path) -> Optional[Path]:
     files = list_board_full_reviews(data_root)
@@ -92,22 +92,12 @@ from dataclasses import dataclass, field
 from usa_signal_bot.core.exceptions import PaperReadinessBoardValidationError
 
 @dataclass
-class PaperReadinessBoardValidationIssue:
-    severity: str
-    field: Optional[str]
-    message: str
-    details: dict = field(default_factory=dict)
+class PaperReadinessBoardValidationIssue(ValidationIssue):
+    pass
 
 @dataclass
-class PaperReadinessBoardValidationReport:
-    valid: bool
-    issue_count: int
-    warning_count: int
-    error_count: int
-    blocked_count: int
-    issues: List[PaperReadinessBoardValidationIssue]
-    warnings: List[str]
-    errors: List[str]
+class PaperReadinessBoardValidationReport(ValidationReport):
+    pass
 
 def validate_board_review_report(item: PaperReadinessBoardReview) -> PaperReadinessBoardValidationReport:
     issues = []

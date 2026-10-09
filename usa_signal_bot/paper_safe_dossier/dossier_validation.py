@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+from usa_signal_bot.paper_common.validation_types import ValidationIssue, ValidationReport
 from typing import Any, Dict, List, Optional
 import json
 from usa_signal_bot.paper_safe_dossier.paper_safe_dossier_models import (
@@ -7,22 +8,12 @@ from usa_signal_bot.paper_safe_dossier.paper_safe_dossier_models import (
 from usa_signal_bot.core.exceptions import PaperSafeDossierValidationError
 
 @dataclass
-class PaperSafeDossierValidationIssue:
-    severity: str
-    field: Optional[str]
-    message: str
-    details: Dict[str, Any] = field(default_factory=dict)
+class PaperSafeDossierValidationIssue(ValidationIssue):
+    pass
 
 @dataclass
-class PaperSafeDossierValidationReport:
-    valid: bool
-    issue_count: int
-    warning_count: int
-    error_count: int
-    blocked_count: int
-    issues: List[PaperSafeDossierValidationIssue]
-    warnings: List[str]
-    errors: List[str]
+class PaperSafeDossierValidationReport(ValidationReport):
+    pass
 
 def _build_report(issues: List[PaperSafeDossierValidationIssue]) -> PaperSafeDossierValidationReport:
     warnings = [i for i in issues if i.severity == "WARNING"]

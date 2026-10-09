@@ -1,5 +1,6 @@
 import re
 from dataclasses import dataclass, field
+from usa_signal_bot.paper_common.validation_types import ValidationIssue, ValidationReport
 from typing import Any, Dict, List, Optional
 from usa_signal_bot.paper_readiness_rehearsal.readiness_rehearsal_models import (
     ReadinessRehearsalRun, FinalReviewLock, GuardedHandoffRegistryEntry, ReadinessRehearsalReview,
@@ -8,22 +9,12 @@ from usa_signal_bot.paper_readiness_rehearsal.readiness_rehearsal_models import 
 )
 
 @dataclass
-class ReadinessRehearsalValidationIssue:
-    severity: str
-    field: Optional[str]
-    message: str
-    details: Dict[str, Any] = field(default_factory=dict)
+class ReadinessRehearsalValidationIssue(ValidationIssue):
+    pass
 
 @dataclass
-class ReadinessRehearsalValidationReport:
-    valid: bool
-    issue_count: int
-    warning_count: int
-    error_count: int
-    blocked_count: int
-    issues: List[ReadinessRehearsalValidationIssue]
-    warnings: List[str]
-    errors: List[str]
+class ReadinessRehearsalValidationReport(ValidationReport):
+    pass
 
 def _create_report(issues: List[ReadinessRehearsalValidationIssue]) -> ReadinessRehearsalValidationReport:
     warnings = [i.message for i in issues if i.severity == "WARNING"]

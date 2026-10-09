@@ -10,23 +10,15 @@ from usa_signal_bot.paper_mode_dry_admission_dossier.dry_admission_dossier_model
 )
 from usa_signal_bot.core.exceptions import DryAdmissionDossierValidationError
 
-@dataclass
-class DryAdmissionDossierValidationIssue:
-    severity: str
-    field: str | None
-    message: str
-    details: dict[str, Any] = field(default_factory=dict)
+from usa_signal_bot.paper_common.validation_types import ValidationIssue, ValidationReport
 
 @dataclass
-class DryAdmissionDossierValidationReport:
-    valid: bool
-    issue_count: int
-    warning_count: int
-    error_count: int
-    blocked_count: int
-    issues: list[DryAdmissionDossierValidationIssue]
-    warnings: list[str]
-    errors: list[str]
+class DryAdmissionDossierValidationIssue(ValidationIssue):
+    pass
+
+@dataclass
+class DryAdmissionDossierValidationReport(ValidationReport):
+    pass
 
 def _create_report(issues: list[DryAdmissionDossierValidationIssue]) -> DryAdmissionDossierValidationReport:
     errors = [i.message for i in issues if i.severity in ["ERROR", "BLOCKED"]]
