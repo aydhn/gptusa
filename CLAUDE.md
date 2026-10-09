@@ -24,11 +24,12 @@ Always-on çekirdek. Ayrıntılar normal metinle belirtilen yerlerde; yalnız g�
 - Deterministik: zaman/rastgelelik enjekte et (`backtesting/realistic_engine/deterministic_simulation_clock.py`).
 - ML: leakage kontrolü zorunlu; optimizer sonuçları out-of-sample doğrulanmadan raporlanmaz; backtest edilmemiş strateji güvenilir sayılmaz; risk yönetimi olmadan sinyal aktifleştirme yok.
 - Küçük, geri alınabilir, CLI'dan bağımsız test edilebilir adımlar.
-- Tuzaklar: `*_phase152_patch.py`, `*.py_patch.py`, `cli_phase155.py`, `phase107_cli.py` yamalar/yetim modüllerdir; kullanmadan önce gerçekten import edildiğini doğrula. `app/cli.py` `setup_parser()` yalnız `setup_phase143/155/145/147/150/151_cli` çağırır; `setup_phase152/156/157_cli` tanımlı ama bu fonksiyondan çağrılmıyor (yeni komut eklerken `grep` ile doğrula). Birçok `__init__.py` boştur: sembolleri modülden import et.
+- Tuzaklar: komutlar yalnız `app/cli.py::_command_registrars()` listesine eklenen `setup_*_cli` ile kaydolur (aynı komut adı iki kez = argparse hatası). Yama betiği yazma: import anında kendi dosyasına yazan kod ve `scripts/` altından çekirdek dosyayı yeniden yazan betikler geçmişte `core/enums.py`/`exceptions.py` içeriğini sildi; kaybolan tanımlar `core/_recovered_*.py` ve bazı modüllerin sonunda "recovered" bloğunda. Yeni enum/exception doğrudan `core/enums.py`/`exceptions.py`'ye. `paper_*` ortak IO/doğrulama tabanı: `paper_common/`. Kısmi `__init__` API: `core`, `data`, `features`; diğer `__init__.py`'ler boş olabilir, sembolleri modülden import et.
+- Bilinen kırıklar (Aşama 1 sonrası, tam süit ~3277 geçti / ~771 kaldı / ~84 hata): ortamda `yfinance` yoksa veri modülleri import edilemez; bazı enum üyeleri eksik (örn. `DataCoverageStatus.COMPLETE`); `paper_promotion_dossier.dossier_models.PromotionEvidenceIndex` yok; testler arası mock sızıntısı var (tek başına geçen test süitte kalabilir). Karşılaştırma için önce/sonra aynı komutla koş.
 
 ## Doğrulama
 - Test: `python -m pytest tests/<ilgili>.py` (`pytest.ini`: `pythonpath = .`). `tests/` altında ~2000 dosya (`test_<modül>.py`, bazı alt klasörler) ve `usa_signal_bot/tests/`; tüm süiti yalnız gerektiğinde çalıştır. `tests/conftest.py` `mocker` fixture'ı pytest-mock yoksa sahte sağlar.
-- Bağımlılık: `requirements.txt` (PyYAML, pytest, yfinance, pandas). Windows: `start_windows.bat`, `RUN_WINDOWS.md`.
+- Bağımlılık: `requirements.txt` (PyYAML, pytest, yfinance, pandas); `click`/`typer` kullanma (yüklü değil). Windows: `start_windows.bat`, `RUN_WINDOWS.md`.
 - `.gitignore` `*.json, *.csv, *.txt, *.sh, scripts/, data/, tests/fixtures/` yok sayar; yeni dosyanın gerçekten izlendiğini `git status` ile doğrula.
 - Sır commit etme: `config/runtime.env` yerel; örnekler `config/runtime.env.example`, `config/local.example.yaml`.
 
@@ -36,4 +37,4 @@ Always-on çekirdek. Ayrıntılar normal metinle belirtilen yerlerde; yalnız g�
 - Branch `master`, remote `origin` (github.com/aydhn/gptusa). Commit/push yalnız kullanıcı isteyince; bitişte working tree temiz.
 
 ## Navigasyon (on-demand)
-- `docs/` (~900 dosya): `PHASE_<n>_SUMMARY.md`/`_LIMITATIONS.md` faz geçmişi; `*_SAFETY_GUARDS.md`/`*_LIMITATIONS.md` modül sınırları; `ARCHITECTURE.md`, `OPERATOR_RUNBOOK.md`, `INCIDENT_RUNBOOK.md`, `CONFIGURATION.md`, `STORAGE.md`, `ROADMAP.md`. Ayrıca `usa_signal_bot/docs/`. Konuya göre Grep/Glob ile tek dosya bul; faz geçmişini bu dosyada tutma.
+- `docs/` (~935 dosya; faz tablosu `PHASES_INDEX.md`, ücretsiz veri karşılaştırması `FREE_DATA_SOURCES.md`): `PHASE_<n>_SUMMARY.md`/`_LIMITATIONS.md` faz geçmişi; `*_SAFETY_GUARDS.md`/`*_LIMITATIONS.md` modül sınırları; `ARCHITECTURE.md`, `OPERATOR_RUNBOOK.md`, `INCIDENT_RUNBOOK.md`, `CONFIGURATION.md`, `STORAGE.md`, `ROADMAP.md`. Ayrıca `usa_signal_bot/docs/`. Konuya göre Grep/Glob ile tek dosya bul; faz geçmişini bu dosyada tutma.
