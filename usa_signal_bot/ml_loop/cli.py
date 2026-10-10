@@ -77,7 +77,42 @@ def cmd_ml_loop_approve(args) -> None:
     print(f"{rec.model_id}: {rec.status} by {rec.approved_by}; activation_allowed={rec.activation_allowed}")
 
 
+def cmd_ml_loop_cycle(args) -> None:
+    from usa_signal_bot.ml_loop.auto_cycle import CycleConfig, run_cycle
+
+    cfg = CycleConfig(source=args.source, csv_dir=args.csv_dir, memberships=args.memberships, seed=args.seed, model=args.model,
+                      meta=args.meta, trials=args.trials, hypothesis_log=args.hypothesis_log, commission_bps=args.commission_bps,
+                      slippage_bps=args.slippage_bps, cash_rate=args.cash_rate, registry_dir=args.registry_dir, out_dir=args.out_dir,
+                      refresh=args.refresh, force=args.force, train_anyway=args.train_anyway)
+    rep = run_cycle(cfg)
+    if rep["status"] != "done":
+        print(f"ml-loop-cycle: {rep['status']} - {rep['message']}")
+        return
+    c = rep["candidate"]
+    print(f"Cycle {rep['date']}: data={rep['data_label']} drift_triggered={rep['drift']['triggered']} "
+          f"candidate={(c['model_id'] + ' ' + c['status']) if c else 'none'}")
+    print(f"Report: {rep['out_dir']}/cycle_report.md | activation: none; promotion only via `ml-loop-approve`. Not investment advice.")
+
+
 def setup_ml_loop_cli(subparsers) -> None:
+    y = subparsers.add_parser("ml-loop-cycle", help="One local learning cycle: drift -> retrain trigger -> CPCV candidate -> gate -> report (never activates)")
+    y.add_argument("--source", choices=["synthetic", "csv"], default="csv")
+    y.add_argument("--csv-dir", default=None)
+    y.add_argument("--memberships", default=None)
+    y.add_argument("--refresh", action="store_true", help="refresh prices via evidence/fetch.py (yfinance) first; default uses existing CSVs")
+    y.add_argument("--model", choices=["hgb", "rf"], default="hgb")
+    y.add_argument("--meta", action="store_true")
+    y.add_argument("--seed", type=int, default=7)
+    y.add_argument("--trials", type=int, default=1)
+    y.add_argument("--hypothesis-log", default=None)
+    y.add_argument("--commission-bps", type=float, default=1.0)
+    y.add_argument("--slippage-bps", type=float, default=5.0)
+    y.add_argument("--cash-rate", type=float, default=0.02)
+    y.add_argument("--registry-dir", default="data/model_registry")
+    y.add_argument("--out-dir", default=None, help="default data/ml_cycle/<UTC date>")
+    y.add_argument("--force", action="store_true", help="re-run even if today's cycle already completed")
+    y.add_argument("--train-anyway", action="store_true", help="train a gated candidate even without a drift trigger")
+    y.set_defaults(func=cmd_ml_loop_cycle)
     p = subparsers.add_parser("ml-loop-train", help="Offline purged-CV training, registry and promotion gate")
     p.add_argument("--model-id", required=True)
     p.add_argument("--source", choices=["synthetic", "csv"], default="synthetic")

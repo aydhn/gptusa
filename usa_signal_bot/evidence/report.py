@@ -26,7 +26,10 @@ from usa_signal_bot.evidence.factors_fundamental import (
 from usa_signal_bot.evidence.factors_rel import (
     beta_tilt_weights, low_turnover_mix_weights, regime_beta_weights, vol_target_beta_weights,
 )
+from usa_signal_bot.evidence.earnings_drift import EARNINGS_GRID, earnings_drift_weights
 from usa_signal_bot.evidence.fundamentals import fundamental_frames
+from usa_signal_bot.evidence.macro_regime import MACRO_GRID, macro_regime_weights
+from usa_signal_bot.evidence.sector_rotation import ETF_FAMILIES, spy_benchmark_weights
 from usa_signal_bot.evidence.hypothesis_log import HypothesisLog
 from usa_signal_bot.evidence.rates import RateLike, real_cagr
 from usa_signal_bot.evidence.spa import spa_test
@@ -73,6 +76,7 @@ class EvidenceReport:
     cash_rate_note: str = ""
     inflation: float = 0.0
     has_fundamentals: bool = False
+    notes: Optional[List[str]] = None
 
     def to_markdown(self) -> str:
         lines = ["# Strateji Kanıt Raporu (walk-forward, maliyet dahil)", "", f"> {DISCLAIMER}", ""]
@@ -96,6 +100,7 @@ class EvidenceReport:
             ("- `Değer (temel)`/`Kalite (temel)` aileleri EDGAR XBRL noktasal-zamanlı verisidir; `(vekil)` aileleri fiyat-türevlidir."
              if self.has_fundamentals else "- `value`/`quality` aileleri fiyat-türevli VEKİLDİR (temel veri yok)."),
         ]
+        lines += [f"- {n}" for n in (self.notes or [])]
         lines += ["", "| Strateji | OOS CAGR | Reel CAGR | OOS Sharpe | Sharpe %95 GA | DSR | DSR (kıyasa göre) | PBO | MaxDD | Yıllık turnover | Kıyas CAGR | Kıyas Sharpe | Karar |",
                   "|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
         for r in self.results:
@@ -173,6 +178,8 @@ def run_evidence(
     cash_rate: RateLike = 0.0,
     inflation: float = 0.0,
     fundamentals: Optional[Dict[str, dict]] = None,
+    macro: Optional[Dict[str, pd.Series]] = None,
+    etf_prices: Optional[pd.DataFrame] = None,
 ) -> EvidenceReport:
     cost = cost or CostModel()
     cfg = cfg or WalkForwardConfig()
@@ -209,11 +216,30 @@ def run_evidence(
             "Kalite (temel)": (lambda p, m, **k: quality_fundamental_weights(p, m, roe, **k), tf),
             "Değer+Kalite (temel)": (lambda p, m, **k: value_quality_weights(p, m, btp, roe, **k), tf),
         })
+    notes: List[str] = []
+    if macro:
+        strategies["Makro rejim (FRED)"] = (lambda p, m, **k: macro_regime_weights(p, m, macro, **k), MACRO_GRID)
+        notes.append(f"`Makro rejim` FRED serileri: {', '.join(sorted(macro))}; değer t-1'e gecikmeli (look-ahead yok).")
+    if fundamentals:
+        strategies["Bildirim sonrası sürüklenme"] = (
+            lambda p, m, **k: earnings_drift_weights(p, m, fundamentals, **k), EARNINGS_GRID)
+        notes.append("`Bildirim sonrası sürüklenme` 10-K/10-Q BİLDİRİM tarihini kullanır (kâr açıklama tarihi değil; tepki kısmen eskimiş olabilir).")
     if families:
         strategies = {k: v for k, v in strategies.items() if k in families}
+    # ETF families run on their own panel (aligned to the stock calendar so OOS folds/dates match); benchmark = SPY buy&hold.
+    etf_inputs: Dict[str, tuple] = {}
+    if etf_prices is not None and not etf_prices.empty:
+        ep = etf_prices.reindex(prices.index).ffill(limit=5)
+        etf_bench = spy_benchmark_weights(ep)
+        for name, (fn, grid) in ETF_FAMILIES.items():
+            if not families or name in families:
+                strategies[name] = (fn, grid)
+                etf_inputs[name] = (ep, ep.notna(), etf_bench)
+        notes.append("`(ETF)` aileleri sektör ETF panelinde çalışır; kıyas SPY al-tut (diğer ailelerde kıyas hisse evreni eşit ağırlık).")
     runs = {}
     for name, (fn, grid) in strategies.items():
-        runs[name] = run_walk_forward(prices, members, fn, grid, cost, cfg, bench_w, cash_rate)
+        px, mem, bw = etf_inputs.get(name, (prices, members, bench_w))
+        runs[name] = run_walk_forward(px, mem, fn, grid, cost, cfg, bw, cash_rate)
     n_total = sum(len(g) for _fn, g in strategies.values())
     all_trials = [wf.trial_returns for wf in runs.values() if not wf.trial_returns.empty]
     pooled = pd.concat(all_trials, axis=1) if all_trials else pd.DataFrame()
@@ -260,5 +286,5 @@ def run_evidence(
     return EvidenceReport(
         data.label, prices.shape[1], prices.shape[0], issues, cost, results,
         survivorship_warning=data.static_universe, n_trials_total=n_total, global_pbo=global_pbo, spa_p=spa_p, rc_p=rc_p,
-        cash_rate_note=("tarihsel seri" if hasattr(cash_rate, "index") else f"sabit yıllık %{float(cash_rate)*100:.2f}"), inflation=inflation, has_fundamentals=bool(fundamentals),
+        cash_rate_note=("tarihsel seri" if hasattr(cash_rate, "index") else f"sabit yıllık %{float(cash_rate)*100:.2f}"), inflation=inflation, has_fundamentals=bool(fundamentals), notes=notes,
     )

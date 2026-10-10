@@ -36,6 +36,28 @@ def _fundamentals(args):
     return load_fundamentals(args.fundamentals_dir)
 
 
+def _macro(args):
+    if not getattr(args, "macro_dir", None):
+        return None
+    from usa_signal_bot.evidence.macro_regime import fetch_macro, load_macro
+
+    if getattr(args, "fetch_macro", False):
+        print("macro fetch:", fetch_macro(args.macro_dir))
+    return load_macro(args.macro_dir) or None
+
+
+def _etf(args):
+    if not getattr(args, "etf_dir", None):
+        return None
+    from usa_signal_bot.evidence.sector_rotation import fetch_etf_prices, load_etf_prices
+
+    if getattr(args, "fetch_etf", False):
+        res = fetch_etf_prices(args.etf_dir)
+        print(f"etf fetch ok={len(res['ok'])} failed={res['failed']}")
+    df = load_etf_prices(args.etf_dir)
+    return None if df.empty else df
+
+
 def _hlog(args):
     if not getattr(args, "hypothesis_log", None):
         return None
@@ -55,7 +77,7 @@ def cmd_evidence_run(args) -> None:
     report = run_evidence(data, CostModel(args.commission_bps, args.slippage_bps), seed=args.seed,
                           families=args.families.split(",") if args.families else None,
                           hypothesis_log=_hlog(args), run_id=f"run-seed{args.seed}",
-                          cash_rate=_cash_rate(args), fundamentals=_fundamentals(args), inflation=_inflation(args, data))
+                          cash_rate=_cash_rate(args), fundamentals=_fundamentals(args), macro=_macro(args), etf_prices=_etf(args), inflation=_inflation(args, data))
     text = report.to_markdown()
     print(text)
     if args.write:
@@ -112,6 +134,10 @@ def setup_evidence_cli(subparsers) -> None:
     p.add_argument("--inflation", type=float, default=0.025, help="Annual inflation assumption for real CAGR (default 2.5%%)")
     p.add_argument("--inflation-csv", default=None, help="FRED CPIAUCSL-style CSV (index level); realised inflation over the data span overrides --inflation")
     p.add_argument("--fundamentals-dir", default=None, help="Compact EDGAR facts (evidence-fetch); adds true value/quality families")
+    p.add_argument("--macro-dir", default=None, help="Dir with FRED CSVs (T10Y2Y, VIXCLS, BAA10Y); adds the macro regime family")
+    p.add_argument("--fetch-macro", action="store_true", help="download/refresh the FRED CSVs into --macro-dir (public CSV endpoint)")
+    p.add_argument("--etf-dir", default=None, help="Dir with sector ETF + SPY CSVs; adds the sector rotation families")
+    p.add_argument("--fetch-etf", action="store_true", help="download/refresh sector ETFs + SPY (yfinance) into --etf-dir")
     p.add_argument("--write", action="store_true")
     p.add_argument("--out", default="data/evidence/evidence_report.md")
     p.set_defaults(func=cmd_evidence_run)

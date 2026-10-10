@@ -79,7 +79,7 @@ def cache_file_age_seconds(path: Path) -> Optional[float]:
     """Returns the age of a cache file in seconds, or None if it doesn't exist."""
     if not path.exists():
         return None
-    return time.time() - path.stat().st_mtime
+    return max(0.0, time.time() - path.stat().st_mtime)  # mtime can run slightly ahead of time.time()
 
 def cache_file_size(path: Path) -> Optional[int]:
     """Returns the size of a cache file in bytes, or None if it doesn't exist."""

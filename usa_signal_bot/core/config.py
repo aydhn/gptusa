@@ -186,19 +186,6 @@ def _apply_dataclass_configs(config: AppConfig, merged_cfg_dict: dict) -> None:
             **merged_cfg_dict["phase105_notifications"]
         )
 
-    if "basket_simulation" in merged_cfg_dict:
-        config.basket_simulation = BasketSimulationConfigSchema(
-            **merged_cfg_dict["basket_simulation"]
-        )
-    if "allocation_replay" in merged_cfg_dict:
-        config.allocation_replay = AllocationReplayConfig(
-            **merged_cfg_dict["allocation_replay"]
-        )
-    if "allocation_drift" in merged_cfg_dict:
-        config.allocation_drift = AllocationDriftConfigSchema(
-            **merged_cfg_dict["allocation_drift"]
-        )
-
     if "regime_monitoring" in merged_cfg_dict:
         config.regime_monitoring = RegimeMonitoringConfig(
             **merged_cfg_dict["regime_monitoring"]

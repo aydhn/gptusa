@@ -66,7 +66,38 @@ def cmd_decision_report(args) -> None:
 NOTICE_TR = "Yerel simüle ledger; emir/broker yok. Araştırma çıktısıdır, yatırım tavsiyesi değildir."
 
 
+def cmd_decision_package(args) -> None:
+    """Dated report package folder (markdown + CSV): hypothesis summary, why-trace, active-risk CSV, real returns, cash interest."""
+    from usa_signal_bot.decision.package import build_package
+    from usa_signal_bot.evidence.cli import _cash_rate, _inflation
+
+    data = load_csv_market(args.csv_dir, args.memberships) if args.source == "csv" else synthetic_market(seed=args.seed)
+    members = PointInTimeUniverse.from_frame(data.memberships).membership_matrix(data.prices.index, data.prices.columns)
+    out = build_package(data.prices, members, Path(args.out_dir), hypothesis_log=Path(args.hypothesis_log) if args.hypothesis_log else None,
+                        evidence_report=Path(args.evidence_report) if args.evidence_report else None, cash_rate=_cash_rate(args),
+                        inflation=_inflation(args, data), cash=args.cash, cost=CostModel(args.commission_bps, args.slippage_bps))
+    print(f"Package written to {out}")
+    print(NOTICE_TR)
+
+
 def setup_decision_cli(subparsers) -> None:
+    k = subparsers.add_parser("decision-package", help="Dated report package (markdown + CSV) from the simulated ledger and hypothesis log")
+    k.add_argument("--source", choices=["synthetic", "csv"], default="synthetic")
+    k.add_argument("--csv-dir", default=None)
+    k.add_argument("--memberships", default=None)
+    k.add_argument("--seed", type=int, default=7)
+    k.add_argument("--cash", type=float, default=100000.0)
+    k.add_argument("--cash-rate", type=float, default=0.02)
+    k.add_argument("--cash-rate-csv", default=None)
+    k.add_argument("--inflation", type=float, default=0.025)
+    k.add_argument("--inflation-csv", default=None)
+    k.add_argument("--commission-bps", type=float, default=1.0)
+    k.add_argument("--slippage-bps", type=float, default=5.0)
+    k.add_argument("--hypothesis-log", default=None)
+    k.add_argument("--evidence-report", default=None)
+    k.add_argument("--out-dir", default="data/report_packages", help="package goes to <out-dir>/<date>/")
+    k.set_defaults(func=cmd_decision_package)
+
     r = subparsers.add_parser("decision-report", help="Decision journal, why-position trace, daily active-risk CSV, weekly summary (simulated)")
     r.add_argument("--source", choices=["synthetic", "csv"], default="synthetic")
     r.add_argument("--csv-dir", default=None)

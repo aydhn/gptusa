@@ -31,3 +31,34 @@ python -m usa_signal_bot evidence-run --source csv --csv-dir data/prices400 --ca
 python -m usa_signal_bot ml-loop-cpcv --source csv --csv-dir data/prices --model rf --meta --hypothesis-log data/evidence/hyp_real.jsonl
 python -m usa_signal_bot decision-report --source csv --csv-dir data/prices --cash-rate-csv data/evidence/DTB3.csv --inflation-csv data/evidence/CPIAUCSL.csv
 ```
+
+---
+
+# Ek Bölüm — 2026-10-10 (ikinci tur)
+
+> Araştırma çıktısıdır; yatırım tavsiyesi değildir, kâr garantisi yoktur. Emir/broker/canlı yok.
+
+## Yapılan
+- **Fiyat doğrulama (37 uyarı):** kök neden bölünme uyuşmazlığı DEĞİL; 37'nin tamamı `UNEXPLAINED_JUMP` idi ve çoğu gerçek hareket (Mart 2020 enerji çöküşü, VRTX/NFLX/CVNA kazanç günleri, MRNA +%177). `validate_adjusted_prices` artık bölünme tarihine ±3 gün tolerans verir, bölünme oranı biçiminde olmayan büyük hareketi `LARGE_MOVE` sayar (varsayılan raporlanmaz). 400 hisse: 37 → 1 (HTHIY ADR, ≈-%49,5, elle incelenmeli). Test: `tests/test_evidence_price_validation.py`.
+- **Ölü kod:** `app/runtime.py` ve `core/runtime_state.py` (importer yok, `config.runtime.*` okuyordu) silindi; `core/config.py`'deki tanımsız üç şema bloğu (NameError riski) kaldırıldı. `AppConfig` onarılmadı (kullanıcısı yok).
+- **Yeni aday aileler** (`evidence/macro_regime.py`, `sector_rotation.py`, `earnings_drift.py`): hepsi aynı walk-forward+maliyet+purge+DTB3 hattında, hipotez günlüğünde (81 deneme), sızıntı testli (`tests/test_evidence_new_families.py`).
+- **Öğrenme döngüsü:** `ml-loop-cycle` (`ml_loop/auto_cycle.py`; drift→tetik→CPCV→kapı→rapor; aynı gün tekrar = no-op; aktivasyon yok, terfi yalnız `ml-loop-approve`). Runbook: `docs/AUTO_CYCLE_RUNBOOK.md`.
+- **Rapor paketi:** `decision-package` (`decision/package.py`): karar günlüğü, neden-izi, kıyasa göre sapma+risk bütçesi, hipotez özeti, reel getiri; markdown/CSV.
+- **Test:** `test_data_cache` flaky kökü: Windows dosya mtime'ı `time.time()`'dan ileri → negatif yaş (`cache_file_age_seconds` sıfıra sıkıştırıldı; 30/30 geçti, öncesi ~2/15 hata). 10 yinelenen test adı `_pkg`/`_pq` ekiyle benzersizleştirildi.
+
+## Sonuç (400 hisse, 81 deneme, PBO ≈ 0,29, SPA p ≈ 0,15, White RC p ≈ 0,13)
+| Aile | OOS CAGR / Sharpe | Kıyas CAGR / Sharpe | Kıyasa göre DSR | Karar |
+|---|---|---|---|---|
+| Makro rejim (FRED) | ~%14,6 / 1,44 | ~%20,6 / 1,16 | ≈0 | NEGATİF |
+| Dosyalama sonrası sürüklenme | ~%19,8 / 1,13 | ~%20,6 / 1,16 | ≈0 | NEGATİF |
+| Sektör momentum (ETF) | ~%10,6 / 0,65 | ~%14,8 / 0,92 | ≈0 | NEGATİF |
+| Sektör düşük vol (ETF) | ~%11,7 / 0,87 | ~%14,8 / 0,92 | ≈0 | NEGATİF |
+
+**Kıyası geçen kanıtlı edge YOK** (eşik: kıyasa göre DSR≥0,95 ve SPA p≤0,05; hiçbiri sağlamadı). Makro rejim Sharpe'ı yüksek, maxDD ≈ -%12 ama nakitte beklerken CAGR'dan vazgeçiyor.
+
+## Belirsiz / sınırlar
+- ETF aileleri SPY'a, diğerleri 400'lük eşit ağırlığa göre ölçülür; havuzlanmış SPA tam eşdeğer değil.
+- Hayatta kalma yanlılığı devam ediyor; kazanç ailesi 10-K/10-Q dosyalama tarihi kullanır (duyuru tarihi değil), tepki kısmen bayat.
+- SEC_USER_AGENT bu turda yok; yeni SEC isteği yapılmadı. HTHIY elle incelenmedi.
+- Hipotez günlüğü değil, simüle defterden gelen kıyasa göre istatistikler paket raporunda kullanılır (günlük ham Sharpe tutar).
+- Test: `tests` 4078 → 4100 geçti/2 atlandı; `usa_signal_bot/tests` 123 → 123 geçti.
