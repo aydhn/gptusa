@@ -4,42 +4,7 @@ from unittest.mock import patch, MagicMock
 import sys
 
 
-# Provide mock for enums if missing
-class CatchAllMockEnum:
-    def __init__(self, value=""):
-        self.value = value
-
-    def __getattr__(self, name):
-        return CatchAllMockEnum(name)
-
-
-if "usa_signal_bot.core.enums" not in sys.modules:
-    sys.modules["usa_signal_bot.core.enums"] = CatchAllMockEnum()
-
-
-if "pandas" not in sys.modules:
-    sys.modules["pandas"] = MagicMock()
-if "yfinance" not in sys.modules:
-    sys.modules["yfinance"] = MagicMock()
-if "pytest" not in sys.modules:
-    sys.modules["pytest"] = MagicMock()
-
-
-class ProviderQualityValidationError(Exception):
-    pass
-
-
-if "usa_signal_bot.core.exceptions" not in sys.modules:
-
-    class MockExceptions:
-        ProviderQualityValidationError = ProviderQualityValidationError
-
-    sys.modules["usa_signal_bot.core.exceptions"] = MockExceptions()
-else:
-    sys.modules["usa_signal_bot.core.exceptions"].ProviderQualityValidationError = (
-        ProviderQualityValidationError
-    )
-
+from usa_signal_bot.core.exceptions import ProviderQualityValidationError
 from usa_signal_bot.provider_quality.freshness_scorer import (
     score_freshness,
     FreshnessParameters,

@@ -30,7 +30,7 @@ def load_rate_csv(path: str | Path, percent: bool = True) -> pd.Series:
 def fetch_fred_csv(series_id: str, out_path: str | Path, timeout: int = 30) -> Path:
     if not series_id.replace("_", "").isalnum():
         raise ValueError("bad FRED series id")
-    req = urllib.request.Request(FRED_CSV.format(sid=series_id), headers={"User-Agent": "gptusa-research"})
+    req = urllib.request.Request(FRED_CSV.format(sid=series_id), headers={"User-Agent": "Mozilla/5.0 gptusa-research"})
     with urllib.request.urlopen(req, timeout=timeout) as resp:  # noqa: S310 - fixed https FRED host
         data = resp.read()
     out = Path(out_path)
@@ -42,6 +42,17 @@ def fetch_fred_csv(series_id: str, out_path: str | Path, timeout: int = 30) -> P
 def yoy_inflation_from_index(level: pd.Series) -> pd.Series:
     """Year-over-year inflation from a price-index level series (monthly CPI -> 12-period change)."""
     return level.pct_change(12).dropna()
+
+
+def average_inflation(level: pd.Series, start, end) -> float:
+    """Annualised (geometric) inflation of an index level between ``start`` and ``end`` (last value known at each date)."""
+    level = level.sort_index()
+    a = level[:pd.Timestamp(start)]
+    b = level[:pd.Timestamp(end)]
+    if a.empty or b.empty:
+        raise ValueError("index level does not cover the requested span")
+    years = max((pd.Timestamp(end) - pd.Timestamp(start)).days / 365.25, 1e-9)
+    return float((b.iloc[-1] / a.iloc[-1]) ** (1.0 / years) - 1.0)
 
 
 def align_rate(rate: RateLike, index: pd.DatetimeIndex) -> pd.Series:

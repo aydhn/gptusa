@@ -2,14 +2,10 @@ import pytest
 import sys
 from unittest.mock import MagicMock
 
-# Mock out core.enums to avoid ImportError during test collection
 class DummyEnum:
     def __init__(self, value):
         self.value = value
 
-mock_enums = MagicMock()
-mock_enums.ProviderQualityRiskFlag = DummyEnum
-sys.modules['usa_signal_bot.core.enums'] = mock_enums
 
 from usa_signal_bot.provider_quality.score_explanation import explain_quality_score
 from usa_signal_bot.provider_quality.phase109_models import ProviderDataQualityScore, DataQualityScoreComponent

@@ -68,8 +68,8 @@ class TestSchemaValidityScorer(unittest.TestCase):
     @patch("usa_signal_bot.provider_quality.schema_validity_scorer.datetime")
     def test_score_schema_validity_no_errors(self, mock_datetime, mock_create_id):
         mock_create_id.return_value = "dq_comp_test1"
-        mock_datetime.datetime.utcnow.return_value = MagicMock(
-            isoformat=lambda: "2023-01-01T00:00:00"
+        mock_datetime.datetime.now.return_value = MagicMock(
+            isoformat=lambda: "2023-01-01T00:00:00+00:00"
         )
 
         result = score_schema_validity([], provider_name="TEST_PROV", symbol="BTC")
@@ -95,8 +95,8 @@ class TestSchemaValidityScorer(unittest.TestCase):
     @patch("usa_signal_bot.provider_quality.schema_validity_scorer.datetime")
     def test_score_schema_validity_with_errors(self, mock_datetime, mock_create_id):
         mock_create_id.return_value = "dq_comp_test2"
-        mock_datetime.datetime.utcnow.return_value = MagicMock(
-            isoformat=lambda: "2023-01-01T00:00:00"
+        mock_datetime.datetime.now.return_value = MagicMock(
+            isoformat=lambda: "2023-01-01T00:00:00+00:00"
         )
 
         errors = ["Missing field X", "Invalid type for Y"]
@@ -117,8 +117,8 @@ class TestSchemaValidityScorer(unittest.TestCase):
     @patch("usa_signal_bot.provider_quality.schema_validity_scorer.datetime")
     def test_schema_validity_scorer_to_text(self, mock_datetime, mock_create_id):
         mock_create_id.return_value = "dq_comp_test3"
-        mock_datetime.datetime.utcnow.return_value = MagicMock(
-            isoformat=lambda: "2023-01-01T00:00:00"
+        mock_datetime.datetime.now.return_value = MagicMock(
+            isoformat=lambda: "2023-01-01T00:00:00+00:00"
         )
 
         result = score_schema_validity(["Error1"], provider_name="PROV")

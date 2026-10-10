@@ -3,21 +3,8 @@ from unittest.mock import patch, MagicMock
 
 class TestAllocationConfigValidation(unittest.TestCase):
     def setUp(self):
-        # Dynamically patch sys.modules inside the test file to avoid permanent pollution
-        self.patcher_enums = patch.dict('sys.modules', {'usa_signal_bot.core.enums': MagicMock()})
-        self.patcher_models = patch.dict('sys.modules', {'usa_signal_bot.portfolio.portfolio_models': MagicMock()})
-        self.patcher_candidates = patch.dict('sys.modules', {'usa_signal_bot.portfolio.portfolio_candidates': MagicMock()})
-
-        self.patcher_enums.start()
-        self.patcher_models.start()
-        self.patcher_candidates.start()
-
-        # We also need to patch core.exceptions
-        import usa_signal_bot.core.exceptions
-        class DummyAllocationMethodError(Exception): pass
-        self.dummy_exception = DummyAllocationMethodError
-        self.patcher_exc = patch('usa_signal_bot.core.exceptions.AllocationMethodError', DummyAllocationMethodError, create=True)
-        self.patcher_exc.start()
+        from usa_signal_bot.core.exceptions import AllocationMethodError
+        self.dummy_exception = AllocationMethodError
 
         from usa_signal_bot.portfolio.allocation_methods import validate_allocation_config, AllocationConfig
         self.validate_allocation_config = validate_allocation_config
@@ -40,10 +27,7 @@ class TestAllocationConfigValidation(unittest.TestCase):
         )
 
     def tearDown(self):
-        self.patcher_enums.stop()
-        self.patcher_models.stop()
-        self.patcher_candidates.stop()
-        self.patcher_exc.stop()
+        pass
 
     def test_valid_config(self):
         # Should not raise any exception

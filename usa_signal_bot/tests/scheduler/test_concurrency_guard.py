@@ -23,7 +23,7 @@ def test_guard_context_handles_release_exception():
     # Make release_if_owned raise an Exception (simulate what caused the bare except pass)
     with patch.object(guard, 'acquire_or_block', return_value=mock_acq_result):
         with patch.object(guard, 'release_if_owned', side_effect=FileNotFoundError("Lock file missing")):
-            owner = RunIdentity(run_id="test_run", run_type=RunLockScope.GLOBAL)
+            owner = RunIdentity(run_id="test_run", run_type=RunLockScope.GLOBAL, owner="t", hostname="h", process_id=1, created_at_utc="2026-01-01T00:00:00Z")
             # This should not raise an exception, the bare except swallows it
             with guard.guard_context(RunLockScope.GLOBAL, owner):
                 pass

@@ -12,4 +12,4 @@ def test_filter_unprotected_paths():
     paths = [Path(".env"), Path("data/runtime/scans/scan_1.json")]
     filtered = filter_unprotected_paths(paths)
     assert len(filtered) == 1
-    assert str(filtered[0]) == "data/runtime/scans/scan_1.json"
+    assert filtered[0].as_posix() == "data/runtime/scans/scan_1.json"

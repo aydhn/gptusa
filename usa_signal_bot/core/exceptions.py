@@ -1010,3 +1010,41 @@ class AttributionValidationError(Exception):
 
 
 from usa_signal_bot.core._recovered_exceptions import *  # noqa: E402,F401,F403
+
+
+class DataReadinessError(USASignalBotError):
+    pass
+
+
+class DryAdmissionDossierValidationError(USASignalBotError):
+    pass
+
+
+class MLFoundationStoreError(USASignalBotError):
+    pass
+
+
+class MLFoundationValidationError(USASignalBotError):
+    pass
+
+
+class RegimeFinalClosureIngestionError(USASignalBotError):
+    pass
+
+
+class TaskQueueValidationError(USASignalBotError):
+    pass
+
+
+class WorkloadBudgetError(USASignalBotError):
+    pass
+
+
+# DataValidationError was first defined as a bare Exception subclass in the recovered block; the root-derived
+# definition below is the effective one for importers.
+class DataValidationError(USASignalBotError):  # noqa: F811
+    pass
+
+
+class UnsupportedOperationError(USASignalBotError):  # noqa: F811
+    pass

@@ -1,7 +1,6 @@
 import sys
 from unittest.mock import MagicMock
 
-sys.modules["usa_signal_bot.core.enums"] = MagicMock()
 
 import pytest
 from usa_signal_bot.transaction_costs.cost_validation import (
@@ -26,7 +25,6 @@ def test_validate_slippage_curve_report_error():
     import sys
     from unittest.mock import MagicMock
 
-    sys.modules["usa_signal_bot.core.enums"] = MagicMock()
     from usa_signal_bot.transaction_costs.cost_models import (
         SlippageCurve,
         SlippageCurvePoint,
@@ -62,7 +60,6 @@ def test_validate_slippage_curve_report_error_slippage():
     import sys
     from unittest.mock import MagicMock
 
-    sys.modules["usa_signal_bot.core.enums"] = MagicMock()
     from usa_signal_bot.transaction_costs.cost_models import (
         SlippageCurve,
         SlippageCurvePoint,
@@ -98,7 +95,6 @@ def test_validate_market_impact_report_error_empty_symbol():
     import sys
     from unittest.mock import MagicMock
 
-    sys.modules["usa_signal_bot.core.enums"] = MagicMock()
     from usa_signal_bot.transaction_costs.cost_models import MarketImpactEstimate
     from usa_signal_bot.transaction_costs.cost_validation import (
         validate_market_impact_report,
@@ -129,7 +125,6 @@ def test_validate_market_impact_report_error_negative_bps():
     import sys
     from unittest.mock import MagicMock
 
-    sys.modules["usa_signal_bot.core.enums"] = MagicMock()
     from usa_signal_bot.transaction_costs.cost_models import MarketImpactEstimate
     from usa_signal_bot.transaction_costs.cost_validation import (
         validate_market_impact_report,
@@ -160,7 +155,6 @@ def test_validate_market_impact_report_error_negative_usd():
     import sys
     from unittest.mock import MagicMock
 
-    sys.modules["usa_signal_bot.core.enums"] = MagicMock()
     from usa_signal_bot.transaction_costs.cost_models import MarketImpactEstimate
     from usa_signal_bot.transaction_costs.cost_validation import (
         validate_market_impact_report,

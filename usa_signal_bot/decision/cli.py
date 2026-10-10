@@ -26,7 +26,63 @@ def cmd_decision_simulate(args) -> None:
     print("Local simulated ledger only: no orders, no broker, not investment advice.")
 
 
+def cmd_decision_report(args) -> None:
+    """Simulate on the local ledger and write journal (JSONL), daily active-risk CSV, why-trace and weekly summary (MD)."""
+    import pandas as pd
+
+    from usa_signal_bot.decision.regime import classify_regime
+    from usa_signal_bot.decision.reporting import (
+        daily_active_report, explain_positions, latest_evidence_note, weekly_summary, write_decision_journal,
+    )
+    from usa_signal_bot.evidence.cli import _cash_rate, _inflation
+
+    data = load_csv_market(args.csv_dir, args.memberships) if args.source == "csv" else synthetic_market(seed=args.seed)
+    prices = data.prices
+    members = PointInTimeUniverse.from_frame(data.memberships).membership_matrix(prices.index, prices.columns)
+    cash = _cash_rate(args)
+    ledger = PaperLedger(initial_cash=args.cash, cost=CostModel(args.commission_bps, args.slippage_bps),
+                         cash_rate_annual=float(cash.iloc[-1]) if hasattr(cash, "iloc") else float(cash))
+    decisions = simulate_paper(prices, members, DecisionConfig(), ledger)
+    out = Path(args.out_dir)
+    out.mkdir(parents=True, exist_ok=True)
+    write_decision_journal(decisions, prices.index[: len(decisions)], out / "decision_journal.jsonl")
+    bench = prices.pct_change(fill_method=None).where(members).mean(axis=1).fillna(0.0)
+    inflation = _inflation(args, data)
+    daily = daily_active_report(pd.Series(ledger.equity_curve), bench, cash, inflation)
+    daily.to_csv(out / "daily_active_risk.csv", index_label="date")
+    last = len(decisions) - 1
+    score = (prices.shift(21) / prices.shift(126) - 1.0).where(members & prices.notna())
+    vol = prices.pct_change(fill_method=None).rolling(20, min_periods=20).std()
+    why = explain_positions(decisions[last], {s: float(v) for s, v in score.iloc[last].dropna().items()},
+                            {s: float(v) for s, v in vol.iloc[last].dropna().items()})
+    header = f"# Neden bu pozisyon ({prices.index[last].date()} kararı)"
+    (out / "why_positions.md").write_text("\n\n".join([header, f"> {NOTICE_TR}", why]) + "\n", encoding="utf-8")
+    note = latest_evidence_note(Path(args.evidence_report) if args.evidence_report else None)
+    (out / "weekly_summary.md").write_text(weekly_summary(daily, inflation, note, interest_earned=ledger.interest_earned), encoding="utf-8")
+    print(f"Reports written to {out}: decision_journal.jsonl, daily_active_risk.csv, why_positions.md, weekly_summary.md")
+    print(NOTICE_TR)
+
+
+NOTICE_TR = "Yerel simüle ledger; emir/broker yok. Araştırma çıktısıdır, yatırım tavsiyesi değildir."
+
+
 def setup_decision_cli(subparsers) -> None:
+    r = subparsers.add_parser("decision-report", help="Decision journal, why-position trace, daily active-risk CSV, weekly summary (simulated)")
+    r.add_argument("--source", choices=["synthetic", "csv"], default="synthetic")
+    r.add_argument("--csv-dir", default=None)
+    r.add_argument("--memberships", default=None)
+    r.add_argument("--seed", type=int, default=7)
+    r.add_argument("--cash", type=float, default=100000.0)
+    r.add_argument("--cash-rate", type=float, default=0.02)
+    r.add_argument("--cash-rate-csv", default=None)
+    r.add_argument("--inflation", type=float, default=0.025)
+    r.add_argument("--inflation-csv", default=None)
+    r.add_argument("--commission-bps", type=float, default=1.0)
+    r.add_argument("--slippage-bps", type=float, default=5.0)
+    r.add_argument("--evidence-report", default=None, help="Evidence markdown whose **Sonuç:** line is quoted in the weekly summary")
+    r.add_argument("--out-dir", default="data/reports")
+    r.set_defaults(func=cmd_decision_report)
+
     p = subparsers.add_parser("decision-simulate", help="Run the decision pipeline on the local paper ledger (simulated)")
     p.add_argument("--source", choices=["synthetic", "csv"], default="synthetic")
     p.add_argument("--csv-dir", default=None)

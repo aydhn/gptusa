@@ -39,7 +39,7 @@ def test_dataclass_to_dict():
     assert d["text"] == "hello"
     assert d["enum_val"] == "VALUE_A"
     assert d["nested"] == {"inner_val": 42}
-    assert d["path_val"] == "/tmp/test"
+    assert d["path_val"].replace("\\", "/") == "/tmp/test"
     assert d["a_list"] == [1, "VALUE_A", {"inner_val": 42}]
 
 def test_dataclass_to_json():

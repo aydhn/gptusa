@@ -1,9 +1,5 @@
 """Phase 139 Evaluation Metrics"""
 from typing import Any
-import sys
-from unittest.mock import MagicMock
-if 'pandas' not in sys.modules:
-    sys.modules['pandas'] = MagicMock()
 import pandas
 from .phase139_models import OfflineEvaluationMetricResult, BaselineFittedModelArtifact, OfflineEvaluationMetricKind, OfflineEvaluationStatus
 

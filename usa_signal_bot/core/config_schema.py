@@ -3232,6 +3232,7 @@ class Phase160NotificationsConfig:
     preview_only: bool = True
     telegram_real_send: bool = False
 
+@dataclass
 class AppConfig:
     final_closure: FinalClosureConfig = field(default_factory=FinalClosureConfig)
     phase160_final_policy: Phase160FinalPolicyConfig = field(default_factory=Phase160FinalPolicyConfig)

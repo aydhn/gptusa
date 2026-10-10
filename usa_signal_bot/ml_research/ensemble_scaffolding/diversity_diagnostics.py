@@ -1,4 +1,4 @@
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 from .phase142_models import (
     CandidateDiversityProfile,
     DiversityMetricKind,

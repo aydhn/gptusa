@@ -19,3 +19,6 @@ def ensemble_readiness_gate_to_text(item: EnsembleReadinessGate, limit: int = 30
 def ensemble_scaffolding_context_to_text(item: EnsembleScaffoldingContext, limit: int = 300) -> str: return f"Context {item.context_id}"
 def ensemble_scaffolding_full_review_to_text(item: EnsembleScaffoldingFullReview, limit: int = 300) -> str: return f"Review {item.review_id}"
 def ensemble_scaffolding_store_summary_to_text(summary: Dict[str, Any]) -> str: return f"Store Summary: {summary}"
+
+def ensemble_scaffolding_limitations_text() -> str:
+    return "Phase 142 is non-activation ensemble scaffolding only. No trade signals."

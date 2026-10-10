@@ -42,7 +42,7 @@ def test_normalize_asset_type():
     assert normalize_asset_type("") == AssetType.STOCK # default
 
     with pytest.raises(SymbolValidationError):
-        normalize_asset_type("crypto")
+        normalize_asset_type("bond")
 
 def test_normalize_currency():
     assert normalize_currency("") == "USD"

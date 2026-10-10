@@ -57,6 +57,23 @@ def build_ensemble_readiness_rules(
         metadata={}
     )
     rules.append(r2)
+    r3 = EnsembleReadinessRule(
+        rule_id=create_ensemble_readiness_rule_id(),
+        created_at_utc=_now(),
+        rule_kind=EnsembleReadinessRuleKind.CALIBRATION_DIAGNOSTICS_INGESTION_VALID,
+        name="Calibration Diagnostics Ingestion Valid",
+        status=EnsembleReadinessStatus.PASSED if ingestion.ready_for_phase142 else EnsembleReadinessStatus.FAILED,
+        required=True,
+        passed=bool(ingestion.ready_for_phase142),
+        expected_value=True,
+        observed_value=bool(ingestion.ready_for_phase142),
+        rationale="Upstream calibration diagnostics must be ready",
+        warnings=[],
+        errors=[],
+        risk_flags=[],
+        metadata={}
+    )
+    rules.append(r3)
     return rules
 
 def build_ensemble_readiness_gate(

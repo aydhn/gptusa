@@ -53,7 +53,7 @@ def cache_exists(path: Path) -> bool:
 
 def is_cache_fresh(path: Path, ttl_seconds: int) -> bool:
     """Checks if a cache file is fresher than ttl_seconds."""
-    if not cache_exists(path):
+    if ttl_seconds <= 0 or not cache_exists(path):  # ttl 0 is never fresh (file mtime can be ahead of time.time())
         return False
     mtime = path.stat().st_mtime
     age = time.time() - mtime

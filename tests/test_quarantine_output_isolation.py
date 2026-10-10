@@ -11,11 +11,11 @@ from usa_signal_bot.paper_quarantine.output_isolation import (
 
 def test_root():
     root = quarantine_output_root(Path("/data"))
-    assert str(root) == "/data/paper_quarantine/outputs"
+    assert root.as_posix() == "/data/paper_quarantine/outputs"
 
 def test_dir():
     d = quarantine_output_dir(Path("/data"), "c1")
-    assert str(d) == "/data/paper_quarantine/outputs/c1"
+    assert d.as_posix() == "/data/paper_quarantine/outputs/c1"
 
 def test_valid_path():
     data_root = Path("/data")

@@ -1,8 +1,9 @@
+from usa_signal_bot.data_providers.adapters.skeleton_mixin import MetadataOnlySkeletonMixin
 
 from usa_signal_bot.data_providers.interfaces.market_data import MarketDataProviderBase
 from usa_signal_bot.core.enums import DataProviderName, DataProviderKind, DataProviderCapability
 
-class YFinanceProviderSkeleton(MarketDataProviderBase):
+class YFinanceProviderSkeleton(MetadataOnlySkeletonMixin, MarketDataProviderBase):
     provider_name = DataProviderName.YFINANCE
     provider_kind = DataProviderKind.MARKET_DATA
     skeleton_only = True

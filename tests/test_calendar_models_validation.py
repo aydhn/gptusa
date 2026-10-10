@@ -21,11 +21,6 @@ class MockExceptions:
         pass
 
 
-# Mocking missing modules to bypass ImportError
-if "usa_signal_bot.core.enums" not in sys.modules:
-    sys.modules["usa_signal_bot.core.enums"] = CatchAllMockEnum()
-if "usa_signal_bot.core.exceptions" not in sys.modules:
-    sys.modules["usa_signal_bot.core.exceptions"] = MockExceptions()
 
 from usa_signal_bot.calendar.calendar_models import (
     MarketHoliday,

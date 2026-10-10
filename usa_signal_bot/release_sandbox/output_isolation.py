@@ -26,14 +26,14 @@ def validate_sandbox_output_path(path: Path, data_root: Path) -> List[str]:
     return warnings
 
 def write_sandbox_output_json(path: Path, payload: Dict[str, Any]) -> Path:
-    if "release_sandbox/outputs" not in str(path):
+    if "release_sandbox/outputs" not in Path(path).as_posix():
         raise SandboxOutputIsolationError(f"Refusing to write JSON to unsafe path: {path}")
     with open(path, 'w', encoding='utf-8') as f:
         json.dump(payload, f, indent=2)
     return path
 
 def write_sandbox_output_text(path: Path, text: str) -> Path:
-    if "release_sandbox/outputs" not in str(path):
+    if "release_sandbox/outputs" not in Path(path).as_posix():
         raise SandboxOutputIsolationError(f"Refusing to write text to unsafe path: {path}")
     with open(path, 'w', encoding='utf-8') as f:
         f.write(text)

@@ -83,6 +83,8 @@ def ingest_provider_cache_review_payload(payload: Dict[str, Any], source_path: O
 def ingest_latest_provider_cache_review_from_store(data_root: Any) -> ProviderCacheIngestionResult:
     from usa_signal_bot.provider_quality.provider_quality_store import get_latest_provider_quality_review, read_provider_quality_full_review_json
 
+    if data_root is None:
+        return None
     path = get_latest_provider_quality_review(data_root)
     if path:
         payload = read_provider_quality_full_review_json(path)

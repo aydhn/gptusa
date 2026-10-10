@@ -16,7 +16,11 @@ _ORDER = {"NONE": 0, "LOW": 1, "MEDIUM": 2, "HIGH": 3, "BLOCKING": 4}
 
 
 def _sev(item) -> str:
-    s = getattr(item, "severity", None)
+    s = None
+    for attr in ("severity", "drift_severity", "calibration_severity"):  # ml_research drift/calibration result fields
+        s = getattr(item, attr, None)
+        if s is not None:
+            break
     return str(getattr(s, "value", s) or "NONE").upper()
 
 
@@ -40,7 +44,7 @@ def evaluate_retrain(results: Iterable, policy: Optional[RetrainPolicy] = None) 
     reasons: List[str] = []
     for it in items:
         if _ORDER.get(_sev(it), 0) >= threshold:
-            reasons.append(f"{getattr(it, 'metric_name', 'metric')}: {_sev(it)}")
+            reasons.append(f"{getattr(it, 'metric_name', None) or getattr(it, 'drift_kind', None) or 'metric'}: {_sev(it)}")
     medium = sum(1 for it in items if _ORDER.get(_sev(it), 0) >= 2)
     if not reasons and medium >= policy.min_medium_count:
         reasons.append(f"{medium} metrics at MEDIUM or worse")

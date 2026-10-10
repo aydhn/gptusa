@@ -28,6 +28,16 @@ class PromotionThresholds:
 
 
 @dataclass
+class CpcvThresholds:
+    """Gate for tree models judged on CPCV backtest paths (excess return vs benchmark)."""
+
+    min_dsr_excess: float = 0.95
+    max_spa_p: float = 0.05
+    min_median_path_excess_sharpe: float = 0.0
+    min_positive_path_fraction: float = 0.6
+
+
+@dataclass
 class ModelRecord:
     model_id: str
     created_at: str
@@ -79,6 +89,25 @@ class ModelRegistry:
             reasons.append("too few positive folds")
         if th.min_dsr is not None and m.get("dsr", float("-inf")) < th.min_dsr:
             reasons.append(f"dsr {m.get('dsr')} < {th.min_dsr}")
+        rec.gate_reasons = reasons
+        rec.status = ELIGIBLE if not reasons else REJECTED
+        self._save(rec)
+        return rec
+
+    def evaluate_cpcv_promotion(self, model_id: str, th: CpcvThresholds) -> ModelRecord:
+        """CPCV+DSR+SPA gate. Passing only makes the model ELIGIBLE; a human still has to approve it."""
+        rec = self.get(model_id)
+        m, reasons = rec.metrics, []
+        if not rec.leakage_clean:
+            reasons.append("leakage check not clean")
+        if not m.get("median_path_excess_sharpe", float("-inf")) > th.min_median_path_excess_sharpe:
+            reasons.append("median path excess Sharpe too low")
+        if not m.get("positive_path_fraction", 0.0) >= th.min_positive_path_fraction:
+            reasons.append("too few positive paths")
+        if not m.get("dsr_excess", float("-inf")) >= th.min_dsr_excess:
+            reasons.append(f"dsr_excess {m.get('dsr_excess')} < {th.min_dsr_excess}")
+        if not m.get("spa_p", float("inf")) <= th.max_spa_p:
+            reasons.append(f"spa_p {m.get('spa_p')} > {th.max_spa_p}")
         rec.gate_reasons = reasons
         rec.status = ELIGIBLE if not reasons else REJECTED
         self._save(rec)

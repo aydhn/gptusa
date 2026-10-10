@@ -93,6 +93,19 @@ class EdgarClient:
         raw = self.get_json(COMPANY_TICKERS_URL)
         return {str(v["ticker"]).upper(): int(v["cik_str"]) for v in raw.values()}
 
+    def top_registrants(self, n: int) -> List[str]:
+        """First ``n`` plain tickers of ``company_tickers.json`` (SEC lists larger registrants first - an approximation of
+        size ordering, NOT an index; today's list, so survivorship bias remains). Share-class/odd tickers are skipped."""
+        raw = self.get_json(COMPANY_TICKERS_URL)
+        out: List[str] = []
+        for key in sorted(raw, key=lambda k: int(k)):
+            t = str(raw[key]["ticker"]).upper()
+            if t.isalpha() and len(t) <= 5 and t not in out:
+                out.append(t)
+            if len(out) >= n:
+                break
+        return out
+
     def submissions(self, cik: int) -> Any:
         return self.get_json(SUBMISSIONS_URL.format(cik=int(cik)))
 

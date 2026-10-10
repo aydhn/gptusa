@@ -16,7 +16,7 @@ def import_universe_csv(
     overwrite: bool = False
 ) -> Path:
     # Security check: no URL
-    if str(source_path).startswith("http://") or str(source_path).startswith("https://") or str(source_path).startswith("http:/") or str(source_path).startswith("https:/"):
+    if str(source_path).replace("\\", "/").lower().startswith(("http:/", "https:/")):
         raise UniverseImportError("URL is not permitted")
 
     # Security check: path traversal check for source path if it tries to go up.

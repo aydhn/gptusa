@@ -219,6 +219,7 @@ class BlendCoefficientPlan:
     errors: List[str]
     risk_flags: List[EnsembleScaffoldingRiskFlag]
     metadata: Dict[str, Any]
+    final_ensemble_prediction_created: bool = False
 
 @dataclass
 class PredictionCorrelationDiagnostic:
@@ -325,6 +326,7 @@ class EnsemblePreparationReport:
     report_valid: bool
     quality: EnsembleScaffoldingQuality
     fitting_performed: bool
+    final_ensemble_prediction_created: bool
     threshold_optimization_performed: bool
     research_data_only: bool
     offline_ml_research_only: bool

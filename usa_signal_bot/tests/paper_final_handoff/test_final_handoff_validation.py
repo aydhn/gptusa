@@ -1,25 +1,6 @@
 import sys
 from unittest.mock import MagicMock
 
-class CatchAllMockException(Exception): pass
-
-class MockExceptions:
-    def __getattr__(self, name):
-        return CatchAllMockException
-
-sys.modules['usa_signal_bot.core.exceptions'] = MockExceptions()
-
-class MockFinalHandoffModels:
-    class FinalHandoffReview:
-        pass
-    class SealedReadinessArchiveManifest:
-        pass
-    class PrePaperGovernanceCheckpoint:
-        pass
-    class FinalHandoffFullReview:
-        pass
-sys.modules['usa_signal_bot.paper_final_handoff.final_handoff_models'] = MockFinalHandoffModels
-
 import pytest
 from usa_signal_bot.paper_final_handoff.final_handoff_validation import (
     validate_final_handoff_review_report,

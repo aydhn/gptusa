@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field as dc_field
 from typing import Any, Dict, List, Optional
 from usa_signal_bot.provider_freeze.phase114_models import (
     ProviderFreezeContext,
@@ -12,7 +12,7 @@ class ProviderFreezeValidationIssue:
     severity: str
     field: Optional[str] = None
     message: str = ""
-    details: Dict[str, Any] = field(default_factory=dict)
+    details: Dict[str, Any] = dc_field(default_factory=dict)
 
 @dataclass
 class ProviderFreezeValidationReport:
@@ -21,9 +21,9 @@ class ProviderFreezeValidationReport:
     warning_count: int = 0
     error_count: int = 0
     blocked_count: int = 0
-    issues: List[ProviderFreezeValidationIssue] = field(default_factory=list)
-    warnings: List[str] = field(default_factory=list)
-    errors: List[str] = field(default_factory=list)
+    issues: List[ProviderFreezeValidationIssue] = dc_field(default_factory=list)
+    warnings: List[str] = dc_field(default_factory=list)
+    errors: List[str] = dc_field(default_factory=list)
 
 def _add_issue(report: ProviderFreezeValidationReport, sev: str, msg: str, fld: Optional[str] = None):
     report.issues.append(ProviderFreezeValidationIssue(severity=sev, message=msg, field=fld))

@@ -17,7 +17,7 @@ def test_check_symbol_history_missing():
     assert res.status == SymbolHistoryStatus.MISSING_HISTORY
 
 def test_check_symbol_history_short():
-    rows = [{"timestamp_utc": "2026-05-13T16:03:45.160532+00:00"} for _ in range(50)] # less than min 120
+    rows = [{"timestamp_utc": datetime.datetime.now(datetime.timezone.utc).isoformat()} for _ in range(50)] # less than min 120
     res = check_symbol_history("AAPL", rows, min_rows=120)
     assert res.status == SymbolHistoryStatus.SHORT_HISTORY
 

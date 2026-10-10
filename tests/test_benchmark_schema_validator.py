@@ -1,8 +1,6 @@
 import sys
 from unittest.mock import MagicMock
 
-# Mock the enums to bypass ImportError during collection
-sys.modules["usa_signal_bot.core.enums"] = MagicMock()
 
 import pytest
 from usa_signal_bot.backtesting.benchmark_comparison.benchmark_schema_validator import (

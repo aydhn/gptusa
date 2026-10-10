@@ -33,10 +33,6 @@ class CatchAllMockEnum:
 class TestScoreCalibrationGuard(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.patcher = patch.dict(sys.modules, {'usa_signal_bot.core.enums': CatchAllMockEnum()})
-        cls.patcher.start()
-
-        # We must import inside the test/setup after mocking
         global validate_score_range, validate_component_weights, validate_quality_score_calibration
         global validate_selection_score_calibration, score_calibration_guard_summary, score_calibration_guard_to_text
         global ProviderDataQualityScore, DataQualityScoreComponent, ProviderSelectionScore
@@ -54,10 +50,6 @@ class TestScoreCalibrationGuard(unittest.TestCase):
             DataQualityScoreComponent,
             ProviderSelectionScore
         )
-
-    @classmethod
-    def tearDownClass(cls):
-        cls.patcher.stop()
 
     def test_validate_score_range(self):
         self.assertEqual(validate_score_range(None), [])

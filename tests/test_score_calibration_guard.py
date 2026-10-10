@@ -6,20 +6,19 @@ class CatchAllMockException(Exception): pass
 class MockExceptions:
     def __getattr__(self, name): return CatchAllMockException
 
-with patch.dict('sys.modules', {'usa_signal_bot.core.enums': MagicMock()}):
-    from usa_signal_bot.provider_quality.phase109_models import (
-        ProviderDataQualityScore,
-        DataQualityScoreComponent,
-        ProviderSelectionScore
-    )
-    from usa_signal_bot.provider_quality.score_calibration_guard import (
-        validate_score_range,
-        validate_component_weights,
-        validate_quality_score_calibration,
-        validate_selection_score_calibration,
-        score_calibration_guard_summary,
-        score_calibration_guard_to_text
-    )
+from usa_signal_bot.provider_quality.phase109_models import (
+    ProviderDataQualityScore,
+    DataQualityScoreComponent,
+    ProviderSelectionScore
+)
+from usa_signal_bot.provider_quality.score_calibration_guard import (
+    validate_score_range,
+    validate_component_weights,
+    validate_quality_score_calibration,
+    validate_selection_score_calibration,
+    score_calibration_guard_summary,
+    score_calibration_guard_to_text
+)
 
 def test_validate_score_range():
     assert validate_score_range(None) == []
